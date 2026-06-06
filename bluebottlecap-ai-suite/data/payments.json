@@ -1,0 +1,46 @@
+[
+  {
+    "id": "pay_SrbLCJ18pJ7y6v",
+    "order_id": "order_SrbJtUYpCqqOE5",
+    "signature": "9cd011c5c42fde68f24b672fd7948cf1df13e3b642593bfb9561c7ab26d8cb7c",
+    "verifiedAt": "2026-05-20T11:26:07.758Z",
+    "details": {
+      "id": "pay_SrbLCJ18pJ7y6v",
+      "entity": "payment",
+      "amount": 9900,
+      "currency": "INR",
+      "status": "captured",
+      "order_id": "order_SrbJtUYpCqqOE5",
+      "invoice_id": null,
+      "international": false,
+      "method": "upi",
+      "amount_refunded": 0,
+      "refund_status": null,
+      "captured": true,
+      "description": "Basic plan purchase",
+      "card_id": null,
+      "bank": null,
+      "wallet": null,
+      "vpa": "divyanshu2404@ptaxis",
+      "email": null,
+      "contact": "+919761601093",
+      "notes": [],
+      "fee": 234,
+      "tax": 36,
+      "error_code": null,
+      "error_description": null,
+      "error_source": null,
+      "error_step": null,
+      "error_reason": null,
+      "acquirer_data": {
+        "rrn": "614032236661"
+      },
+      "created_at": 1779276353,
+      "upi": {
+        "payer_account_type": "bank_account",
+        "vpa": "divyanshu2404@ptaxis",
+        "flow": "intent"
+      }
+    }
+  }
+]

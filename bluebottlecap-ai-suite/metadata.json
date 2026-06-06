@@ -1,0 +1,11 @@
+{
+  "name": "BlueBottleCap AI Suite",
+  "description": "An advanced AI-powered student study suite featuring interactive PDF reading, smart summaries, writing math solvers, flashcards generators, and custom PDF tools.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
