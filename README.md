@@ -1,6 +1,4 @@
 <div align="center">
-  <img width="100%" alt="BlueBottleCap SaaS Banner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-
   <h1>🚀 BlueBottleCap SaaS 🚀</h1>
   <p>An Advanced AI Suite and SaaS Platform powered by Next.js, Google Gemini, and Supabase.</p>
 
