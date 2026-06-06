@@ -1,0 +1,5 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "cd bluebottlecap-ai-suite && npm install && npm run build",
+  "outputDirectory": "bluebottlecap-ai-suite/.next"
+}
