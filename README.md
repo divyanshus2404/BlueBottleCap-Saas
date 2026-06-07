@@ -4,7 +4,7 @@
   <br />
   
   <a href="https://github.com/divyanshus2404/BlueBottleCap-Saas">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=24&pause=1000&color=3B82F6&center=true&vCenter=true&width=600&lines=🚀+B.Tech+Study+Planner;📚+Engineering+Flashcard+Maker;🎯+JEE+Question+Generator;🤖+PDF+Copilot+Assistant" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=24&pause=1000&color=3B82F6&center=true&vCenter=true&width=600&lines=B.Tech+Study+Planner;Engineering+Flashcard+Maker;JEE+Question+Generator;PDF+Copilot+Assistant" alt="Typing SVG" />
   </a>
 
   <p>An Advanced AI Suite and SaaS Platform powered by Next.js, Google Gemini, and Supabase.</p>
