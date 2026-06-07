@@ -1,10 +1,10 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import { Sparkles, BookOpen } from "lucide-react";
 import { ActiveView } from "../types";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Canvas } from "@react-three/fiber";
-import { Float, Sphere, MeshDistortMaterial } from "@react-three/drei";
+import * as THREE from "three";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,32 +12,158 @@ interface LandingPageProps {
   onNavigate: (view: ActiveView) => void;
 }
 
-// ─── 3D BACKGROUND COMPONENT ────────────────────────────────────────────────
+// ─── 3D SHADERS & COMPONENTS ────────────────────────────────────────────────
+
+// VERTEX SHADER: Handles shape distortion and mouse bending
+const vertexShader = `
+  uniform float uTime;
+  uniform vec2 uMouse;
+  varying vec2 vUv;
+  varying vec3 vPosition;
+  varying vec3 vNormal;
+
+  void main() {
+    vUv = uv;
+    vPosition = position;
+    vNormal = normal;
+
+    vec3 pos = position;
+    
+    // Liquid distortion
+    float noiseFreq = 1.2;
+    float noiseAmp = 0.6;
+    vec3 noisePos = vec3(pos.x * noiseFreq + uTime, pos.y * noiseFreq + uTime, pos.z);
+    
+    pos.x += sin(noisePos.y) * noiseAmp;
+    pos.y += cos(noisePos.z) * noiseAmp;
+    pos.z += sin(noisePos.x) * noiseAmp;
+    
+    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+    
+    // Mouse hover warping (bending space around the cursor)
+    vec2 viewMouse = uMouse * 8.0; 
+    float dist = distance(mvPosition.xy, viewMouse);
+    float force = smoothstep(4.0, 0.0, dist); 
+    
+    mvPosition.xy += normalize(mvPosition.xy - viewMouse) * force * 1.5;
+    
+    gl_Position = projectionMatrix * mvPosition;
+  }
+`;
+
+// FRAGMENT SHADER: Handles iridescent melting colors
+const fragmentShader = `
+  uniform float uTime;
+  varying vec2 vUv;
+  varying vec3 vPosition;
+  varying vec3 vNormal;
+
+  void main() {
+    // Brand Colors
+    vec3 color1 = vec3(0.06, 0.20, 0.45); // Brand Navy
+    vec3 color2 = vec3(0.23, 0.51, 0.96); // Cobalt Blue
+    vec3 color3 = vec3(0.06, 0.72, 0.50); // Emerald
+    
+    // Melting color blend
+    float mix1 = sin(vUv.x * 4.0 + uTime * 0.4) * 0.5 + 0.5;
+    float mix2 = cos(vUv.y * 6.0 - uTime * 0.3) * 0.5 + 0.5;
+    
+    vec3 finalColor = mix(color1, color2, mix1);
+    finalColor = mix(finalColor, color3, mix2);
+    
+    // Fresnel / Iridescent Edge Glow
+    float fresnel = dot(vNormal, vec3(0.0, 0.0, 1.0));
+    fresnel = clamp(1.0 - fresnel, 0.0, 1.0);
+    fresnel = pow(fresnel, 2.5);
+    
+    finalColor += fresnel * 0.8; // intense glow on edges
+    
+    gl_FragColor = vec4(finalColor, 0.65);
+  }
+`;
+
+const CustomShape = ({ position, scale }: { position: [number, number, number], scale: number }) => {
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const meshRef = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    if (materialRef.current) {
+      materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+      // Smoothly interpolate mouse position into the shader
+      materialRef.current.uniforms.uMouse.value.lerp(
+        new THREE.Vector2(state.pointer.x, state.pointer.y),
+        0.1
+      );
+    }
+    // Slowly rotate the entire mesh as well
+    if (meshRef.current) {
+      meshRef.current.rotation.x += 0.002;
+      meshRef.current.rotation.y += 0.003;
+    }
+  });
+
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uMouse: { value: new THREE.Vector2(0, 0) },
+    }),
+    []
+  );
+
+  return (
+    <mesh ref={meshRef} position={position} scale={scale}>
+      <icosahedronGeometry args={[1, 32]} />
+      <shaderMaterial
+        ref={materialRef}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={uniforms}
+        transparent={true}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  );
+};
+
+// Camera Controller: Flies through the 3D space based on page scroll
+const SceneController = () => {
+  const { camera } = useThree();
+
+  useFrame(() => {
+    // Get scroll progress from 0 to 1
+    const scrollY = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = maxScroll > 0 ? Math.min(Math.max(scrollY / maxScroll, 0), 1) : 0;
+
+    // Fly through the Z-axis, rotating slightly
+    const targetZ = 8 - progress * 25; // Fly deep into the tunnel
+    const targetRotZ = progress * Math.PI * 0.3;
+    const targetRotY = progress * Math.PI * 0.15;
+
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.05);
+    camera.rotation.z = THREE.MathUtils.lerp(camera.rotation.z, targetRotZ, 0.05);
+    camera.rotation.y = THREE.MathUtils.lerp(camera.rotation.y, targetRotY, 0.05);
+  });
+
+  return null;
+};
+
 function Background3D() {
   return (
-    <div className="absolute inset-0 -z-20 pointer-events-none opacity-60">
-      <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
-        <ambientLight intensity={0.8} />
-        <directionalLight position={[10, 10, 5]} intensity={1.5} color="#ffffff" />
-        <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#4f46e5" />
+    <div className="fixed inset-0 -z-20 h-screen w-screen">
+      <Canvas camera={{ position: [0, 0, 8], fov: 45 }} className="w-full h-full">
+        <SceneController />
         
-        <Float speed={2} rotationIntensity={1.5} floatIntensity={2}>
-          <Sphere args={[1.5, 64, 64]} position={[-3.5, 1.5, -2]}>
-            <MeshDistortMaterial color="#3b82f6" attach="material" distort={0.4} speed={2} roughness={0.1} metalness={0.8} />
-          </Sphere>
-        </Float>
-        
-        <Float speed={1.5} rotationIntensity={2} floatIntensity={1.5}>
-          <Sphere args={[1.2, 64, 64]} position={[3.5, -1, -3]}>
-            <MeshDistortMaterial color="#8b5cf6" attach="material" distort={0.5} speed={1.5} roughness={0.2} metalness={0.7} />
-          </Sphere>
-        </Float>
-
-        <Float speed={1} rotationIntensity={1} floatIntensity={1}>
-          <Sphere args={[0.8, 64, 64]} position={[0, -3, -5]}>
-            <MeshDistortMaterial color="#10b981" attach="material" distort={0.3} speed={1} roughness={0.3} metalness={0.5} />
-          </Sphere>
-        </Float>
+        {/* A deep tunnel of liquid geometry */}
+        <CustomShape position={[-3.5, 1.5, 0]} scale={1.8} />
+        <CustomShape position={[3.5, -1.0, -3]} scale={1.4} />
+        <CustomShape position={[-2.0, -3.0, -6]} scale={1.2} />
+        <CustomShape position={[4.0, 3.0, -9]} scale={2.0} />
+        <CustomShape position={[-3.0, 2.0, -12]} scale={1.6} />
+        <CustomShape position={[2.5, -2.5, -15]} scale={1.9} />
+        <CustomShape position={[-4.5, -1.0, -18]} scale={2.2} />
+        <CustomShape position={[3.0, 2.0, -21]} scale={1.5} />
+        <CustomShape position={[-2.0, -3.0, -24]} scale={2.5} />
       </Canvas>
     </div>
   );
@@ -48,7 +174,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      // 1. Hero Reveal Timeline
       const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
       tl.from(".hero-badge", { y: 30, opacity: 0, duration: 1, delay: 0.1 })
         .from(".hero-title .word", { y: 40, opacity: 0, duration: 1.2, stagger: 0.1 }, "-=0.8")
@@ -62,7 +187,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           ease: "expo.out" 
         }, "-=0.8");
 
-      // 2. Parallax Scrolling Effects
       gsap.to(".hero-dashboard", {
         y: -150,
         ease: "none",
@@ -86,7 +210,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         }
       });
 
-      // 3. Staggered Feature Cards
       gsap.from(".feature-card", {
         y: 60,
         opacity: 0,
@@ -99,7 +222,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         }
       });
 
-      // 4. Comparison Table Reveal
       gsap.from(".comparison-row", {
         x: -30,
         opacity: 0,
@@ -112,7 +234,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         }
       });
       
-      // 5. Testimonial Stagger
       gsap.from(".testimonial-card", {
         y: 50,
         scale: 0.95,
@@ -126,7 +247,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         }
       });
 
-      // 6. Glowing CTA Parallax
       gsap.to(".cta-glow", {
         scale: 1.8,
         rotation: 90,
@@ -145,11 +265,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   }, []);
 
   return (
-    <div ref={containerRef} className="dark:bg-slate-950 min-h-screen overflow-hidden">
+    <div ref={containerRef} className="dark:bg-slate-950 min-h-screen">
+      
+      <Background3D />
       
       {/* ── HERO SECTION ── */}
-      <section className="hero-section relative pt-16 pb-20 md:pt-24 md:pb-28 min-h-screen flex flex-col justify-center perspective-1000">
-        <Background3D />
+      <section className="hero-section relative pt-16 pb-20 md:pt-24 md:pb-28 min-h-screen flex flex-col justify-center perspective-1000 z-10">
         
         <div className="hero-content mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 text-center w-full mt-10">
           <div className="hero-badge inline-flex items-center gap-1.5 rounded-full bg-brand-cobalt/10 dark:bg-brand-cobalt/20 px-4 py-1.5 text-xs font-semibold text-brand-cobalt dark:text-blue-400 mb-6 backdrop-blur-md border border-brand-cobalt/10">
@@ -221,7 +342,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── EMOTIONAL PAIN POINT SECTION ── */}
-      <section className="py-32 bg-slate-50 dark:bg-slate-900/50 border-y border-gray-100 dark:border-slate-800 text-center relative z-20">
+      <section className="py-32 bg-slate-50/80 dark:bg-slate-900/50 backdrop-blur-md border-y border-gray-100 dark:border-slate-800/80 text-center relative z-20">
         <div className="mx-auto max-w-3xl px-4">
           <h2 className="text-4xl font-black font-display text-brand-navy dark:text-white mb-6">Stop searching for the "perfect" notes.</h2>
           <p className="text-xl text-gray-600 dark:text-slate-400 leading-relaxed font-medium">
@@ -231,7 +352,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── HOW IT WORKS (FEATURES) ── */}
-      <section className="features-section py-40 bg-white dark:bg-slate-950 relative z-20">
+      <section className="features-section py-40 bg-white/90 dark:bg-slate-950/90 backdrop-blur-lg relative z-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-black font-display text-brand-navy dark:text-white mb-24">
             Everything you need to succeed.
@@ -255,7 +376,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             </div>
           </div>
 
-          {/* CTA */}
           <div className="mt-24 feature-card">
             <button
               onClick={() => onNavigate("study-material-page")}
@@ -270,13 +390,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── COACHING COMPARISON ── */}
-      <section className="comparison-section py-32 bg-slate-50 dark:bg-slate-900/30 border-y border-gray-100 dark:border-slate-800 overflow-hidden relative z-20">
+      <section className="comparison-section py-32 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-y border-gray-100 dark:border-slate-800/50 overflow-hidden relative z-20">
         <div className="mx-auto max-w-5xl px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-black font-display text-brand-navy dark:text-white mb-20">
             Traditional Learning vs <br className="hidden sm:block" />BlueBottleCap
           </h2>
           
-          <div className="overflow-hidden border border-gray-200 dark:border-slate-700/50 rounded-[2rem] shadow-2xl text-left text-sm md:text-lg bg-white dark:bg-slate-900">
+          <div className="overflow-hidden border border-gray-200 dark:border-slate-700/50 rounded-[2rem] shadow-2xl text-left text-sm md:text-lg bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
             <div className="comparison-row grid grid-cols-3 bg-slate-100/50 dark:bg-slate-800/50 border-b border-gray-200 dark:border-slate-700/50 font-black text-brand-navy dark:text-white p-6 sm:p-8">
               <div className="col-span-1 uppercase tracking-widest text-xs text-slate-400">Feature</div>
               <div className="col-span-1 text-gray-400 dark:text-slate-500">Traditional</div>
@@ -285,19 +405,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               </div>
             </div>
             
-            <div className="comparison-row grid grid-cols-3 border-b border-gray-100 dark:border-slate-800/50 p-6 sm:p-8 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors">
+            <div className="comparison-row grid grid-cols-3 border-b border-gray-100 dark:border-slate-800/50 p-6 sm:p-8 hover:bg-white dark:hover:bg-slate-800 transition-colors">
               <div className="col-span-1 font-bold text-gray-700 dark:text-slate-300">Cost</div>
               <div className="col-span-1 text-gray-500 dark:text-slate-400 pr-4">₹1,00,000+ per year</div>
               <div className="col-span-1 font-black text-brand-navy dark:text-white text-brand-cobalt">Extremely affordable.</div>
             </div>
             
-            <div className="comparison-row grid grid-cols-3 border-b border-gray-100 dark:border-slate-800/50 p-6 sm:p-8 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors">
+            <div className="comparison-row grid grid-cols-3 border-b border-gray-100 dark:border-slate-800/50 p-6 sm:p-8 hover:bg-white dark:hover:bg-slate-800 transition-colors">
               <div className="col-span-1 font-bold text-gray-700 dark:text-slate-300">Material</div>
               <div className="col-span-1 text-gray-500 dark:text-slate-400 pr-4">Heavy, outdated books.</div>
               <div className="col-span-1 font-bold text-brand-navy dark:text-white">Digital, constantly updated notes.</div>
             </div>
 
-            <div className="comparison-row grid grid-cols-3 border-b border-gray-100 dark:border-slate-800/50 p-6 sm:p-8 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors">
+            <div className="comparison-row grid grid-cols-3 border-b border-gray-100 dark:border-slate-800/50 p-6 sm:p-8 hover:bg-white dark:hover:bg-slate-800 transition-colors">
               <div className="col-span-1 font-bold text-gray-700 dark:text-slate-300">Tests</div>
               <div className="col-span-1 text-gray-500 dark:text-slate-400 pr-4">Rigid schedule.</div>
               <div className="col-span-1 font-bold text-brand-navy dark:text-white">Take full mock tests instantly.</div>
@@ -307,7 +427,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── TESTIMONIALS / TRUST ── */}
-      <section className="testimonials-section py-40 bg-white dark:bg-slate-950 border-b border-gray-100 dark:border-slate-800 relative z-20">
+      <section className="testimonials-section py-40 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-gray-100 dark:border-slate-800/50 relative z-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-black font-display text-brand-navy dark:text-white mb-6">Built for serious students.</h2>
           <p className="text-gray-500 dark:text-slate-400 mb-20 font-medium text-xl">Trusted by ambitious learners everywhere.</p>
@@ -341,7 +461,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── CTA SECTION ── */}
-      <section className="cta-section py-40 text-center relative overflow-hidden bg-brand-navy dark:bg-slate-950 text-white z-20">
+      <section className="cta-section py-40 text-center relative overflow-hidden bg-brand-navy/95 dark:bg-slate-950/95 backdrop-blur-xl text-white z-20">
         <div className="cta-glow absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-brand-cobalt/50 via-brand-navy to-brand-navy dark:from-blue-900/50 dark:via-slate-950 dark:to-slate-950 opacity-60 blur-3xl pointer-events-none" />
         
         <div className="mx-auto max-w-4xl px-4 relative z-10 space-y-12">
@@ -363,9 +483,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-gray-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 dark:bg-slate-950 py-16 relative z-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center text-xs text-gray-400 dark:text-slate-600 space-y-4">
-          <span className="font-display font-black text-brand-navy dark:text-slate-500 text-xl tracking-tight">BlueBottleCap</span>
+      <footer className="border-t border-white/5 dark:border-slate-800/50 bg-slate-900/95 dark:bg-slate-950/95 backdrop-blur-xl py-16 relative z-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 space-y-4">
+          <span className="font-display font-black text-slate-400 text-xl tracking-tight">BlueBottleCap</span>
           <p className="font-mono text-[11px] uppercase tracking-widest mt-2">© 2026 BlueBottleCap Suite. All Rights Reserved.</p>
         </div>
       </footer>
