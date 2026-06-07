@@ -14,6 +14,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const { signUp, signIn, signInWithGoogle, resetPassword } = useAuth();
   const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signin");
   
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +31,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
     try {
       if (mode === "signup") {
-        await signUp(email, password);
+        await signUp(email, password, name);
         onClose();
       } else if (mode === "signin") {
         await signIn(email, password);
@@ -105,6 +106,29 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4.5">
+          {mode === "signup" && (
+            <div className="space-y-1">
+              <label className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 font-mono">
+                Full Name
+              </label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-3.5 flex items-center text-gray-400">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                  </svg>
+                </span>
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Jane Doe"
+                  className="w-full rounded-xl border border-gray-200 bg-slate-50/50 py-3 pl-10.5 pr-4 text-xs font-semibold text-brand-navy focus:border-brand-cobalt focus:bg-white focus:outline-hidden transition"
+                />
+              </div>
+            </div>
+          )}
+
           {/* Email */}
           <div className="space-y-1">
             <label className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 font-mono">

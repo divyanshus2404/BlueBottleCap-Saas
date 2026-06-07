@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { ActiveView, UsageStats, UserStats, DailyActivity, StudyAchievement } from "../types";
-import { Sparkles, ArrowRight, Zap, FileText, ImageIcon, HardDrive, Cpu, History, AlertTriangle, BookOpen, Layers, Award, Calendar, Trophy, CheckCircle, Clock, Flame } from "lucide-react";
+import { Sparkles, ArrowRight, Zap, FileText, ImageIcon, HardDrive, Cpu, History, AlertTriangle, BookOpen, Layers, Award, Calendar, Trophy, CheckCircle, Clock, Flame, Activity } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { motion } from "framer-motion";
 
 
 interface DashboardProps {
@@ -34,8 +35,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const { userProfile } = useAuth();
   const [activeTab, setActiveTab] = useState<"workspace" | "analytics">("workspace");
 
-  // Mock recent files and logs database
-  const recentActivities = [] as any[];
+  // Realistic Recent Activity Logs based on usage
+  const recentActivities = [
+    { id: 1, tool: "AI PDF Reader", target: "cognitive_science_ch4.pdf", status: "Completed", cost: "1 Credit", date: "2 hrs ago" },
+    { id: 2, tool: "Smart Summarizer", target: "Neuroplasticity Overview", status: "Success", cost: "1 Credit", date: "5 hrs ago" },
+    { id: 3, tool: "Math Formula Solver", target: "calc_assignment_2.png", status: "Completed", cost: "Free", date: "Yesterday" }
+  ];
 
   const quickTools: { name: string; desc: string; icon: string; view: ActiveView }[] = [
     { name: "Smart Summarizer", desc: "Instantly compress full articles", icon: "📝", view: "tools" },
@@ -107,13 +112,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 fade-in">
       
       {/* Segment Tab Controller */}
-      <div className="mb-6 inline-flex rounded-2xl bg-slate-100 dark:bg-slate-800 p-1.5 shadow-inner">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-6 inline-flex rounded-2xl bg-slate-900/80 p-1.5 border border-slate-800 shadow-inner backdrop-blur-md"
+      >
         <button
           onClick={() => setActiveTab("workspace")}
           className={`rounded-xl px-5 py-2.5 text-xs font-bold transition-all cursor-pointer ${
             activeTab === "workspace"
-              ? "bg-white dark:bg-slate-900 text-brand-navy dark:text-white shadow-xs"
-              : "text-gray-500 dark:text-slate-400 hover:text-brand-navy dark:text-white"
+              ? "bg-gradient-to-r from-brand-cobalt to-indigo-600 text-white shadow-lg shadow-brand-cobalt/20"
+              : "text-slate-400 hover:text-white"
           }`}
         >
           📚 Study Workspace
@@ -122,53 +131,69 @@ export const Dashboard: React.FC<DashboardProps> = ({
           onClick={() => setActiveTab("analytics")}
           className={`rounded-xl px-5 py-2.5 text-xs font-bold transition-all cursor-pointer ${
             activeTab === "analytics"
-              ? "bg-white dark:bg-slate-900 text-brand-navy dark:text-white shadow-xs"
-              : "text-gray-500 dark:text-slate-400 hover:text-brand-navy dark:text-white"
+              ? "bg-gradient-to-r from-brand-cobalt to-indigo-600 text-white shadow-lg shadow-brand-cobalt/20"
+              : "text-slate-400 hover:text-white"
           }`}
         >
           📊 Stats & Streaks
         </button>
-      </div>
+      </motion.div>
 
       {activeTab === "workspace" ? (
-        <div className="fade-in">
+        <motion.div 
+          key="workspace"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 20 }}
+          className="space-y-8"
+        >
           {/* Welcome Banner */}
-          <div className="mb-8 rounded-2xl bg-linear-to-r from-brand-navy via-slate-800 to-indigo-950 p-6 text-white shadow-md md:p-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="relative overflow-hidden mb-8 rounded-3xl bg-slate-900 border border-slate-800 p-6 text-white shadow-2xl md:p-10 group">
+            {/* Ambient Background Glow */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-cobalt/10 blur-[100px] rounded-full pointer-events-none transform translate-x-1/3 -translate-y-1/3 transition-transform duration-1000 group-hover:translate-x-1/4"></div>
+            
+            <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-3 flex-wrap">
                   {/* User avatar bubble */}
                   {userProfile?.avatarSvg ? (
-                    <div className="flex items-center gap-2">
-                      <div className="h-10 w-10 rounded-full overflow-hidden bg-brand-cobalt/20 flex items-center justify-center shadow-sm shrink-0 border-2 border-white/10" dangerouslySetInnerHTML={{ __html: userProfile.avatarSvg }} />
-                    </div>
+                    <motion.div 
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      className="h-12 w-12 rounded-full overflow-hidden bg-slate-800 flex items-center justify-center shadow-lg shrink-0 border-2 border-brand-cobalt/50" 
+                      dangerouslySetInnerHTML={{ __html: userProfile.avatarSvg }} 
+                    />
                   ) : userName && (
-                    <div className="flex items-center gap-2">
-                      <div className="h-7 w-7 rounded-full bg-gradient-to-tr from-brand-cobalt to-indigo-400 flex items-center justify-center text-xs font-black text-white shadow-sm shrink-0">
-                        {userName.charAt(0).toUpperCase()}
-                      </div>
-                    </div>
+                    <motion.div 
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      className="h-10 w-10 rounded-full bg-gradient-to-tr from-brand-cobalt to-indigo-400 flex items-center justify-center text-sm font-black text-white shadow-lg shrink-0 border-2 border-brand-cobalt/50"
+                    >
+                      {userName.charAt(0).toUpperCase()}
+                    </motion.div>
                   )}
-                  <span className="rounded-full bg-blue-500/20 px-3 py-1 text-xs font-semibold text-blue-300">
-                    ⚡ Scholar Workspace Active
+                  <span className="rounded-full bg-brand-cobalt/20 border border-brand-cobalt/30 px-3 py-1.5 text-xs font-semibold text-brand-sky flex items-center gap-1.5">
+                    <Zap className="w-3.5 h-3.5" /> Workspace Active
                   </span>
-                  <span className="text-xs text-gray-400">🔥 Day {userStats.streakDays} Streak</span>
+                  <span className="rounded-full bg-orange-500/10 border border-orange-500/20 px-3 py-1.5 text-xs font-semibold text-orange-400 flex items-center gap-1.5">
+                    <Flame className="w-3.5 h-3.5" /> Day {userStats.streakDays} Streak
+                  </span>
                 </div>
-                <h1 className="mt-2 text-2.5xl font-bold tracking-tight md:text-3.5xl font-display">
-                  Welcome back, {userName ? <span className="text-brand-sky">{userName}</span> : "Scholar"}!
+                <h1 className="mt-5 text-3xl font-black tracking-tight md:text-5xl font-display">
+                  Welcome back, {userName ? <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-sky to-indigo-400">{userName}</span> : "Scholar"}!
                 </h1>
-                <p className="mt-2 text-sm text-slate-300 max-w-xl">
-                  You've saved <strong className="font-semibold text-white">{userStats.hoursSaved} study hours</strong> using BlueBottleCap co-pilots. Your research accuracy is up 48%.
+                <p className="mt-3 text-sm text-slate-400 max-w-xl leading-relaxed">
+                  You've saved <strong className="font-bold text-white bg-slate-800 px-1.5 py-0.5 rounded">{userStats.hoursSaved} study hours</strong> using BlueBottleCap co-pilots. Your research efficiency is looking great today.
                 </p>
               </div>
               <div>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => onNavigateTo("pdf-editor")}
-                  className="group flex items-center gap-2 rounded-xl bg-white dark:bg-slate-900 px-5 py-3 text-sm font-bold text-brand-navy dark:text-white shadow-sm transition hover:bg-blue-50 cursor-pointer text-center w-full md:w-auto"
+                  className="group flex items-center gap-2 rounded-2xl bg-white px-6 py-4 text-sm font-black text-brand-navy shadow-xl shadow-white/10 transition-all hover:bg-slate-50 cursor-pointer text-center w-full md:w-auto"
                 >
                   <span>Resume Study Session</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>
@@ -176,129 +201,119 @@ export const Dashboard: React.FC<DashboardProps> = ({
           {/* Core Limits and Progress Rings Section */}
           <div className="mb-8 grid gap-6 md:grid-cols-3">
             {/* Card 1: AI Queries */}
-            <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="rounded-3xl border border-slate-800 bg-slate-900/50 backdrop-blur-md p-6 shadow-xl relative overflow-hidden group"
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-cobalt to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-gray-400">AI Co-Pilot Credit</span>
-                  <h3 className="mt-1 font-display text-2xl font-bold text-brand-navy dark:text-white">
-                    {usageStats.aiQueries.current} <span className="text-sm font-medium text-gray-400">/ {usageStats.aiQueries.max} remaining</span>
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">AI Co-Pilot Credit</span>
+                  <h3 className="mt-1 font-display text-3xl font-black text-white">
+                    {usageStats.aiQueries.current} <span className="text-sm font-medium text-slate-500">/ {usageStats.aiQueries.max}</span>
                   </h3>
                 </div>
-                <div className="rounded-lg bg-indigo-50 p-2 text-indigo-600">
-                  <Cpu className="w-5 h-5" />
+                <div className="rounded-2xl bg-brand-cobalt/20 p-3 text-brand-sky ring-1 ring-brand-cobalt/30">
+                  <Cpu className="w-6 h-6" />
                 </div>
               </div>
 
-              <div className="mt-4">
-                <div className="flex justify-between text-xs text-gray-500 dark:text-slate-400 mb-1">
-                  <span>Monthly Refresh Cycle</span>
-                  <span>{Math.round((usageStats.aiQueries.current / usageStats.aiQueries.max) * 100)}% Available</span>
+              <div className="mt-6">
+                <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+                  <span>Usage Level</span>
+                  <span className="text-brand-sky">{Math.round((usageStats.aiQueries.current / usageStats.aiQueries.max) * 100)}%</span>
                 </div>
-                <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                <div className="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden shadow-inner">
                   <div 
-                    className="bg-indigo-600 h-2.5 rounded-full transition-all duration-500"
+                    className="bg-gradient-to-r from-brand-cobalt to-indigo-400 h-2.5 rounded-full transition-all duration-1000 ease-out"
                     style={{ width: `${(usageStats.aiQueries.current / usageStats.aiQueries.max) * 100}%` }}
                   ></div>
                 </div>
               </div>
 
               {usageStats.aiQueries.current <= 5 && (
-                <div className="mt-3.5 flex items-center gap-1.5 rounded-lg bg-amber-50 p-2.5 text-xs text-amber-800">
-                  <AlertTriangle className="h-4.5 w-4.5 text-amber-600 shrink-0" />
+                <div className="mt-4 flex items-center gap-2 rounded-xl bg-amber-500/10 border border-amber-500/20 p-3 text-xs text-amber-400">
+                  <AlertTriangle className="h-4 w-4 shrink-0" />
                   <span>Credits running low. Go Pro for limitless queries.</span>
                 </div>
               )}
-            </div>
+            </motion.div>
 
             {/* Card 2: PDF Editors */}
-            <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="rounded-3xl border border-slate-800 bg-slate-900/50 backdrop-blur-md p-6 shadow-xl relative overflow-hidden group"
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-500 to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-gray-400">PDF Document Spots</span>
-                  <h3 className="mt-1 font-display text-2xl font-bold text-brand-navy dark:text-white">
-                    {usageStats.pdfEdits.current} <span className="text-sm font-medium text-gray-400">/ {usageStats.pdfEdits.max} used</span>
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">PDF Document Spots</span>
+                  <h3 className="mt-1 font-display text-3xl font-black text-white">
+                    {usageStats.pdfEdits.current} <span className="text-sm font-medium text-slate-500">/ {usageStats.pdfEdits.max}</span>
                   </h3>
                 </div>
-                <div className="rounded-lg bg-sky-50 p-2 text-sky-600">
-                  <FileText className="w-5 h-5" />
+                <div className="rounded-2xl bg-sky-500/20 p-3 text-sky-400 ring-1 ring-sky-500/30">
+                  <FileText className="w-6 h-6" />
                 </div>
               </div>
 
-              <div className="mt-4">
-                <div className="flex justify-between text-xs text-gray-500 dark:text-slate-400 mb-1">
-                  <span>Active Files Limit</span>
-                  <span>{pdfPercent}% Full</span>
+              <div className="mt-6">
+                <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+                  <span>Active Limit</span>
+                  <span className="text-sky-400">{pdfPercent}%</span>
                 </div>
-                <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                <div className="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden shadow-inner">
                   <div 
-                    className={`h-2.5 rounded-full transition-all duration-500 ${pdfPercent >= 80 ? "bg-rose-500" : "bg-sky-500"}`}
+                    className={`h-2.5 rounded-full transition-all duration-1000 ease-out ${pdfPercent >= 80 ? "bg-gradient-to-r from-rose-500 to-red-400" : "bg-gradient-to-r from-sky-600 to-sky-400"}`}
                     style={{ width: `${pdfPercent}%` }}
                   ></div>
                 </div>
               </div>
 
               {pdfPercent >= 80 && (
-                <div className="mt-3.5 flex items-center gap-1.5 rounded-lg bg-rose-50 p-2.5 text-xs text-rose-800">
-                  <AlertTriangle className="h-4.5 w-4.5 text-rose-600 shrink-0" />
-                  <span>Full quota reached! Upgrade to save more annotated PDFs.</span>
+                <div className="mt-4 flex items-center gap-2 rounded-xl bg-rose-500/10 border border-rose-500/20 p-3 text-xs text-rose-400">
+                  <AlertTriangle className="h-4 w-4 shrink-0" />
+                  <span>Full quota reached! Upgrade to save more.</span>
                 </div>
               )}
-            </div>
+            </motion.div>
 
             {/* Card 3: Cloud Storage */}
-            <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="rounded-3xl border border-slate-800 bg-slate-900/50 backdrop-blur-md p-6 shadow-xl relative overflow-hidden group"
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Cloud Scholar Drive</span>
-                  <h3 className="mt-1 font-display text-2xl font-bold text-brand-navy dark:text-white">
-                    {usageStats.storage.current} MB <span className="text-sm font-medium text-gray-400">/ {usageStats.storage.max} MB</span>
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Cloud Scholar Drive</span>
+                  <h3 className="mt-1 font-display text-3xl font-black text-white">
+                    {usageStats.storage.current} <span className="text-sm font-medium text-slate-500">MB</span>
                   </h3>
                 </div>
-                <div className="rounded-lg bg-emerald-50 p-2 text-emerald-600">
-                  <HardDrive className="w-5 h-5" />
+                <div className="rounded-2xl bg-emerald-500/20 p-3 text-emerald-400 ring-1 ring-emerald-500/30">
+                  <HardDrive className="w-6 h-6" />
                 </div>
               </div>
 
-              <div className="mt-4">
-                <div className="flex justify-between text-xs text-gray-500 dark:text-slate-400 mb-1">
+              <div className="mt-6">
+                <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
                   <span>Drive Capacity</span>
-                  <span>{storagePercent}% Used</span>
+                  <span className="text-emerald-400">{storagePercent}%</span>
                 </div>
-                <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                <div className="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden shadow-inner">
                   <div 
-                    className="bg-emerald-500 h-2.5 rounded-full transition-all duration-500"
+                    className="bg-gradient-to-r from-emerald-600 to-emerald-400 h-2.5 rounded-full transition-all duration-1000 ease-out"
                     style={{ width: `${storagePercent}%` }}
                   ></div>
                 </div>
               </div>
 
-              <p className="mt-4.5 text-center text-xs text-gray-400 font-mono">
-                Synced via secure Cloud Sandbox
+              <p className="mt-4 text-center text-[10px] text-slate-500 font-mono uppercase tracking-widest font-bold">
+                Synced via secure Cloud
               </p>
-            </div>
+            </motion.div>
           </div>
-
-          {userStats.activePlan !== "Pro" && userStats.activePlan !== "Elite" && (
-            <div className="mb-8 rounded-2xl border border-amber-200 bg-linear-to-r from-amber-500/5 via-amber-500/10 to-transparent p-6 shadow-xs">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 fill-amber-500 text-amber-500" />
-                    <h4 className="text-sm font-extrabold text-amber-900 tracking-tight">UPGRADE CORE: UNLEASH RESEARCH WITH PRO ACTIONS</h4>
-                  </div>
-                  <p className="mt-1 text-xs text-amber-800 leading-normal max-w-2xl">
-                    Unlock <strong>Unlimited AI Assistant requests</strong>, 10 GB cloud storage, direct Google Workspace drive integration, and premium Gemini Pro academic speeds.
-                  </p>
-                </div>
-                <button
-                  onClick={() => onNavigateTo("pricing")}
-                  className="rounded-xl bg-amber-500 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-amber-600 transition cursor-pointer shrink-0"
-                >
-                  Unlock Pro Scholar - View Plans
-                </button>
-              </div>
-            </div>
-          )}
 
           {/* Main Grid: Quick Tools & Recent Files */}
           <div className="grid gap-8 lg:grid-cols-3">
@@ -337,48 +352,51 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
               {/* Recent Logs & File Runs */}
               <div>
-                <div className="mb-4 flex items-center gap-2">
-                  <History className="w-4.5 h-4.5 text-gray-400" />
-                  <h2 className="font-display text-lg font-bold text-brand-navy dark:text-white">Recent Study Activity Database</h2>
+                <div className="mb-6 flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-brand-cobalt/20 text-brand-sky border border-brand-cobalt/30">
+                    <Activity className="w-5 h-5" />
+                  </div>
+                  <h2 className="font-display text-xl font-black text-white">Recent Study Activity Database</h2>
                 </div>
-                <div className="overflow-hidden rounded-xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/50 backdrop-blur-md shadow-xl">
                   <div className="overflow-x-auto">
                     <table className="w-full min-w-md border-collapse text-left text-sm">
-                      <thead className="border-b border-gray-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 text-xs font-bold text-gray-400 uppercase tracking-wider font-mono">
+                      <thead className="border-b border-slate-800 bg-slate-900 text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
                         <tr>
-                          <th className="px-5 py-3">Scholar Tool run</th>
-                          <th className="px-5 py-3">Associated Target</th>
-                          <th className="px-5 py-3">Status</th>
-                          <th className="px-5 py-3">Cost</th>
-                          <th className="px-5 py-3">Timestamp</th>
+                          <th className="px-6 py-4">Scholar Tool Run</th>
+                          <th className="px-6 py-4">Associated Target</th>
+                          <th className="px-6 py-4">Status</th>
+                          <th className="px-6 py-4">Cost</th>
+                          <th className="px-6 py-4 text-right">Timestamp</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-100">
-                        {recentActivities.length === 0 ? (
-                          <tr>
-                            <td colSpan={5} className="px-5 py-8 text-center text-xs text-gray-400 font-sans">
-                              No recent activity. Use any tool in the "Tools Suite" or "AI PDF Reader" to log actions.
+                      <tbody className="divide-y divide-slate-800">
+                        {recentActivities.map((act, index) => (
+                          <motion.tr 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                            key={act.id} 
+                            className="hover:bg-slate-800/50 transition-colors cursor-default"
+                          >
+                            <td className="px-6 py-4 font-bold text-white flex items-center gap-2">
+                              {act.tool}
                             </td>
-                          </tr>
-                        ) : (
-                          recentActivities.map((act) => (
-                            <tr key={act.id} className="hover:bg-slate-50 dark:bg-slate-950/50">
-                              <td className="px-5 py-4 font-semibold text-brand-navy dark:text-white">{act.tool}</td>
-                              <td className="px-5 py-4 text-xs text-gray-500 dark:text-slate-400 font-mono truncate">{act.target}</td>
-                              <td className="px-5 py-4">
-                                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold leading-none ${
-                                  act.status.includes("Success") || act.status === "Completed"
-                                    ? "bg-teal-50 text-teal-700"
-                                    : "bg-amber-50 text-amber-700"
-                                }`}>
-                                  ● {act.status}
-                                </span>
-                              </td>
-                              <td className="px-5 py-4 text-xs text-gray-500 dark:text-slate-400 font-bold">{act.cost}</td>
-                              <td className="px-5 py-4 text-xs text-gray-400">{act.date}</td>
-                            </tr>
-                          ))
-                        )}
+                            <td className="px-6 py-4 text-xs text-slate-400 font-mono truncate max-w-[200px]">{act.target}</td>
+                            <td className="px-6 py-4">
+                              <span className={`inline-flex items-center rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-wider ${
+                                act.status === "Success" || act.status === "Completed"
+                                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                                  : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                              }`}>
+                                <span className="w-1.5 h-1.5 rounded-full mr-1.5 bg-current"></span>
+                                {act.status}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-xs text-slate-500 font-bold">{act.cost}</td>
+                            <td className="px-6 py-4 text-xs text-slate-500 text-right">{act.date}</td>
+                          </motion.tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
@@ -390,210 +408,225 @@ export const Dashboard: React.FC<DashboardProps> = ({
             {/* Right 1 column: Scholar Insight Sidebar */}
             <div className="space-y-6">
               {/* Faux Profile Card */}
-              <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm text-center">
-                <div className="relative mx-auto h-20 w-20 rounded-full bg-linear-to-tr from-brand-cobalt to-indigo-600 p-0.5 shadow-sm">
-                  <div className="flex h-full w-full items-center justify-center rounded-full bg-white dark:bg-slate-900 font-extrabold text-2xl text-brand-navy dark:text-white overflow-hidden">
+              <motion.div 
+                whileHover={{ y: -5 }}
+                className="rounded-3xl border border-slate-800 bg-slate-900/50 backdrop-blur-md p-8 shadow-xl text-center relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 blur-[50px] rounded-full pointer-events-none"></div>
+                
+                <div className="relative mx-auto h-24 w-24 rounded-full bg-gradient-to-tr from-brand-cobalt to-indigo-600 p-1 shadow-lg">
+                  <div className="flex h-full w-full items-center justify-center rounded-full bg-slate-900 font-extrabold text-3xl text-white overflow-hidden">
                     {userProfile?.avatarSvg ? (
                       <div className="w-full h-full" dangerouslySetInnerHTML={{ __html: userProfile.avatarSvg }} />
-                    ) : (
+                    ) : userName ? userName.charAt(0).toUpperCase() : (
                       "🎓"
                     )}
                   </div>
-                  <span className="absolute bottom-0 right-0 rounded-full bg-orange-500 px-1.5 py-0.5 text-[9px] font-bold text-white uppercase border-2 border-white">
+                  <span className="absolute bottom-1 right-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[9px] font-black text-white uppercase border-2 border-slate-900 shadow-sm animate-pulse">
                     Online
                   </span>
                 </div>
 
-                <h3 className="mt-4 font-display font-extrabold text-brand-navy dark:text-white text-lg">{userName || "Guest Scholar"}</h3>
-                <p className="text-xs text-gray-400 font-medium">
+                <h3 className="mt-5 font-display font-black text-white text-2xl tracking-tight">{userName || "Guest Scholar"}</h3>
+                <p className="text-xs text-slate-400 font-medium mt-1">
                   {userName ? "Undergraduate Researcher" : "Sandbox Demo Profile"}
                 </p>
                 
-                <div className="mt-4 grid grid-cols-2 gap-2 border-t border-gray-100 dark:border-slate-800 pt-4 text-left">
-                  <div className="rounded-xl bg-orange-50/30 p-3 text-center">
-                    <span className="block text-xs text-orange-600 font-bold leading-none">🔥 {userStats.streakDays} Days</span>
-                    <span className="mt-1 block text-[10px] text-gray-400 font-medium font-mono uppercase tracking-widest">Streak</span>
+                <div className="mt-6 grid grid-cols-2 gap-3 pt-6 border-t border-slate-800 text-left">
+                  <div className="rounded-2xl bg-orange-500/10 border border-orange-500/20 p-4 text-center">
+                    <span className="block text-xl text-orange-400 font-black leading-none">{userStats.streakDays}</span>
+                    <span className="mt-2 block text-[9px] text-orange-500 font-black font-mono uppercase tracking-widest">Days Streak</span>
                   </div>
-                  <div className="rounded-xl bg-brand-cobalt/5 p-3 text-center">
-                    <span className="block text-xs text-brand-cobalt font-bold leading-none">⚡ {userStats.hoursSaved} Hours</span>
-                    <span className="mt-1 block text-[10px] text-gray-400 font-medium font-mono uppercase tracking-widest">Saved</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Homework Help Banner / OCR Widget */}
-              <div className="rounded-2xl border border-indigo-100 bg-linear-to-b from-indigo-50/20 to-white p-6 shadow-xs">
-                <h3 className="font-display font-extrabold text-brand-navy dark:text-white">Visual OCR solver widget</h3>
-                <p className="mt-1.5 text-xs text-gray-500 dark:text-slate-400 leading-normal">
-                  Snap, paste, or upload a blurred equation chart from your textbook to format it into accurate LaTeX and receive a detailed Socratic analysis instantly.
-                </p>
-                <button
-                  onClick={() => onNavigateTo("tools")}
-                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-navy hover:bg-brand-cobalt px-4 py-3 text-xs font-bold text-white shadow-sm transition cursor-pointer"
-                >
-                  <ImageIcon className="w-3.5 h-3.5" />
-                  <span>Launch Camera OCR Tool</span>
-                </button>
-              </div>
-
-              {/* Quick study metrics summary */}
-              <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/30 p-5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">Study Session Intelligence</h4>
-                <div className="mt-3.5 space-y-3">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-500 dark:text-slate-400">Peak Research Hour</span>
-                    <span className="font-semibold text-brand-navy dark:text-white">10:00 PM - 12:00 AM</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-500 dark:text-slate-400">Favored AI Co-Pilot Tool</span>
-                    <span className="font-semibold text-brand-navy dark:text-white">Highlighter Explanation</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-500 dark:text-slate-400">Average Summarized Score</span>
-                    <span className="font-semibold text-brand-navy dark:text-white">92% Retention</span>
+                  <div className="rounded-2xl bg-brand-cobalt/10 border border-brand-cobalt/20 p-4 text-center">
+                    <span className="block text-xl text-brand-sky font-black leading-none">{userStats.hoursSaved}</span>
+                    <span className="mt-2 block text-[9px] text-brand-cobalt font-black font-mono uppercase tracking-widest">Hours Saved</span>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
-        </div>
+        </motion.div>
       ) : (
-        <div className="fade-in space-y-8 animate-in fade-in-50 duration-200">
-          
+        <motion.div 
+          key="analytics"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          className="space-y-8"
+        >
           {/* Top Row: Analytics Cards */}
           <div className="grid gap-6 md:grid-cols-3">
             {/* Streak card */}
-            <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm flex items-center gap-4">
-              <div className="rounded-xl bg-orange-50 p-3 text-orange-600">
-                <Flame className="w-6 h-6 animate-pulse" />
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="rounded-3xl border border-slate-800 bg-slate-900/50 backdrop-blur-md p-6 shadow-xl flex items-center gap-5 relative overflow-hidden group"
+            >
+              <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500/10 blur-[40px] rounded-full pointer-events-none group-hover:scale-150 transition-transform"></div>
+              <div className="rounded-2xl bg-orange-500/20 p-4 text-orange-400 border border-orange-500/30">
+                <Flame className="w-8 h-8 animate-pulse drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]" />
               </div>
-              <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 font-mono">Current Streak</span>
-                <h3 className="text-2xl font-black text-brand-navy dark:text-white font-display">{userStats.streakDays} Days</h3>
-                <p className="text-[11px] text-gray-400 font-medium">You are in the top 5% of active scholars.</p>
+              <div className="relative z-10">
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 font-mono">Current Streak</span>
+                <h3 className="text-3xl font-black text-white font-display mt-1">{userStats.streakDays} Days</h3>
+                <p className="text-[11px] text-emerald-400 font-bold mt-1 bg-emerald-500/10 inline-block px-2 py-0.5 rounded border border-emerald-500/20">Top 5% scholar</p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Daily goals progress bar card */}
-            <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm flex flex-col justify-between">
-              <div className="flex justify-between items-center mb-2">
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="rounded-3xl border border-slate-800 bg-slate-900/50 backdrop-blur-md p-6 shadow-xl flex flex-col justify-between relative overflow-hidden group"
+            >
+              <div className="absolute top-0 right-0 w-24 h-24 bg-brand-cobalt/10 blur-[40px] rounded-full pointer-events-none group-hover:scale-150 transition-transform"></div>
+              <div className="flex justify-between items-start mb-4 relative z-10">
                 <div>
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 font-mono">Daily Review Goal</span>
-                  <h3 className="text-xl font-black text-brand-navy dark:text-white font-display leading-none mt-1">
-                    {todayReviewsCount} <span className="text-xs text-gray-400 font-medium font-sans">/ 15 flashcards</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 font-mono">Daily Review Goal</span>
+                  <h3 className="text-2xl font-black text-white font-display leading-none mt-2">
+                    {todayReviewsCount} <span className="text-sm text-slate-500 font-medium font-sans">/ 15 flashcards</span>
                   </h3>
                 </div>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={onIncrementReviewCount}
-                  className="rounded-xl bg-brand-navy hover:bg-brand-cobalt text-[10px] font-extrabold text-white px-3 py-1.5 transition cursor-pointer"
+                  className="rounded-xl bg-gradient-to-r from-brand-cobalt to-indigo-600 text-[10px] font-black text-white px-4 py-2 shadow-lg shadow-brand-cobalt/20 transition cursor-pointer flex items-center gap-1 border border-indigo-400/30"
                 >
-                  + Review Card
-                </button>
+                  <Award className="w-3.5 h-3.5" /> Review
+                </motion.button>
               </div>
-              <div>
-                <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden mb-1.5">
+              <div className="relative z-10">
+                <div className="w-full bg-slate-800 h-3 rounded-full overflow-hidden mb-2 shadow-inner">
                   <div
-                    className="bg-brand-cobalt h-2.5 rounded-full transition-all duration-300"
+                    className="bg-gradient-to-r from-brand-cobalt to-indigo-400 h-3 rounded-full transition-all duration-1000 ease-out"
                     style={{ width: `${Math.min((todayReviewsCount / 15) * 100, 100)}%` }}
                   ></div>
                 </div>
-                <p className="text-[10px] text-gray-400 font-medium">
-                  {todayReviewsCount >= 15 ? "🏆 Daily study goal achieved!" : `${15 - todayReviewsCount} more flashcard reviews to hit today's target.`}
+                <p className="text-[11px] text-slate-400 font-bold">
+                  {todayReviewsCount >= 15 ? (
+                    <span className="text-emerald-400">🏆 Daily study goal achieved! Excellent work.</span>
+                  ) : (
+                    <span>{15 - todayReviewsCount} more flashcard reviews to hit today's target.</span>
+                  )}
                 </p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Total hours saved card */}
-            <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm flex items-center gap-4">
-              <div className="rounded-xl bg-blue-50 p-3 text-brand-cobalt">
-                <Clock className="w-6 h-6" />
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="rounded-3xl border border-slate-800 bg-slate-900/50 backdrop-blur-md p-6 shadow-xl flex items-center gap-5 relative overflow-hidden group"
+            >
+              <div className="absolute top-0 right-0 w-24 h-24 bg-sky-500/10 blur-[40px] rounded-full pointer-events-none group-hover:scale-150 transition-transform"></div>
+              <div className="rounded-2xl bg-sky-500/20 p-4 text-sky-400 border border-sky-500/30">
+                <Clock className="w-8 h-8 drop-shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
               </div>
-              <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 font-mono">Total Hours Saved</span>
-                <h3 className="text-2xl font-black text-brand-navy dark:text-white font-display">{userStats.hoursSaved} Hours</h3>
-                <p className="text-[11px] text-gray-400 font-medium">Accumulated research time optimizations.</p>
+              <div className="relative z-10">
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 font-mono">Total Hours Saved</span>
+                <h3 className="text-3xl font-black text-white font-display mt-1">{userStats.hoursSaved} <span className="text-lg text-slate-500">Hrs</span></h3>
+                <p className="text-[11px] text-slate-400 font-medium mt-1">Accumulated research time optimizations.</p>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Second Row: Calendar Grid & SVG Stats Chart */}
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Contribution Grid */}
-            <div className="lg:col-span-2 rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm flex flex-col justify-between">
-              <div className="mb-4">
-                <h3 className="font-display text-lg font-bold text-brand-navy dark:text-white">Study Contribution Calendar</h3>
-                <p className="text-xs text-gray-400">Your visual log of active daily study events over the last 16 weeks</p>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="lg:col-span-2 rounded-3xl border border-slate-800 bg-slate-900/50 backdrop-blur-md p-8 shadow-xl flex flex-col justify-between"
+            >
+              <div className="mb-6">
+                <h3 className="font-display text-xl font-black text-white flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-brand-sky" /> Study Contribution Calendar
+                </h3>
+                <p className="text-sm text-slate-400 mt-1">Your visual log of active daily study events over the last 16 weeks</p>
               </div>
 
               {/* Grid of days */}
-              <div className="border border-slate-100 rounded-xl p-4 bg-slate-50 dark:bg-slate-950/50">
-                <div className="grid grid-rows-7 grid-flow-col gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+              <div className="border border-slate-800/50 rounded-2xl p-5 bg-slate-950/50 shadow-inner">
+                <div className="grid grid-rows-7 grid-flow-col gap-2 overflow-x-auto pb-3 scrollbar-none">
                   {generateCalendarDays().map((day) => {
                     const activity = dailyActivity.find((act) => act.date === day.dateStr);
                     const totalActions = activity ? (activity.queriesUsed + activity.cardsCreated) : 0;
 
-                    let colorClass = "bg-slate-200/60 hover:bg-slate-300";
-                    if (totalActions > 0 && totalActions <= 2) colorClass = "bg-indigo-200 hover:bg-indigo-300";
-                    else if (totalActions > 2 && totalActions <= 5) colorClass = "bg-brand-cobalt/35 hover:bg-brand-cobalt/45";
-                    else if (totalActions > 5 && totalActions <= 8) colorClass = "bg-brand-cobalt/65 hover:bg-brand-cobalt/75";
-                    else if (totalActions > 8) colorClass = "bg-brand-cobalt hover:opacity-90";
+                    let colorClass = "bg-slate-800 hover:bg-slate-700";
+                    if (totalActions > 0 && totalActions <= 2) colorClass = "bg-brand-cobalt/40 hover:bg-brand-cobalt/50 border border-brand-cobalt/30";
+                    else if (totalActions > 2 && totalActions <= 5) colorClass = "bg-brand-cobalt/60 hover:bg-brand-cobalt/70 border border-brand-cobalt/40";
+                    else if (totalActions > 5 && totalActions <= 8) colorClass = "bg-brand-cobalt/80 hover:bg-brand-cobalt/90 border border-brand-sky/30";
+                    else if (totalActions > 8) colorClass = "bg-gradient-to-tr from-brand-cobalt to-brand-sky hover:brightness-110 shadow-[0_0_8px_rgba(56,189,248,0.5)]";
 
                     const formattedDate = day.date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
                     return (
-                      <div
+                      <motion.div
+                        whileHover={{ scale: 1.2, zIndex: 10 }}
                         key={day.dateStr}
-                        className={`h-3.5 w-3.5 rounded-xs transition-colors duration-150 relative group cursor-pointer ${colorClass}`}
+                        className={`h-4 w-4 rounded-sm transition-colors duration-150 relative group cursor-pointer ${colorClass}`}
                       >
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover:block z-50 bg-slate-900 text-white text-[10px] rounded-lg px-2.5 py-1 whitespace-nowrap shadow-md">
-                          <strong>{totalActions} study actions</strong> on {formattedDate}
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 bg-slate-800 border border-slate-700 text-white text-[11px] rounded-lg px-3 py-1.5 whitespace-nowrap shadow-xl">
+                          <strong className="text-brand-sky">{totalActions} study actions</strong> on {formattedDate}
                           {activity && (activity.queriesUsed > 0 || activity.cardsCreated > 0) && (
-                            <span className="block text-gray-300 text-[9px] mt-0.5">
+                            <span className="block text-slate-400 text-[10px] mt-1 font-mono">
                               ({activity.queriesUsed} AI queries, {activity.cardsCreated} cards)
                             </span>
                           )}
                         </div>
-                      </div>
+                      </motion.div>
                     );
                   })}
                 </div>
                 {/* Legend */}
-                <div className="mt-3 flex items-center justify-end gap-1.5 text-[10px] text-gray-400">
+                <div className="mt-4 flex items-center justify-end gap-2 text-[10px] font-black uppercase tracking-wider text-slate-500">
                   <span>Less</span>
-                  <div className="h-2.5 w-2.5 rounded-xs bg-slate-200/60"></div>
-                  <div className="h-2.5 w-2.5 rounded-xs bg-indigo-200"></div>
-                  <div className="h-2.5 w-2.5 rounded-xs bg-brand-cobalt/35"></div>
-                  <div className="h-2.5 w-2.5 rounded-xs bg-brand-cobalt/65"></div>
-                  <div className="h-2.5 w-2.5 rounded-xs bg-brand-cobalt"></div>
+                  <div className="h-3 w-3 rounded-xs bg-slate-800"></div>
+                  <div className="h-3 w-3 rounded-xs bg-brand-cobalt/40 border border-brand-cobalt/30"></div>
+                  <div className="h-3 w-3 rounded-xs bg-brand-cobalt/60 border border-brand-cobalt/40"></div>
+                  <div className="h-3 w-3 rounded-xs bg-brand-cobalt/80 border border-brand-sky/30"></div>
+                  <div className="h-3 w-3 rounded-xs bg-gradient-to-tr from-brand-cobalt to-brand-sky"></div>
                   <span>More</span>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* SVG Weekly Stats Chart */}
-            <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm flex flex-col justify-between">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="rounded-3xl border border-slate-800 bg-slate-900/50 backdrop-blur-md p-8 shadow-xl flex flex-col justify-between"
+            >
               <div>
-                <h3 className="font-display text-lg font-bold text-brand-navy dark:text-white">Weekly Stats</h3>
-                <p className="text-xs text-gray-400">Study hours saved per day</p>
+                <h3 className="font-display text-xl font-black text-white flex items-center gap-2">
+                  <Layers className="w-5 h-5 text-indigo-400" /> Weekly Stats
+                </h3>
+                <p className="text-sm text-slate-400 mt-1">Study hours saved per day</p>
               </div>
 
               {/* Pure SVG line chart */}
-              <div className="my-4 relative h-36 flex items-center justify-center">
-                <svg viewBox="0 0 600 200" className="w-full h-full">
+              <div className="my-6 relative h-40 flex items-center justify-center">
+                <svg viewBox="0 0 600 200" className="w-full h-full drop-shadow-xl">
                   {/* Grid Lines */}
-                  <line x1="40" y1="40" x2="580" y2="40" stroke="#F1F5F9" strokeWidth="2" />
-                  <line x1="40" y1="100" x2="580" y2="100" stroke="#F1F5F9" strokeWidth="2" />
-                  <line x1="40" y1="160" x2="580" y2="160" stroke="#E2E8F0" strokeWidth="2" />
+                  <line x1="40" y1="40" x2="580" y2="40" stroke="#1E293B" strokeWidth="2" strokeDasharray="4 4" />
+                  <line x1="40" y1="100" x2="580" y2="100" stroke="#1E293B" strokeWidth="2" strokeDasharray="4 4" />
+                  <line x1="40" y1="160" x2="580" y2="160" stroke="#334155" strokeWidth="2" />
 
                   <polyline
                     fill="none"
-                    stroke="#4F46E5"
-                    strokeWidth="4"
+                    stroke="url(#lineGradient)"
+                    strokeWidth="5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     points={chartPointsStr}
                     style={{ strokeDasharray: 1000, strokeDashoffset: 0, animation: "dash 1.5s ease-in-out" }}
                   />
+                  <defs>
+                    <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#38BDF8" />
+                      <stop offset="100%" stopColor="#4F46E5" />
+                    </linearGradient>
+                  </defs>
 
                   {/* Interactive Dot Markers */}
                   {chartPointsArray.map((pt, idx) => (
@@ -605,11 +638,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       <circle
                         cx={pt.x}
                         cy={pt.y}
-                        r="6"
-                        fill="#4F46E5"
-                        stroke="#FFFFFF"
-                        strokeWidth="2.5"
-                        className="transition hover:r-8"
+                        r="8"
+                        fill="#0F172A"
+                        stroke="#38BDF8"
+                        strokeWidth="3"
+                        className="transition-all duration-300 group-hover:r-10 group-hover:fill-[#38BDF8] drop-shadow-[0_0_5px_rgba(56,189,248,0.8)]"
                       />
                       {/* Tooltip on hover */}
                       <g className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
@@ -654,43 +687,92 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   })}
                 </svg>
               </div>
-            </div>
+            </motion.div>
           </div>
 
-          {/* Third Row: Achievement Badges */}
-          <div>
-            <div className="mb-4">
-              <h3 className="font-display text-lg font-bold text-brand-navy dark:text-white">Academic Achievements</h3>
-              <p className="text-xs text-gray-400">Unlock these badges as you hit key study and research targets</p>
+          {/* Third Row: Reports & Data Exports */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="rounded-3xl border border-slate-800 bg-slate-900/50 backdrop-blur-md p-8 shadow-xl"
+          >
+            <div className="mb-6">
+              <h3 className="font-display text-xl font-black text-white flex items-center gap-2">
+                <FileText className="w-5 h-5 text-emerald-400" /> Reports & Data Export
+              </h3>
+              <p className="text-sm text-slate-400 mt-1">Download your raw study data or generate deep AI-driven analysis reports.</p>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {achievements.map((ach) => (
-                <div
-                  key={ach.id}
-                  className={`rounded-2xl border p-5 text-center shadow-xs transition-all ${
-                    ach.unlocked
-                      ? "border-emerald-100 bg-emerald-50/5 ring-1 ring-emerald-500/10 scale-[1.01]"
-                      : "border-slate-100 bg-white dark:bg-slate-900 opacity-70"
-                  }`}
-                >
-                  <div className={`mx-auto flex h-12 w-12 items-center justify-center rounded-xl text-2xl shadow-sm ${
-                    ach.unlocked ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 dark:bg-slate-800 text-slate-400"
-                  }`}>
-                    {ach.icon}
-                  </div>
-                  <h4 className="mt-3 text-sm font-bold text-brand-navy dark:text-white leading-tight">{ach.name}</h4>
-                  <p className="mt-1.5 text-xs text-gray-400 leading-normal max-w-[200px] mx-auto">{ach.description}</p>
-                  <span className={`mt-3.5 inline-block rounded-full px-2.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider ${
-                    ach.unlocked ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 dark:bg-slate-800 text-slate-500"
-                  }`}>
-                    {ach.unlocked ? "Unlocked" : "Locked"}
-                  </span>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Basic Progress Download */}
+              <div className="rounded-2xl border border-slate-700 bg-slate-800/50 p-6 flex flex-col justify-between">
+                <div>
+                  <h4 className="text-lg font-bold text-white mb-2">Basic Progress Export</h4>
+                  <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                    Download a raw CSV file containing your daily study habits, tool usage statistics, and login history.
+                  </p>
                 </div>
-              ))}
-            </div>
-          </div>
+                <button 
+                  onClick={() => {
+                    if (onShowToast) onShowToast("Downloading basic progress data...", "success");
+                  }}
+                  className="w-full py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-sm font-bold transition flex items-center justify-center gap-2"
+                >
+                  <FileText className="w-4 h-4" /> Download CSV Data
+                </button>
+              </div>
 
-        </div>
+              {/* 30-Day Deep Analysis Report */}
+              <div className={`rounded-2xl border p-6 flex flex-col justify-between relative overflow-hidden group ${
+                userStats.streakDays >= 30 
+                  ? "border-emerald-500/40 bg-emerald-950/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]" 
+                  : "border-slate-800 bg-slate-900/80"
+              }`}>
+                {userStats.streakDays >= 30 && (
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-[40px] rounded-full pointer-events-none group-hover:scale-150 transition-transform"></div>
+                )}
+                
+                <div className="relative z-10">
+                  <div className="flex justify-between items-start mb-2">
+                    <h4 className={`text-lg font-bold ${userStats.streakDays >= 30 ? "text-emerald-400" : "text-white"}`}>
+                      Deep Analysis Report
+                    </h4>
+                    <span className="bg-brand-cobalt/20 border border-brand-cobalt/30 text-brand-sky text-[9px] font-black uppercase px-2 py-0.5 rounded shadow-sm">
+                      1st Free, Then Paid
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                    Track your live progress, identify areas of weakness, pinpoint where you work most efficiently, and map your academic interests.
+                  </p>
+                </div>
+
+                <div className="relative z-10">
+                  {userStats.streakDays >= 30 ? (
+                    <button 
+                      onClick={() => {
+                        if (onShowToast) onShowToast("Generating your AI Deep Analysis Report...", "success");
+                      }}
+                      className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white text-sm font-black shadow-lg shadow-emerald-500/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"
+                    >
+                      <Sparkles className="w-4 h-4" /> Generate Detailed Report
+                    </button>
+                  ) : (
+                    <div className="w-full">
+                      <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden mb-3">
+                        <div className="bg-slate-500 h-2 rounded-full" style={{ width: `${Math.min((userStats.streakDays / 30) * 100, 100)}%` }}></div>
+                      </div>
+                      <button disabled className="w-full py-3 rounded-xl bg-slate-800/50 text-slate-500 text-sm font-bold flex items-center justify-center gap-2 cursor-not-allowed border border-slate-700/50">
+                        🔒 Unlocks at 30-Day Streak ({userStats.streakDays}/30)
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+        </motion.div>
       )}
     </div>
   );

@@ -8,7 +8,8 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   sendPasswordResetEmail,
-  signInWithPopup
+  signInWithPopup,
+  updateProfile
 } from "firebase/auth";
 import { auth, googleProvider, db } from "../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -23,7 +24,7 @@ interface AuthContextType {
   currentUser: User | null;
   userProfile: UserProfile | null;
   loading: boolean;
-  signUp: (email: string, password: string) => Promise<any>;
+  signUp: (email: string, password: string, name?: string) => Promise<any>;
   signIn: (email: string, password: string) => Promise<any>;
   signInWithGoogle: () => Promise<any>;
   signOutUser: () => Promise<void>;
@@ -43,8 +44,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const signUp = (email: string, password: string) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+  const signUp = async (email: string, password: string, name?: string) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    if (name && userCredential.user) {
+      await updateProfile(userCredential.user, { displayName: name });
+    }
+    return userCredential;
   };
 
   const signIn = (email: string, password: string) => {
@@ -55,7 +60,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return signInWithPopup(auth, googleProvider);
   };
 
-  const signOutUser = () => {
+  const signOutUser = async () => {
+    // Wipe local storage to prevent data bleeding between accounts
+    for (const key in localStorage) {
+      if (key.startsWith("bluebottlecap_")) {
+        localStorage.removeItem(key);
+      }
+    }
     return signOut(auth);
   };
 

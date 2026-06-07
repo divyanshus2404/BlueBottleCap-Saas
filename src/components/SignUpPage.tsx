@@ -15,6 +15,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
   const { signUp, signIn, signInWithGoogle, resetPassword } = useAuth();
   const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signup");
   
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -51,7 +52,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
           const data = await res.json();
           if (!res.ok) throw new Error(data.error || "Invalid OTP");
           
-          await signUp(email, password);
+          await signUp(email, password, name);
           setCurrentView("create-profile");
         }
       } else if (mode === "signin") {
@@ -215,6 +216,29 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
             </AnimatePresence>
 
             <form onSubmit={handleSubmit} className="space-y-5">
+              {mode === "signup" && !isVerifyingOTP && (
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-4 flex items-center text-slate-500">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                      </svg>
+                    </span>
+                    <input
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Jane Doe"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-800/50 py-3.5 pl-12 pr-4 text-sm font-medium text-white placeholder-slate-500 focus:border-brand-cobalt focus:bg-slate-800 focus:ring-1 focus:ring-brand-cobalt focus:outline-none transition-all"
+                    />
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                   Email Address

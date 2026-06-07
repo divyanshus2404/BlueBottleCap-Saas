@@ -435,36 +435,12 @@ export default function App() {
           setToolCreditsLeft(cloudToolCredits);
           localStorage.setItem("bluebottlecap_tool_credits", String(cloudToolCredits));
         } else {
-          const localAct = localStorage.getItem("bluebottlecap_daily_activity");
-          let initialActivity = generateDefaultActivity();
-          if (localAct) {
-            try {
-              initialActivity = JSON.parse(localAct);
-            } catch (e) {}
-          }
-          const localRev = localStorage.getItem("bluebottlecap_today_reviews");
-          let initialReviews = 0;
-          if (localRev) {
-            const count = parseInt(localRev, 10);
-            if (!isNaN(count)) initialReviews = count;
-          }
-          const localPapers = localStorage.getItem("bluebottlecap_opened_papers");
-          let initialPapers = [];
-          if (localPapers) {
-            try {
-              initialPapers = JSON.parse(localPapers);
-            } catch (e) {}
-          }
-          const localToolCredits = localStorage.getItem("bluebottlecap_tool_credits");
-          let initialToolCredits = 5;
-          if (localToolCredits) {
-            const count = parseInt(localToolCredits, 10);
-            if (!isNaN(count)) initialToolCredits = count;
-          }
-          const localStreak = localStorage.getItem("bluebottlecap_streak_days");
-          const initialStreak = localStreak ? parseInt(localStreak, 10) : 0;
-          const localHours = localStorage.getItem("bluebottlecap_hours_saved");
-          const initialHours = localHours ? parseFloat(localHours) : 0.0;
+          const initialActivity = generateDefaultActivity();
+          const initialReviews = 0;
+          const initialPapers: string[] = [];
+          const initialToolCredits = 5;
+          const initialStreak = 0;
+          const initialHours = 0.0;
 
           await setDoc(userDocRef, {
             email: currentUser.email,
