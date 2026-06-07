@@ -159,67 +159,88 @@ const QuestionCard: React.FC<{
   qKey: string;
   isRevealed: boolean;
   onReveal: () => void;
-}> = ({ q, qKey, isRevealed, onReveal }) => (
-  <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
-    <div className="px-4 pt-4 pb-3 space-y-3">
-      <div className="flex items-start gap-2.5">
-        <span
-          className={`text-[9px] font-black px-2 py-0.5 rounded-full shrink-0 mt-0.5 border ${
-            questionTypeBadge[q.type] || "bg-slate-100 dark:bg-slate-800 text-slate-500"
-          }`}
-        >
-          {q.type}
-        </span>
-        <p className="text-[13px] font-semibold text-brand-navy dark:text-white leading-snug">{q.text}</p>
-      </div>
+}> = ({ q, qKey, isRevealed, onReveal }) => {
+  const [selectedOpt, setSelectedOpt] = useState<string | null>(null);
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-        {q.options.map((opt, oi) => {
-          const optLetter = opt.split(".")[0]?.trim();
-          const isCorrect = isRevealed && optLetter === q.answer;
-          return (
-            <div
-              key={oi}
-              className={`text-xs px-3 py-2 rounded-xl border font-medium transition ${
-                isCorrect
-                  ? "bg-green-100 border-green-300 text-green-800 font-bold"
-                  : "bg-slate-50 dark:bg-slate-950 border-slate-100 text-slate-700"
-              }`}
-            >
-              {opt}
-            </div>
-          );
-        })}
-      </div>
-
-      {isRevealed && (
-        <div className="rounded-xl bg-slate-900 px-4 py-3">
-          <p className="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1.5">
-            Solution
-          </p>
-          <p className="text-xs text-green-400 leading-relaxed">{q.solution}</p>
+  return (
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+      <div className="px-4 pt-4 pb-3 space-y-3">
+        <div className="flex items-start gap-2.5">
+          <span
+            className={`text-[9px] font-black px-2 py-0.5 rounded-full shrink-0 mt-0.5 border ${
+              questionTypeBadge[q.type] || "bg-slate-100 dark:bg-slate-800 text-slate-500"
+            }`}
+          >
+            {q.type}
+          </span>
+          <p className="text-[13px] font-semibold text-brand-navy dark:text-white leading-snug">{q.text}</p>
         </div>
-      )}
-    </div>
 
-    <div className="border-t border-slate-100 px-4 py-2.5">
-      <button
-        onClick={onReveal}
-        className="flex items-center gap-1.5 text-[11px] font-bold text-brand-cobalt hover:text-brand-navy dark:text-white transition cursor-pointer"
-      >
-        {isRevealed ? (
-          <>
-            <EyeOff className="w-3.5 h-3.5" /> Hide answer
-          </>
-        ) : (
-          <>
-            <Eye className="w-3.5 h-3.5" /> Reveal answer & solution
-          </>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {q.options.map((opt, oi) => {
+            const optLetter = opt.split(".")[0]?.trim();
+            const isCorrect = isRevealed && optLetter === q.answer;
+            const isSelected = selectedOpt === optLetter;
+            const isWrongSelected = isRevealed && isSelected && !isCorrect;
+
+            return (
+              <button
+                key={oi}
+                onClick={() => {
+                  if (!isRevealed) setSelectedOpt(optLetter);
+                }}
+                disabled={isRevealed}
+                className={`text-xs px-3 py-2.5 rounded-xl border font-medium transition text-left cursor-pointer ${
+                  isCorrect
+                    ? "bg-green-100 border-green-300 text-green-800 font-bold"
+                    : isWrongSelected
+                    ? "bg-red-100 border-red-300 text-red-800 font-bold"
+                    : isSelected
+                    ? "bg-brand-navy border-brand-navy text-white shadow-md ring-2 ring-brand-cobalt/20 scale-[1.02]"
+                    : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900"
+                }`}
+              >
+                {opt}
+              </button>
+            );
+          })}
+        </div>
+
+        {isRevealed && (
+          <div className="rounded-xl bg-slate-900 px-4 py-3 animate-fade-in mt-3">
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+              <Lightbulb className="w-3.5 h-3.5 text-yellow-400" />
+              Solution
+            </p>
+            <p className="text-xs text-green-400 leading-relaxed">{q.solution}</p>
+          </div>
         )}
-      </button>
+      </div>
+
+      <div className="border-t border-slate-100 dark:border-slate-800 px-4 py-3 bg-slate-50 dark:bg-slate-950">
+        <button
+          onClick={() => {
+            if (isRevealed && selectedOpt) {
+              setSelectedOpt(null);
+            }
+            onReveal();
+          }}
+          className="flex items-center gap-1.5 text-[11px] font-bold text-brand-cobalt hover:text-brand-navy dark:text-white transition cursor-pointer"
+        >
+          {isRevealed ? (
+            <>
+              <EyeOff className="w-3.5 h-3.5" /> Hide answer & reset
+            </>
+          ) : (
+            <>
+              <Eye className="w-3.5 h-3.5" /> Reveal answer & solution
+            </>
+          )}
+        </button>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
   onNavigate,
