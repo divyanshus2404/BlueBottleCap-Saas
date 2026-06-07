@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { ActiveView, UsageStats, UserStats, DailyActivity, StudyAchievement } from "../types";
 import { Sparkles, ArrowRight, Zap, FileText, ImageIcon, HardDrive, Cpu, History, AlertTriangle, BookOpen, Layers, Award, Calendar, Trophy, CheckCircle, Clock, Flame } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { motion } from "framer-motion";
 
 interface DashboardProps {
   onNavigateTo: (view: ActiveView) => void;
@@ -585,18 +586,27 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   <line x1="40" y1="160" x2="580" y2="160" stroke="#E2E8F0" strokeWidth="2" />
 
                   {/* Polyline Path */}
-                  <polyline
+                  <motion.polyline
                     fill="none"
                     stroke="#4F46E5"
                     strokeWidth="4"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     points={chartPointsStr}
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
                   />
 
                   {/* Interactive Dot Markers */}
                   {chartPointsArray.map((pt, idx) => (
-                    <g key={idx} className="group cursor-pointer">
+                    <motion.g 
+                      key={idx} 
+                      className="group cursor-pointer"
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 1 + idx * 0.1, type: "spring" }}
+                    >
                       <circle
                         cx={pt.x}
                         cy={pt.y}
@@ -627,7 +637,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                           {pt.val}h
                         </text>
                       </g>
-                    </g>
+                    </motion.g>
                   ))}
 
                   {/* X Axis Labels */}

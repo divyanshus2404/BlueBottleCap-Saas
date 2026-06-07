@@ -1,6 +1,7 @@
 import React from "react";
 import { Sparkles, BookOpen } from "lucide-react";
 import { ActiveView } from "../types";
+import { motion } from "framer-motion";
 
 interface LandingPageProps {
   onNavigate: (view: ActiveView) => void;
@@ -11,7 +12,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
     <div className="fade-in dark:bg-slate-950 min-h-screen transition-colors duration-300">
       {/* HERO SECTION */}
       <section className="relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 text-center"
+        >
           <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-cobalt/10 dark:bg-brand-cobalt/20 px-4 py-1.5 text-xs font-semibold text-brand-cobalt dark:text-blue-400">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Crack JEE on your first attempt</span>
@@ -74,22 +80,34 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* EMOTIONAL PAIN POINT SECTION */}
       <section className="py-20 bg-slate-50 dark:bg-slate-900/50 border-y border-gray-100 dark:border-slate-800 text-center">
-        <div className="mx-auto max-w-3xl px-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7 }}
+          className="mx-auto max-w-3xl px-4"
+        >
           <h2 className="text-3xl font-black font-display text-brand-navy dark:text-white mb-6">Stop searching for the "perfect" notes.</h2>
           <p className="text-lg text-gray-600 dark:text-slate-400 leading-relaxed">
             You spend more time looking for good study material and downloading scattered PDFs than actually studying. Stop wasting your energy. We compiled the absolute best chapter-wise notes, formulas, and mock tests so you can just sit down and study.
           </p>
-        </div>
+        </motion.div>
       </section>
 
       {/* HOW IT WORKS */}
       <section className="py-20 bg-white dark:bg-slate-950">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7 }}
+          className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center"
+        >
           <h2 className="text-3.5xl font-black font-display text-brand-navy dark:text-white mb-16">Everything you need to clear the cutoff.</h2>
           
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -121,12 +139,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             </button>
             <p className="text-xs text-gray-400 dark:text-slate-500 font-medium mt-3">Free preview available · No signup needed</p>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* COACHING COMPARISON */}
       <section className="py-24 bg-white dark:bg-slate-950 border-b border-gray-100 dark:border-slate-800">
-        <div className="mx-auto max-w-5xl px-4 text-center">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="mx-auto max-w-5xl px-4 text-center"
+        >
           <h2 className="text-3.5xl font-black font-display text-brand-navy dark:text-white mb-16">Traditional Coaching vs <br/>BlueBottleCap</h2>
           
           <div className="overflow-hidden border border-gray-200 dark:border-slate-800 rounded-3xl shadow-sm text-left text-sm md:text-base">
@@ -160,12 +184,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <div className="col-span-1 font-medium text-brand-navy dark:text-white">Direct forum advice from recent graduates.</div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* TESTIMONIALS / TRUST */}
       <section className="py-20 bg-slate-50 dark:bg-slate-900/50 border-b border-gray-100 dark:border-slate-800">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7 }}
+          className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center"
+        >
           <h2 className="text-3xl font-black font-display text-brand-navy dark:text-white mb-4">Built for serious aspirants.</h2>
           <p className="text-gray-500 dark:text-slate-400 mb-12 font-medium">Trusted by students across India aiming for IITs and NITs.</p>
           
@@ -184,12 +214,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <div className="text-sm text-gray-500 dark:text-slate-500">Dropper</div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* CTA SECTION */}
       <section className="py-24 text-center relative overflow-hidden bg-brand-navy dark:bg-slate-900 text-white">
-        <div className="mx-auto max-w-4xl px-4 relative z-10 space-y-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="mx-auto max-w-4xl px-4 relative z-10 space-y-8"
+        >
           <h2 className="font-display text-4xl sm:text-5xl font-black tracking-tight leading-tight">
             Stop procrastinating.
           </h2>
@@ -204,7 +240,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               Start Studying Smarter
             </button>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* FOOTER */}

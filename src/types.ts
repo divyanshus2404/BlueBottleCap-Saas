@@ -33,6 +33,10 @@ export interface Flashcard {
   question: string;
   answer: string;
   category: string;
+  topic?: string;
+  nextReview?: string; // ISO date string
+  interval?: number; // days until next review
+  easeFactor?: number; // difficulty multiplier
 }
 
 export interface ToolItem {

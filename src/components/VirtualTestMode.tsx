@@ -32,6 +32,7 @@ import {
 import { db } from "../firebase";
 import { collection, addDoc, serverTimestamp, query, where, getDocs } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
+import { motion } from "framer-motion";
 
 interface VirtualTestModeProps {
   userStats: UserStats;
@@ -328,7 +329,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
       <div className="flex flex-col lg:flex-row gap-8 bg-slate-50 dark:bg-slate-950/50 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
         
         {/* LEFT SIDEBAR NAVIGATION PANEL */}
-        <aside className="w-full lg:w-64 bg-white dark:bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 p-6 flex flex-col justify-between shrink-0">
+        <aside className="w-full lg:w-64 bg-white dark:bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 p-6 flex flex-col justify-between shrink-0 print:hidden">
           <div className="space-y-6">
 
             {/* ← Back to Home button */}
@@ -422,17 +423,24 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
               <div className="flex justify-between items-center flex-wrap gap-4 border-b border-slate-150 pb-4">
                 <button
                   onClick={() => handleExitTest()}
-                  className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-brand-navy dark:text-white cursor-pointer select-none"
+                  className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-brand-navy dark:text-white cursor-pointer select-none print:hidden"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <span>Exit Assessment</span>
                 </button>
 
-                <h3 className="text-sm font-black font-display text-brand-navy dark:text-white max-w-xs truncate">
+                <h3 className="text-sm font-black font-display text-brand-navy dark:text-white max-w-xs truncate print:text-2xl print:max-w-full print:whitespace-normal">
                   {activeTest.name}
                 </h3>
 
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2.5 print:hidden">
+                  <button
+                    onClick={() => window.print()}
+                    className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-800 px-3 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900 transition"
+                  >
+                    <FileText className="w-4 h-4" />
+                    <span className="hidden sm:inline">Export PDF</span>
+                  </button>
                   <div className="flex items-center gap-1.5 rounded-xl bg-orange-50 border border-orange-200 px-3 py-2 text-xs font-bold text-orange-700 shadow-3xs font-mono">
                     <Timer className="w-4 h-4 text-orange-500 animate-pulse" />
                     <span>
@@ -561,8 +569,8 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                         ))}
                       </div>
 
-                      {/* OMR Selector Row */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-150">
+                        {/* OMR Selector Row */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-150 print:hidden">
                         <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest font-mono">Select Answer:</span>
                         <div className="flex gap-4">
                           {["A", "B", "C", "D"].map((optLetter) => {
@@ -601,18 +609,18 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
 
                       {/* Solution accordion on submit review */}
                       {testSubmitted && (
-                        <div className="pt-2">
-                          <details className="group">
-                            <summary className="text-[10px] font-bold text-brand-cobalt hover:underline cursor-pointer list-none flex items-center gap-1 select-none">
+                        <div className="pt-2 print:block">
+                          <details className="group print:open">
+                            <summary className="text-[10px] font-bold text-brand-cobalt hover:underline cursor-pointer list-none flex items-center gap-1 select-none print:hidden">
                               <span>View derivation & tricks</span>
                               <ChevronRight className="w-3.5 h-3.5 group-open:rotate-90 transition-transform" />
                             </summary>
-                            <div className="mt-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-150 p-4 space-y-3 font-mono text-[10.5px] leading-relaxed text-slate-700 fade-in">
-                              <div className="flex items-center gap-1.5 font-bold text-emerald-800 text-[10px] leading-none mb-1 font-sans font-bold">
+                            <div className="mt-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-150 p-4 space-y-3 font-mono text-[10.5px] leading-relaxed text-slate-700 fade-in print:bg-white print:border-none print:p-0">
+                              <div className="flex items-center gap-1.5 font-bold text-emerald-800 text-[10px] leading-none mb-1 font-sans">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                                 Correct Option: {q.answer}
                               </div>
-                              <p className="whitespace-pre-line border-t border-slate-200 dark:border-slate-800/50 pt-2">{q.solution}</p>
+                              <p className="whitespace-pre-line border-t border-slate-200 dark:border-slate-800/50 pt-2 print:border-t-0">{q.solution}</p>
                               <div className="rounded-xl bg-rose-50 border border-rose-100 p-4 flex gap-3 text-rose-800 leading-normal font-sans">
                                 <AlertTriangle className="w-4 h-4 shrink-0 text-rose-500 mt-0.5" />
                                 <div>
@@ -674,10 +682,28 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                       <div className="relative flex items-center justify-center">
                         <svg className="w-32 h-32" viewBox="0 0 100 100">
                           <circle className="text-slate-100" strokeWidth="9" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
-                          <circle className="text-teal-400 transition-all duration-1000" strokeWidth="9" strokeDasharray={251.2} strokeDashoffset={251.2 * (1 - 0.78)} strokeLinecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" style={{ transform: "rotate(-90deg)", transformOrigin: "50% 50%" }} />
+                          <motion.circle 
+                            className="text-teal-400" 
+                            strokeWidth="9" 
+                            strokeDasharray={251.2} 
+                            strokeLinecap="round" 
+                            stroke="currentColor" 
+                            fill="transparent" 
+                            r="40" cx="50" cy="50" 
+                            style={{ transform: "rotate(-90deg)", transformOrigin: "50% 50%" }}
+                            initial={{ strokeDashoffset: 251.2 }}
+                            animate={{ strokeDashoffset: 251.2 * (1 - 0.78) }}
+                            transition={{ duration: 1.5, ease: "easeOut" }}
+                          />
                         </svg>
                         <div className="absolute text-3xl font-black text-slate-800 dark:text-slate-200 font-display">
-                          78<span className="text-sm font-bold text-slate-400">%</span>
+                          <motion.span
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.5, duration: 1 }}
+                          >
+                            78
+                          </motion.span><span className="text-sm font-bold text-slate-400">%</span>
                         </div>
                       </div>
 
@@ -700,25 +726,40 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                       <div className="grid grid-cols-3 gap-6 items-end h-32 pt-2 pb-1 border-b border-slate-100">
                         {/* Physics */}
                         <div className="flex flex-col items-center gap-1.5 h-full justify-end">
-                          <div className="w-8 sm:w-12 bg-indigo-100 rounded-t-lg transition-all duration-1000 relative group overflow-hidden" style={{ height: "82%" }}>
+                          <motion.div 
+                            className="w-8 sm:w-12 bg-indigo-100 rounded-t-lg relative group overflow-hidden" 
+                            initial={{ height: "0%" }}
+                            animate={{ height: "82%" }}
+                            transition={{ duration: 1, ease: "easeOut" }}
+                          >
                             <div className="absolute inset-x-0 bottom-0 bg-indigo-500 h-1"></div>
-                          </div>
+                          </motion.div>
                           <span className="text-[9px] font-bold text-slate-400 uppercase font-mono">PHY</span>
                         </div>
 
                         {/* Chemistry */}
                         <div className="flex flex-col items-center gap-1.5 h-full justify-end">
-                          <div className="w-8 sm:w-12 bg-teal-100 rounded-t-lg transition-all duration-1000 relative group overflow-hidden" style={{ height: "88%" }}>
+                          <motion.div 
+                            className="w-8 sm:w-12 bg-teal-100 rounded-t-lg relative group overflow-hidden" 
+                            initial={{ height: "0%" }}
+                            animate={{ height: "88%" }}
+                            transition={{ duration: 1, delay: 0.1, ease: "easeOut" }}
+                          >
                             <div className="absolute inset-x-0 bottom-0 bg-teal-500 h-1"></div>
-                          </div>
+                          </motion.div>
                           <span className="text-[9px] font-bold text-slate-400 uppercase font-mono">CHEM</span>
                         </div>
 
                         {/* Mathematics */}
                         <div className="flex flex-col items-center gap-1.5 h-full justify-end">
-                          <div className="w-8 sm:w-12 bg-amber-100 rounded-t-lg transition-all duration-1000 relative group overflow-hidden" style={{ height: "65%" }}>
+                          <motion.div 
+                            className="w-8 sm:w-12 bg-amber-100 rounded-t-lg relative group overflow-hidden" 
+                            initial={{ height: "0%" }}
+                            animate={{ height: "65%" }}
+                            transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+                          >
                             <div className="absolute inset-x-0 bottom-0 bg-amber-500 h-1"></div>
-                          </div>
+                          </motion.div>
                           <span className="text-[9px] font-bold text-slate-400 uppercase font-mono">MATH</span>
                         </div>
                       </div>

@@ -661,6 +661,18 @@ export default function App() {
   };
 
   // Handlers
+  const handleUpdateFlashcard = async (id: string, updates: Partial<Flashcard>) => {
+    setFlashcards(prev => prev.map(fc => fc.id === id ? { ...fc, ...updates } : fc));
+    if (currentUser) {
+      try {
+        const docRef = doc(db, "users", currentUser.uid, "flashcards", id);
+        await updateDoc(docRef, updates);
+      } catch (err) {
+        console.error("Failed to update flashcard in Firestore:", err);
+      }
+    }
+  };
+
   const handleAddFlashcard = async (newFc: Flashcard) => {
     recordActivity("card");
     showToast("🧠 Flashcard saved to your study bank!", "success");
@@ -970,7 +982,7 @@ export default function App() {
 
       {currentView === "flashcards" && (
         <div className="fade-in min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-950">
-          <FlashcardsPage />
+          <FlashcardsPage flashcards={flashcards} onUpdateFlashcard={handleUpdateFlashcard} />
         </div>
       )}
 
