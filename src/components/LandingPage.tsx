@@ -9,6 +9,9 @@ import { EffectComposer, Bloom, ChromaticAberration, Noise } from "@react-three/
 import { BlendFunction } from "postprocessing";
 import { LiquidImage } from "./LiquidImage";
 import { MagneticWrapper } from "./MagneticWrapper";
+import { TiltCard } from "./TiltCard";
+import { VelocityMarquee } from "./VelocityMarquee";
+import { SplitTextReveal } from "./SplitTextReveal";
 
 if (typeof window !== "undefined") {
   (window as any).globalScrollProxy = { velocity: 0 };
@@ -167,7 +170,7 @@ const PostProcessingEffects = () => {
   });
 
   return (
-    <EffectComposer multisampling={0} disableNormalPass>
+    <EffectComposer multisampling={0}>
       <Bloom luminanceThreshold={0.5} mipmapBlur intensity={1.5} />
       <Noise opacity={0.03} />
       <ChromaticAberration
@@ -401,46 +404,59 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── EMOTIONAL PAIN POINT SECTION ── */}
-      <section className="py-32 bg-white/60 backdrop-blur-xl border-y border-white/50 text-center relative z-20 shadow-sm">
-        <div className="mx-auto max-w-3xl px-4">
-          <h2 className="text-4xl font-black font-display text-slate-900 mb-6">Stop searching for the "perfect" notes.</h2>
-          <p className="text-xl text-slate-600 leading-relaxed font-medium">
+      <section className="py-32 bg-white/60 backdrop-blur-xl border-y border-white/50 text-center relative z-20 shadow-sm overflow-hidden">
+        <div className="mx-auto max-w-4xl px-4">
+          <SplitTextReveal 
+            text="Stop searching for the perfect notes." 
+            className="text-4xl md:text-5xl lg:text-6xl font-black font-display text-slate-900 mb-6 leading-tight" 
+          />
+          <p className="text-xl text-slate-600 leading-relaxed font-medium mt-6 max-w-3xl mx-auto">
             You spend more time looking for good study material and downloading scattered PDFs than actually studying. Stop wasting your energy. We compiled the absolute best chapter-wise notes, formulas, and mock tests so you can just sit down and study.
           </p>
         </div>
       </section>
 
+      {/* ── INFINITE VELOCITY MARQUEE ── */}
+      <VelocityMarquee text="STUDY SMARTER • RETAIN FASTER • ACE EXAMS • " className="my-0" />
+
       {/* ── HOW IT WORKS (FEATURES) ── */}
       <section className="features-section py-40 bg-slate-50/80 backdrop-blur-2xl relative z-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-black font-display text-slate-900 mb-24">
-            Everything you need to succeed.
-          </h2>
+          <SplitTextReveal 
+            text="Everything you need to succeed." 
+            className="text-4xl md:text-5xl font-black font-display text-slate-900 mb-24" 
+          />
           
           <div className="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
-            <div className="feature-card flex flex-col items-center group">
-              <div className="w-full h-56 md:h-64 rounded-[2.5rem] overflow-hidden mb-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)] transition-shadow duration-500 relative bg-white">
-                <LiquidImage src="/images/physics.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+            <TiltCard className="h-[400px]">
+              <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
+                <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
+                  <LiquidImage src="/images/physics.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+                </div>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Premium Notes</h3>
+                <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Access exhaustive, topper-grade notes carefully organized by subject and chapter.</p>
               </div>
-              <h3 className="text-2xl font-black text-slate-900 mb-4">Premium Notes</h3>
-              <p className="text-slate-500 leading-relaxed text-base font-medium max-w-sm">Access exhaustive, topper-grade notes carefully organized by subject and chapter.</p>
-            </div>
+            </TiltCard>
             
-            <div className="feature-card flex flex-col items-center group">
-              <div className="w-full h-56 md:h-64 rounded-[2.5rem] overflow-hidden mb-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)] transition-shadow duration-500 relative bg-white">
-                <LiquidImage src="/images/chemistry.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+            <TiltCard className="h-[400px]">
+              <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
+                <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
+                  <LiquidImage src="/images/chemistry.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+                </div>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Virtual Test Mode</h3>
+                <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Practice past papers in an immersive, distraction-free environment with an active timer.</p>
               </div>
-              <h3 className="text-2xl font-black text-slate-900 mb-4">Virtual Test Mode</h3>
-              <p className="text-slate-500 leading-relaxed text-base font-medium max-w-sm">Practice past papers in an immersive, distraction-free environment with an active timer.</p>
-            </div>
+            </TiltCard>
             
-            <div className="feature-card flex flex-col items-center group">
-              <div className="w-full h-56 md:h-64 rounded-[2.5rem] overflow-hidden mb-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)] transition-shadow duration-500 relative bg-white">
-                <LiquidImage src="/images/math.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+            <TiltCard className="h-[400px]">
+              <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
+                <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
+                  <LiquidImage src="/images/math.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+                </div>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">AI Powered</h3>
+                <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Get instant solutions and flashcard generation to retain concepts longer.</p>
               </div>
-              <h3 className="text-2xl font-black text-slate-900 mb-4">AI Powered</h3>
-              <p className="text-slate-500 leading-relaxed text-base font-medium max-w-sm">Get instant solutions and flashcard generation to retain concepts longer.</p>
-            </div>
+            </TiltCard>
           </div>
 
           <div className="mt-24 feature-card">
