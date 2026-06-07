@@ -25,6 +25,7 @@ import { ToastContainer, Toast, ToastType } from "./components/ToastContainer";
 import { LandingPage } from "./components/LandingPage";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { SmoothScroll } from "./components/SmoothScroll";
+import { LiquidTransition } from "./components/LiquidTransition";
 
 let toastIdCounter = 0;
 
@@ -86,6 +87,8 @@ const loadPdfTextFromBlob = async (file: File, onProgress?: (percent: number) =>
 export default function App() {
   const { currentUser } = useAuth();
   const [currentView, setCurrentView] = useState<ActiveView>("landing");
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [pendingView, setPendingView] = useState<ActiveView | null>(null);
   const [faqOpenIdx, setFaqOpenIdx] = useState<number | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
@@ -820,9 +823,9 @@ export default function App() {
   };
 
   const navigateToView = (view: ActiveView) => {
-
-    setCurrentView(view);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (view === currentView) return;
+    setPendingView(view);
+    setIsTransitioning(true);
   };
 
   // Static FAQ items
@@ -883,6 +886,19 @@ export default function App() {
 
   return (
     <SmoothScroll>
+      <LiquidTransition
+        isAnimating={isTransitioning}
+        onMidpoint={() => {
+          if (pendingView) {
+            setCurrentView(pendingView);
+            window.scrollTo({ top: 0, behavior: "instant" });
+          }
+        }}
+        onComplete={() => {
+          setIsTransitioning(false);
+          setPendingView(null);
+        }}
+      />
       <div className="min-h-screen bg-white dark:bg-slate-900 font-sans text-brand-navy dark:text-white antialiased">
       {/* Unified top header navigation */}
       <Navigation

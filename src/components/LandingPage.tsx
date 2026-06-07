@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { LiquidImage } from "./LiquidImage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -360,17 +361,37 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           
           <div className="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
             <div className="feature-card flex flex-col items-center group">
-              <div className="w-24 h-24 rounded-[2rem] bg-brand-cobalt/10 dark:bg-brand-cobalt/20 text-brand-cobalt dark:text-blue-400 flex items-center justify-center text-4xl font-bold mb-8 transition-transform duration-500 group-hover:-translate-y-4 group-hover:scale-110 shadow-lg group-hover:shadow-brand-cobalt/20">📚</div>
+              <div className="w-full h-56 md:h-64 rounded-[2.5rem] overflow-hidden mb-8 shadow-2xl relative w-full">
+                <LiquidImage src="/images/physics.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+                <div className="absolute inset-0 bg-brand-navy/40 dark:bg-slate-900/40 z-10 transition-opacity duration-500 group-hover:opacity-20 backdrop-blur-[2px] group-hover:backdrop-blur-0"></div>
+                <div className="relative z-20 w-full h-full flex items-center justify-center text-5xl font-bold transition-transform duration-500 group-hover:-translate-y-2 text-white drop-shadow-xl">
+                  📚
+                </div>
+              </div>
               <h3 className="text-2xl font-black text-brand-navy dark:text-white mb-4">Premium Notes</h3>
               <p className="text-gray-500 dark:text-slate-400 leading-relaxed text-lg">Access exhaustive, topper-grade notes carefully organized by subject and chapter.</p>
             </div>
+            
             <div className="feature-card flex flex-col items-center group">
-              <div className="w-24 h-24 rounded-[2rem] bg-brand-cobalt/10 dark:bg-brand-cobalt/20 text-brand-cobalt dark:text-blue-400 flex items-center justify-center text-4xl font-bold mb-8 transition-transform duration-500 group-hover:-translate-y-4 group-hover:scale-110 shadow-lg group-hover:shadow-brand-cobalt/20">⏱️</div>
+              <div className="w-full h-56 md:h-64 rounded-[2.5rem] overflow-hidden mb-8 shadow-2xl relative w-full">
+                <LiquidImage src="/images/chemistry.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+                <div className="absolute inset-0 bg-brand-navy/40 dark:bg-slate-900/40 z-10 transition-opacity duration-500 group-hover:opacity-20 backdrop-blur-[2px] group-hover:backdrop-blur-0"></div>
+                <div className="relative z-20 w-full h-full flex items-center justify-center text-5xl font-bold transition-transform duration-500 group-hover:-translate-y-2 text-white drop-shadow-xl">
+                  ⏱️
+                </div>
+              </div>
               <h3 className="text-2xl font-black text-brand-navy dark:text-white mb-4">Virtual Test Mode</h3>
               <p className="text-gray-500 dark:text-slate-400 leading-relaxed text-lg">Practice past papers in an immersive, distraction-free environment with an active timer.</p>
             </div>
+            
             <div className="feature-card flex flex-col items-center group">
-              <div className="w-24 h-24 rounded-[2rem] bg-brand-cobalt/10 dark:bg-brand-cobalt/20 text-brand-cobalt dark:text-blue-400 flex items-center justify-center text-4xl font-bold mb-8 transition-transform duration-500 group-hover:-translate-y-4 group-hover:scale-110 shadow-lg group-hover:shadow-brand-cobalt/20">🤖</div>
+              <div className="w-full h-56 md:h-64 rounded-[2.5rem] overflow-hidden mb-8 shadow-2xl relative w-full">
+                <LiquidImage src="/images/math.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+                <div className="absolute inset-0 bg-brand-navy/40 dark:bg-slate-900/40 z-10 transition-opacity duration-500 group-hover:opacity-20 backdrop-blur-[2px] group-hover:backdrop-blur-0"></div>
+                <div className="relative z-20 w-full h-full flex items-center justify-center text-5xl font-bold transition-transform duration-500 group-hover:-translate-y-2 text-white drop-shadow-xl">
+                  🤖
+                </div>
+              </div>
               <h3 className="text-2xl font-black text-brand-navy dark:text-white mb-4">AI Powered</h3>
               <p className="text-gray-500 dark:text-slate-400 leading-relaxed text-lg">Get instant solutions and flashcard generation to retain concepts longer.</p>
             </div>
