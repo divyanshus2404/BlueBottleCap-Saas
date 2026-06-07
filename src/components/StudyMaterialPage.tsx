@@ -268,10 +268,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
   }, []);
 
   const [selectedSubject, setSelectedSubject] = useState<"Physics" | "Chemistry" | "Mathematics">("Physics");
-  const [selectedChapter, setSelectedChapter] = useState<string>(() => {
-    const first = chapters.find((c) => c.subject === "Physics");
-    return first?.chapter ?? "";
-  });
+  const [selectedChapter, setSelectedChapter] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedConcepts, setExpandedConcepts] = useState<Record<number, boolean>>({ 0: true });
   const [revealedAnswers, setRevealedAnswers] = useState<Record<string, boolean>>({});
@@ -356,8 +353,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                   key={subj}
                   onClick={() => {
                     setSelectedSubject(subj);
-                    const first = chapters.find((c) => c.subject === subj);
-                    if (first) handleChapterSelect(first.chapter);
+                    setSelectedChapter("");
                     setSearchQuery("");
                   }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-black transition cursor-pointer ${
@@ -710,9 +706,61 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
               )}
             </>
           ) : (
-            <div className="flex flex-col items-center justify-center h-64 text-slate-400">
-              <BookOpen className="w-10 h-10 mb-3 opacity-30" />
-              <p className="text-sm font-semibold">Select a chapter to start studying</p>
+            <div className="space-y-8 animate-fade-in pb-10">
+              <div className={`rounded-3xl bg-gradient-to-br ${subjectColor[selectedSubject]} p-8 sm:p-10 text-white shadow-lg relative overflow-hidden`}>
+                <div className="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                  {subjectIcon[selectedSubject]}
+                </div>
+                <div className="relative z-10 flex items-center gap-5">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-3xl flex items-center justify-center backdrop-blur-md shrink-0 border border-white/30 shadow-inner">
+                    {React.cloneElement(subjectIcon[selectedSubject] as React.ReactElement, { className: "w-8 h-8 sm:w-10 sm:h-10 text-white" })}
+                  </div>
+                  <div>
+                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight">{selectedSubject} Overview</h1>
+                    <p className="text-white/80 font-medium mt-1.5 sm:text-lg flex items-center gap-2">
+                      <span className="bg-white/20 px-2.5 py-0.5 rounded-full text-sm font-bold">{filteredChapters.length} Chapters</span>
+                      Master concepts, practice questions, and ace exams.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-8">
+                {[11, 12].map((cls) => {
+                  const classChaps = filteredChapters.filter(c => c.class === cls);
+                  if (classChaps.length === 0) return null;
+                  
+                  return (
+                    <div key={cls} className="space-y-4">
+                      <h2 className="flex items-center gap-3">
+                        <span className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest whitespace-nowrap">Class {cls} Chapters</span>
+                        <div className="h-px bg-slate-200 dark:bg-slate-800 w-full rounded-full"></div>
+                      </h2>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {classChaps.map(ch => (
+                          <button
+                            key={ch.chapter}
+                            onClick={() => handleChapterSelect(ch.chapter)}
+                            className="text-left bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 hover:border-brand-cobalt hover:shadow-md transition group cursor-pointer flex flex-col h-full"
+                          >
+                            <h3 className="font-bold text-brand-navy dark:text-white group-hover:text-brand-cobalt transition line-clamp-2 min-h-[3rem] leading-snug">
+                              {ch.chapter}
+                            </h3>
+                            <div className="mt-auto pt-4 flex items-center gap-3 text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wide">
+                              <span className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-950 px-2 py-1 rounded-lg">
+                                <BookOpen className="w-3.5 h-3.5 text-brand-cobalt" /> {ch.keyConcepts?.length || 0}
+                              </span>
+                              <span className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-950 px-2 py-1 rounded-lg">
+                                <FileText className="w-3.5 h-3.5 text-brand-cobalt" /> {ch.questions?.length || 0}
+                              </span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </main>
