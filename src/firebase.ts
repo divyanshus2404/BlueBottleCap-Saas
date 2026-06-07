@@ -11,39 +11,13 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Lazy singleton – prevents crashes during Next.js server-side
-// static generation where the Firebase API key isn't available.
-let _app: FirebaseApp | undefined;
-let _auth: Auth | undefined;
-let _db: Firestore | undefined;
-let _googleProvider: GoogleAuthProvider | undefined;
-
-function ensureApp(): FirebaseApp {
-  if (!_app) {
-    _app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-  }
-  return _app;
+let app: FirebaseApp | undefined;
+try {
+  app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+} catch (error) {
+  console.warn("Firebase initialization skipped (expected during SSR/build without env vars).");
 }
 
-// These getters are used everywhere. They lazily initialize on first access
-// so the module can be safely imported during SSR without crashing.
-export const auth: Auth = new Proxy({} as Auth, {
-  get(_, prop) {
-    if (!_auth) _auth = getAuth(ensureApp());
-    return (_auth as any)[prop];
-  },
-});
-
-export const googleProvider: GoogleAuthProvider = new Proxy({} as GoogleAuthProvider, {
-  get(_, prop) {
-    if (!_googleProvider) _googleProvider = new GoogleAuthProvider();
-    return (_googleProvider as any)[prop];
-  },
-});
-
-export const db: Firestore = new Proxy({} as Firestore, {
-  get(_, prop) {
-    if (!_db) _db = getFirestore(ensureApp());
-    return (_db as any)[prop];
-  },
-});
+export const auth = typeof window !== "undefined" && app ? getAuth(app) : null as unknown as Auth;
+export const googleProvider = typeof window !== "undefined" ? new GoogleAuthProvider() : null as unknown as GoogleAuthProvider;
+export const db = typeof window !== "undefined" && app ? getFirestore(app) : null as unknown as Firestore;
