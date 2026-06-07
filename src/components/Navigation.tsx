@@ -76,7 +76,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               Blue<span className="text-brand-cobalt dark:text-blue-400 bg-linear-to-r from-brand-cobalt to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">BottleCap</span>
             </span>
             <span className="block text-[10px] uppercase tracking-wider font-mono text-gray-400 dark:text-slate-500 font-medium leading-none transition-colors duration-300">
-              JEE Prep Suite
+              STUDENT AI SUITE
             </span>
           </div>
         </div>
