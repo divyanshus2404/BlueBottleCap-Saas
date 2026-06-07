@@ -72,9 +72,12 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                   <div className="text-slate-400 font-bold mb-2">Image Missing</div>
                   <div className="text-slate-400 text-sm">Please drag your photo into <br/><code className="bg-slate-200 px-1 py-0.5 rounded text-xs text-slate-600">public/images/founder.jpg</code></div>
                 </div>
-                <LiquidImage 
+                <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/20 to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100 z-20 pointer-events-none mix-blend-overlay"></div>
+                <img 
                   src="/images/founder.jpg" 
-                  className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" 
+                  alt="Divyanshu Singh - Founder" 
+                  className="w-full h-full object-cover object-top relative z-10 transition-transform duration-700 group-hover:scale-[1.03]"
+                  onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0'; }}
                 />
               </div>
             </TiltCard>
