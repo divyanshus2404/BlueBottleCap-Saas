@@ -32,7 +32,7 @@ import {
 import { db } from "../firebase";
 import { collection, addDoc, serverTimestamp, query, where, getDocs } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
-import { motion } from "framer-motion";
+
 
 interface VirtualTestModeProps {
   userStats: UserStats;
@@ -682,28 +682,22 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                       <div className="relative flex items-center justify-center">
                         <svg className="w-32 h-32" viewBox="0 0 100 100">
                           <circle className="text-slate-100" strokeWidth="9" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
-                          <motion.circle 
-                            className="text-teal-400" 
+                          <circle 
+                            className="text-teal-400 animate-[dash_1.5s_ease-out_forwards]" 
                             strokeWidth="9" 
                             strokeDasharray={251.2} 
+                            strokeDashoffset={251.2 * (1 - 0.78)}
                             strokeLinecap="round" 
                             stroke="currentColor" 
                             fill="transparent" 
                             r="40" cx="50" cy="50" 
                             style={{ transform: "rotate(-90deg)", transformOrigin: "50% 50%" }}
-                            initial={{ strokeDashoffset: 251.2 }}
-                            animate={{ strokeDashoffset: 251.2 * (1 - 0.78) }}
-                            transition={{ duration: 1.5, ease: "easeOut" }}
                           />
                         </svg>
                         <div className="absolute text-3xl font-black text-slate-800 dark:text-slate-200 font-display">
-                          <motion.span
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.5, duration: 1 }}
-                          >
+                          <span className="animate-fade-in" style={{ animationDelay: '0.5s', animationFillMode: 'both' }}>
                             78
-                          </motion.span><span className="text-sm font-bold text-slate-400">%</span>
+                          </span><span className="text-sm font-bold text-slate-400">%</span>
                         </div>
                       </div>
 
@@ -726,40 +720,31 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                       <div className="grid grid-cols-3 gap-6 items-end h-32 pt-2 pb-1 border-b border-slate-100">
                         {/* Physics */}
                         <div className="flex flex-col items-center gap-1.5 h-full justify-end">
-                          <motion.div 
-                            className="w-8 sm:w-12 bg-indigo-100 rounded-t-lg relative group overflow-hidden" 
-                            initial={{ height: "0%" }}
-                            animate={{ height: "82%" }}
-                            transition={{ duration: 1, ease: "easeOut" }}
+                          <div 
+                            className="w-8 sm:w-12 bg-indigo-100 rounded-t-lg relative group overflow-hidden transition-all duration-1000 ease-out h-[82%]" 
                           >
                             <div className="absolute inset-x-0 bottom-0 bg-indigo-500 h-1"></div>
-                          </motion.div>
+                          </div>
                           <span className="text-[9px] font-bold text-slate-400 uppercase font-mono">PHY</span>
                         </div>
 
                         {/* Chemistry */}
                         <div className="flex flex-col items-center gap-1.5 h-full justify-end">
-                          <motion.div 
-                            className="w-8 sm:w-12 bg-teal-100 rounded-t-lg relative group overflow-hidden" 
-                            initial={{ height: "0%" }}
-                            animate={{ height: "88%" }}
-                            transition={{ duration: 1, delay: 0.1, ease: "easeOut" }}
+                          <div 
+                            className="w-8 sm:w-12 bg-teal-100 rounded-t-lg relative group overflow-hidden transition-all duration-1000 ease-out delay-100 h-[64%]" 
                           >
                             <div className="absolute inset-x-0 bottom-0 bg-teal-500 h-1"></div>
-                          </motion.div>
+                          </div>
                           <span className="text-[9px] font-bold text-slate-400 uppercase font-mono">CHEM</span>
                         </div>
 
                         {/* Mathematics */}
                         <div className="flex flex-col items-center gap-1.5 h-full justify-end">
-                          <motion.div 
-                            className="w-8 sm:w-12 bg-amber-100 rounded-t-lg relative group overflow-hidden" 
-                            initial={{ height: "0%" }}
-                            animate={{ height: "65%" }}
-                            transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+                          <div 
+                            className="w-8 sm:w-12 bg-amber-100 rounded-t-lg relative group overflow-hidden transition-all duration-1000 ease-out delay-200 h-[65%]" 
                           >
                             <div className="absolute inset-x-0 bottom-0 bg-amber-500 h-1"></div>
-                          </motion.div>
+                          </div>
                           <span className="text-[9px] font-bold text-slate-400 uppercase font-mono">MATH</span>
                         </div>
                       </div>

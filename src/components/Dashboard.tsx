@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { ActiveView, UsageStats, UserStats, DailyActivity, StudyAchievement } from "../types";
 import { Sparkles, ArrowRight, Zap, FileText, ImageIcon, HardDrive, Cpu, History, AlertTriangle, BookOpen, Layers, Award, Calendar, Trophy, CheckCircle, Clock, Flame } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { motion } from "framer-motion";
+
 
 interface DashboardProps {
   onNavigateTo: (view: ActiveView) => void;
@@ -585,27 +585,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   <line x1="40" y1="100" x2="580" y2="100" stroke="#F1F5F9" strokeWidth="2" />
                   <line x1="40" y1="160" x2="580" y2="160" stroke="#E2E8F0" strokeWidth="2" />
 
-                  {/* Polyline Path */}
-                  <motion.polyline
+                  <polyline
                     fill="none"
                     stroke="#4F46E5"
                     strokeWidth="4"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     points={chartPointsStr}
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ duration: 1.5, ease: "easeInOut" }}
+                    style={{ strokeDasharray: 1000, strokeDashoffset: 0, animation: "dash 1.5s ease-in-out" }}
                   />
 
                   {/* Interactive Dot Markers */}
                   {chartPointsArray.map((pt, idx) => (
-                    <motion.g 
+                    <g 
                       key={idx} 
-                      className="group cursor-pointer"
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 1 + idx * 0.1, type: "spring" }}
+                      className="group cursor-pointer animate-fade-in"
+                      style={{ animationDelay: `${1 + idx * 0.1}s`, animationFillMode: 'both' }}
                     >
                       <circle
                         cx={pt.x}
@@ -637,7 +632,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                           {pt.val}h
                         </text>
                       </g>
-                    </motion.g>
+                    </g>
                   ))}
 
                   {/* X Axis Labels */}
