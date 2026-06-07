@@ -1,0 +1,24 @@
+<svg width="100%" height="100%" viewBox="0 0 1000 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#001233" />
+      <stop offset="100%" stop-color="#002855" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="300" rx="16" fill="url(#bg-grad)" />
+
+  <g transform="translate(140, 70) scale(1.6)">
+    <path d="M 16,16 L 50,26 L 84,16 L 84,84 L 50,74 L 16,84 Z" fill="#3B82F6" />
+    <path d="M 16,49.2 L 32,49.2 L 41.5,46 L 41.5,54 L 32,50.8 L 16,50.8 Z" fill="white" />
+    <path d="M 84,49.2 L 68,49.2 L 58.5,46 L 58.5,54 L 68,50.8 L 84,50.8 Z" fill="white" />
+    <path d="M 45,26.5 C 43.8,26.5 43.5,27.5 43.5,28.5 L 43.5,30.5 C 43.5,31.5 44.2,32 45,32 L 46.5,32 L 46.5,36 L 41.5,46 L 41.5,70 C 41.5,71.5 42.5,72.5 44,72.5 L 56,72.5 C 57.5,72.5 58.5,71.5 58.5,70 L 58.5,46 L 53.5,36 L 53.5,32 L 55,32 C 55.8,32 56.5,31.5 56.5,30.5 L 56.5,28.5 C 56.5,27.5 56.2,26.5 55,26.5 Z" fill="white" />
+    <circle cx="16" cy="50" r="5" fill="white" />
+    <circle cx="16" cy="50" r="2.2" fill="#3B82F6" />
+    <circle cx="84" cy="50" r="5" fill="white" />
+    <circle cx="84" cy="50" r="2.2" fill="#3B82F6" />
+  </g>
+
+  <text x="350" y="160" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'" font-weight="800" font-size="76" fill="#ffffff" letter-spacing="-1">BlueBottleCap SaaS</text>
+  <text x="355" y="215" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="500" font-size="28" fill="#F0F8FF" opacity="0.9">The Ultimate AI Suite for Students</text>
+</svg>
