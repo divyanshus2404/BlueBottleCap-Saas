@@ -642,7 +642,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 fade-in">
+    <div className="w-full px-4 py-8 sm:px-6 lg:px-8 fade-in min-h-[calc(100vh-73px)]">
       
       {/* Page header warnings */}
       {errors && (
