@@ -24,6 +24,7 @@ import { supabase } from "./supabaseClient";
 import { ToastContainer, Toast, ToastType } from "./components/ToastContainer";
 import { LandingPage } from "./components/LandingPage";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { SmoothScroll } from "./components/SmoothScroll";
 
 let toastIdCounter = 0;
 
@@ -881,7 +882,8 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 font-sans text-brand-navy dark:text-white antialiased">
+    <SmoothScroll>
+      <div className="min-h-screen bg-white dark:bg-slate-900 font-sans text-brand-navy dark:text-white antialiased">
       {/* Unified top header navigation */}
       <Navigation
         currentView={currentView}
@@ -1003,6 +1005,7 @@ export default function App() {
       )}
 
       </ErrorBoundary>
-    </div>
+      </div>
+    </SmoothScroll>
   );
 }

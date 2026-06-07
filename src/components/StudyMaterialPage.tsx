@@ -713,7 +713,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                 </div>
                 <div className="relative z-10 flex items-center gap-5">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-3xl flex items-center justify-center backdrop-blur-md shrink-0 border border-white/30 shadow-inner">
-                    {React.cloneElement(subjectIcon[selectedSubject] as React.ReactElement, { className: "w-8 h-8 sm:w-10 sm:h-10 text-white" })}
+                    {React.cloneElement(subjectIcon[selectedSubject] as React.ReactElement<any>, { className: "w-8 h-8 sm:w-10 sm:h-10 text-white" })}
                   </div>
                   <div>
                     <h1 className="text-3xl sm:text-4xl font-black tracking-tight">{selectedSubject} Overview</h1>
