@@ -86,9 +86,9 @@ const loadPdfTextFromBlob = async (file: File, onProgress?: (percent: number) =>
   return fullText;
 };
 
-export default function App() {
+export default function App({ initialView }: { initialView?: ActiveView }) {
   const { currentUser } = useAuth();
-  const [currentView, setCurrentView] = useState<ActiveView>("landing");
+  const [currentView, setCurrentView] = useState<ActiveView>(initialView || "landing");
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [pendingView, setPendingView] = useState<ActiveView | null>(null);
   const [faqOpenIdx, setFaqOpenIdx] = useState<number | null>(null);
@@ -800,8 +800,52 @@ export default function App() {
     }
   };
 
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      const viewMap: Record<string, ActiveView> = {
+        '/': 'landing',
+        '/dashboard': 'dashboard',
+        '/about': 'about',
+        '/study-material': 'study-material-page',
+        '/virtual-test': 'virtual-test',
+        '/tools': 'tools',
+        '/pricing': 'pricing',
+        '/flashcards': 'flashcards',
+        '/seniors': 'seniors-opinion',
+        '/create-profile': 'create-profile',
+        '/pdf-editor': 'pdf-editor'
+      };
+      const view = viewMap[path] || 'landing';
+      if (view !== currentView) {
+        setPendingView(view);
+        setIsTransitioning(true);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [currentView]);
+
   const navigateToView = (view: ActiveView) => {
     if (view === currentView) return;
+    
+    const paths: Record<string, string> = {
+      landing: '/',
+      dashboard: '/dashboard',
+      about: '/about',
+      'study-material-page': '/study-material',
+      'virtual-test': '/virtual-test',
+      tools: '/tools',
+      pricing: '/pricing',
+      flashcards: '/flashcards',
+      'seniors-opinion': '/seniors',
+      'create-profile': '/create-profile',
+      'pdf-editor': '/pdf-editor'
+    };
+    
+    // Update the browser URL natively without triggering a full page reload from Next.js
+    window.history.pushState({}, '', paths[view] || '/');
+    
     setPendingView(view);
     setIsTransitioning(true);
   };

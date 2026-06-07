@@ -103,6 +103,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   });
 
   const chartPointsStr = chartPointsArray.map((pt) => `${pt.x},${pt.y}`).join(" ");
+  const chartLabels = chartData.map((cd) => cd.dayLabel);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -199,7 +200,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <span className="text-sm font-black text-slate-900">{usageStats.aiQueries.current} / {usageStats.aiQueries.max}</span>
               </div>
               <div className="w-full bg-slate-100 rounded-full h-2 mb-2">
-                <div className="bg-indigo-500 h-2 rounded-full transition-all duration-1000" style={{ width: \`\${isSyncing ? 0 : aiPercent}%\` }}></div>
+                <div className="bg-indigo-500 h-2 rounded-full transition-all duration-1000" style={{ width: `${isSyncing ? 0 : aiPercent}%` }}></div>
               </div>
               <p className="text-[10px] text-slate-400 font-medium text-right">{aiPercent}% Used</p>
             </div>
@@ -213,7 +214,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <span className="text-sm font-black text-slate-900">{usageStats.pdfEdits.current} / {usageStats.pdfEdits.max}</span>
               </div>
               <div className="w-full bg-slate-100 rounded-full h-2 mb-2">
-                <div className="bg-sky-500 h-2 rounded-full transition-all duration-1000" style={{ width: \`\${isSyncing ? 0 : pdfPercent}%\` }}></div>
+                <div className="bg-sky-500 h-2 rounded-full transition-all duration-1000" style={{ width: `${isSyncing ? 0 : pdfPercent}%` }}></div>
               </div>
               <p className="text-[10px] text-slate-400 font-medium text-right">{pdfPercent}% Used</p>
             </div>
@@ -227,7 +228,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <span className="text-sm font-black text-slate-900">{usageStats.storage.current} MB / {usageStats.storage.max} MB</span>
               </div>
               <div className="w-full bg-slate-100 rounded-full h-2 mb-2">
-                <div className="bg-emerald-500 h-2 rounded-full transition-all duration-1000" style={{ width: \`\${isSyncing ? 0 : storagePercent}%\` }}></div>
+                <div className="bg-emerald-500 h-2 rounded-full transition-all duration-1000" style={{ width: `${isSyncing ? 0 : storagePercent}%` }}></div>
               </div>
               <p className="text-[10px] text-slate-400 font-medium text-right">{storagePercent}% Used</p>
             </div>
@@ -335,8 +336,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     {generateCalendarDays()
                       .slice(colIdx * 7, (colIdx + 1) * 7)
                       .map((day, rowIdx) => {
-                        const hasActivity = dailyActivity.find(a => a.date === day.dateStr && a.points > 0);
-                        const points = hasActivity ? hasActivity.points : 0;
+                        const hasActivity = dailyActivity.find(a => a.date === day.dateStr);
+                        const points = hasActivity ? (hasActivity.queriesUsed + hasActivity.cardsCreated * 5) : 0;
                         let colorClass = "bg-slate-100 border-gray-100";
                         if (points > 0 && points <= 20) colorClass = "bg-emerald-100 border-emerald-200";
                         else if (points > 20 && points <= 50) colorClass = "bg-emerald-300 border-emerald-400";
@@ -346,8 +347,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         return (
                           <div
                             key={rowIdx}
-                            className={`h-3 w-3 rounded-[3px] border transition-colors duration-300 \${colorClass}`}
-                            title={\`\${day.dateStr}: \${points} pts\`}
+                            className={`h-3 w-3 rounded-[3px] border transition-colors duration-300 ${colorClass}`}
+                            title={`${day.dateStr}: ${points} pts`}
                           ></div>
                         );
                       })}
@@ -421,12 +422,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </button>
               </div>
 
-              <div className={`rounded-2xl border p-6 flex flex-col justify-between relative overflow-hidden \${
+              <div className={`rounded-2xl border p-6 flex flex-col justify-between relative overflow-hidden ${
                 userStats.streakDays >= 30 ? "border-brand-cobalt bg-brand-cobalt/5" : "border-gray-100 bg-slate-50"
               }`}>
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-1">
-                    <h4 className={`text-base font-bold \${userStats.streakDays >= 30 ? "text-brand-cobalt" : "text-slate-900"}`}>
+                    <h4 className={`text-base font-bold ${userStats.streakDays >= 30 ? "text-brand-cobalt" : "text-slate-900"}`}>
                       Deep Analysis Report
                     </h4>
                     <span className="bg-white border border-gray-200 text-brand-cobalt text-[9px] font-black uppercase px-2 py-0.5 rounded shadow-xs">
@@ -449,7 +450,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   ) : (
                     <div className="w-full">
                       <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mb-3">
-                        <div className="bg-brand-cobalt h-1.5 rounded-full" style={{ width: \`\${Math.min((userStats.streakDays / 30) * 100, 100)}%\` }}></div>
+                        <div className="bg-brand-cobalt h-1.5 rounded-full" style={{ width: `${Math.min((userStats.streakDays / 30) * 100, 100)}%` }}></div>
                       </div>
                       <button disabled className="w-full py-2.5 rounded-xl bg-white text-slate-400 text-sm font-bold flex items-center justify-center gap-2 cursor-not-allowed border border-gray-200">
                         🔒 Unlocks at 30-Day Streak ({userStats.streakDays}/30)
