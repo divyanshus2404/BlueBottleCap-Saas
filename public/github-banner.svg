@@ -19,6 +19,6 @@
     <circle cx="84" cy="50" r="2.2" fill="#3B82F6" />
   </g>
 
-  <text x="350" y="160" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'" font-weight="800" font-size="76" fill="#ffffff" letter-spacing="-1">BlueBottleCap SaaS</text>
+  <text x="350" y="160" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'" font-weight="800" font-size="76" fill="#ffffff" letter-spacing="-1">BlueBottleCap</text>
   <text x="355" y="215" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="500" font-size="28" fill="#F0F8FF" opacity="0.9">The Ultimate AI Suite for Students</text>
 </svg>
