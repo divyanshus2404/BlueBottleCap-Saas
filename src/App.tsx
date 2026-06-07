@@ -27,6 +27,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { SmoothScroll } from "./components/SmoothScroll";
 import { LiquidTransition } from "./components/LiquidTransition";
 import { CustomCursor } from "./components/CustomCursor";
+import { AboutPage } from "./components/AboutPage";
 
 let toastIdCounter = 0;
 
@@ -993,6 +994,9 @@ export default function App() {
         <StudyMaterialPage
           onNavigate={navigateToView}
         />
+      )}
+      {currentView === "about" && (
+        <AboutPage onNavigate={navigateToView} />
       )}
       {currentView === "seniors-opinion" && (
         <div className="fade-in">
