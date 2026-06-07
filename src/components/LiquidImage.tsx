@@ -92,7 +92,7 @@ export const LiquidImage = ({ src, className }: { src: string, className?: strin
   return (
     <div className={`relative overflow-hidden ${className}`}>
       <Canvas camera={{ position: [0, 0, 1] }} gl={{ alpha: true }} style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
-        <React.Suspense fallback={<div className="w-full h-full bg-slate-900 animate-pulse" />}>
+        <React.Suspense fallback={null}>
           <ImagePlane src={src} />
         </React.Suspense>
       </Canvas>
