@@ -74,6 +74,13 @@
   body {
     @apply bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 transition-colors duration-300;
   }
+  
+  /* Force custom cursor globally on desktop devices */
+  @media (pointer: fine) {
+    *, *::before, *::after {
+      cursor: none !important;
+    }
+  }
 }
 
 @layer utilities {
