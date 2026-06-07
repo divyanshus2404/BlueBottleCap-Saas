@@ -50,7 +50,6 @@ graph TD
 Upload any PDF and chat with it instantly. The AI reads the context and answers questions specifically from the document.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#0f172a", "edgeLabelBackground": "#1e293b", "tertiaryColor": "#1e293b"}}}%%
 sequenceDiagram
     autonumber
     actor User
