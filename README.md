@@ -32,13 +32,16 @@
 The study planner analyzes your syllabus and automatically allocates time across your semester.
 
 ```mermaid
-graph LR
-    A[Student Input] -->|Syllabus & Exam Dates| B(Gemini AI Engine)
-    B -->|Analyzes Weights| C{Study Plan Generation}
+%%{init: {"flowchart": {"defaultRenderer": "elk", "nodeSpacing": 80, "rankSpacing": 80}}}%%
+graph TD
+    A([Student Input]) -->|Syllabus & Exam Dates| B(Gemini AI Engine)
+    B -->|Analyzes Weights| C{Study Plan<br/>Generation}
+    
     C -->|High Priority| D[Daily Tasks]
     C -->|Medium Priority| E[Weekly Revisions]
     C -->|Low Priority| F[Monthly Overviews]
-    D --> G[Dashboard UI]
+    
+    D --> G([Dashboard UI])
     E --> G
     F --> G
 ```
@@ -47,8 +50,10 @@ graph LR
 Upload any PDF and chat with it instantly. The AI reads the context and answers questions specifically from the document.
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#0f172a", "edgeLabelBackground": "#1e293b", "tertiaryColor": "#1e293b"}}}%%
 sequenceDiagram
-    participant User
+    autonumber
+    actor User
     participant Frontend
     participant Supabase
     participant GeminiAI
@@ -57,8 +62,8 @@ sequenceDiagram
     Frontend->>Supabase: Stores PDF & Extracts Text
     Supabase-->>Frontend: Returns Text Chunks
     User->>Frontend: Asks Question
-    Frontend->>GeminiAI: Sends Context + Question
-    GeminiAI-->>Frontend: Streams Intelligent Answer
+    Frontend->>GeminiAI: Sends Context & Question
+    GeminiAI-->>Frontend: Streams Answer
     Frontend-->>User: Displays Response
 ```
 
@@ -81,27 +86,41 @@ pie title "AI Question Distribution"
 The entire platform is built on a highly scalable, serverless architecture using modern web technologies.
 
 ```mermaid
-graph TD
-    UI[Next.js 15 Frontend<br/>React 19 + TailwindCSS] --> |API Routes| API[Next.js Serverless Backend]
+%%{init: {"flowchart": {"defaultRenderer": "elk", "nodeSpacing": 100, "rankSpacing": 100}}}%%
+graph LR
+    UI(["Frontend<br/>(Next.js 15)"]) 
+
+    subgraph Backend [Serverless Backend]
+        direction TB
+        API["API Routes"]
+    end
+
+    subgraph Services [External APIs]
+        direction TB
+        DB[("Supabase DB")]
+        AI["Gemini AI"]
+        Pay["Razorpay"]
+    end
+
+    UI -->|API Requests| API
     
-    API --> |Auth & Database| DB[(Supabase PostgreSQL)]
-    API --> |AI Inference| AI[Google Gemini API]
-    API --> |Payments| Pay[Razorpay Gateway]
-    
-    DB --> |User Profiles| UI
-    AI --> |Streaming Responses| UI
-    Pay --> |Premium Access| UI
-    
-    classDef frontend fill:#3B82F6,stroke:#1D4ED8,stroke-width:2px,color:#fff;
-    classDef backend fill:#10B981,stroke:#047857,stroke-width:2px,color:#fff;
+    API -->|Queries| DB
+    API -->|Prompts| AI
+    API -->|Verifies| Pay
+
+    DB -.->|User Data| UI
+    AI -.->|AI Streams| UI
+    Pay -.->|Status| UI
+
+    classDef ui fill:#3B82F6,stroke:#1D4ED8,stroke-width:2px,color:#fff;
+    classDef api fill:#10B981,stroke:#047857,stroke-width:2px,color:#fff;
     classDef db fill:#F59E0B,stroke:#B45309,stroke-width:2px,color:#fff;
     classDef ai fill:#8B5CF6,stroke:#6D28D9,stroke-width:2px,color:#fff;
     
-    class UI frontend;
-    class API backend;
-    class DB db;
+    class UI ui;
+    class API api;
+    class DB,Pay db;
     class AI ai;
-    class Pay db;
 ```
 
 ---
