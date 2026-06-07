@@ -1,10 +1,4 @@
-export interface Flashcard {
-  id: string;
-  question: string;
-  answer: string;
-  category: "Physics" | "Chemistry" | "Mathematics";
-  topic: string;
-}
+import { Flashcard } from "../types";
 
 export const flashcardsData: Flashcard[] = [
   {
