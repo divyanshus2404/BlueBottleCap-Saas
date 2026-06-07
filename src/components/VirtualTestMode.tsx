@@ -325,8 +325,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
   }, [studySubject]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 fade-in text-brand-navy dark:text-white">
-      <div className="flex flex-col lg:flex-row gap-8 bg-slate-50 dark:bg-slate-950/50 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+    <div className="flex flex-col lg:flex-row min-h-[calc(100vh-73px)] w-full bg-slate-50 dark:bg-slate-950/50 fade-in text-brand-navy dark:text-white">
         
         {/* LEFT SIDEBAR NAVIGATION PANEL */}
         <aside className="w-full lg:w-64 bg-white dark:bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 p-6 flex flex-col justify-between shrink-0 print:hidden">
@@ -1432,7 +1431,6 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
           )}
 
         </main>
-      </div>
     </div>
   );
 };
