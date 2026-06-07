@@ -32,14 +32,14 @@
 The study planner analyzes your syllabus and automatically allocates time across your semester.
 
 ```mermaid
-%%{init: {"flowchart": {"defaultRenderer": "elk", "nodeSpacing": 80, "rankSpacing": 80}}}%%
+%%{init: {"flowchart": {"nodeSpacing": 50, "rankSpacing": 50}}}%%
 graph TD
-    A([Student Input]) -->|Syllabus & Exam Dates| B(Gemini AI Engine)
-    B -->|Analyzes Weights| C{Study Plan<br/>Generation}
+    A([Student Input]) -->|Syllabus &<br/>Exam Dates| B(Gemini AI Engine)
+    B -->|Analyzes<br/>Weights| C{Study Plan<br/>Generation}
     
-    C -->|High Priority| D[Daily Tasks]
-    C -->|Medium Priority| E[Weekly Revisions]
-    C -->|Low Priority| F[Monthly Overviews]
+    C -->|High<br/>Priority| D[Daily Tasks]
+    C -->|Medium<br/>Priority| E[Weekly Revisions]
+    C -->|Low<br/>Priority| F[Monthly Overviews]
     
     D --> G([Dashboard UI])
     E --> G
@@ -86,31 +86,25 @@ pie title "AI Question Distribution"
 The entire platform is built on a highly scalable, serverless architecture using modern web technologies.
 
 ```mermaid
-%%{init: {"flowchart": {"defaultRenderer": "elk", "nodeSpacing": 100, "rankSpacing": 100}}}%%
-graph LR
+%%{init: {"flowchart": {"nodeSpacing": 60, "rankSpacing": 60}}}%%
+graph TD
     UI(["Frontend<br/>(Next.js 15)"]) 
 
     subgraph Backend [Serverless Backend]
-        direction TB
         API["API Routes"]
     end
 
     subgraph Services [External APIs]
-        direction TB
         DB[("Supabase DB")]
         AI["Gemini AI"]
         Pay["Razorpay"]
     end
 
-    UI -->|API Requests| API
+    UI <-->|API Requests<br/>& Responses| API
     
-    API -->|Queries| DB
-    API -->|Prompts| AI
-    API -->|Verifies| Pay
-
-    DB -.->|User Data| UI
-    AI -.->|AI Streams| UI
-    Pay -.->|Status| UI
+    API <-->|Queries &<br/>User Data| DB
+    API <-->|Prompts &<br/>AI Streams| AI
+    API <-->|Verifies &<br/>Status| Pay
 
     classDef ui fill:#3B82F6,stroke:#1D4ED8,stroke-width:2px,color:#fff;
     classDef api fill:#10B981,stroke:#047857,stroke-width:2px,color:#fff;
