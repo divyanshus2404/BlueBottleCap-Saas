@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./public/github-banner.svg" width="100%" alt="BlueBottleCap SaaS Banner" />
+  <img src="./public/github-banner-v2.svg" width="100%" alt="BlueBottleCap SaaS Banner" />
   
   <br />
   
