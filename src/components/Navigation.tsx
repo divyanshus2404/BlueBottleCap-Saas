@@ -5,6 +5,7 @@ import { ActiveView, UserStats } from "../types";
 import { Zap, Sparkles, BookOpen, Layers, Menu, X, Check, Award, Lock, Timer, Sun, Moon, CreditCard } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Logo } from "./Logo";
+import { MagneticWrapper } from "./MagneticWrapper";
 
 interface NavigationProps {
   currentView: ActiveView;
@@ -66,20 +67,22 @@ export const Navigation: React.FC<NavigationProps> = ({
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* Logo Section */}
-        <div 
-          onClick={() => handleLinkClick("landing")} 
-          className="flex cursor-pointer items-center gap-2.5 transition-opacity hover:opacity-90"
-        >
-          <Logo className="h-10 w-10 text-brand-cobalt" />
-          <div>
-            <span className="font-display text-lg font-bold tracking-tight text-brand-navy dark:text-white transition-colors duration-300">
-              Blue<span className="text-brand-cobalt dark:text-blue-400 bg-linear-to-r from-brand-cobalt to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">BottleCap</span>
-            </span>
-            <span className="block text-[10px] uppercase tracking-wider font-mono text-gray-400 dark:text-slate-500 font-medium leading-none transition-colors duration-300">
-              STUDENT AI SUITE
-            </span>
+        <MagneticWrapper strength={30}>
+          <div 
+            onClick={() => handleLinkClick("landing")} 
+            className="flex cursor-pointer items-center gap-2.5 transition-opacity hover:opacity-90"
+          >
+            <Logo className="h-10 w-10 text-brand-cobalt" />
+            <div>
+              <span className="font-display text-lg font-bold tracking-tight text-brand-navy dark:text-white transition-colors duration-300">
+                Blue<span className="text-brand-cobalt dark:text-blue-400 bg-linear-to-r from-brand-cobalt to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">BottleCap</span>
+              </span>
+              <span className="block text-[10px] uppercase tracking-wider font-mono text-gray-400 dark:text-slate-500 font-medium leading-none transition-colors duration-300">
+                STUDENT AI SUITE
+              </span>
+            </div>
           </div>
-        </div>
+        </MagneticWrapper>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-2">

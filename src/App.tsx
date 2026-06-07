@@ -26,6 +26,7 @@ import { LandingPage } from "./components/LandingPage";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { SmoothScroll } from "./components/SmoothScroll";
 import { LiquidTransition } from "./components/LiquidTransition";
+import { CustomCursor } from "./components/CustomCursor";
 
 let toastIdCounter = 0;
 
@@ -886,6 +887,7 @@ export default function App() {
 
   return (
     <SmoothScroll>
+      <CustomCursor />
       <LiquidTransition
         isAnimating={isTransitioning}
         onMidpoint={() => {

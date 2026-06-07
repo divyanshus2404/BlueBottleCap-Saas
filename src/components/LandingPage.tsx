@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { LiquidImage } from "./LiquidImage";
+import { MagneticWrapper } from "./MagneticWrapper";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -255,6 +256,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         }
       });
 
+      const skewSetter = gsap.quickSetter(".hero-title .word", "skewY", "deg");
+      let proxy = { skew: 0 };
+      
+      ScrollTrigger.create({
+        onUpdate: (self) => {
+          let skew = Math.min(Math.max(self.getVelocity() / -200, -10), 10);
+          if (Math.abs(skew) > Math.abs(proxy.skew)) {
+            proxy.skew = skew;
+            gsap.to(proxy, {
+              skew: 0,
+              duration: 0.8,
+              ease: "power3",
+              overwrite: true,
+              onUpdate: () => skewSetter(proxy.skew)
+            });
+          }
+        }
+      });
+
     }, containerRef);
     
     return () => ctx.revert();
@@ -476,12 +496,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             Join thousands of ambitious students and start your serious prep tonight.
           </p>
           <div className="pt-10 flex justify-center items-center">
-            <button
-              onClick={() => onNavigate("onboarding")}
-              className="rounded-2xl bg-white text-slate-900 hover:bg-slate-50 px-14 py-7 font-black text-2xl cursor-pointer shadow-2xl w-full sm:w-auto transition-all hover:scale-105 hover:-translate-y-2 ring-8 ring-white/10 hover:ring-white/20"
-            >
-              Start Studying Smarter
-            </button>
+            <MagneticWrapper strength={60}>
+              <button
+                onClick={() => onNavigate("onboarding")}
+                className="rounded-2xl bg-white text-slate-900 hover:bg-slate-50 px-14 py-7 font-black text-2xl cursor-pointer shadow-2xl transition-colors ring-8 ring-white/10 hover:ring-white/20 w-full sm:w-auto"
+              >
+                Start Studying Smarter
+              </button>
+            </MagneticWrapper>
           </div>
         </div>
       </section>
