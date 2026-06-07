@@ -200,8 +200,6 @@ function Background3D() {
         <CustomShape position={[-4.5, -1.0, -18]} scale={2.2} />
         <CustomShape position={[3.0, 2.0, -21]} scale={1.5} />
         <CustomShape position={[-2.0, -3.0, -24]} scale={2.5} />
-        
-        <PostProcessingEffects />
       </Canvas>
     </div>
   );

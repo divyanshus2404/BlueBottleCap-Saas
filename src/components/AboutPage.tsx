@@ -55,7 +55,6 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           <div className="lg:col-span-5 about-content relative z-10">
             <TiltCard className="h-[600px] w-full">
               <div className="w-full h-full rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white relative group bg-white flex items-center justify-center">
-                {/* Fallback silhouette if image not found */}
                 <div className="absolute inset-0 bg-slate-100 flex flex-col items-center justify-center -z-10 p-8 text-center border-2 border-dashed border-slate-300 rounded-[2rem]">
                   <div className="text-slate-400 font-bold mb-2">Image Missing</div>
                   <div className="text-slate-400 text-sm">Please drag your photo into <br/><code className="bg-slate-200 px-1 py-0.5 rounded text-xs text-slate-600">public/images/founder.jpg</code></div>
