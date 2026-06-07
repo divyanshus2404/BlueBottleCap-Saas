@@ -5,8 +5,14 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { EffectComposer, Bloom, ChromaticAberration, Noise } from "@react-three/postprocessing";
+import { BlendFunction } from "postprocessing";
 import { LiquidImage } from "./LiquidImage";
 import { MagneticWrapper } from "./MagneticWrapper";
+
+if (typeof window !== "undefined") {
+  (window as any).globalScrollProxy = { velocity: 0 };
+}
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -145,6 +151,36 @@ const SceneController = () => {
   return null;
 };
 
+const PostProcessingEffects = () => {
+  const aberrationRef = useRef<any>(null);
+  
+  useFrame(() => {
+    if (aberrationRef.current && (window as any).globalScrollProxy) {
+      // Calculate a target offset based on the absolute scroll velocity
+      const velocity = Math.abs((window as any).globalScrollProxy.velocity);
+      // Clamp the max intensity
+      const intensity = Math.min(velocity * 0.0001, 0.02);
+      
+      const targetOffset = new THREE.Vector2(intensity, intensity);
+      aberrationRef.current.offset.lerp(targetOffset, 0.1);
+    }
+  });
+
+  return (
+    <EffectComposer multisampling={0} disableNormalPass>
+      <Bloom luminanceThreshold={0.5} mipmapBlur intensity={1.5} />
+      <Noise opacity={0.03} />
+      <ChromaticAberration
+        ref={aberrationRef}
+        blendFunction={BlendFunction.NORMAL}
+        offset={new THREE.Vector2(0, 0)}
+        radialModulation={false}
+        modulationOffset={0}
+      />
+    </EffectComposer>
+  );
+};
+
 function Background3D() {
   return (
     <div className="fixed inset-0 -z-20 h-screen w-screen bg-slate-50">
@@ -161,6 +197,8 @@ function Background3D() {
         <CustomShape position={[-4.5, -1.0, -18]} scale={2.2} />
         <CustomShape position={[3.0, 2.0, -21]} scale={1.5} />
         <CustomShape position={[-2.0, -3.0, -24]} scale={2.5} />
+        
+        <PostProcessingEffects />
       </Canvas>
     </div>
   );
@@ -261,7 +299,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       
       ScrollTrigger.create({
         onUpdate: (self) => {
-          let skew = Math.min(Math.max(self.getVelocity() / -200, -10), 10);
+          let velocity = self.getVelocity();
+          if (typeof window !== "undefined") {
+            (window as any).globalScrollProxy.velocity = velocity;
+          }
+          
+          let skew = Math.min(Math.max(velocity / -200, -10), 10);
           if (Math.abs(skew) > Math.abs(proxy.skew)) {
             proxy.skew = skew;
             gsap.to(proxy, {
