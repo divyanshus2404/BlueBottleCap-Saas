@@ -187,7 +187,10 @@ const QuestionCard: React.FC<{
               <button
                 key={oi}
                 onClick={() => {
-                  if (!isRevealed) setSelectedOpt(optLetter);
+                  if (!isRevealed) {
+                    setSelectedOpt(optLetter);
+                    onReveal();
+                  }
                 }}
                 disabled={isRevealed}
                 className={`text-xs px-3 py-2.5 rounded-xl border font-medium transition text-left cursor-pointer ${
