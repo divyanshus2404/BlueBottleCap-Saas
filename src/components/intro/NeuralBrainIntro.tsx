@@ -52,11 +52,9 @@ export default function NeuralBrainIntro() {
 
     // Pre-calculate rgba strings to avoid heavy string ops in render loop
     const colors = [
-      { fill: "#38bdf8", strokeRGB: "56, 189, 248" },
-      { fill: "#818cf8", strokeRGB: "129, 140, 248" },
-      { fill: "#c084fc", strokeRGB: "192, 132, 252" },
-      { fill: "#e879f9", strokeRGB: "232, 121, 249" },
-      { fill: "#2dd4bf", strokeRGB: "45, 212, 191" }
+      { fill: "#ffffff", strokeRGB: "255, 255, 255" },
+      { fill: "#f8fafc", strokeRGB: "248, 250, 252" },
+      { fill: "#f1f5f9", strokeRGB: "241, 245, 249" }
     ];
 
     for (let i = 0; i < NUM_PARTICLES; i++) {
