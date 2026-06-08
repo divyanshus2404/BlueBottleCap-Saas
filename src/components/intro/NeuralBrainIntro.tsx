@@ -20,9 +20,8 @@ export default function NeuralBrainIntro() {
     canvas.width = width;
     canvas.height = height;
 
-    // DRASTICALLY REDUCED PARTICLES FOR PERFORMANCE (from 300 to 120)
-    // O(N^2) complexity means this reduces calculations by 85%!
-    const NUM_PARTICLES = 120;
+    // Increased particles to make brain clearer (from 120 to 220)
+    const NUM_PARTICLES = 220;
     const particles: any[] = [];
 
     const targetPoints: { x: number; y: number }[] = [];
@@ -35,7 +34,7 @@ export default function NeuralBrainIntro() {
     const length1 = path1.getTotalLength();
     const length2 = path2.getTotalLength();
 
-    const scale = 15;
+    const scale = 22; // Scaled up to make it bigger and clearer
     const offsetX = width / 2 - (24 * scale) / 2;
     const offsetY = height / 2 - (24 * scale) / 2 - 50;
 
@@ -54,7 +53,8 @@ export default function NeuralBrainIntro() {
     const colors = [
       { fill: "#ffffff", strokeRGB: "255, 255, 255" },
       { fill: "#f8fafc", strokeRGB: "248, 250, 252" },
-      { fill: "#f1f5f9", strokeRGB: "241, 245, 249" }
+      { fill: "#f1f5f9", strokeRGB: "241, 245, 249" },
+      { fill: "#60a5fa", strokeRGB: "96, 165, 250" } // Added a slight blue hue for depth
     ];
 
     for (let i = 0; i < NUM_PARTICLES; i++) {
@@ -115,7 +115,7 @@ export default function NeuralBrainIntro() {
 
     const render = () => {
       // Fast motion blur
-      ctx.fillStyle = "rgba(2, 6, 23, 0.35)"; // Slightly more opaque to reduce heavy overdraw
+      ctx.fillStyle = "rgba(2, 6, 23, 0.4)"; 
       ctx.fillRect(0, 0, width, height);
 
       ctx.save();
@@ -125,12 +125,11 @@ export default function NeuralBrainIntro() {
         ctx.translate(-width / 2, -height / 2);
       }
 
-      // REMOVED shadowBlur (Extremely expensive on GPU/CPU)
-      ctx.lineWidth = 0.8;
+      ctx.lineWidth = 1.0; // Slightly thicker lines for visibility
 
-      // Loop optimizations
-      const sqConnectionThresholdForming = 1500;
-      const sqConnectionThresholdIdle = 8000;
+      // Loop optimizations: Increased connection thresholds
+      const sqConnectionThresholdForming = 4500; // Increased to make the brain much denser and clearer
+      const sqConnectionThresholdIdle = 10000;
 
       for (let i = 0; i < NUM_PARTICLES; i++) {
         const p1 = particles[i];
