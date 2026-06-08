@@ -124,7 +124,7 @@ function Particles() {
 
 export default function HeroCanvas() {
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none" id="intro-canvas-container">
+    <div className="fixed inset-0 z-10 pointer-events-none" id="intro-canvas-container">
       <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
         <ambientLight intensity={1} />
         <Particles />

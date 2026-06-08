@@ -329,16 +329,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
   return (
     <div ref={containerRef} className="bg-transparent min-h-screen">
-      <div id="intro-overlay" className="fixed inset-0 z-50 bg-white" />
+      <div id="intro-overlay" className="absolute inset-0 z-0 bg-white" />
+      <HeroCanvas />
       
       <Background3D />
       
       {/* ── HERO SECTION ── */}
       <section className="hero-section relative pt-16 pb-20 md:pt-24 md:pb-28 min-h-screen flex flex-col justify-center perspective-1000 z-10">
-        
-        <HeroCanvas />
 
-        <div className="hero-content mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 text-center w-full mt-10 pointer-events-none">
+        <div className="hero-content mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 text-center w-full mt-10 pointer-events-none">
           <div className="hero-badge hero-reveal-element inline-flex items-center gap-1.5 rounded-full bg-slate-100/80 px-4 py-1.5 text-xs font-semibold text-slate-800 mb-6 backdrop-blur-md border border-slate-200 shadow-sm pointer-events-auto">
             <Sparkles className="w-3.5 h-3.5 text-blue-500" />
             <span>The intelligent way to study</span>
