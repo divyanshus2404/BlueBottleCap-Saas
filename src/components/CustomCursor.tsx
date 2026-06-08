@@ -19,6 +19,8 @@ export const CustomCursor = () => {
     
     document.body.style.cursor = "none";
     
+    let hasMoved = false;
+
     const ringX = gsap.quickTo(ring, "x", { duration: 0.15, ease: "power3.out" });
     const ringY = gsap.quickTo(ring, "y", { duration: 0.15, ease: "power3.out" });
     
@@ -30,9 +32,17 @@ export const CustomCursor = () => {
       ringY(e.clientY);
       dotX(e.clientX);
       dotY(e.clientY);
+
+      // Fade in cursor on first move to prevent it from getting stuck at 0,0
+      if (!hasMoved) {
+        hasMoved = true;
+        gsap.to([ring, dot], { opacity: 1, duration: 0.3 });
+      }
     };
 
     const handleMouseOver = (e: MouseEvent) => {
+      if (!hasMoved) return; // Don't trigger hover effects before first move
+
       const target = e.target as HTMLElement;
       if (target.closest("a") || target.closest("button") || target.closest(".magnetic-target") || target.closest("[role='button']")) {
         gsap.to(ring, { scale: 1.5, opacity: 0.4, borderColor: "#ffffff", duration: 0.3 });
@@ -59,12 +69,12 @@ export const CustomCursor = () => {
     <>
       <div 
         ref={cursorRef} 
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border-2 border-brand-cobalt pointer-events-none z-[9999] transform -translate-x-1/2 -translate-y-1/2"
+        className="fixed top-0 left-0 w-8 h-8 rounded-full border-2 border-brand-cobalt pointer-events-none z-[9999] transform -translate-x-1/2 -translate-y-1/2 opacity-0"
         style={{ willChange: "transform" }}
       />
       <div 
         ref={dotRef} 
-        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-brand-cobalt pointer-events-none z-[9999] transform -translate-x-1/2 -translate-y-1/2"
+        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-brand-cobalt pointer-events-none z-[9999] transform -translate-x-1/2 -translate-y-1/2 opacity-0"
         style={{ willChange: "transform" }}
       />
     </>
