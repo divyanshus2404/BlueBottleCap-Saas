@@ -17,48 +17,101 @@ export const CustomCursor = () => {
     const dot = dotRef.current;
     if (!ring || !dot) return;
     
+    // Set initial transform properties to avoid conflicts later
+    gsap.set(ring, { xPercent: -50, yPercent: -50, transformOrigin: "center center" });
+    gsap.set(dot, { xPercent: -50, yPercent: -50, transformOrigin: "center center" });
+    
     document.body.style.cursor = "none";
     
     let hasMoved = false;
+    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let ringPos = { x: mouse.x, y: mouse.y };
+    let dotPos = { x: mouse.x, y: mouse.y };
 
-    const ringX = gsap.quickTo(ring, "x", { duration: 0.15, ease: "power3.out" });
-    const ringY = gsap.quickTo(ring, "y", { duration: 0.15, ease: "power3.out" });
-    
-    const dotX = gsap.quickTo(dot, "x", { duration: 0.05, ease: "power3.out" });
-    const dotY = gsap.quickTo(dot, "y", { duration: 0.05, ease: "power3.out" });
+    const ringX = gsap.quickSetter(ring, "x", "px");
+    const ringY = gsap.quickSetter(ring, "y", "px");
+    const dotX = gsap.quickSetter(dot, "x", "px");
+    const dotY = gsap.quickSetter(dot, "y", "px");
 
     const moveCursor = (e: MouseEvent) => {
-      ringX(e.clientX);
-      ringY(e.clientY);
-      dotX(e.clientX);
-      dotY(e.clientY);
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
 
-      // Fade in cursor on first move to prevent it from getting stuck at 0,0
       if (!hasMoved) {
         hasMoved = true;
-        gsap.to([ring, dot], { opacity: 1, duration: 0.3 });
+        ringPos.x = mouse.x; ringPos.y = mouse.y;
+        dotPos.x = mouse.x; dotPos.y = mouse.y;
+        gsap.to([ring, dot], { opacity: 1, duration: 0.4 });
       }
     };
 
-    const handleMouseOver = (e: MouseEvent) => {
-      if (!hasMoved) return; // Don't trigger hover effects before first move
+    // Smooth Interpolation Loop
+    const tickerFunction = () => {
+      // The magic Awwwards smooth interpolation math
+      ringPos.x += (mouse.x - ringPos.x) * 0.15;
+      ringPos.y += (mouse.y - ringPos.y) * 0.15;
+      
+      // Dot follows almost instantly but still smooth
+      dotPos.x += (mouse.x - dotPos.x) * 0.6;
+      dotPos.y += (mouse.y - dotPos.y) * 0.6;
+      
+      ringX(ringPos.x);
+      ringY(ringPos.y);
+      dotX(dotPos.x);
+      dotY(dotPos.y);
+    };
+    
+    gsap.ticker.add(tickerFunction);
 
+    let isHoveringButton = false;
+
+    const handleMouseOver = (e: MouseEvent) => {
+      if (!hasMoved) return;
       const target = e.target as HTMLElement;
+      
+      // Button / Magnetic Links
       if (target.closest("a") || target.closest("button") || target.closest(".magnetic-target") || target.closest("[role='button']")) {
-        gsap.to(ring, { scale: 1.5, opacity: 0.4, borderColor: "#ffffff", duration: 0.3 });
-        gsap.to(dot, { scale: 0, opacity: 0, duration: 0.3 });
-      } else {
-        gsap.to(ring, { scale: 1, opacity: 1, borderColor: "#6366f1", duration: 0.3 });
-        gsap.to(dot, { scale: 1, opacity: 1, duration: 0.3 });
+        isHoveringButton = true;
+        gsap.to(ring, { scale: 1.5, background: "rgba(255, 255, 255, 0.1)", duration: 0.3, ease: "power2.out" });
+        gsap.to(dot, { scale: 0, opacity: 0, duration: 0.3, ease: "power2.out" });
+      } 
+      // Text hover mode (grow the ring lightly)
+      else if (target.closest("p") || target.closest("h1") || target.closest("h2") || target.closest("h3") || target.closest("span")) {
+        isHoveringButton = false;
+        gsap.to(ring, { scale: 2.0, background: "transparent", duration: 0.3, ease: "power2.out" });
+        gsap.to(dot, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" });
       }
+      // Default state
+      else {
+        isHoveringButton = false;
+        gsap.to(ring, { scale: 1, background: "transparent", duration: 0.3, ease: "power2.out" });
+        gsap.to(dot, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" });
+      }
+    };
+
+    const handleMouseDown = () => {
+      if (!hasMoved) return;
+      gsap.to(ring, { scale: isHoveringButton ? 1.2 : 0.7, duration: 0.15, ease: "power2.inOut" });
+      gsap.to(dot, { scale: isHoveringButton ? 0 : 0.5, duration: 0.15, ease: "power2.inOut" });
+    };
+
+    const handleMouseUp = () => {
+      if (!hasMoved) return;
+      gsap.to(ring, { scale: isHoveringButton ? 1.5 : 1, duration: 0.3, ease: "elastic.out(1, 0.4)" });
+      gsap.to(dot, { scale: isHoveringButton ? 0 : 1, duration: 0.3, ease: "elastic.out(1, 0.4)" });
     };
 
     window.addEventListener("mousemove", moveCursor);
     document.addEventListener("mouseover", handleMouseOver);
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
 
     return () => {
       window.removeEventListener("mousemove", moveCursor);
       document.removeEventListener("mouseover", handleMouseOver);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
+      gsap.ticker.remove(tickerFunction);
       document.body.style.cursor = "auto";
     };
   }, []);
@@ -69,13 +122,11 @@ export const CustomCursor = () => {
     <>
       <div 
         ref={cursorRef} 
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border-2 border-brand-cobalt pointer-events-none z-[9999] transform -translate-x-1/2 -translate-y-1/2 opacity-0"
-        style={{ willChange: "transform" }}
+        className="fixed top-0 left-0 w-10 h-10 rounded-full border border-white pointer-events-none z-[9998] opacity-0 mix-blend-difference"
       />
       <div 
         ref={dotRef} 
-        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-brand-cobalt pointer-events-none z-[9999] transform -translate-x-1/2 -translate-y-1/2 opacity-0"
-        style={{ willChange: "transform" }}
+        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-white pointer-events-none z-[9999] opacity-0 mix-blend-difference"
       />
     </>
   );
