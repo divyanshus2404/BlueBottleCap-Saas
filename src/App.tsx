@@ -28,6 +28,7 @@ import { SmoothScroll } from "./components/SmoothScroll";
 import { LiquidTransition } from "./components/LiquidTransition";
 import { CustomCursor } from "./components/CustomCursor";
 import { AboutPage } from "./components/AboutPage";
+import { GlobalBackground } from "./components/GlobalBackground";
 
 let toastIdCounter = 0;
 
@@ -953,7 +954,8 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
           setPendingView(null);
         }}
       />
-      <div className="min-h-screen bg-white dark:bg-slate-900 font-sans text-brand-navy dark:text-white antialiased">
+      <div className="min-h-screen bg-transparent font-sans antialiased flex flex-col">
+        <GlobalBackground />
       {/* Unified top header navigation */}
       <Navigation
         currentView={currentView}
@@ -1058,7 +1060,7 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
       )}
 
       {currentView === "flashcards" && (
-        <div className="fade-in min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-950">
+        <div className="fade-in min-h-[calc(100vh-64px)] bg-slate-50 bg-bg-primary">
           <FlashcardsPage flashcards={flashcards} onUpdateFlashcard={handleUpdateFlashcard} />
         </div>
       )}

@@ -88,14 +88,14 @@ const SeniorsOpinionPage: React.FC<SeniorsOpinionPageProps> = ({ onNavigate }) =
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-white font-sans pb-16">
+    <div className="min-h-screen bg-gray-50 bg-bg-primary text-gray-900 text-white font-sans pb-16">
       {/* Header */}
-      <header className="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 sticky top-0 z-30">
+      <header className="bg-white bg-bg-primary border-b border-gray-200 dark:border-slate-800 sticky top-0 z-30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
               onClick={() => onNavigate("landing")}
-              className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:bg-slate-800 transition-colors text-gray-600 dark:text-slate-400"
+              className="p-2 -ml-2 rounded-full hover:bg-gray-100 bg-surface-solid transition-colors text-gray-600 text-text-secondary"
               aria-label="Go back"
             >
               <ArrowLeft className="w-5 h-5" />
@@ -105,7 +105,7 @@ const SeniorsOpinionPage: React.FC<SeniorsOpinionPageProps> = ({ onNavigate }) =
                 <GraduationCap className="w-6 h-6 text-blue-600" />
                 Seniors Opinion
               </h1>
-              <p className="text-xs text-gray-500 dark:text-slate-400 hidden sm:block">Advice and notes from top graduates</p>
+              <p className="text-xs text-gray-500 text-text-secondary hidden sm:block">Advice and notes from top graduates</p>
             </div>
           </div>
 
@@ -133,7 +133,7 @@ const SeniorsOpinionPage: React.FC<SeniorsOpinionPageProps> = ({ onNavigate }) =
               placeholder="Search advice, strategies, notes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white dark:bg-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm shadow-sm"
+              className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white bg-bg-primary placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm shadow-sm"
             />
           </div>
 
@@ -145,7 +145,7 @@ const SeniorsOpinionPage: React.FC<SeniorsOpinionPageProps> = ({ onNavigate }) =
                 className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
                   activeTag === tag 
                     ? "bg-blue-100 text-blue-800 border border-blue-200" 
-                    : "bg-white dark:bg-slate-900 text-gray-600 dark:text-slate-400 border border-gray-200 dark:border-slate-800 hover:bg-gray-50 dark:bg-slate-900"
+                    : "bg-white bg-bg-primary text-gray-600 text-text-secondary border border-gray-200 dark:border-slate-800 hover:bg-gray-50 bg-bg-primary"
                 }`}
               >
                 {tag}
@@ -158,16 +158,16 @@ const SeniorsOpinionPage: React.FC<SeniorsOpinionPageProps> = ({ onNavigate }) =
         <div className="space-y-6">
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post) => (
-              <article key={post.id} className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden">
+              <article key={post.id} className="bg-white bg-bg-primary rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden">
                 <div className="p-6">
                   {/* Post Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">{post.title}</h2>
+                      <h2 className="text-xl font-bold text-gray-900 text-white mb-1">{post.title}</h2>
                       <div className="flex items-center gap-2 text-sm">
                         <span className="font-medium text-blue-600">{post.authorName}</span>
                         <span className="text-gray-300">•</span>
-                        <span className="text-gray-500 dark:text-slate-400 bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-xs font-semibold">{post.authorCredential}</span>
+                        <span className="text-gray-500 text-text-secondary bg-gray-100 bg-surface-solid px-2 py-0.5 rounded-md text-xs font-semibold">{post.authorCredential}</span>
                         <span className="text-gray-300">•</span>
                         <span className="text-gray-400 text-xs">{post.datePosted}</span>
                       </div>
@@ -177,7 +177,7 @@ const SeniorsOpinionPage: React.FC<SeniorsOpinionPageProps> = ({ onNavigate }) =
                   {/* Post Content - rendering minimal bold tags */}
                   <div className="prose prose-blue max-w-none text-gray-700 text-sm sm:text-base leading-relaxed mb-6 whitespace-pre-line" 
                        dangerouslySetInnerHTML={{ 
-                         __html: post.content.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900 dark:text-white">$1</strong>').replace(/\*(.*?)\*/g, '<em class="italic">$1</em>') 
+                         __html: post.content.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900 text-white">$1</strong>').replace(/\*(.*?)\*/g, '<em class="italic">$1</em>') 
                        }} 
                   />
 
@@ -202,18 +202,18 @@ const SeniorsOpinionPage: React.FC<SeniorsOpinionPageProps> = ({ onNavigate }) =
                   <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-slate-800">
                     <div className="flex gap-2">
                       {post.tags.map(tag => (
-                        <span key={tag} className="text-xs font-medium text-gray-500 dark:text-slate-400 bg-gray-100 dark:bg-slate-800 px-2.5 py-1 rounded-full">
+                        <span key={tag} className="text-xs font-medium text-gray-500 text-text-secondary bg-gray-100 bg-surface-solid px-2.5 py-1 rounded-full">
                           #{tag}
                         </span>
                       ))}
                     </div>
                     
                     <div className="flex items-center gap-4">
-                      <button className="flex items-center gap-1.5 text-gray-500 dark:text-slate-400 hover:text-blue-600 transition-colors">
+                      <button className="flex items-center gap-1.5 text-gray-500 text-text-secondary hover:text-blue-600 transition-colors">
                         <ThumbsUp className="w-4 h-4" />
                         <span className="text-sm font-semibold">{post.upvotes}</span>
                       </button>
-                      <button className="flex items-center gap-1.5 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:text-white transition-colors">
+                      <button className="flex items-center gap-1.5 text-gray-500 text-text-secondary hover:text-gray-900 text-white transition-colors">
                         <MessageSquare className="w-4 h-4" />
                         <span className="text-sm font-semibold">Reply</span>
                       </button>
@@ -223,10 +223,10 @@ const SeniorsOpinionPage: React.FC<SeniorsOpinionPageProps> = ({ onNavigate }) =
               </article>
             ))
           ) : (
-            <div className="text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800">
+            <div className="text-center py-12 bg-white bg-bg-primary rounded-2xl border border-gray-200 dark:border-slate-800">
               <MessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">No advice found</h3>
-              <p className="text-gray-500 dark:text-slate-400 mt-1">Try adjusting your search or filters.</p>
+              <h3 className="text-lg font-medium text-gray-900 text-white">No advice found</h3>
+              <p className="text-gray-500 text-text-secondary mt-1">Try adjusting your search or filters.</p>
             </div>
           )}
         </div>
@@ -235,15 +235,15 @@ const SeniorsOpinionPage: React.FC<SeniorsOpinionPageProps> = ({ onNavigate }) =
       {/* Mock Upload Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center bg-gray-50 dark:bg-slate-900">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <div className="bg-white bg-bg-primary rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center bg-gray-50 bg-bg-primary">
+              <h3 className="text-lg font-bold text-gray-900 text-white flex items-center gap-2">
                 <GraduationCap className="w-5 h-5 text-blue-600" />
                 Share Advice as a Senior
               </h3>
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="text-gray-400 hover:text-gray-600 dark:text-slate-400 transition-colors"
+                className="text-gray-400 hover:text-gray-600 text-text-secondary transition-colors"
               >
                 ✕
               </button>
@@ -277,16 +277,16 @@ const SeniorsOpinionPage: React.FC<SeniorsOpinionPageProps> = ({ onNavigate }) =
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Attach Notes (Optional)</label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-50 dark:bg-slate-900 transition-colors cursor-pointer">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-50 bg-bg-primary transition-colors cursor-pointer">
                   <Paperclip className="w-5 h-5 text-gray-400 mx-auto mb-1" />
-                  <span className="text-sm text-gray-500 dark:text-slate-400">Click to upload PDF or Images</span>
+                  <span className="text-sm text-gray-500 text-text-secondary">Click to upload PDF or Images</span>
                 </div>
               </div>
             </div>
-            <div className="px-6 py-4 bg-gray-50 dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 flex justify-end gap-3">
+            <div className="px-6 py-4 bg-gray-50 bg-bg-primary border-t border-gray-100 dark:border-slate-800 flex justify-end gap-3">
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-white hover:bg-gray-100 dark:bg-slate-800 rounded-lg transition-colors"
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 text-white hover:bg-gray-100 bg-surface-solid rounded-lg transition-colors"
               >
                 Cancel
               </button>

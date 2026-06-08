@@ -12,7 +12,7 @@ export const Paywall: React.FC<PaywallProps> = ({ featureName, onUpgradeClick })
   const getFeatureIcon = () => {
     switch (featureName.toLowerCase()) {
       case "dashboard":
-        return <Layers className="w-8 h-8 text-brand-cobalt" />;
+        return <Layers className="w-8 h-8 text-accent" />;
       case "ai pdf reader":
       case "pdf-editor":
         return <BookOpen className="w-8 h-8 text-indigo-650" />;
@@ -60,14 +60,14 @@ export const Paywall: React.FC<PaywallProps> = ({ featureName, onUpgradeClick })
       <div className="relative overflow-hidden rounded-3xl border border-gray-150 bg-white p-8 md:p-12 shadow-xl">
         
         {/* Glow background effects */}
-        <div className="absolute -top-24 -left-24 -z-10 h-72 w-72 rounded-full bg-brand-cobalt/5 blur-3xl"></div>
+        <div className="absolute -top-24 -left-24 -z-10 h-72 w-72 rounded-full bg-accent/5 blur-3xl"></div>
         <div className="absolute -bottom-24 -right-24 -z-10 h-72 w-72 rounded-full bg-indigo-500/5 blur-3xl"></div>
 
         <div className="flex flex-col items-center text-center max-w-2xl mx-auto space-y-6">
           
           {/* Padlock Icon & Feature Icon Indicator */}
           <div className="relative flex items-center justify-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-slate-50 border border-gray-100 shadow-inner">
+            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-surface-solid border border-gray-100 shadow-inner">
               {getFeatureIcon()}
             </div>
             <div className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-tr from-brand-navy to-slate-800 text-white shadow-lg ring-4 ring-white">
@@ -79,7 +79,7 @@ export const Paywall: React.FC<PaywallProps> = ({ featureName, onUpgradeClick })
             <span className="rounded-full bg-orange-50 border border-orange-100 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-orange-700">
               🔒 Premium Workspace Feature
             </span>
-            <h1 className="mt-4 font-display text-3xl font-black text-brand-navy md:text-4xl tracking-tight leading-tight">
+            <h1 className="mt-4 font-display text-3xl font-black text-white md:text-4xl tracking-tight leading-tight">
               Unlock the {featureName}
             </h1>
             <p className="mt-3 text-sm text-gray-500 leading-relaxed">
@@ -94,9 +94,9 @@ export const Paywall: React.FC<PaywallProps> = ({ featureName, onUpgradeClick })
             </h3>
             <div className="grid gap-6 md:grid-cols-3">
               {getFeatureBenefits().map((benefit, index) => (
-                <div key={index} className="space-y-1 bg-slate-50/50 border border-gray-100/50 rounded-2xl p-4.5">
-                  <div className="flex items-center gap-1.5 text-xs font-extrabold text-brand-navy">
-                    <Shield className="w-3.5 h-3.5 text-brand-cobalt fill-brand-cobalt/10 shrink-0" />
+                <div key={index} className="space-y-1 bg-surface-solid border border-gray-100/50 rounded-2xl p-4.5">
+                  <div className="flex items-center gap-1.5 text-xs font-extrabold text-white">
+                    <Shield className="w-3.5 h-3.5 text-accent fill-brand-cobalt/10 shrink-0" />
                     <span>{benefit.title}</span>
                   </div>
                   <p className="text-[11px] text-gray-400 leading-normal">
@@ -117,7 +117,7 @@ export const Paywall: React.FC<PaywallProps> = ({ featureName, onUpgradeClick })
             </button>
             <button
               onClick={() => window.history.back()}
-              className="flex items-center justify-center rounded-xl border border-gray-200 hover:bg-slate-50 bg-white text-gray-600 px-6 py-3.5 font-bold text-sm cursor-pointer w-full sm:w-auto"
+              className="flex items-center justify-center rounded-xl border border-gray-200 hover:bg-surface-solid bg-white text-gray-600 px-6 py-3.5 font-bold text-sm cursor-pointer w-full sm:w-auto"
             >
               Go Back
             </button>

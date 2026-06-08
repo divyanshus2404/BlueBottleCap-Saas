@@ -173,22 +173,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wide">Live</span>
               </div>
             </div>
-            <p className="welcome-text text-sm text-slate-500 font-medium mt-1">
-              You've saved <span className="font-bold text-brand-cobalt">{userStats.hoursSaved} study hours</span> using AI Co-pilots.
+            <p className="welcome-text text-sm text-text-muted font-medium mt-1">
+              You've saved <span className="font-bold text-accent">{userStats.hoursSaved} study hours</span> using AI Co-pilots.
             </p>
           </div>
         </div>
         
         <div className="flex gap-4 mt-4 md:mt-0">
           <div className="text-center px-6 border-r border-gray-100">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Streak</p>
+            <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Active Streak</p>
             <p className="text-xl font-black text-orange-500 mt-1 flex items-center justify-center gap-1">
               <Flame className="w-4 h-4 fill-orange-500" /> {userStats.streakDays}
             </p>
           </div>
           <div className="welcome-text text-center px-4">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Study Plan</p>
-            <p className="text-lg font-black text-brand-cobalt mt-1">
+            <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Study Plan</p>
+            <p className="text-lg font-black text-accent mt-1">
               {userStats.activePlan}
             </p>
           </div>
@@ -200,23 +200,23 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <button
           onClick={() => setActiveTab("workspace")}
           className={`px-5 py-3 text-sm font-bold transition-all relative ${
-            activeTab === "workspace" ? "text-brand-cobalt" : "text-slate-500 hover:text-slate-800"
+            activeTab === "workspace" ? "text-accent" : "text-text-muted hover:text-slate-800"
           }`}
         >
           📚 Study Workspace
           {activeTab === "workspace" && (
-            <motion.div layoutId="tab-indicator" className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-cobalt" />
+            <motion.div layoutId="tab-indicator" className="absolute bottom-0 left-0 w-full h-0.5 bg-accent" />
           )}
         </button>
         <button
           onClick={() => setActiveTab("analytics")}
           className={`px-5 py-3 text-sm font-bold transition-all relative ${
-            activeTab === "analytics" ? "text-brand-cobalt" : "text-slate-500 hover:text-slate-800"
+            activeTab === "analytics" ? "text-accent" : "text-text-muted hover:text-slate-800"
           }`}
         >
           📊 Stats & Streaks
           {activeTab === "analytics" && (
-            <motion.div layoutId="tab-indicator" className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-cobalt" />
+            <motion.div layoutId="tab-indicator" className="absolute bottom-0 left-0 w-full h-0.5 bg-accent" />
           )}
         </button>
       </div>
@@ -234,42 +234,42 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg"><Cpu className="w-4 h-4" /></div>
-                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">AI Co-Pilot Credit</h3>
+                  <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">AI Co-Pilot Credit</h3>
                 </div>
                 <span className="text-sm font-black text-slate-900">{usageStats.aiQueries.current} / {usageStats.aiQueries.max}</span>
               </div>
-              <div className="w-full bg-slate-100 rounded-full h-2 mb-2">
+              <div className="w-full bg-surface-glass rounded-full h-2 mb-2">
                 <div className="bg-indigo-500 h-2 rounded-full transition-all duration-1000" style={{ width: `${isSyncing ? 0 : aiPercent}%` }}></div>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium text-right">{aiPercent}% Used</p>
+              <p className="text-[10px] text-text-secondary font-medium text-right">{aiPercent}% Used</p>
             </div>
 
             <div className="stat-card rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-sky-50 text-sky-600 rounded-lg"><FileText className="w-4 h-4" /></div>
-                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">PDF Spots</h3>
+                  <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">PDF Spots</h3>
                 </div>
                 <span className="text-sm font-black text-slate-900">{usageStats.pdfEdits.current} / {usageStats.pdfEdits.max}</span>
               </div>
-              <div className="w-full bg-slate-100 rounded-full h-2 mb-2">
+              <div className="w-full bg-surface-glass rounded-full h-2 mb-2">
                 <div className="bg-sky-500 h-2 rounded-full transition-all duration-1000" style={{ width: `${isSyncing ? 0 : pdfPercent}%` }}></div>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium text-right">{pdfPercent}% Used</p>
+              <p className="text-[10px] text-text-secondary font-medium text-right">{pdfPercent}% Used</p>
             </div>
 
             <div className="stat-card rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg"><HardDrive className="w-4 h-4" /></div>
-                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Cloud Storage</h3>
+                  <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">Cloud Storage</h3>
                 </div>
                 <span className="text-sm font-black text-slate-900">{usageStats.storage.current} MB / {usageStats.storage.max} MB</span>
               </div>
-              <div className="w-full bg-slate-100 rounded-full h-2 mb-2">
+              <div className="w-full bg-surface-glass rounded-full h-2 mb-2">
                 <div className="bg-emerald-500 h-2 rounded-full transition-all duration-1000" style={{ width: `${isSyncing ? 0 : storagePercent}%` }}></div>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium text-right">{storagePercent}% Used</p>
+              <p className="text-[10px] text-text-secondary font-medium text-right">{storagePercent}% Used</p>
             </div>
           </div>
 
@@ -278,27 +278,27 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <div className="lg:col-span-2 space-y-6">
               <div className="flex items-center justify-between">
                 <h2 className="flex items-center gap-2 font-display text-lg font-black text-slate-900">
-                  <History className="w-5 h-5 text-brand-sky" /> Recent Activity Log
+                  <History className="w-5 h-5 text-accent" /> Recent Activity Log
                 </h2>
-                <button className="text-xs font-bold text-brand-cobalt hover:underline">View All</button>
+                <button className="text-xs font-bold text-accent hover:underline">View All</button>
               </div>
 
               <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
                 <div className="min-w-full">
-                  <div className="bg-slate-50 border-b border-gray-100 px-6 py-3 grid grid-cols-12 gap-4">
-                    <div className="col-span-5 text-xs font-bold text-slate-500 uppercase tracking-wider">Action</div>
-                    <div className="col-span-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</div>
-                    <div className="col-span-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Cost</div>
-                    <div className="col-span-2 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Time</div>
+                  <div className="bg-surface-solid border-b border-gray-100 px-6 py-3 grid grid-cols-12 gap-4">
+                    <div className="col-span-5 text-xs font-bold text-text-muted uppercase tracking-wider">Action</div>
+                    <div className="col-span-3 text-xs font-bold text-text-muted uppercase tracking-wider">Status</div>
+                    <div className="col-span-2 text-xs font-bold text-text-muted uppercase tracking-wider">Cost</div>
+                    <div className="col-span-2 text-right text-xs font-bold text-text-muted uppercase tracking-wider">Time</div>
                   </div>
                   <div className="divide-y divide-gray-50">
                     {recentActivities.length === 0 ? (
                       <div className="px-6 py-8 text-center border-t border-gray-50">
-                        <div className="mx-auto w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-3">
-                          <History className="w-5 h-5 text-slate-300" />
+                        <div className="mx-auto w-12 h-12 bg-surface-solid rounded-full flex items-center justify-center mb-3">
+                          <History className="w-5 h-5 text-text-primary" />
                         </div>
                         <h4 className="text-sm font-bold text-slate-900">No recent activity</h4>
-                        <p className="text-xs text-slate-500 mt-1 max-w-[200px] mx-auto">
+                        <p className="text-xs text-text-muted mt-1 max-w-[200px] mx-auto">
                           When you use tools like the Smart Summarizer or AI PDF Reader, your activity will appear here.
                         </p>
                       </div>
@@ -309,11 +309,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.1 }}
                           key={act.id} 
-                          className="px-6 py-4 grid grid-cols-12 gap-4 items-center hover:bg-slate-50 transition-colors cursor-default"
+                          className="px-6 py-4 grid grid-cols-12 gap-4 items-center hover:bg-surface-solid transition-colors cursor-default"
                         >
                           <div className="col-span-5">
                             <p className="text-sm font-bold text-slate-900 truncate">{act.tool}</p>
-                            <p className="text-xs text-slate-500 truncate">{act.target}</p>
+                            <p className="text-xs text-text-muted truncate">{act.target}</p>
                           </div>
                           <div className="col-span-3">
                             <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-100">
@@ -323,7 +323,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                           <div className="col-span-2 text-xs font-medium text-slate-600">
                             {act.cost}
                           </div>
-                          <div className="col-span-2 text-right text-xs text-slate-400">
+                          <div className="col-span-2 text-right text-xs text-text-secondary">
                             {act.date}
                           </div>
                         </motion.div>
@@ -352,16 +352,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       }
                       onNavigateTo(tool.view);
                     }}
-                    className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md hover:border-brand-cobalt/30 transition-all cursor-pointer"
+                    className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md hover:border-accent/30 transition-all cursor-pointer"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 border border-gray-100 text-lg">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-surface-solid border border-gray-100 text-lg">
                       {tool.icon}
                     </div>
                     <div>
                       <h3 className="text-sm font-bold text-slate-900">{tool.name}</h3>
-                      <p className="text-[10px] text-slate-500">{tool.desc}</p>
+                      <p className="text-[10px] text-text-muted">{tool.desc}</p>
                     </div>
-                    <ArrowRight className="ml-auto w-4 h-4 text-slate-300" />
+                    <ArrowRight className="ml-auto w-4 h-4 text-text-primary" />
                   </motion.div>
                 ))}
               </div>
@@ -384,7 +384,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <h3 className="font-display text-lg font-black text-slate-900 flex items-center gap-2">
                   <Calendar className="w-5 h-5 text-indigo-500" /> Study Contribution Map
                 </h3>
-                <span className="text-xs font-bold text-slate-400">Past 16 Weeks</span>
+                <span className="text-xs font-bold text-text-secondary">Past 16 Weeks</span>
               </div>
               <div className="flex gap-1 overflow-x-auto pb-2 scrollbar-hide">
                 {Array.from({ length: 16 }).map((_, colIdx) => (
@@ -394,7 +394,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       .map((day, rowIdx) => {
                         const hasActivity = dailyActivity.find(a => a.date === day.dateStr);
                         const points = hasActivity ? (hasActivity.queriesUsed + hasActivity.cardsCreated * 5) : 0;
-                        let colorClass = "bg-slate-100 border-gray-100";
+                        let colorClass = "bg-surface-glass border-gray-100";
                         if (points > 0 && points <= 20) colorClass = "bg-emerald-100 border-emerald-200";
                         else if (points > 20 && points <= 50) colorClass = "bg-emerald-300 border-emerald-400";
                         else if (points > 50 && points <= 100) colorClass = "bg-emerald-500 border-emerald-600 shadow-[0_0_8px_rgba(16,185,129,0.4)]";
@@ -417,10 +417,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <div className="rounded-3xl border border-gray-100 bg-white p-8 shadow-sm">
               <div className="mb-6">
                 <h3 className="font-display text-lg font-black text-slate-900 flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-brand-cobalt" /> Weekly Hours Saved
+                  <Activity className="w-5 h-5 text-accent" /> Weekly Hours Saved
                 </h3>
               </div>
-              <div className="relative h-48 w-full border-b border-l border-slate-100">
+              <div className="relative h-48 w-full border-b border-l border-border-subtle">
                 <svg viewBox="0 0 600 180" className="h-full w-full overflow-visible drop-shadow-md">
                   <defs>
                     <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
@@ -459,38 +459,38 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <h3 className="font-display text-lg font-black text-slate-900 flex items-center gap-2">
                 <HardDrive className="w-5 h-5 text-slate-700" /> Reports & Data Export
               </h3>
-              <p className="text-sm text-slate-500 mt-1">Download your raw study data or generate deep AI-driven analysis reports.</p>
+              <p className="text-sm text-text-muted mt-1">Download your raw study data or generate deep AI-driven analysis reports.</p>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
-              <div className="rounded-2xl border border-gray-100 bg-slate-50 p-6 flex flex-col justify-between">
+              <div className="rounded-2xl border border-gray-100 bg-surface-solid p-6 flex flex-col justify-between">
                 <div>
                   <h4 className="text-base font-bold text-slate-900 mb-1">Basic Progress Export</h4>
-                  <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                  <p className="text-xs text-text-muted leading-relaxed mb-4">
                     Download a raw CSV file containing your daily study habits, tool usage statistics, and login history.
                   </p>
                 </div>
                 <button 
                   onClick={() => onShowToast && onShowToast("Downloading basic progress data...", "success")}
-                  className="w-full py-2.5 rounded-xl bg-white border border-gray-200 text-slate-700 hover:bg-slate-50 text-sm font-bold transition flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-white border border-gray-200 text-slate-700 hover:bg-surface-solid text-sm font-bold transition flex items-center justify-center gap-2 shadow-sm cursor-pointer"
                 >
                   <FileText className="w-4 h-4" /> Download CSV Data
                 </button>
               </div>
 
               <div className={`rounded-2xl border p-6 flex flex-col justify-between relative overflow-hidden ${
-                userStats.streakDays >= 30 ? "border-brand-cobalt bg-brand-cobalt/5" : "border-gray-100 bg-slate-50"
+                userStats.streakDays >= 30 ? "border-accent bg-accent/5" : "border-gray-100 bg-surface-solid"
               }`}>
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-1">
-                    <h4 className={`text-base font-bold ${userStats.streakDays >= 30 ? "text-brand-cobalt" : "text-slate-900"}`}>
+                    <h4 className={`text-base font-bold ${userStats.streakDays >= 30 ? "text-accent" : "text-slate-900"}`}>
                       Deep Analysis Report
                     </h4>
-                    <span className="bg-white border border-gray-200 text-brand-cobalt text-[9px] font-black uppercase px-2 py-0.5 rounded shadow-xs">
+                    <span className="bg-white border border-gray-200 text-accent text-[9px] font-black uppercase px-2 py-0.5 rounded shadow-xs">
                       1st Free, Then Paid
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                  <p className="text-xs text-text-muted leading-relaxed mb-4">
                     Track your live progress, identify areas of weakness, pinpoint where you work most efficiently, and map your academic interests.
                   </p>
                 </div>
@@ -499,16 +499,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   {userStats.streakDays >= 30 ? (
                     <button 
                       onClick={() => onShowToast && onShowToast("Generating your AI Deep Analysis Report...", "success")}
-                      className="w-full py-2.5 rounded-xl bg-brand-cobalt text-white text-sm font-bold shadow-md hover:bg-brand-navy transition flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full py-2.5 rounded-xl bg-accent text-white text-sm font-bold shadow-md hover:bg-brand-navy transition flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <Sparkles className="w-4 h-4" /> Generate Detailed Report
                     </button>
                   ) : (
                     <div className="w-full">
                       <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mb-3">
-                        <div className="bg-brand-cobalt h-1.5 rounded-full" style={{ width: `${Math.min((userStats.streakDays / 30) * 100, 100)}%` }}></div>
+                        <div className="bg-accent h-1.5 rounded-full" style={{ width: `${Math.min((userStats.streakDays / 30) * 100, 100)}%` }}></div>
                       </div>
-                      <button disabled className="w-full py-2.5 rounded-xl bg-white text-slate-400 text-sm font-bold flex items-center justify-center gap-2 cursor-not-allowed border border-gray-200">
+                      <button disabled className="w-full py-2.5 rounded-xl bg-white text-text-secondary text-sm font-bold flex items-center justify-center gap-2 cursor-not-allowed border border-gray-200">
                         🔒 Unlocks at 30-Day Streak ({userStats.streakDays}/30)
                       </button>
                     </div>

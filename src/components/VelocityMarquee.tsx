@@ -50,7 +50,7 @@ export const VelocityMarquee: React.FC<{ text: string, className?: string }> = (
   }, []);
 
   return (
-    <div className={`w-full overflow-hidden flex whitespace-nowrap select-none border-y border-slate-200/50 py-6 bg-slate-50/50 ${className}`}>
+    <div className={`w-full overflow-hidden flex whitespace-nowrap select-none border-y border-border-subtle py-6 bg-surface-solid ${className}`}>
       <div ref={trackRef} className="flex gap-16 pr-16 items-center min-w-max">
         <h1 className="text-7xl md:text-[9rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-200 to-slate-300 tracking-tighter uppercase">{text}</h1>
         <h1 className="text-7xl md:text-[9rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-200 to-slate-300 tracking-tighter uppercase">{text}</h1>

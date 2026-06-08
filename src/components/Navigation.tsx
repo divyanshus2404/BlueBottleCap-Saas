@@ -64,7 +64,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-100 dark:border-slate-800 bg-white/85 dark:bg-slate-950/85 backdrop-blur-md transition-colors duration-300">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-100 dark:border-slate-800 bg-white/85 bg-bg-primary/85 backdrop-blur-md transition-colors duration-300">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* Logo Section */}
@@ -73,12 +73,12 @@ export const Navigation: React.FC<NavigationProps> = ({
             onClick={() => handleLinkClick("landing")} 
             className="flex cursor-pointer items-center gap-2.5 transition-opacity hover:opacity-90"
           >
-            <Logo className="h-10 w-10 text-brand-cobalt" />
+            <Logo className="h-10 w-10 text-accent" />
             <div>
-              <span className="font-display text-lg font-bold tracking-tight text-brand-navy dark:text-white transition-colors duration-300">
-                Blue<span className="text-brand-cobalt dark:text-blue-400 bg-linear-to-r from-brand-cobalt to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">BottleCap</span>
+              <span className="font-display text-lg font-bold tracking-tight text-white text-white transition-colors duration-300">
+                Blue<span className="text-accent dark:text-blue-400 bg-linear-to-r from-brand-cobalt to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">BottleCap</span>
               </span>
-              <span className="block text-[10px] uppercase tracking-wider font-mono text-gray-400 dark:text-slate-500 font-medium leading-none transition-colors duration-300">
+              <span className="block text-[10px] uppercase tracking-wider font-mono text-gray-400 text-text-muted font-medium leading-none transition-colors duration-300">
                 STUDENT AI SUITE
               </span>
             </div>
@@ -96,8 +96,8 @@ export const Navigation: React.FC<NavigationProps> = ({
                 onClick={() => handleLinkClick(link.view)}
                 className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-300 ${
                   isActive
-                    ? "bg-brand-cobalt/5 dark:bg-brand-cobalt/20 text-brand-cobalt dark:text-blue-400"
-                    : "text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-900 hover:text-gray-900 dark:hover:text-white"
+                    ? "bg-accent/5 dark:bg-accent/20 text-accent dark:text-blue-400"
+                    : "text-gray-600 text-text-secondary hover:bg-gray-50 dark:hover:bg-bg-primary hover:text-gray-900 dark:hover:text-white"
                 }`}
               >
                 {link.icon}
@@ -112,43 +112,28 @@ export const Navigation: React.FC<NavigationProps> = ({
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-3">
-          {/* Dark Mode Toggle */}
-          <button 
-            onClick={toggleDarkMode}
-            className={`flex relative items-center h-7 w-[52px] rounded-full p-1 transition-colors duration-500 shadow-inner shrink-0 ${
-              isDarkMode ? 'bg-white' : 'bg-[#2A2B2E]'
-            }`}
-            aria-label="Toggle Dark Mode"
-          >
-            <div 
-              className={`absolute flex items-center justify-center w-5 h-5 rounded-full transition-transform duration-500 shadow-sm ${
-                isDarkMode ? 'translate-x-[26px] bg-black text-white' : 'translate-x-0 bg-white text-black'
-              }`}
-            >
-              {isDarkMode ? <Moon className="w-3 h-3" strokeWidth={3} /> : <Sun className="w-3 h-3" strokeWidth={3} />}
-            </div>
-          </button>
+
 
           {/* Authentication Menu */}
           {currentUser ? (
             <div className="hidden md:block relative group">
-              <button className="flex items-center gap-2 rounded-xl border border-gray-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 px-3 h-9 text-xs font-bold text-brand-navy dark:text-white transition cursor-pointer">
+              <button className="flex items-center gap-2 rounded-xl border border-gray-200 dark:border-slate-800 bg-surface-solid bg-bg-primary/50 hover:bg-surface-glass dark:hover:bg-surface-solid/50 px-3 h-9 text-xs font-bold text-white text-white transition cursor-pointer">
                 {userProfile?.avatarSvg ? (
-                  <div className="w-5 h-5 rounded-full shrink-0 overflow-hidden bg-brand-cobalt/10 dark:bg-brand-cobalt/20 flex items-center justify-center" dangerouslySetInnerHTML={{ __html: userProfile.avatarSvg }} />
+                  <div className="w-5 h-5 rounded-full shrink-0 overflow-hidden bg-accent/10 dark:bg-accent/20 flex items-center justify-center" dangerouslySetInnerHTML={{ __html: userProfile.avatarSvg }} />
                 ) : currentUser.photoURL ? (
                   <img src={currentUser.photoURL} alt="Avatar" className="w-5 h-5 rounded-full shrink-0" />
                 ) : (
-                  <div className="flex w-5 h-5 items-center justify-center rounded-full bg-brand-cobalt dark:bg-blue-600 text-white text-[9px] font-extrabold shrink-0">
+                  <div className="flex w-5 h-5 items-center justify-center rounded-full bg-accent dark:bg-blue-600 text-white text-[9px] font-extrabold shrink-0">
                     {currentUser.email?.charAt(0).toUpperCase()}
                   </div>
                 )}
-                <span className="max-w-24 truncate text-gray-700 dark:text-slate-300">{currentUser.displayName || currentUser.email}</span>
+                <span className="max-w-24 truncate text-gray-700 text-text-primary">{currentUser.displayName || currentUser.email}</span>
               </button>
               {/* Dropdown Menu */}
-              <div className="absolute right-0 top-[80%] pt-3.5 w-48 origin-top-right rounded-2xl border border-gray-150 dark:border-slate-800 bg-white dark:bg-slate-950 p-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="absolute right-0 top-[80%] pt-3.5 w-48 origin-top-right rounded-2xl border border-gray-150 dark:border-slate-800 bg-white bg-bg-primary p-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div className="px-3 py-2.5 border-b border-gray-100 dark:border-slate-800 mb-1">
-                  <p className="text-[9px] font-extrabold uppercase tracking-wider text-gray-400 dark:text-slate-500 font-mono">Signed in as</p>
-                  <p className="text-[11px] font-bold text-brand-navy dark:text-white truncate mt-0.5">{currentUser.email}</p>
+                  <p className="text-[9px] font-extrabold uppercase tracking-wider text-gray-400 text-text-muted font-mono">Signed in as</p>
+                  <p className="text-[11px] font-bold text-white text-white truncate mt-0.5">{currentUser.email}</p>
                 </div>
                 <button
                   onClick={signOutUser}
@@ -161,7 +146,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           ) : (
             <button 
               onClick={onLoginClick}
-              className="hidden md:flex items-center gap-1.5 px-2 h-9 text-[13px] font-medium text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-slate-200 transition cursor-pointer"
+              className="hidden md:flex items-center gap-1.5 px-2 h-9 text-[13px] font-medium text-gray-500 hover:text-gray-900 text-text-secondary dark:hover:text-slate-200 transition cursor-pointer"
             >
               Sign In
             </button>
@@ -185,7 +170,7 @@ export const Navigation: React.FC<NavigationProps> = ({
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="border-t border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-3 md:hidden fade-in shadow-xl transition-colors duration-300">
+        <div className="border-t border-gray-100 dark:border-slate-800 bg-white bg-bg-primary px-4 py-3 md:hidden fade-in shadow-xl transition-colors duration-300">
           <div className="space-y-1">
             {navLinks.map((link) => {
               const isActive = currentView === link.view;
@@ -196,8 +181,8 @@ export const Navigation: React.FC<NavigationProps> = ({
                   onClick={() => handleLinkClick(link.view)}
                   className={`flex w-full items-center gap-2.5 rounded-lg px-4 py-3 text-sm font-semibold transition-all duration-300 ${
                     isActive
-                      ? "bg-brand-cobalt/5 dark:bg-brand-cobalt/20 text-brand-cobalt dark:text-blue-400"
-                      : "text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-900 hover:text-gray-900 dark:hover:text-white"
+                      ? "bg-accent/5 dark:bg-accent/20 text-accent dark:text-blue-400"
+                      : "text-gray-600 text-text-secondary hover:bg-gray-50 dark:hover:bg-bg-primary hover:text-gray-900 dark:hover:text-white"
                   }`}
                 >
                   {link.icon}
@@ -218,25 +203,25 @@ export const Navigation: React.FC<NavigationProps> = ({
                   ? "bg-purple-100 text-purple-700"
                   : userStats.activePlan === "Basic"
                   ? "bg-blue-100 text-blue-700"
-                  : "bg-slate-100 text-slate-700"
+                  : "bg-surface-glass text-slate-700"
               }`}>
                 {userStats.activePlan} Scholar
               </span>
             </div>
 
             {currentUser ? (
-              <div className="px-4 py-2 bg-slate-50 rounded-2xl space-y-2">
+              <div className="px-4 py-2 bg-surface-solid rounded-2xl space-y-2">
                 <div className="flex items-center gap-2">
                   {userProfile?.avatarSvg ? (
-                    <div className="w-6 h-6 rounded-full shrink-0 overflow-hidden bg-brand-cobalt/10 flex items-center justify-center" dangerouslySetInnerHTML={{ __html: userProfile.avatarSvg }} />
+                    <div className="w-6 h-6 rounded-full shrink-0 overflow-hidden bg-accent/10 flex items-center justify-center" dangerouslySetInnerHTML={{ __html: userProfile.avatarSvg }} />
                   ) : currentUser.photoURL ? (
                     <img src={currentUser.photoURL} alt="Avatar" className="w-6 h-6 rounded-full shrink-0" />
                   ) : (
-                    <div className="flex w-6 h-6 items-center justify-center rounded-full bg-brand-cobalt text-white text-[10px] font-extrabold shrink-0">
+                    <div className="flex w-6 h-6 items-center justify-center rounded-full bg-accent text-white text-[10px] font-extrabold shrink-0">
                       {currentUser.email?.charAt(0).toUpperCase()}
                     </div>
                   )}
-                  <span className="text-xs font-semibold text-brand-navy truncate grow">{currentUser.displayName || currentUser.email}</span>
+                  <span className="text-xs font-semibold text-white truncate grow">{currentUser.displayName || currentUser.email}</span>
                 </div>
                 <button
                   onClick={() => {
@@ -254,7 +239,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                   onLoginClick();
                   setMobileMenuOpen(false);
                 }}
-                className="flex w-full items-center justify-center rounded-xl border border-gray-200 py-3 text-sm font-semibold text-gray-700 hover:bg-slate-50 transition cursor-pointer"
+                className="flex w-full items-center justify-center rounded-xl border border-gray-200 py-3 text-sm font-semibold text-gray-700 hover:bg-surface-solid transition cursor-pointer"
               >
                 Sign In to Account
               </button>

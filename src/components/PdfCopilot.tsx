@@ -664,7 +664,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
       <div className="grid gap-6 lg:grid-cols-12 min-h-[640px]">
         
         {/* PANEL 1: Left Index Panel (2 cols) */}
-        <div className="lg:col-span-2 rounded-2xl border border-gray-100 bg-slate-50/50 p-4 space-y-6">
+        <div className="lg:col-span-2 rounded-2xl border border-gray-100 bg-surface-solid p-4 space-y-6">
           <div>
             <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400">Select PDF Paper</span>
             <div className="mt-2 flex flex-col gap-2">
@@ -672,7 +672,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                 value={activePaperId}
                 onChange={(e) => handlePaperChange(e.target.value)}
                 disabled={allPapers.length === 0}
-                className="w-full rounded-xl border border-gray-250 bg-white p-2 text-xs font-semibold text-brand-navy focus:outline-hidden cursor-pointer disabled:bg-slate-100 disabled:cursor-not-allowed"
+                className="w-full rounded-xl border border-gray-250 bg-white p-2 text-xs font-semibold text-white focus:outline-hidden cursor-pointer disabled:bg-surface-glass disabled:cursor-not-allowed"
               >
                 {allPapers.length === 0 ? (
                   <option value="">No documents loaded</option>
@@ -687,7 +687,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
               <button
                 onClick={handleSimulateUpload}
                 disabled={uploadingFile}
-                className="w-full text-center rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 py-1.5 text-[10px] font-extrabold transition cursor-pointer disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
+                className="w-full text-center rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 py-1.5 text-[10px] font-extrabold transition cursor-pointer disabled:bg-surface-glass disabled:text-text-secondary disabled:cursor-not-allowed"
               >
                 {uploadingFile ? "Uploading..." : "📁 Upload Custom File"}
               </button>
@@ -705,9 +705,9 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                     <span>{uploadProgress}%</span>
                   </div>
                   <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
-                    <div className="bg-brand-cobalt h-full transition-all duration-150" style={{ width: `${uploadProgress}%` }}></div>
+                    <div className="bg-accent h-full transition-all duration-150" style={{ width: `${uploadProgress}%` }}></div>
                   </div>
-                  <span className="text-[7.5px] text-brand-cobalt animate-pulse block">{uploadStatus}</span>
+                  <span className="text-[7.5px] text-accent animate-pulse block">{uploadStatus}</span>
                 </div>
               )}
             </div>
@@ -729,13 +729,13 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                       }}
                       className={`w-full text-left rounded-xl p-3.5 transition-all text-xs border ${
                         active
-                          ? "bg-white border-brand-cobalt text-brand-cobalt shadow-xs font-bold"
-                          : "bg-transparent border-transparent text-gray-500 hover:bg-slate-100 hover:text-gray-800"
+                          ? "bg-white border-accent text-accent shadow-xs font-bold"
+                          : "bg-transparent border-transparent text-gray-500 hover:bg-surface-glass hover:text-gray-800"
                       }`}
                     >
                       <div className="flex items-center gap-2">
                         <span className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-[10px] ${
-                          active ? "bg-brand-cobalt text-white" : "bg-slate-200 text-gray-600"
+                          active ? "bg-accent text-white" : "bg-slate-200 text-gray-600"
                         }`}>
                           {p.pageIndex}
                         </span>
@@ -747,7 +747,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                   );
                 })
               ) : (
-                <div className="text-[10px] text-gray-400 font-sans italic p-3 bg-slate-100/50 rounded-xl text-center border border-dashed border-slate-200">
+                <div className="text-[10px] text-gray-400 font-sans italic p-3 bg-surface-glass rounded-xl text-center border border-dashed border-border-subtle">
                   Nodes will appear after upload.
                 </div>
               )}
@@ -757,7 +757,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
           <div className="mt-5 border-t border-gray-200 pt-5">
             <button
               onClick={handleExportHighlights}
-              className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-brand-navy hover:bg-brand-cobalt text-white py-2.5 text-xs font-bold transition shadow-3xs cursor-pointer select-none"
+              className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-brand-navy hover:bg-accent text-white py-2.5 text-xs font-bold transition shadow-3xs cursor-pointer select-none"
               title="Export Highlighted references to JSON"
             >
               <Download className="w-3.5 h-3.5" />
@@ -775,9 +775,9 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                 <button
                   key={phraseItem.phrase}
                   onClick={() => applyCustomHighlight(phraseItem.phrase, phraseItem.color)}
-                  className="flex items-center gap-1.5 w-full text-left rounded-lg bg-white border border-gray-150 p-2 hover:bg-slate-50 text-[11px] transition"
+                  className="flex items-center gap-1.5 w-full text-left rounded-lg bg-white border border-gray-150 p-2 hover:bg-surface-solid text-[11px] transition"
                 >
-                  <Sparkle className="w-3.5 h-3.5 text-brand-sky" />
+                  <Sparkle className="w-3.5 h-3.5 text-accent" />
                   <span className="truncate font-semibold capitalize text-gray-600">{phraseItem.phrase}</span>
                 </button>
               ))}
@@ -793,7 +793,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                 <BookOpen className="h-8 w-8 animate-pulse" />
               </div>
               <div>
-                <h3 className="font-display text-lg font-bold text-brand-navy">No Documents Uploaded</h3>
+                <h3 className="font-display text-lg font-bold text-white">No Documents Uploaded</h3>
                 <p className="mt-1 text-xs text-gray-500 max-w-sm font-sans">
                   Upload your research paper, text file, notes, or diagrams using the "+ Upload Custom File" button on the left sidebar to start.
                 </p>
@@ -809,16 +809,16 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
             <>
               {/* Paper Info Header */}
               <div className="border-b border-gray-100 pb-4">
-                <span className="text-[10px] font-mono font-bold text-brand-cobalt uppercase tracking-widest">{activePaper.doi}</span>
-                <h1 className="mt-1 font-display font-black text-xl tracking-tight text-brand-navy leading-snug">
+                <span className="text-[10px] font-mono font-bold text-accent uppercase tracking-widest">{activePaper.doi}</span>
+                <h1 className="mt-1 font-display font-black text-xl tracking-tight text-white leading-snug">
                   {activePaper.title}
                 </h1>
-                <p className="mt-1.5 text-xs text-slate-400 font-semibold">{activePaper.authors}</p>
+                <p className="mt-1.5 text-xs text-text-secondary font-semibold">{activePaper.authors}</p>
               </div>
 
               {/* Abstract callout panel */}
               {currentPage === 1 && activePaper.abstract && (
-                <div className="mt-4 rounded-xl bg-slate-50/50 border border-slate-100 p-4 text-xs font-medium text-gray-500 leading-relaxed italic">
+                <div className="mt-4 rounded-xl bg-surface-solid border border-border-subtle p-4 text-xs font-medium text-gray-500 leading-relaxed italic">
                   <strong>Abstract:</strong> {activePaper.abstract}
                 </div>
               )}
@@ -827,22 +827,22 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
               <div 
                 ref={textViewerRef}
                 onMouseUp={handleTextSelection}
-                className="relative grow mt-6 overflow-y-auto max-h-[460px] pr-2 space-y-4 text-sm text-gray-700 leading-relaxed font-sans selection:bg-brand-cobalt/25 select-text"
+                className="relative grow mt-6 overflow-y-auto max-h-[460px] pr-2 space-y-4 text-sm text-gray-700 leading-relaxed font-sans selection:bg-accent/25 select-text"
               >
                 {activePaper.isImage ? (
                   <div className="flex flex-col items-center justify-center py-6 space-y-4 select-none">
                     <img 
                       src={activePaper.imageSrc} 
                       alt={activePaper.title} 
-                      className="max-h-[350px] w-auto rounded-xl border border-slate-200 shadow-md object-contain animate-fade-in" 
+                      className="max-h-[350px] w-auto rounded-xl border border-border-subtle shadow-md object-contain animate-fade-in" 
                     />
-                    <p className="text-xs text-slate-500 text-center max-w-md bg-slate-50 p-2.5 rounded-lg border border-slate-100 font-medium">
+                    <p className="text-xs text-text-muted text-center max-w-md bg-surface-solid p-2.5 rounded-lg border border-border-subtle font-medium">
                       🖼️ <strong>Image Document Mode.</strong> Use the AI Chat on the right to analyze diagrams, solve formulas, or explain this image!
                     </p>
                   </div>
                 ) : (
                   <>
-                    <h3 className="font-display font-extrabold text-brand-navy border-b border-dashed border-gray-100 pb-1">
+                    <h3 className="font-display font-extrabold text-white border-b border-dashed border-gray-100 pb-1">
                       {activePaper.pages.find((p: any) => p.pageIndex === currentPage)?.title}
                     </h3>
 
@@ -950,11 +950,11 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
         </div>
 
         {/* PANEL 3: Right AI Co-Pilot Chat Sidebar Panel (4 cols) */}
-        <div className="lg:col-span-4 flex flex-col rounded-2xl border border-gray-105 bg-slate-50/50 p-4">
+        <div className="lg:col-span-4 flex flex-col rounded-2xl border border-gray-105 bg-surface-solid p-4">
           <div className="flex items-center justify-between border-b border-gray-200 pb-3">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-4.5 w-4.5 text-brand-cobalt" />
-              <h3 className="font-display font-extrabold text-brand-navy text-sm">Copilot Assistant</h3>
+              <Sparkles className="h-4.5 w-4.5 text-accent" />
+              <h3 className="font-display font-extrabold text-white text-sm">Copilot Assistant</h3>
             </div>
             <div className="flex items-center gap-1.5">
               <button
@@ -975,19 +975,19 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
           <div className="my-3 flex gap-1.5 overflow-x-auto pb-1 select-none shrink-0 scrollbar-none">
             <button
               onClick={() => queryGeminiCoPilot(`Can you summarize the main findings of Page ${currentPage}?`)}
-              className="rounded-lg bg-white border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-600 hover:border-brand-cobalt hover:text-brand-cobalt shrink-0 transition cursor-pointer"
+              className="rounded-lg bg-white border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-600 hover:border-accent hover:text-accent shrink-0 transition cursor-pointer"
             >
               📝 Summarize Page
             </button>
             <button
               onClick={() => queryGeminiCoPilot(`Can you identify the critical math formula or logical methodology on Page ${currentPage}?`)}
-              className="rounded-lg bg-white border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-600 hover:border-brand-cobalt hover:text-brand-cobalt shrink-0 transition cursor-pointer"
+              className="rounded-lg bg-white border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-600 hover:border-accent hover:text-accent shrink-0 transition cursor-pointer"
             >
               📐 Key Equations
             </button>
             <button
               onClick={() => queryGeminiCoPilot(`Generate 3 quiz trivia questions based strictly on the text of Page ${currentPage} so I can test my retention.`)}
-              className="rounded-lg bg-white border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-600 hover:border-brand-cobalt hover:text-brand-cobalt shrink-0 transition cursor-pointer"
+              className="rounded-lg bg-white border border-gray-200 px-3 py-1.5 text-[10px] font-bold text-gray-600 hover:border-accent hover:text-accent shrink-0 transition cursor-pointer"
             >
               🧠 Test Me
             </button>
@@ -1015,7 +1015,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
             })}
             {loading && (
               <div className="flex items-center gap-2 rounded-2xl bg-white border border-gray-100 p-4 text-xs text-gray-500 self-start max-w-[80%] animate-pulse">
-                <Loader2 className="h-4 w-4 text-brand-cobalt animate-spin" />
+                <Loader2 className="h-4 w-4 text-accent animate-spin" />
                 <span>Scholar co-pilot is thinking...</span>
               </div>
             )}
@@ -1029,12 +1029,12 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
               value={currentInput}
               onChange={(e) => setCurrentInput(e.target.value)}
               placeholder="Ask anything about the paper..."
-              className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-3.5 pr-12 text-xs font-medium focus:border-brand-cobalt focus:outline-hidden"
+              className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-3.5 pr-12 text-xs font-medium focus:border-accent focus:outline-hidden"
               disabled={loading}
             />
             <button
               type="submit"
-              className="absolute right-1.5 top-1.5 rounded-lg bg-brand-navy p-1.5 text-white hover:bg-brand-cobalt transition disabled:opacity-50 cursor-pointer"
+              className="absolute right-1.5 top-1.5 rounded-lg bg-brand-navy p-1.5 text-white hover:bg-accent transition disabled:opacity-50 cursor-pointer"
               disabled={loading || !currentInput.trim()}
             >
               <CornerDownLeft className="h-3.5 w-3.5" />
@@ -1048,14 +1048,14 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
       {/* PDF PAYWALL MODAL */}
       {showPdfPaywallModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-xs fade-in">
-          <div className="max-w-md w-full bg-white rounded-3xl p-6.5 shadow-2xl relative border border-slate-100 text-center space-y-4">
+          <div className="max-w-md w-full bg-white rounded-3xl p-6.5 shadow-2xl relative border border-border-subtle text-center space-y-4">
             
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-4 ring-indigo-500/5 animate-bounce-slow">
               <BookOpen className="h-6 w-6" />
             </div>
 
             <div>
-              <h3 className="font-display text-2xl font-black text-brand-navy tracking-tight">
+              <h3 className="font-display text-2xl font-black text-white tracking-tight">
                 Unlock Unlimited PDFs
               </h3>
               <p className="mt-2 text-xs text-gray-500 leading-normal max-w-xs mx-auto font-sans">
@@ -1064,20 +1064,20 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
             </div>
 
             {/* Benefit Grid */}
-            <div className="rounded-2xl border border-dashed border-gray-200 bg-slate-50/50 p-4 text-left text-xs space-y-2 font-sans">
-              <div className="flex justify-between font-bold text-brand-navy">
+            <div className="rounded-2xl border border-dashed border-gray-200 bg-surface-solid p-4 text-left text-xs space-y-2 font-sans">
+              <div className="flex justify-between font-bold text-white">
                 <span>⭐ Pro Scholar Plan Benefits:</span>
-                <span className="text-brand-cobalt font-extrabold">Unlimited</span>
+                <span className="text-accent font-extrabold">Unlimited</span>
               </div>
-              <div className="flex justify-between text-slate-500">
+              <div className="flex justify-between text-text-muted">
                 <span>• Infinite PDF uploads</span>
                 <span className="font-bold text-emerald-600">Yes</span>
               </div>
-              <div className="flex justify-between text-slate-500">
+              <div className="flex justify-between text-text-muted">
                 <span>• Full Gemini AI chat history</span>
                 <span className="font-bold text-emerald-600">Yes</span>
               </div>
-              <div className="flex justify-between text-slate-500">
+              <div className="flex justify-between text-text-muted">
                 <span>• 10 GB Secure Cloud Drive</span>
                 <span className="font-bold text-emerald-600">Yes</span>
               </div>
@@ -1086,7 +1086,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
             <div className="flex gap-2.5 pt-2">
               <button
                 onClick={() => setShowPdfPaywallModal(false)}
-                className="w-1/2 rounded-xl border border-gray-200 hover:bg-slate-50 py-3 text-xs font-bold text-gray-600 transition cursor-pointer"
+                className="w-1/2 rounded-xl border border-gray-200 hover:bg-surface-solid py-3 text-xs font-bold text-gray-600 transition cursor-pointer"
               >
                 Maybe Later
               </button>

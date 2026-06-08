@@ -246,12 +246,12 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-950 flex font-sans overflow-hidden relative">
+    <div className="min-h-screen w-full bg-bg-primary flex font-sans overflow-hidden relative">
       {/* Absolute Header for Mobile / Back Button */}
       <div className="absolute top-6 left-6 z-50">
         <button 
           onClick={() => setCurrentView("landing")}
-          className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-200"
+          className="flex items-center gap-2 text-text-secondary hover:text-white transition-colors duration-200"
         >
           <ArrowRight className="w-5 h-5 rotate-180" />
           <span className="text-sm font-medium">Back to Home</span>
@@ -259,17 +259,17 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
       </div>
 
       {/* LEFT PANE: Beautiful Visuals (Hidden on small screens) */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 border-r border-slate-800/50 flex-col justify-between p-12 overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-bg-primary border-r border-slate-800/50 flex-col justify-between p-12 overflow-hidden">
         {/* Background Gradients & Constellation */}
         <div className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
           <ConstellationBackground />
         </div>
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand-cobalt/20 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-accent/20 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/20 blur-[120px] rounded-full pointer-events-none" />
 
         <div className="relative z-10">
           <div className="flex items-center gap-3">
-            <Logo className="w-10 h-10 text-brand-cobalt" />
+            <Logo className="w-10 h-10 text-accent" />
             <span className="text-xl font-black text-white font-display tracking-tight">BlueBottleCap</span>
           </div>
           <h1 className="mt-16 text-5xl font-black text-white leading-tight font-display tracking-tight">
@@ -278,7 +278,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
               academic workflow
             </span>
           </h1>
-          <p className="mt-6 text-lg text-slate-400 max-w-md">
+          <p className="mt-6 text-lg text-text-secondary max-w-md">
             Join thousands of students and researchers using AI to read faster, synthesize better, and retain more knowledge.
           </p>
         </div>
@@ -289,15 +289,15 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 mb-4 shadow-xl"
+            className="bg-surface-solid/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 mb-4 shadow-xl"
           >
             <div className="flex items-start gap-4">
-              <div className="p-2.5 rounded-xl bg-brand-cobalt/20 text-brand-cobalt">
+              <div className="p-2.5 rounded-xl bg-accent/20 text-accent">
                 <Sparkles className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="text-white font-bold mb-1">Instant PDF Co-pilot</h3>
-                <p className="text-sm text-slate-400">Chat with your research papers and extract key insights in seconds.</p>
+                <p className="text-sm text-text-secondary">Chat with your research papers and extract key insights in seconds.</p>
               </div>
             </div>
           </motion.div>
@@ -306,7 +306,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 shadow-xl ml-8"
+            className="bg-surface-solid/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 shadow-xl ml-8"
           >
             <div className="flex items-start gap-4">
               <div className="p-2.5 rounded-xl bg-purple-500/20 text-purple-400">
@@ -314,7 +314,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
               </div>
               <div>
                 <h3 className="text-white font-bold mb-1">Smart Flashcards</h3>
-                <p className="text-sm text-slate-400">Auto-generate study decks from any document to ace your exams.</p>
+                <p className="text-sm text-text-secondary">Auto-generate study decks from any document to ace your exams.</p>
               </div>
             </div>
           </motion.div>
@@ -324,10 +324,10 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
           <div className="flex -space-x-3 mt-8">
             <div className="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-700"></div>
             <div className="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-600"></div>
-            <div className="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-500"></div>
-            <div className="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center text-xs font-bold text-white">+2k</div>
+            <div className="w-10 h-10 rounded-full border-2 border-slate-900 bg-surface-solid0"></div>
+            <div className="w-10 h-10 rounded-full border-2 border-slate-900 bg-surface-solid flex items-center justify-center text-xs font-bold text-white">+2k</div>
           </div>
-          <p className="text-sm text-slate-500 mt-3 font-medium">Loved by students worldwide</p>
+          <p className="text-sm text-text-muted mt-3 font-medium">Loved by students worldwide</p>
         </div>
       </div>
 
@@ -335,7 +335,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 relative z-10">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center justify-center gap-3 mb-10">
-            <Logo className="w-10 h-10 text-brand-cobalt" />
+            <Logo className="w-10 h-10 text-accent" />
             <span className="text-2xl font-black text-white font-display tracking-tight">BlueBottleCap</span>
           </div>
 
@@ -353,7 +353,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
                 {mode === "signup" && isVerifyingOTP && "Verify your email"}
                 {mode === "forgot" && "Reset your password"}
               </h2>
-              <p className="mt-3 text-slate-400">
+              <p className="mt-3 text-text-secondary">
                 {mode === "signin" && "Sign in to access your dashboard"}
                 {mode === "signup" && !isVerifyingOTP && "Unlock high-power AI academic tools in seconds"}
                 {mode === "signup" && isVerifyingOTP && "We sent a 6-digit code to your email. Enter it below to verify."}
@@ -382,11 +382,11 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
             <form onSubmit={handleSubmit} className="space-y-5">
               {mode === "signup" && !isVerifyingOTP && (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-1.5">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
                     Full Name
                   </label>
                   <div className="relative">
-                    <span className="absolute inset-y-0 left-4 flex items-center text-slate-500">
+                    <span className="absolute inset-y-0 left-4 flex items-center text-text-muted">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                       </svg>
@@ -397,7 +397,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Jane Doe"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-800/50 py-3.5 pl-12 pr-4 text-sm font-medium text-white placeholder-slate-500 focus:border-brand-cobalt focus:bg-slate-800 focus:ring-1 focus:ring-brand-cobalt focus:outline-none transition-all"
+                      className="w-full rounded-xl border border-slate-700 bg-surface-solid/50 py-3.5 pl-12 pr-4 text-sm font-medium text-white placeholder-slate-500 focus:border-accent focus:bg-surface-solid focus:ring-1 focus:ring-brand-cobalt focus:outline-none transition-all"
                     />
                   </div>
                 </motion.div>
@@ -405,11 +405,11 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
 
               {!isVerifyingOTP && (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-1.5">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
                     Email Address
                   </label>
                   <div className="relative">
-                    <span className="absolute inset-y-0 left-4 flex items-center text-slate-500">
+                    <span className="absolute inset-y-0 left-4 flex items-center text-text-muted">
                       <Mail className="w-5 h-5" />
                     </span>
                     <input
@@ -418,7 +418,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@school.edu"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-800/50 py-3.5 pl-12 pr-4 text-sm font-medium text-white placeholder-slate-500 focus:border-brand-cobalt focus:bg-slate-800 focus:ring-1 focus:ring-brand-cobalt focus:outline-none transition-all disabled:opacity-50"
+                      className="w-full rounded-xl border border-slate-700 bg-surface-solid/50 py-3.5 pl-12 pr-4 text-sm font-medium text-white placeholder-slate-500 focus:border-accent focus:bg-surface-solid focus:ring-1 focus:ring-brand-cobalt focus:outline-none transition-all disabled:opacity-50"
                     />
                   </div>
                 </motion.div>
@@ -427,21 +427,21 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
               {mode !== "forgot" && !isVerifyingOTP && (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-1.5">
                   <div className="flex justify-between items-center">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
                       Password
                     </label>
                     {mode === "signin" && (
                       <button
                         type="button"
                         onClick={() => setMode("forgot")}
-                        className="text-[11px] font-bold text-brand-cobalt hover:text-white transition-colors cursor-pointer"
+                        className="text-[11px] font-bold text-accent hover:text-white transition-colors cursor-pointer"
                       >
                         Forgot password?
                       </button>
                     )}
                   </div>
                   <div className="relative">
-                    <span className="absolute inset-y-0 left-4 flex items-center text-slate-500">
+                    <span className="absolute inset-y-0 left-4 flex items-center text-text-muted">
                       <Lock className="w-5 h-5" />
                     </span>
                     <input
@@ -450,7 +450,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-800/50 py-3.5 pl-12 pr-4 text-sm font-medium text-white placeholder-slate-500 focus:border-brand-cobalt focus:bg-slate-800 focus:ring-1 focus:ring-brand-cobalt focus:outline-none transition-all"
+                      className="w-full rounded-xl border border-slate-700 bg-surface-solid/50 py-3.5 pl-12 pr-4 text-sm font-medium text-white placeholder-slate-500 focus:border-accent focus:bg-surface-solid focus:ring-1 focus:ring-brand-cobalt focus:outline-none transition-all"
                     />
                   </div>
                 </motion.div>
@@ -470,7 +470,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
                         value={digit}
                         onChange={(e) => handleOtpChange(i, e.target.value)}
                         onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                        className="w-10 h-12 sm:w-12 sm:h-14 text-center rounded-xl border border-slate-700 bg-slate-800/80 text-xl font-bold text-white focus:border-brand-cobalt focus:bg-slate-800 focus:ring-2 focus:ring-brand-cobalt focus:outline-none transition-all shadow-inner"
+                        className="w-10 h-12 sm:w-12 sm:h-14 text-center rounded-xl border border-slate-700 bg-surface-solid/80 text-xl font-bold text-white focus:border-accent focus:bg-surface-solid focus:ring-2 focus:ring-brand-cobalt focus:outline-none transition-all shadow-inner"
                       />
                     ))}
                   </div>
@@ -479,20 +479,20 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
                     <button
                       type="button"
                       onClick={() => setIsVerifyingOTP(false)}
-                      className="text-xs font-bold text-slate-500 hover:text-slate-300 transition-colors"
+                      className="text-xs font-bold text-text-muted hover:text-text-primary transition-colors"
                     >
                       Change email
                     </button>
                     
                     {timer > 0 ? (
-                      <span className="text-xs font-bold text-slate-400 bg-slate-800 px-3 py-1.5 rounded-full">
+                      <span className="text-xs font-bold text-text-secondary bg-surface-solid px-3 py-1.5 rounded-full">
                         Resend code in {timer}s
                       </span>
                     ) : (
                       <button
                         type="button"
                         onClick={handleResend}
-                        className="text-xs font-bold text-brand-cobalt hover:text-brand-sky transition-colors bg-brand-cobalt/10 px-3 py-1.5 rounded-full"
+                        className="text-xs font-bold text-accent hover:text-accent transition-colors bg-accent/10 px-3 py-1.5 rounded-full"
                       >
                         Resend OTP
                       </button>
@@ -523,7 +523,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-slate-800"></div>
                   </div>
-                  <span className="relative bg-slate-950 px-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  <span className="relative bg-bg-primary px-4 text-[11px] font-bold uppercase tracking-wider text-text-muted">
                     Or continue with
                   </span>
                 </div>
@@ -531,7 +531,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
                 <button
                   onClick={handleGoogleSignIn}
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-3 rounded-xl border border-slate-700 bg-slate-800/30 hover:bg-slate-800 py-3.5 text-sm font-bold text-white transition-all cursor-pointer disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-3 rounded-xl border border-slate-700 bg-surface-solid/30 hover:bg-surface-solid py-3.5 text-sm font-bold text-white transition-all cursor-pointer disabled:opacity-50"
                 >
                   <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
                     <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.2-5.136 4.2A5.727 5.727 0 0 1 8.2 12.9a5.727 5.727 0 0 1 5.79-5.7 5.666 5.666 0 0 1 3.93 1.545l3.1-3.1A9.913 9.913 0 0 0 13.99 2.1a10.8 10.8 0 0 0-10.8 10.8 10.8 10.8 0 0 0 10.8 10.8c5.73 0 9.87-3.955 9.87-9.87a9.23 9.23 0 0 0-.21-2.145H12.24Z"/>
@@ -543,23 +543,23 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
 
             <div className="mt-8 text-center text-sm">
               {mode === "signin" && (
-                <p className="text-slate-400">
+                <p className="text-text-secondary">
                   New to BlueBottleCap?{" "}
-                  <button onClick={() => setMode("signup")} className="font-bold text-brand-cobalt hover:text-white transition-colors cursor-pointer">
+                  <button onClick={() => setMode("signup")} className="font-bold text-accent hover:text-white transition-colors cursor-pointer">
                     Create an account
                   </button>
                 </p>
               )}
               {mode === "signup" && (
-                <p className="text-slate-400">
+                <p className="text-text-secondary">
                   Already have an account?{" "}
-                  <button onClick={() => setMode("signin")} className="font-bold text-brand-cobalt hover:text-white transition-colors cursor-pointer">
+                  <button onClick={() => setMode("signin")} className="font-bold text-accent hover:text-white transition-colors cursor-pointer">
                     Sign in
                   </button>
                 </p>
               )}
               {mode === "forgot" && (
-                <button onClick={() => setMode("signin")} className="font-bold text-brand-cobalt hover:text-white transition-colors cursor-pointer">
+                <button onClick={() => setMode("signin")} className="font-bold text-accent hover:text-white transition-colors cursor-pointer">
                   Back to Sign In
                 </button>
               )}

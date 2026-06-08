@@ -85,9 +85,9 @@ export const FlashcardsPage: React.FC<FlashcardsPageProps> = ({
   if (filteredCards.length === 0) {
     return (
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 text-center">
-        <h1 className="text-3xl font-black font-display text-brand-navy mb-4">Flashcards</h1>
+        <h1 className="text-3xl font-black font-display text-white mb-4">Flashcards</h1>
         <div className="bg-white rounded-3xl border border-gray-100 p-12 shadow-sm">
-          <Brain className="w-16 h-16 text-brand-cobalt mx-auto mb-4 opacity-50" />
+          <Brain className="w-16 h-16 text-accent mx-auto mb-4 opacity-50" />
           <h2 className="text-xl font-bold text-gray-700">You're all caught up!</h2>
           <p className="text-gray-500 mt-2">No flashcards {filter === "Due Today" ? "due for review today" : "in this category"}.</p>
           <div className="mt-6 flex justify-center gap-4">
@@ -97,7 +97,7 @@ export const FlashcardsPage: React.FC<FlashcardsPageProps> = ({
                 onClick={() => { setFilter(cat); setCurrentIndex(0); setIsFlipped(false); }}
                 className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${
                   filter === cat 
-                    ? "bg-brand-cobalt text-white" 
+                    ? "bg-accent text-white" 
                     : "text-gray-600 bg-gray-50 hover:bg-gray-100"
                 }`}
               >
@@ -114,7 +114,7 @@ export const FlashcardsPage: React.FC<FlashcardsPageProps> = ({
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8 flex flex-col items-center justify-between sm:flex-row gap-4">
         <div>
-          <h1 className="text-3xl font-black font-display text-brand-navy">Flashcards</h1>
+          <h1 className="text-3xl font-black font-display text-white">Flashcards</h1>
           <p className="mt-1 text-sm text-gray-500">Spaced repetition for long-term retention.</p>
         </div>
         
@@ -126,7 +126,7 @@ export const FlashcardsPage: React.FC<FlashcardsPageProps> = ({
               onClick={() => { setFilter(cat); setCurrentIndex(0); setIsFlipped(false); }}
               className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${
                 filter === cat 
-                  ? "bg-brand-cobalt text-white" 
+                  ? "bg-accent text-white" 
                   : "text-gray-600 hover:bg-gray-50"
               }`}
             >
@@ -147,10 +147,10 @@ export const FlashcardsPage: React.FC<FlashcardsPageProps> = ({
           >
             {/* Front of Card */}
             <div className="absolute inset-0 backface-hidden bg-white border-2 border-gray-100 shadow-xl rounded-3xl p-8 flex flex-col items-center justify-center text-center group">
-              <div className="absolute top-6 left-6 text-xs font-bold text-brand-cobalt bg-brand-cobalt/10 px-3 py-1 rounded-full">
+              <div className="absolute top-6 left-6 text-xs font-bold text-accent bg-accent/10 px-3 py-1 rounded-full">
                 {currentCard.category} {currentCard.topic ? `• ${currentCard.topic}` : ''}
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-brand-navy leading-relaxed">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white leading-relaxed">
                 {currentCard.question}
               </h2>
               <div className="absolute bottom-6 text-sm text-gray-400 font-medium flex items-center gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
@@ -196,7 +196,7 @@ export const FlashcardsPage: React.FC<FlashcardsPageProps> = ({
         <div className={`flex items-center gap-6 mt-8 transition-opacity duration-300 ${isFlipped ? 'opacity-0' : 'opacity-100'}`}>
           <button 
             onClick={prevCard}
-            className="w-12 h-12 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center text-gray-600 hover:text-brand-cobalt hover:border-brand-cobalt transition-colors"
+            className="w-12 h-12 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center text-gray-600 hover:text-accent hover:border-accent transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
@@ -207,7 +207,7 @@ export const FlashcardsPage: React.FC<FlashcardsPageProps> = ({
 
           <button 
             onClick={nextCard}
-            className="w-12 h-12 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center text-gray-600 hover:text-brand-cobalt hover:border-brand-cobalt transition-colors"
+            className="w-12 h-12 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center text-gray-600 hover:text-accent hover:border-accent transition-colors"
           >
             <ChevronRight className="w-6 h-6" />
           </button>

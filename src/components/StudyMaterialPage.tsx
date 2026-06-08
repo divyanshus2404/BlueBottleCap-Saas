@@ -39,7 +39,7 @@ const HL: React.FC<{ children: string }> = ({ children }) => {
           return (
             <mark
               key={i}
-              className="bg-yellow-200 rounded-sm px-0.5 font-semibold not-italic text-gray-900 dark:text-white"
+              className="bg-yellow-200 rounded-sm px-0.5 font-semibold not-italic text-gray-900 text-white"
               style={{
                 background:
                   "linear-gradient(to bottom, transparent 20%, #FEF08A 20%, #FEF08A 82%, transparent 82%)",
@@ -74,7 +74,7 @@ const subjectBg: Record<string, string> = {
 };
 
 const questionTypeBadge: Record<string, string> = {
-  NCERT: "bg-slate-100 dark:bg-slate-800 text-slate-600",
+  NCERT: "bg-surface-glass bg-surface-solid text-slate-600",
   "JEE Mains": "bg-amber-100 text-amber-700",
   "JEE Advanced": "bg-purple-100 text-purple-700",
 };
@@ -103,26 +103,26 @@ const ConceptCard: React.FC<{
   isOpen: boolean;
   onToggle: () => void;
 }> = ({ concept, idx, isOpen, onToggle }) => (
-  <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-sm">
+  <div className="rounded-2xl border border-border-subtle dark:border-slate-800 bg-white bg-bg-primary overflow-hidden shadow-sm">
     <button
       onClick={onToggle}
-      className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-slate-50 dark:bg-slate-950 transition cursor-pointer"
+      className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-solid bg-bg-primary transition cursor-pointer"
     >
       <div className="flex items-center gap-3">
         <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-navy text-white text-[11px] font-black flex items-center justify-center">
           {idx + 1}
         </span>
-        <span className="text-sm font-bold text-brand-navy dark:text-white">{concept.title}</span>
+        <span className="text-sm font-bold text-white text-white">{concept.title}</span>
       </div>
       {isOpen ? (
-        <ChevronUp className="w-4 h-4 text-slate-400 shrink-0" />
+        <ChevronUp className="w-4 h-4 text-text-secondary shrink-0" />
       ) : (
-        <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
+        <ChevronDown className="w-4 h-4 text-text-secondary shrink-0" />
       )}
     </button>
 
     {isOpen && (
-      <div className="px-4 pb-4 space-y-3 border-t border-slate-100 pt-3">
+      <div className="px-4 pb-4 space-y-3 border-t border-border-subtle pt-3">
         {/* Explanation with highlights */}
         <p className="text-sm text-slate-700 leading-relaxed">
           <HL>{concept.explanation}</HL>
@@ -131,7 +131,7 @@ const ConceptCard: React.FC<{
         {/* Formula box — blackboard style */}
         {concept.formula && (
           <div className="rounded-xl bg-gray-950 px-4 py-3 border border-gray-800">
-            <p className="text-[10px] font-black text-gray-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+            <p className="text-[10px] font-black text-gray-500 text-text-secondary uppercase tracking-widest mb-1.5">
               Formula
             </p>
             <p className="font-mono text-green-400 text-sm leading-relaxed whitespace-pre-wrap">
@@ -163,17 +163,17 @@ const QuestionCard: React.FC<{
   const [selectedOpt, setSelectedOpt] = useState<string | null>(null);
 
   return (
-    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+    <div className="rounded-2xl border border-border-subtle dark:border-slate-800 bg-white bg-bg-primary shadow-sm overflow-hidden">
       <div className="px-4 pt-4 pb-3 space-y-3">
         <div className="flex items-start gap-2.5">
           <span
             className={`text-[9px] font-black px-2 py-0.5 rounded-full shrink-0 mt-0.5 border ${
-              questionTypeBadge[q.type] || "bg-slate-100 dark:bg-slate-800 text-slate-500"
+              questionTypeBadge[q.type] || "bg-surface-glass bg-surface-solid text-text-muted"
             }`}
           >
             {q.type}
           </span>
-          <p className="text-[13px] font-semibold text-brand-navy dark:text-white leading-snug">{q.text}</p>
+          <p className="text-[13px] font-semibold text-white text-white leading-snug">{q.text}</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -200,7 +200,7 @@ const QuestionCard: React.FC<{
                     ? "bg-red-100 border-red-300 text-red-800 font-bold"
                     : isSelected
                     ? "bg-brand-navy border-brand-navy text-white shadow-md ring-2 ring-brand-cobalt/20 scale-[1.02]"
-                    : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900"
+                    : "bg-surface-solid bg-bg-primary border-border-subtle dark:border-slate-800 text-slate-700 text-text-primary hover:border-slate-300 hover:bg-surface-glass dark:hover:bg-bg-primary"
                 }`}
               >
                 {opt}
@@ -210,8 +210,8 @@ const QuestionCard: React.FC<{
         </div>
 
         {isRevealed && (
-          <div className="rounded-xl bg-slate-900 px-4 py-3 animate-fade-in mt-3">
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+          <div className="rounded-xl bg-bg-primary px-4 py-3 animate-fade-in mt-3">
+            <p className="text-[10px] font-black text-text-muted uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
               <Lightbulb className="w-3.5 h-3.5 text-yellow-400" />
               Solution
             </p>
@@ -220,7 +220,7 @@ const QuestionCard: React.FC<{
         )}
       </div>
 
-      <div className="border-t border-slate-100 dark:border-slate-800 px-4 py-3 bg-slate-50 dark:bg-slate-950">
+      <div className="border-t border-border-subtle dark:border-slate-800 px-4 py-3 bg-surface-solid bg-bg-primary">
         <button
           onClick={() => {
             if (isRevealed && selectedOpt) {
@@ -228,7 +228,7 @@ const QuestionCard: React.FC<{
             }
             onReveal();
           }}
-          className="flex items-center gap-1.5 text-[11px] font-bold text-brand-cobalt hover:text-brand-navy dark:text-white transition cursor-pointer"
+          className="flex items-center gap-1.5 text-[11px] font-bold text-accent hover:text-white text-white transition cursor-pointer"
         >
           {isRevealed ? (
             <>
@@ -323,13 +323,13 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
   return (
     <div className="min-h-screen bg-[#FDFCF9]">
       {/* ── TOP HEADER ── */}
-      <div className="sticky top-0 z-30 bg-white dark:bg-slate-900/90 backdrop-blur border-b border-slate-100 shadow-sm">
+      <div className="sticky top-0 z-30 bg-white bg-bg-primary/90 backdrop-blur border-b border-border-subtle shadow-sm">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
           <div className="flex items-center gap-4 h-14">
             {/* Back */}
             <button
               onClick={() => onNavigate("dashboard")}
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-brand-navy dark:text-white transition cursor-pointer shrink-0"
+              className="flex items-center gap-1.5 text-xs font-bold text-text-muted hover:text-white text-white transition cursor-pointer shrink-0"
             >
               <ArrowLeft className="w-4 h-4" />
               <span className="hidden sm:inline">Home</span>
@@ -337,8 +337,8 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
 
             {/* Title */}
             <div className="flex items-center gap-2 shrink-0">
-              <BookOpen className="w-5 h-5 text-brand-cobalt" />
-              <span className="font-display text-base font-black text-brand-navy dark:text-white tracking-tight">
+              <BookOpen className="w-5 h-5 text-accent" />
+              <span className="font-display text-base font-black text-white text-white tracking-tight">
                 Study Material
               </span>
               <span className="hidden sm:inline text-[10px] bg-green-100 text-green-700 font-black px-2 py-0.5 rounded-full border border-green-200">
@@ -359,7 +359,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-black transition cursor-pointer ${
                     selectedSubject === subj && !searchQuery
                       ? `bg-gradient-to-r ${subjectColor[subj]} text-white shadow-sm`
-                      : "text-slate-500 hover:bg-slate-100 dark:bg-slate-800"
+                      : "text-text-muted hover:bg-surface-glass bg-surface-solid"
                   }`}
                 >
                   {subjectIcon[subj]}
@@ -370,12 +370,12 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
 
             {/* Search */}
             <div className="ml-auto relative w-48 sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-secondary" />
               <input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search chapters or topics..."
-                className="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:border-brand-cobalt focus:bg-white dark:bg-slate-900 transition"
+                className="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-border-subtle dark:border-slate-800 bg-surface-solid bg-bg-primary focus:outline-none focus:border-accent focus:bg-white bg-bg-primary transition"
               />
             </div>
           </div>
@@ -393,10 +393,10 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-6 flex gap-5">
         {/* ── LEFT: CHAPTER LIST ── */}
         <aside className="w-56 xl:w-64 shrink-0 sticky top-[88px] h-[calc(100vh-100px)] overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+          <div className="bg-white bg-bg-primary rounded-2xl border border-border-subtle dark:border-slate-800 shadow-sm overflow-hidden">
             {/* Chapter count */}
-            <div className="px-4 py-3 border-b border-slate-100 bg-slate-50 dark:bg-slate-950">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+            <div className="px-4 py-3 border-b border-border-subtle bg-surface-solid bg-bg-primary">
+              <p className="text-[10px] font-black text-text-muted uppercase tracking-widest">
                 {searchQuery ? `${filteredChapters.length} results` : selectedSubject} — {filteredChapters.length} chapters
               </p>
             </div>
@@ -405,7 +405,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
               {/* Class 11 */}
               {classByChapters.c11.length > 0 && !searchQuery && (
                 <div className="px-3 pt-2 pb-1">
-                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                  <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">
                     Class 11
                   </p>
                 </div>
@@ -417,7 +417,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                   className={`w-full text-left px-3 py-2.5 text-[12px] font-semibold transition flex items-center gap-2 ${
                     selectedChapter === ch.chapter
                       ? "bg-brand-navy text-white"
-                      : "text-slate-600 hover:bg-slate-50 dark:bg-slate-950 hover:text-brand-navy dark:text-white"
+                      : "text-slate-600 hover:bg-surface-solid bg-bg-primary hover:text-white text-white"
                   }`}
                 >
                   {searchQuery && (
@@ -433,7 +433,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
               {classByChapters.c12.length > 0 && !searchQuery && (
                 <>
                   <div className="px-3 pt-4 pb-1">
-                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                    <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">
                       Class 12
                     </p>
                   </div>
@@ -444,7 +444,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                       className={`w-full text-left px-3 py-2.5 text-[12px] font-semibold transition flex items-center gap-2 ${
                         selectedChapter === ch.chapter
                           ? "bg-brand-navy text-white"
-                          : "text-slate-600 hover:bg-slate-50 dark:bg-slate-950 hover:text-brand-navy dark:text-white"
+                          : "text-slate-600 hover:bg-surface-solid bg-bg-primary hover:text-white text-white"
                       }`}
                     >
                       <span className="truncate leading-snug">{ch.chapter}</span>
@@ -465,10 +465,10 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-bold bg-white dark:bg-slate-900/20 rounded-lg px-2.5 py-1">
+                      <span className="text-xs font-bold bg-white bg-bg-primary/20 rounded-lg px-2.5 py-1">
                         Class {currentChapter.class}
                       </span>
-                      <span className="text-xs font-bold bg-white dark:bg-slate-900/20 rounded-lg px-2.5 py-1 flex items-center gap-1">
+                      <span className="text-xs font-bold bg-white bg-bg-primary/20 rounded-lg px-2.5 py-1 flex items-center gap-1">
                         {subjectIcon[currentChapter.subject]}
                         {currentChapter.subject}
                       </span>
@@ -487,7 +487,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
               </div>
 
               {/* Tab bar */}
-              <div className="flex gap-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-1 shadow-sm">
+              <div className="flex gap-1 bg-white bg-bg-primary rounded-2xl border border-border-subtle dark:border-slate-800 p-1 shadow-sm">
                 {(["notes", "questions", "resources"] as const).map((tab) => (
                   <button
                     key={tab}
@@ -495,7 +495,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                     className={`flex-1 py-2 rounded-xl text-xs font-bold capitalize transition cursor-pointer ${
                       activeTab === tab
                         ? "bg-brand-navy text-white shadow-sm"
-                        : "text-slate-500 hover:bg-slate-50 dark:bg-slate-950"
+                        : "text-text-muted hover:bg-surface-solid bg-bg-primary"
                     }`}
                   >
                     {tab === "notes" && "📖 "}
@@ -512,8 +512,8 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                   {/* Key Concepts */}
                   <section>
                     <div className="flex items-center gap-2 mb-3">
-                      <div className="w-1 h-5 rounded-full bg-brand-cobalt" />
-                      <h2 className="text-sm font-black text-brand-navy dark:text-white uppercase tracking-wide">
+                      <div className="w-1 h-5 rounded-full bg-accent" />
+                      <h2 className="text-sm font-black text-white text-white uppercase tracking-wide">
                         Key Concepts
                       </h2>
                     </div>
@@ -534,11 +534,11 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                   <section>
                     <div className="flex items-center gap-2 mb-3">
                       <div className="w-1 h-5 rounded-full bg-yellow-400" />
-                      <h2 className="text-sm font-black text-brand-navy dark:text-white uppercase tracking-wide">
+                      <h2 className="text-sm font-black text-white text-white uppercase tracking-wide">
                         Must-Know Points
                       </h2>
                     </div>
-                    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm divide-y divide-slate-100">
+                    <div className="bg-white bg-bg-primary rounded-2xl border border-border-subtle dark:border-slate-800 shadow-sm divide-y divide-slate-100">
                       {currentChapter.importantPoints.map((pt, i) => (
                         <div key={i} className="flex items-start gap-3 px-4 py-3.5">
                           <span
@@ -559,7 +559,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                     <section>
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-1 h-5 rounded-full bg-blue-500" />
-                        <h2 className="text-sm font-black text-brand-navy dark:text-white uppercase tracking-wide">
+                        <h2 className="text-sm font-black text-white text-white uppercase tracking-wide">
                           ⭐ Topper Tips
                         </h2>
                       </div>
@@ -584,7 +584,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                     <section>
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-1 h-5 rounded-full bg-red-400" />
-                        <h2 className="text-sm font-black text-brand-navy dark:text-white uppercase tracking-wide">
+                        <h2 className="text-sm font-black text-white text-white uppercase tracking-wide">
                           ⚠️ Common Mistakes
                         </h2>
                       </div>
@@ -618,7 +618,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                         className={`px-3 py-1.5 rounded-xl text-[11px] font-black transition cursor-pointer border ${
                           questionFilter === f
                             ? "bg-brand-navy text-white border-brand-navy"
-                            : "bg-white dark:bg-slate-900 text-slate-500 border-slate-200 dark:border-slate-800 hover:border-slate-300"
+                            : "bg-white bg-bg-primary text-text-muted border-border-subtle dark:border-slate-800 hover:border-slate-300"
                         }`}
                       >
                         {f} {f !== "All" && `(${currentChapter.questions.filter((q) => q.type === f).length})`}
@@ -640,7 +640,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                   })}
 
                   {filteredQuestions.length === 0 && (
-                    <div className="text-center py-10 text-sm text-slate-400 font-semibold">
+                    <div className="text-center py-10 text-sm text-text-secondary font-semibold">
                       No questions of this type for this chapter.
                     </div>
                   )}
@@ -656,7 +656,7 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
 
                   {/* Subject-level resources */}
                   <div className="space-y-3">
-                    <p className="text-xs font-black text-slate-500 uppercase tracking-widest">
+                    <p className="text-xs font-black text-text-muted uppercase tracking-widest">
                       Recommended Free Resources for {currentChapter.subject}
                     </p>
                     {(externalResources[currentChapter.subject] || []).map((res, i) => (
@@ -665,24 +665,24 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                         href={res.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-between bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 hover:border-brand-cobalt hover:shadow-sm transition group"
+                        className="flex items-center justify-between bg-white bg-bg-primary border border-border-subtle dark:border-slate-800 rounded-2xl px-4 py-3.5 hover:border-accent hover:shadow-sm transition group"
                       >
                         <div>
-                          <p className="text-sm font-bold text-brand-navy dark:text-white group-hover:text-brand-cobalt transition">
+                          <p className="text-sm font-bold text-white text-white group-hover:text-accent transition">
                             {res.title}
                           </p>
-                          <p className="text-[11px] text-slate-400 font-medium mt-0.5">
+                          <p className="text-[11px] text-text-secondary font-medium mt-0.5">
                             {res.source}
                           </p>
                         </div>
-                        <ExternalLink className="w-4 h-4 text-slate-300 group-hover:text-brand-cobalt transition shrink-0" />
+                        <ExternalLink className="w-4 h-4 text-text-primary group-hover:text-accent transition shrink-0" />
                       </a>
                     ))}
                   </div>
 
                   {/* NCERT official */}
                   <div className="space-y-3">
-                    <p className="text-xs font-black text-slate-500 uppercase tracking-widest mt-4">
+                    <p className="text-xs font-black text-text-muted uppercase tracking-widest mt-4">
                       Official Textbooks
                     </p>
                     <a
@@ -733,25 +733,25 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
                   return (
                     <div key={cls} className="space-y-4">
                       <h2 className="flex items-center gap-3">
-                        <span className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest whitespace-nowrap">Class {cls} Chapters</span>
-                        <div className="h-px bg-slate-200 dark:bg-slate-800 w-full rounded-full"></div>
+                        <span className="text-xs font-black text-text-secondary text-text-muted uppercase tracking-widest whitespace-nowrap">Class {cls} Chapters</span>
+                        <div className="h-px bg-slate-200 bg-surface-solid w-full rounded-full"></div>
                       </h2>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {classChaps.map(ch => (
                           <button
                             key={ch.chapter}
                             onClick={() => handleChapterSelect(ch.chapter)}
-                            className="text-left bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 hover:border-brand-cobalt hover:shadow-md transition group cursor-pointer flex flex-col h-full"
+                            className="text-left bg-white bg-bg-primary border border-border-subtle dark:border-slate-800 rounded-2xl p-5 hover:border-accent hover:shadow-md transition group cursor-pointer flex flex-col h-full"
                           >
-                            <h3 className="font-bold text-brand-navy dark:text-white group-hover:text-brand-cobalt transition line-clamp-2 min-h-[3rem] leading-snug">
+                            <h3 className="font-bold text-white text-white group-hover:text-accent transition line-clamp-2 min-h-[3rem] leading-snug">
                               {ch.chapter}
                             </h3>
-                            <div className="mt-auto pt-4 flex items-center gap-3 text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wide">
-                              <span className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-950 px-2 py-1 rounded-lg">
-                                <BookOpen className="w-3.5 h-3.5 text-brand-cobalt" /> {ch.keyConcepts?.length || 0}
+                            <div className="mt-auto pt-4 flex items-center gap-3 text-[11px] font-black text-text-secondary text-text-muted uppercase tracking-wide">
+                              <span className="flex items-center gap-1.5 bg-surface-solid bg-bg-primary px-2 py-1 rounded-lg">
+                                <BookOpen className="w-3.5 h-3.5 text-accent" /> {ch.keyConcepts?.length || 0}
                               </span>
-                              <span className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-950 px-2 py-1 rounded-lg">
-                                <FileText className="w-3.5 h-3.5 text-brand-cobalt" /> {ch.questions?.length || 0}
+                              <span className="flex items-center gap-1.5 bg-surface-solid bg-bg-primary px-2 py-1 rounded-lg">
+                                <FileText className="w-3.5 h-3.5 text-accent" /> {ch.questions?.length || 0}
                               </span>
                             </div>
                           </button>
@@ -767,11 +767,11 @@ export const StudyMaterialPage: React.FC<StudyMaterialPageProps> = ({
       </div>
 
       {/* ── FOOTER DISCLAIMER ── */}
-      <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 mt-10">
+      <footer className="border-t border-border-subtle dark:border-slate-800 bg-white bg-bg-primary mt-10">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="text-center sm:text-left">
-              <p className="text-xs text-slate-500 font-semibold">
+              <p className="text-xs text-text-muted font-semibold">
                 📚 <strong>Disclaimer:</strong> All original notes and study material on this page are created and owned by BlueBottleCap. External links direct you to their respective official platforms (NCERT, Vedantu, Physics Wallah, MathonGo, etc.). BlueBottleCap does not host, reproduce, or claim ownership of any third-party educational content. All third-party trademarks belong to their respective owners.
               </p>
             </div>
