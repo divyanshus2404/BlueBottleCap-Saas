@@ -11,6 +11,7 @@ import { LiquidImage } from "./LiquidImage";
 import { MagneticWrapper } from "./MagneticWrapper";
 import { TiltCard } from "./TiltCard";
 import { VelocityMarquee } from "./VelocityMarquee";
+import { HeroBackgroundMarquee } from "./HeroBackgroundMarquee";
 import { SplitTextReveal } from "./SplitTextReveal";
 import NeuralBrainIntro from "./intro/NeuralBrainIntro";
 import useIntroAnimation from "../hooks/useIntroAnimation";
@@ -335,7 +336,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       <Background3D />
       
       {/* ── HERO SECTION ── */}
-      <section className="hero-section relative pt-16 pb-20 md:pt-24 md:pb-28 min-h-screen flex flex-col justify-center perspective-1000 z-10">
+      <section className="hero-section relative pt-16 pb-20 md:pt-24 md:pb-28 min-h-screen flex flex-col justify-center perspective-1000 z-10 overflow-hidden">
+
+        <HeroBackgroundMarquee />
 
         <div className="hero-content mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 text-center w-full mt-10 pointer-events-none">
           <div className="hero-badge hero-reveal-element inline-flex items-center gap-1.5 rounded-full bg-slate-100/80 px-4 py-1.5 text-xs font-semibold text-slate-800 mb-6 backdrop-blur-md border border-slate-200 shadow-sm pointer-events-auto">
