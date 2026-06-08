@@ -130,7 +130,7 @@ export const HeroBackgroundMarquee = () => {
   return (
     <div 
       ref={containerRef}
-      className="absolute inset-0 z-0 flex flex-col justify-center items-center overflow-hidden pointer-events-auto mix-blend-multiply opacity-60"
+      className="absolute inset-0 z-0 flex flex-col justify-center items-center overflow-hidden pointer-events-auto opacity-100"
       style={{
         // Premium edge fading mask
         WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
@@ -147,7 +147,7 @@ export const HeroBackgroundMarquee = () => {
           items={quotes} 
           direction={-1} 
           duration={80} 
-          className="text-[8rem] md:text-[12rem] lg:text-[16rem] font-black text-transparent bg-clip-text bg-gradient-to-b from-slate-200/20 to-slate-100/5 opacity-40" 
+          className="text-[8rem] md:text-[12rem] lg:text-[16rem] font-black text-transparent bg-clip-text bg-gradient-to-b from-slate-900/5 to-slate-800/5 dark:from-slate-200/5 dark:to-slate-100/5" 
         />
         
         {/* Layer 2: Medium speed, medium size, slight offset */}
@@ -155,7 +155,7 @@ export const HeroBackgroundMarquee = () => {
           items={topics} 
           direction={1} 
           duration={45} 
-          className="text-[5rem] md:text-[8rem] lg:text-[11rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-200/40 to-slate-100/10 opacity-60 ml-12" 
+          className="text-[5rem] md:text-[8rem] lg:text-[11rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900/10 to-slate-800/5 dark:from-slate-200/10 dark:to-slate-100/5 ml-12" 
         />
         
         {/* Layer 3: Fast, smaller, more visible */}
@@ -163,7 +163,7 @@ export const HeroBackgroundMarquee = () => {
           items={fastWords} 
           direction={-1} 
           duration={25} 
-          className="text-[4rem] md:text-[6rem] lg:text-[8rem] font-black text-transparent bg-clip-text bg-gradient-to-tr from-slate-300/50 to-slate-200/20 opacity-80" 
+          className="text-[4rem] md:text-[6rem] lg:text-[8rem] font-black text-transparent bg-clip-text bg-gradient-to-tr from-slate-900/15 to-slate-800/10 dark:from-slate-300/15 dark:to-slate-200/10" 
         />
       </div>
     </div>
