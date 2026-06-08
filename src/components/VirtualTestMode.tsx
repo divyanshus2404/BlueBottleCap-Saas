@@ -325,7 +325,12 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
   }, [studySubject]);
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-[calc(100vh-73px)] w-full bg-slate-50 dark:bg-slate-950/50 fade-in text-brand-navy dark:text-white">
+    <div className="flex flex-col lg:flex-row min-h-[calc(100vh-73px)] w-full bg-[#f8fafc] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(99,102,241,0.15),rgba(255,255,255,0))] dark:bg-slate-950/50 fade-in text-brand-navy dark:text-white relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-brand-cobalt/5 blur-3xl" />
+        <div className="absolute top-1/2 -left-20 w-72 h-72 rounded-full bg-teal-400/5 blur-3xl" />
+      </div>
         
         {/* LEFT SIDEBAR NAVIGATION PANEL */}
         <aside className="w-full lg:w-64 bg-white dark:bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 p-6 flex flex-col justify-between shrink-0 print:hidden">
@@ -362,7 +367,14 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
               </div>
               <div className="text-left min-w-0">
                 <strong className="block text-xs font-black truncate text-brand-navy dark:text-white">JEE Aspirant</strong>
-                <span className="block text-[10px] font-bold text-brand-cobalt">Rank: #1240</span>
+                <div className="group relative inline-flex items-center gap-1 mt-0.5">
+                  <span className="block text-[10px] font-bold text-brand-cobalt">Rank: #1240</span>
+                  <div className="cursor-help w-3 h-3 rounded-full border border-brand-cobalt/50 text-brand-cobalt flex items-center justify-center text-[8px] font-bold bg-brand-cobalt/5 hover:bg-brand-cobalt hover:text-white transition-colors">i</div>
+                  <div className="absolute left-0 top-full mt-2 w-48 p-2.5 bg-slate-800 text-slate-200 text-[10px] font-medium leading-relaxed rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 pointer-events-none">
+                    <strong className="text-white block mb-1">Disclaimer</strong>
+                    These ranks are not related to any real exam. They are simply a fun way to encourage consistency and put students to work!
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -411,8 +423,8 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
           </div>
         </aside>
 
-        {/* RIGHT CONTENT PANEL */}
-        <main className="flex-1 p-6 md:p-8 bg-white dark:bg-slate-900 min-h-[500px]">
+        {/* Main Content Pane */}
+        <main className="flex-1 p-6 md:p-8 bg-white/40 backdrop-blur-2xl border-l border-white/60 dark:bg-slate-900/80 min-h-[500px] relative z-10 shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.05)]">
           
           {/* TIMED TEST WORKSPACE (IF ACTIVE) */}
           {activeTest ? (
@@ -671,7 +683,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                   <div className="grid gap-6 md:grid-cols-3">
                     
                     {/* Circle Circular readiness score card */}
-                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 flex flex-col justify-between items-center text-center space-y-4 shadow-3xs relative overflow-hidden">
+                    <div className="bg-white/70 backdrop-blur-xl dark:bg-slate-900 border border-white dark:border-slate-800/80 rounded-3xl p-6 flex flex-col justify-between items-center text-center space-y-4 shadow-xl shadow-slate-200/40 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
                       <div className="flex justify-between items-center w-full">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">Readiness Score</span>
                         <div className="h-4 w-4 text-slate-400 font-black cursor-pointer text-xs" title="Calculated based on mock correctness and syllabus scope">ⓘ</div>
@@ -709,7 +721,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                     </div>
 
                     {/* Subject Performance bar chart card */}
-                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 md:col-span-2 flex flex-col justify-between shadow-3xs">
+                    <div className="bg-white/70 backdrop-blur-xl dark:bg-slate-900 border border-white dark:border-slate-800/80 rounded-3xl p-6 md:col-span-2 flex flex-col justify-between shadow-xl shadow-slate-200/40 hover:-translate-y-1 transition-transform duration-300">
                       <div className="flex justify-between items-center w-full mb-4">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">Subject Performance (Last 5 Mocks)</span>
                         <span className="text-xs font-bold text-slate-500 hover:underline cursor-pointer">Details</span>
@@ -760,11 +772,11 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                   <div className="grid gap-6 md:grid-cols-2">
                     
                     {/* Upcoming schedule list card */}
-                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 space-y-4 shadow-3xs">
+                    <div className="bg-white/70 backdrop-blur-xl dark:bg-slate-900 border border-white dark:border-slate-800/80 rounded-3xl p-6 space-y-4 shadow-xl shadow-slate-200/40 hover:-translate-y-1 transition-transform duration-300">
                       <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">Upcoming Schedule</h4>
                       
                       <div className="space-y-3">
-                        <div className="flex items-center gap-4 p-3 rounded-2xl border border-slate-100 bg-slate-50 dark:bg-slate-950/50">
+                        <div className="flex items-center gap-4 p-3 rounded-2xl border border-white/60 bg-white/50 backdrop-blur-md dark:bg-slate-950/50 hover:bg-white/80 transition-colors cursor-pointer">
                           <div className="bg-red-550/90 text-white rounded-xl p-2.5 text-center shrink-0 w-12 shadow-3xs leading-tight">
                             <span className="block text-[10px] font-mono font-bold uppercase">Oct</span>
                             <strong className="block text-base font-black leading-none">12</strong>
@@ -781,7 +793,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                           </button>
                         </div>
 
-                        <div className="flex items-center gap-4 p-3 rounded-2xl border border-slate-100 bg-slate-50 dark:bg-slate-950/50">
+                        <div className="flex items-center gap-4 p-3 rounded-2xl border border-white/60 bg-white/50 backdrop-blur-md dark:bg-slate-950/50 hover:bg-white/80 transition-colors cursor-pointer">
                           <div className="bg-slate-900 text-white rounded-xl p-2.5 text-center shrink-0 w-12 shadow-3xs leading-tight">
                             <span className="block text-[10px] font-mono font-bold uppercase">Oct</span>
                             <strong className="block text-base font-black leading-none">15</strong>
@@ -801,7 +813,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                     <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                       <div
                         onClick={() => setActiveSidebarTab("study-material")}
-                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-5 hover:border-slate-350 transition cursor-pointer select-none text-left space-y-4 shadow-3xs flex flex-col justify-between"
+                        className="bg-white/70 backdrop-blur-xl dark:bg-slate-900 border border-white dark:border-slate-800/80 rounded-3xl p-5 hover:border-slate-350 transition cursor-pointer select-none text-left space-y-4 shadow-xl shadow-slate-200/40 flex flex-col justify-between hover:-translate-y-1 duration-300"
                       >
                         <div className="h-8 w-8 rounded-lg bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center font-display font-black text-sm">
                           Σ
@@ -814,7 +826,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
 
                       <div
                         onClick={() => setActiveSidebarTab("support")}
-                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-5 hover:border-slate-350 transition cursor-pointer select-none text-left space-y-4 shadow-3xs flex flex-col justify-between"
+                        className="bg-white/70 backdrop-blur-xl dark:bg-slate-900 border border-white dark:border-slate-800/80 rounded-3xl p-5 hover:border-slate-350 transition cursor-pointer select-none text-left space-y-4 shadow-xl shadow-slate-200/40 flex flex-col justify-between hover:-translate-y-1 duration-300"
                       >
                         <div className="h-8 w-8 rounded-lg bg-teal-50 text-teal-650 border border-teal-100 flex items-center justify-center font-black text-sm">
                           ✉
