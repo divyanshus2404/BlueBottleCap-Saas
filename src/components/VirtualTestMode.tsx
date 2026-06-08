@@ -153,7 +153,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
         key: data.key_id,
         amount: data.order.amount,
         currency: data.order.currency,
-        name: "EduEngine JEE",
+        name: "BlueBottleCap",
         description: `Unlock ${testName}`,
         order_id: data.order.id,
         handler: async function (response: any) {
@@ -176,8 +176,8 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
           }
         },
         prefill: {
-          name: "JEE Aspirant",
-          email: "student@eduengine.com",
+          name: currentUser?.displayName || "JEE Aspirant",
+          email: currentUser?.email || "student@bluebottlecap.com",
         },
         theme: { color: "#1E293B" },
       };
@@ -347,7 +347,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
               </div>
               <div className="text-left">
                 <span className="font-display text-sm font-bold tracking-tight text-brand-navy dark:text-white block leading-none">
-                  EduEngine JEE
+                  BlueBottleCap
                 </span>
                 <span className="text-[9px] uppercase tracking-wider font-mono text-gray-400 font-bold leading-none mt-1 block">
                   Virtual Test Suite
@@ -508,8 +508,8 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                     {/* Rank Predictor note */}
                     <div className="col-span-2 sm:col-span-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-3.5 text-left text-xs leading-relaxed text-slate-650 font-sans shadow-3xs flex gap-2">
                       <span className="text-base leading-none select-none">🎯</span>
-                      <div>
-                        <strong className="font-extrabold text-slate-800 dark:text-slate-200">EduEngine Percentile Predictor:</strong>
+                      <div className="text-sm">
+                        <strong className="font-extrabold text-slate-800 dark:text-slate-200">BlueBottleCap Percentile Predictor:</strong>
                         <p className="text-[10.5px] text-slate-500 mt-0.5">
                           {testScore >= totalPossibleScore * 0.6 
                             ? "Splendid attempt! This score equates to the 98.5th percentile in JEE Mains mocks. Target Advanced levels next."
