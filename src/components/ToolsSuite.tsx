@@ -3249,7 +3249,8 @@ Do not output markdown code fences, only output raw JSON.`
                     </div>
                   )}
                 </div>
-
+                <p className="mt-2 text-xs text-slate-500 font-medium leading-relaxed max-w-xs">
+                  {tool.desc}
                 </p>
               </div>
 
