@@ -12,6 +12,8 @@ import { MagneticWrapper } from "./MagneticWrapper";
 import { TiltCard } from "./TiltCard";
 import { VelocityMarquee } from "./VelocityMarquee";
 import { SplitTextReveal } from "./SplitTextReveal";
+import HeroCanvas from "./intro/HeroCanvas";
+import useIntroAnimation from "../hooks/useIntroAnimation";
 
 if (typeof window !== "undefined") {
   (window as any).globalScrollProxy = { velocity: 0 };
@@ -206,6 +208,7 @@ function Background3D() {
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
+  useIntroAnimation();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -326,19 +329,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
   return (
     <div ref={containerRef} className="bg-transparent min-h-screen">
+      <div id="intro-overlay" className="fixed inset-0 z-50 bg-white" />
       
       <Background3D />
       
       {/* ── HERO SECTION ── */}
       <section className="hero-section relative pt-16 pb-20 md:pt-24 md:pb-28 min-h-screen flex flex-col justify-center perspective-1000 z-10">
         
-        <div className="hero-content mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 text-center w-full mt-10">
-          <div className="hero-badge inline-flex items-center gap-1.5 rounded-full bg-slate-100/80 px-4 py-1.5 text-xs font-semibold text-slate-800 mb-6 backdrop-blur-md border border-slate-200 shadow-sm">
+        <HeroCanvas />
+
+        <div className="hero-content mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 text-center w-full mt-10 pointer-events-none">
+          <div className="hero-badge hero-reveal-element inline-flex items-center gap-1.5 rounded-full bg-slate-100/80 px-4 py-1.5 text-xs font-semibold text-slate-800 mb-6 backdrop-blur-md border border-slate-200 shadow-sm pointer-events-auto">
             <Sparkles className="w-3.5 h-3.5 text-blue-500" />
             <span>The intelligent way to study</span>
           </div>
           
-          <h1 className="hero-title font-display text-4.5xl font-black tracking-tight text-slate-900 sm:text-6xl md:text-7xl leading-tight max-w-4xl mx-auto drop-shadow-sm">
+          <h1 className="hero-title hero-reveal-element font-display text-4.5xl font-black tracking-tight text-slate-900 sm:text-6xl md:text-7xl leading-tight max-w-4xl mx-auto drop-shadow-sm pointer-events-auto">
             <span className="word inline-block">The</span>{" "}
             <span className="word inline-block">ultimate</span>{" "}
             <span className="word inline-block">arsenal</span>{" "}
@@ -348,12 +354,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             </span>
           </h1>
           
-          <p className="hero-desc mt-6 mx-auto max-w-2xl text-base text-slate-600 md:text-xl leading-relaxed font-medium">
+          <p className="hero-desc hero-reveal-element mt-6 mx-auto max-w-2xl text-base text-slate-600 md:text-xl leading-relaxed font-medium pointer-events-auto">
             Stop wasting time gathering scattered notes. Get premium study material, instant AI-driven answers, and immersive test modes — all in one place.
           </p>
 
           {/* MOCK DASHBOARD PREVIEW UI */}
-          <div className="hero-dashboard mt-14 max-w-5xl mx-auto relative group transform-gpu">
+          <div className="hero-dashboard hero-reveal-element mt-14 max-w-5xl mx-auto relative group transform-gpu pointer-events-auto">
             <div className="absolute inset-0 bg-linear-to-b from-blue-100 to-transparent blur-3xl opacity-80 rounded-[3rem] -z-10 transition duration-700 group-hover:scale-105" />
             
             <div className="relative rounded-2xl md:rounded-[2rem] border border-white/60 bg-white/60 backdrop-blur-2xl p-2 md:p-3 shadow-2xl transition duration-500 hover:shadow-blue-500/10">
