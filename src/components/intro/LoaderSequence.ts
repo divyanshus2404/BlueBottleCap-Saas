@@ -16,12 +16,12 @@ export const runIntro = () => {
     }
   }, 0.5);
 
-  // 1.5s - THE SHATTER: The Brain holds for 1.0s, then shatters
+  // 3.0s - THE SHATTER: The Brain holds for 1.0s fully formed, then shatters
   tl.add(() => {
     if ((window as any).triggerBrainShatter) {
       (window as any).triggerBrainShatter();
     }
-  }, 1.5);
+  }, 3.0);
 
   // Dissolve the dark overlay as it shatters
   tl.to(overlay, {
@@ -38,16 +38,16 @@ export const runIntro = () => {
         }, 800);
       }
     }
-  }, 1.6);
+  }, 3.1);
 
-  // 1.8s - HERO REVEAL (Hero text becomes focus)
+  // 3.3s - HERO REVEAL (Hero text becomes focus)
   tl.to(heroContent, {
     opacity: 1,
     y: 0,
     duration: 0.8,
     stagger: 0.1,
     ease: "power3.out"
-  }, 1.8);
+  }, 3.3);
 
   return tl;
 };
