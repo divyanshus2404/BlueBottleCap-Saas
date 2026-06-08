@@ -53,20 +53,24 @@ export default function NeuralBrainIntro() {
       });
     }
 
+    // Colors for the "Coolness" factor
+    const colors = ["#38bdf8", "#818cf8", "#c084fc", "#e879f9", "#2dd4bf"];
+
     // Initialize particles randomly
     for (let i = 0; i < NUM_PARTICLES; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2,
+        vx: (Math.random() - 0.5) * 4, // Faster idle speed
+        vy: (Math.random() - 0.5) * 4,
         targetX: targetPoints[i].x,
         targetY: targetPoints[i].y,
         isForming: false,
         isShattering: false,
-        shatterVx: (Math.random() - 0.5) * 20,
-        shatterVy: (Math.random() - 0.5) * 20 - 10,
-        radius: Math.random() * 2 + 1
+        shatterVx: (Math.random() - 0.5) * 35, // More explosive
+        shatterVy: (Math.random() - 0.5) * 35 - 15,
+        radius: Math.random() * 2.5 + 1.5, // Slightly larger
+        color: colors[Math.floor(Math.random() * colors.length)],
       });
     }
 
@@ -78,15 +82,27 @@ export default function NeuralBrainIntro() {
     window.addEventListener("mousemove", handleMouse);
 
     // Provide an API for LoaderSequence to trigger phases
+    // We will apply a global scale for the "Heartbeat" pulse
+    let globalScale = { val: 1 };
+
     (window as any).triggerBrainForm = () => {
       particles.forEach((p, i) => {
         gsap.to(p, {
           x: p.targetX,
           y: p.targetY,
           duration: 1.5,
-          ease: "power4.inOut",
+          ease: "expo.inOut", // More aggressive snap
           onStart: () => { p.isForming = true; }
         });
+      });
+      // The Heartbeat pulse effect when it forms
+      gsap.to(globalScale, {
+        val: 1.1,
+        duration: 0.15,
+        yoyo: true,
+        repeat: 3,
+        delay: 1.4, // Right as they snap into place
+        ease: "power2.inOut"
       });
     };
 
@@ -99,10 +115,23 @@ export default function NeuralBrainIntro() {
     let animationFrameId: number;
 
     const render = () => {
-      ctx.clearRect(0, 0, width, height);
+      // MOTION BLUR TRAIL EFFECT (Instead of clearRect)
+      ctx.fillStyle = "rgba(2, 6, 23, 0.25)"; // Matches slate-950 roughly
+      ctx.fillRect(0, 0, width, height);
 
-      // Draw lines between close particles
-      ctx.lineWidth = 0.5;
+      // Apply global heartbeat scale
+      ctx.save();
+      if (globalScale.val !== 1) {
+        ctx.translate(width / 2, height / 2);
+        ctx.scale(globalScale.val, globalScale.val);
+        ctx.translate(-width / 2, -height / 2);
+      }
+
+      // Add intense glow
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = "#818cf8";
+      ctx.lineWidth = 0.8;
+
       for (let i = 0; i < NUM_PARTICLES; i++) {
         const p1 = particles[i];
 
@@ -113,18 +142,18 @@ export default function NeuralBrainIntro() {
           if (p1.x < 0 || p1.x > width) p1.vx *= -1;
           if (p1.y < 0 || p1.y > height) p1.vy *= -1;
 
-          // Mouse repel
+          // Aggressive Mouse repel
           const dx = p1.x - mouse.x;
           const dy = p1.y - mouse.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 150) {
-            p1.x += dx * 0.05;
-            p1.y += dy * 0.05;
+          if (dist < 200) { // Larger repel radius
+            p1.x += dx * 0.1;
+            p1.y += dy * 0.1;
           }
         } else if (p1.isShattering) {
           p1.x += p1.shatterVx;
           p1.y += p1.shatterVy;
-          p1.shatterVy += 0.8; // Gravity
+          p1.shatterVy += 1.2; // Heavier gravity
         }
 
         // Connections
@@ -136,10 +165,13 @@ export default function NeuralBrainIntro() {
             const distSq = dx * dx + dy * dy;
 
             // Connect if close
-            const connectionThreshold = p1.isForming ? 1500 : 10000;
+            const connectionThreshold = p1.isForming ? 1500 : 12000;
             if (distSq < connectionThreshold) {
               const alpha = 1 - Math.sqrt(distSq) / Math.sqrt(connectionThreshold);
-              ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.3})`;
+              ctx.strokeStyle = p1.color.replace(")", `, ${alpha * 0.6})`).replace("rgb", "rgba"); // Attempt to use particle color
+              // Fallback to solid color with alpha if hex is used
+              // Wait, colors are hex! Let's just use a uniform glowing color
+              ctx.strokeStyle = `rgba(129, 140, 248, ${alpha * 0.8})`; 
               ctx.beginPath();
               ctx.moveTo(p1.x, p1.y);
               ctx.lineTo(p2.x, p2.y);
@@ -149,12 +181,13 @@ export default function NeuralBrainIntro() {
         }
 
         // Draw dot
-        ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+        ctx.fillStyle = p1.color;
         ctx.beginPath();
         ctx.arc(p1.x, p1.y, p1.radius, 0, Math.PI * 2);
         ctx.fill();
       }
 
+      ctx.restore();
       animationFrameId = requestAnimationFrame(render);
     };
 
