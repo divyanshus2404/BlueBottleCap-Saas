@@ -9,24 +9,24 @@ export const runIntro = () => {
   // Initial UI state - hide text
   gsap.set(heroContent, { opacity: 0, y: 40 });
   
-  // 1.5s - THE MAGIC: Neural Constellation forms the Brain
+  // 0.5s - THE MAGIC: Neural Constellation forms the Brain
   tl.add(() => {
     if ((window as any).triggerBrainForm) {
       (window as any).triggerBrainForm();
     }
-  }, 1.5);
+  }, 0.5);
 
-  // 3.0s - THE SHATTER: The Brain holds for 1.5s, then shatters
+  // 1.5s - THE SHATTER: The Brain holds for 1.0s, then shatters
   tl.add(() => {
     if ((window as any).triggerBrainShatter) {
       (window as any).triggerBrainShatter();
     }
-  }, 3.0);
+  }, 1.5);
 
   // Dissolve the dark overlay as it shatters
   tl.to(overlay, {
     opacity: 0,
-    duration: 0.8,
+    duration: 0.6,
     ease: "power2.inOut",
     onComplete: () => {
       if (overlay) overlay.style.display = 'none';
@@ -35,19 +35,19 @@ export const runIntro = () => {
         // Let shatter finish, then hide
         setTimeout(() => {
           container.style.display = 'none';
-        }, 1000);
+        }, 800);
       }
     }
-  }, 3.1);
+  }, 1.6);
 
-  // 3.5s - HERO REVEAL (Hero text becomes focus)
+  // 1.8s - HERO REVEAL (Hero text becomes focus)
   tl.to(heroContent, {
     opacity: 1,
     y: 0,
-    duration: 1.0,
+    duration: 0.8,
     stagger: 0.1,
     ease: "power3.out"
-  }, 3.3);
+  }, 1.8);
 
   return tl;
 };
