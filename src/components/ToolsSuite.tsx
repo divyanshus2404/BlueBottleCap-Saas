@@ -3215,13 +3215,26 @@ Do not output markdown code fences, only output raw JSON.`
             <div
               key={tool.id}
               onClick={() => handleSelectTool(tool)}
-              className={`group flex flex-col justify-between rounded-2xl border p-5 bg-white transition-all cursor-pointer relative ${
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+              }}
+              className={`group flex flex-col justify-between rounded-2xl border p-5 bg-white transition-all cursor-pointer relative overflow-hidden ${
                 isCurrentChoice 
                   ? "border-brand-cobalt ring-1 ring-brand-cobalt shadow-xs" 
                   : "border-slate-150 hover:border-gray-350 hover:shadow-xs"
               }`}
             >
-              <div>
+              {/* SPOTLIGHT HOVER EFFECT */}
+              <div 
+                className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                style={{
+                  background: `radial-gradient(400px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(99, 102, 241, 0.12), transparent 40%)`
+                }}
+              />
+              
+              <div className="relative z-10">
                 <div className="flex justify-between items-start">
                   <h3 className="font-display font-extrabold text-sm tracking-tight text-brand-navy group-hover:text-brand-cobalt transition-colors duration-150">
                     {tool.name}
@@ -3237,13 +3250,11 @@ Do not output markdown code fences, only output raw JSON.`
                   )}
                 </div>
 
-                <p className="mt-2 text-xs text-slate-500 font-medium leading-relaxed max-w-xs">
-                  {tool.desc}
                 </p>
               </div>
 
               {/* Bottom arrow panel styling */}
-              <div className="mt-6 flex items-center justify-between text-brand-cobalt">
+              <div className="mt-6 flex items-center justify-between text-brand-cobalt relative z-10">
                 <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                 <span className="text-[10px] uppercase tracking-wider font-mono font-bold text-gray-400">
                   {tool.category === "exam" && "Exam Prep"}
