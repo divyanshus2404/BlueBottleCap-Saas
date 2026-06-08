@@ -2,9 +2,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
-const BRAIN_PATH_1 = "M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z";
-const BRAIN_PATH_2 = "M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z";
-
 export default function NeuralBrainIntro() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isReady, setIsReady] = useState(false);
@@ -12,7 +9,7 @@ export default function NeuralBrainIntro() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d", { alpha: false }); // Optimization: disable alpha if possible, but we use fillRect, so we keep default or use solid bg. Let's use standard.
+    const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
     let width = window.innerWidth;
@@ -20,46 +17,62 @@ export default function NeuralBrainIntro() {
     canvas.width = width;
     canvas.height = height;
 
-    // Increased particles to make brain clearer (from 120 to 220)
-    const NUM_PARTICLES = 220;
+    // Massively increased for a solid, dense volumetric brain
+    const NUM_PARTICLES = 350;
     const particles: any[] = [];
+    const signals: any[] = [];
 
     const targetPoints: { x: number; y: number }[] = [];
-    const svgNS = "http://www.w3.org/2000/svg";
-    const path1 = document.createElementNS(svgNS, "path");
-    const path2 = document.createElementNS(svgNS, "path");
-    path1.setAttribute("d", BRAIN_PATH_1);
-    path2.setAttribute("d", BRAIN_PATH_2);
+    
+    // A much more realistic organic side-profile brain shape path
+    // Centered around 0,0
+    const brainSvgPath = `
+      M -140 -20 
+      C -140 -100, -80 -140, -20 -150 
+      C 60 -160, 120 -130, 160 -80 
+      C 200 -30, 210 40, 170 100 
+      C 150 130, 110 160, 70 150 
+      C 60 180, 20 190, 0 170 
+      C -30 190, -70 180, -90 150 
+      C -140 130, -160 60, -140 -20 Z
+    `;
+    const brainPath2D = new Path2D(brainSvgPath);
 
-    const length1 = path1.getTotalLength();
-    const length2 = path2.getTotalLength();
+    // Generate points INSIDE the brain volume, not just on the edge
+    const scale = Math.min(width, height) * 0.0018; // Dynamic scaling based on screen size
+    const offsetX = width / 2;
+    const offsetY = height / 2 - 30;
 
-    const scale = 22; // Scaled up to make it bigger and clearer
-    const offsetX = width / 2 - (24 * scale) / 2;
-    const offsetY = height / 2 - (24 * scale) / 2 - 50;
-
-    for (let i = 0; i < NUM_PARTICLES; i++) {
-      const p = i % 2 === 0 ? path1 : path2;
-      const len = i % 2 === 0 ? length1 : length2;
-      const pt = p.getPointAtLength((i / NUM_PARTICLES) * 2 * len);
+    // Temporary canvas to test isPointInPath since it works strictly with context
+    const testCtx = document.createElement("canvas").getContext("2d");
+    
+    let generated = 0;
+    // Bounding box for the brain path is roughly -160 to 210 in X, -160 to 190 in Y
+    while (generated < NUM_PARTICLES && testCtx) {
+      const rx = (Math.random() * 370 - 160);
+      const ry = (Math.random() * 350 - 160);
       
-      targetPoints.push({
-        x: pt.x * scale + offsetX,
-        y: pt.y * scale + offsetY
-      });
+      if (testCtx.isPointInPath(brainPath2D, rx, ry)) {
+        targetPoints.push({
+          x: rx * scale + offsetX,
+          y: ry * scale + offsetY
+        });
+        generated++;
+      }
     }
 
-    // Pre-calculate rgba strings to avoid heavy string ops in render loop
     const colors = [
       { fill: "#ffffff", strokeRGB: "255, 255, 255" },
       { fill: "#f8fafc", strokeRGB: "248, 250, 252" },
-      { fill: "#f1f5f9", strokeRGB: "241, 245, 249" },
-      { fill: "#60a5fa", strokeRGB: "96, 165, 250" } // Added a slight blue hue for depth
+      { fill: "#e2e8f0", strokeRGB: "226, 232, 240" },
+      { fill: "#60a5fa", strokeRGB: "96, 165, 250" }, // Neural blue
+      { fill: "#38bdf8", strokeRGB: "56, 189, 248" }  // Bright cyan
     ];
 
     for (let i = 0; i < NUM_PARTICLES; i++) {
       const c = colors[Math.floor(Math.random() * colors.length)];
       particles.push({
+        id: i,
         x: Math.random() * width,
         y: Math.random() * height,
         vx: (Math.random() - 0.5) * 3,
@@ -68,12 +81,27 @@ export default function NeuralBrainIntro() {
         targetY: targetPoints[i].y,
         isForming: false,
         isShattering: false,
-        shatterVx: (Math.random() - 0.5) * 30,
-        shatterVy: (Math.random() - 0.5) * 30 - 15,
-        radius: Math.random() * 2.5 + 1.5,
+        shatterVx: (Math.random() - 0.5) * 35,
+        shatterVy: (Math.random() - 0.5) * 35 - 15,
+        radius: Math.random() * 2.0 + 1.0,
         fillColor: c.fill,
-        strokeRGB: c.strokeRGB
+        strokeRGB: c.strokeRGB,
+        neighbors: [] // populated later for signals
       });
+    }
+
+    // Pre-calculate nearest neighbors for each particle to shoot signals to
+    for (let i = 0; i < NUM_PARTICLES; i++) {
+      const p1 = particles[i];
+      for (let j = 0; j < NUM_PARTICLES; j++) {
+        if (i === j) continue;
+        const p2 = particles[j];
+        const dx = p1.targetX - p2.targetX;
+        const dy = p1.targetY - p2.targetY;
+        if (dx * dx + dy * dy < 8000) {
+          p1.neighbors.push(p2);
+        }
+      }
     }
 
     let mouse = { x: -1000, y: -1000 };
@@ -84,6 +112,7 @@ export default function NeuralBrainIntro() {
     window.addEventListener("mousemove", handleMouse, { passive: true });
 
     let globalScale = { val: 1 };
+    let brainIsFullyFormed = false;
 
     (window as any).triggerBrainForm = () => {
       particles.forEach((p) => {
@@ -92,11 +121,12 @@ export default function NeuralBrainIntro() {
           y: p.targetY,
           duration: 1.5,
           ease: "expo.inOut",
-          onStart: () => { p.isForming = true; }
+          onStart: () => { p.isForming = true; },
+          onComplete: () => { brainIsFullyFormed = true; }
         });
       });
       gsap.to(globalScale, {
-        val: 1.1,
+        val: 1.05,
         duration: 0.15,
         yoyo: true,
         repeat: 3,
@@ -109,13 +139,14 @@ export default function NeuralBrainIntro() {
       particles.forEach(p => {
         p.isShattering = true;
       });
+      brainIsFullyFormed = false; // Stop signals
     };
 
     let animationFrameId: number;
 
     const render = () => {
-      // Fast motion blur
-      ctx.fillStyle = "rgba(2, 6, 23, 0.4)"; 
+      // Dark trail effect
+      ctx.fillStyle = "rgba(2, 6, 23, 0.35)"; 
       ctx.fillRect(0, 0, width, height);
 
       ctx.save();
@@ -125,10 +156,10 @@ export default function NeuralBrainIntro() {
         ctx.translate(-width / 2, -height / 2);
       }
 
-      ctx.lineWidth = 1.0; // Slightly thicker lines for visibility
+      ctx.lineWidth = 1.0;
 
-      // Loop optimizations: Increased connection thresholds
-      const sqConnectionThresholdForming = 4500; // Increased to make the brain much denser and clearer
+      // Draw standard particle connections
+      const sqConnectionThresholdForming = 5500; 
       const sqConnectionThresholdIdle = 10000;
 
       for (let i = 0; i < NUM_PARTICLES; i++) {
@@ -143,12 +174,11 @@ export default function NeuralBrainIntro() {
           const dx = p1.x - mouse.x;
           const dy = p1.y - mouse.y;
           const distSq = dx * dx + dy * dy;
-          if (distSq < 22500) { // 150 squared
+          if (distSq < 25000) { 
             p1.x += dx * 0.005;
             p1.y += dy * 0.005;
             
-            // Connect to mouse for that interactive constellation feel
-            const alpha = 1 - (distSq / 22500);
+            const alpha = 1 - (distSq / 25000);
             ctx.strokeStyle = `rgba(${p1.strokeRGB}, ${alpha * 0.5})`;
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
@@ -171,8 +201,8 @@ export default function NeuralBrainIntro() {
             const distSq = dx * dx + dy * dy;
 
             if (distSq < threshold) {
-              const alpha = 1 - (distSq / threshold); // Cheaper than sqrt
-              ctx.strokeStyle = `rgba(${p1.strokeRGB}, ${alpha * 0.6})`; 
+              const alpha = (1 - (distSq / threshold)) * (p1.isForming ? 0.4 : 0.6); 
+              ctx.strokeStyle = `rgba(${p1.strokeRGB}, ${alpha})`; 
               ctx.beginPath();
               ctx.moveTo(p1.x, p1.y);
               ctx.lineTo(p2.x, p2.y);
@@ -183,9 +213,49 @@ export default function NeuralBrainIntro() {
 
         ctx.fillStyle = p1.fillColor;
         ctx.beginPath();
-        // Use cheap arc calculation
         ctx.arc(p1.x, p1.y, p1.radius, 0, 6.28318530718);
         ctx.fill();
+
+        // SPURT SIGNALS
+        if (brainIsFullyFormed && !p1.isShattering && Math.random() < 0.005 && signals.length < 80) {
+          if (p1.neighbors.length > 0) {
+            const neighbor = p1.neighbors[Math.floor(Math.random() * p1.neighbors.length)];
+            signals.push({
+              source: p1,
+              target: neighbor,
+              progress: 0,
+              speed: Math.random() * 0.02 + 0.03
+            });
+          }
+        }
+      }
+
+      // RENDER SIGNALS (Neural pulses)
+      if (signals.length > 0) {
+        for (let i = signals.length - 1; i >= 0; i--) {
+          const s = signals[i];
+          s.progress += s.speed;
+          if (s.progress >= 1 || s.source.isShattering) {
+            signals.splice(i, 1);
+            continue;
+          }
+          const sx = s.source.x + (s.target.x - s.source.x) * s.progress;
+          const sy = s.source.y + (s.target.y - s.source.y) * s.progress;
+          
+          // Glow effect for signals
+          ctx.beginPath();
+          ctx.arc(sx, sy, 3, 0, Math.PI * 2);
+          ctx.fillStyle = "#38bdf8"; // bright neon cyan
+          ctx.fill();
+
+          // Trail
+          ctx.beginPath();
+          ctx.moveTo(s.source.x + (s.target.x - s.source.x) * (s.progress - 0.1), s.source.y + (s.target.y - s.source.y) * (s.progress - 0.1));
+          ctx.lineTo(sx, sy);
+          ctx.strokeStyle = "rgba(56, 189, 248, 0.8)";
+          ctx.lineWidth = 2.0;
+          ctx.stroke();
+        }
       }
 
       ctx.restore();
@@ -194,8 +264,17 @@ export default function NeuralBrainIntro() {
 
     render();
 
+    const handleResize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    };
+    window.addEventListener('resize', handleResize);
+
     return () => {
       window.removeEventListener("mousemove", handleMouse);
+      window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
       delete (window as any).triggerBrainForm;
       delete (window as any).triggerBrainShatter;
