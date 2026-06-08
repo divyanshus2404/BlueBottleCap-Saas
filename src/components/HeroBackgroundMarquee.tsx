@@ -2,70 +2,169 @@
 import React, { useRef, useEffect } from "react";
 import gsap from "gsap";
 
-interface MarqueeRowProps {
-  text: string;
-  direction?: "left" | "right";
-  baseSpeed?: number;
+const quotes = [
+  "Consistency > Motivation",
+  "Study smart, not hard",
+  "Discipline builds freedom",
+  "Focus is your superpower",
+  "Deep work wins"
+];
+
+const topics = [
+  "Data Structures",
+  "Operating Systems",
+  "Physics",
+  "Chemistry",
+  "Math",
+  "AI Suite",
+  "Mock Tests"
+];
+
+const fastWords = [
+  "FASTER", "ACE EXAMS", "STUDY", "RETAIN", "PRACTICE", "LEARN", "SOLVE"
+];
+
+interface MarqueeLayerProps {
+  items: string[];
+  direction: 1 | -1;
+  duration: number;
+  className: string;
 }
 
-const MarqueeRow: React.FC<MarqueeRowProps> = ({ text, direction = "left", baseSpeed = 0.08 }) => {
+const MarqueeLayer: React.FC<MarqueeLayerProps> = ({ items, direction, duration, className }) => {
   const trackRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     if (!trackRef.current) return;
     
-    let xPercent = direction === "right" ? -50 : 0;
-    let animationFrameId: number;
-    const dirMulti = direction === "right" ? 1 : -1;
+    // Initial setup: clone children to ensure seamless looping
+    const track = trackRef.current;
     
-    // We'll attach a global hover slowdown
-    let speedMultiplier = 1;
-    
-    const animate = () => {
-      if (!trackRef.current) return;
-      if (direction === "left" && xPercent <= -50) xPercent = 0;
-      if (direction === "right" && xPercent >= 0) xPercent = -50;
-      
-      gsap.set(trackRef.current, { xPercent: xPercent });
-      
-      // Look up if parent group is hovered
-      const parent = trackRef.current.closest('.hero-marquee-group');
-      const isHovered = parent?.matches(':hover');
-      
-      // smooth slowdown
-      if (isHovered) {
-        speedMultiplier += (0.01 - speedMultiplier) * 0.05; // Slow down almost to a halt
-      } else {
-        speedMultiplier += (1 - speedMultiplier) * 0.05; // Back to 100% speed
-      }
-      
-      xPercent += baseSpeed * dirMulti * speedMultiplier;
-      animationFrameId = requestAnimationFrame(animate);
+    gsap.set(track, {
+      xPercent: direction === 1 ? -50 : 0
+    });
+
+    const tl = gsap.to(track, {
+      xPercent: direction === 1 ? 0 : -50,
+      duration: duration,
+      ease: "none",
+      repeat: -1
+    });
+
+    // Attach timeline to element so parent can control timeScale
+    (track as any).animation = tl;
+
+    return () => {
+      tl.kill();
     };
-    
-    animationFrameId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [direction, baseSpeed]);
+  }, [direction, duration]);
+
+  const textString = items.join(" • ") + " • ";
 
   return (
-    <div className="w-full overflow-hidden flex whitespace-nowrap select-none">
-      <div ref={trackRef} className="flex gap-16 pr-16 items-center min-w-max">
-        <h1 className="text-[6rem] md:text-[10rem] lg:text-[14rem] font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-200/50 to-slate-100/10 tracking-tighter uppercase">{text}</h1>
-        <h1 className="text-[6rem] md:text-[10rem] lg:text-[14rem] font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-200/50 to-slate-100/10 tracking-tighter uppercase">{text}</h1>
-        <h1 className="text-[6rem] md:text-[10rem] lg:text-[14rem] font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-200/50 to-slate-100/10 tracking-tighter uppercase">{text}</h1>
-        <h1 className="text-[6rem] md:text-[10rem] lg:text-[14rem] font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-200/50 to-slate-100/10 tracking-tighter uppercase">{text}</h1>
+    <div className={`w-full overflow-hidden flex whitespace-nowrap select-none ${className}`}>
+      <div ref={trackRef} className="flex min-w-max items-center marquee-track">
+        {/* Render twice for seamless loop */}
+        <h1 className="tracking-tighter uppercase pr-12">{textString}</h1>
+        <h1 className="tracking-tighter uppercase pr-12">{textString}</h1>
       </div>
     </div>
   );
 };
 
 export const HeroBackgroundMarquee = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Optional mouse parallax
+    const moveX = gsap.quickTo(wrapperRef.current, "x", { duration: 0.8, ease: "power3.out" });
+    const moveY = gsap.quickTo(wrapperRef.current, "y", { duration: 0.8, ease: "power3.out" });
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+      const xPos = (clientX / window.innerWidth - 0.5) * 40; // -20 to 20px
+      const yPos = (clientY / window.innerHeight - 0.5) * 40;
+      moveX(xPos);
+      moveY(yPos);
+    };
+
+    const handleMouseEnter = () => {
+      // Find all track animations and slow them down smoothly
+      const tracks = container.querySelectorAll(".marquee-track");
+      tracks.forEach(track => {
+        const tl = (track as any).animation;
+        if (tl) {
+          gsap.to(tl, { timeScale: 0.15, duration: 0.8, ease: "power2.out" });
+        }
+      });
+      // Slight blur reduction / focus effect
+      gsap.to(wrapperRef.current, { scale: 1.02, opacity: 0.8, duration: 0.8, ease: "power2.out" });
+    };
+
+    const handleMouseLeave = () => {
+      const tracks = container.querySelectorAll(".marquee-track");
+      tracks.forEach(track => {
+        const tl = (track as any).animation;
+        if (tl) {
+          gsap.to(tl, { timeScale: 1, duration: 0.8, ease: "power2.in" });
+        }
+      });
+      gsap.to(wrapperRef.current, { scale: 1, opacity: 0.6, duration: 0.8, ease: "power2.in" });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    container.addEventListener("mouseenter", handleMouseEnter);
+    container.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("mouseenter", handleMouseEnter);
+      container.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
+
   return (
-    <div className="absolute inset-0 z-0 flex flex-col justify-center items-center overflow-hidden pointer-events-auto hero-marquee-group mix-blend-multiply opacity-60">
-      <div className="scale-110 flex flex-col -mt-10">
-        <MarqueeRow text="FASTER • ACE EXAMS • STUDY •" direction="left" baseSpeed={0.06} />
-        <MarqueeRow text="PHYSICS • CHEMISTRY • MATH • AI SUITE •" direction="right" baseSpeed={0.05} />
-        <MarqueeRow text="DOUBT SOLVING • FORMULA SHEETS •" direction="left" baseSpeed={0.07} />
+    <div 
+      ref={containerRef}
+      className="absolute inset-0 z-0 flex flex-col justify-center items-center overflow-hidden pointer-events-auto mix-blend-multiply opacity-60"
+      style={{
+        // Premium edge fading mask
+        WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
+        maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)"
+      }}
+    >
+      <div 
+        ref={wrapperRef}
+        className="flex flex-col gap-6 -rotate-6 scale-110 w-[120%]"
+        style={{ willChange: "transform" }}
+      >
+        {/* Layer 1: Slow, huge, highly transparent */}
+        <MarqueeLayer 
+          items={quotes} 
+          direction={-1} 
+          duration={80} 
+          className="text-[8rem] md:text-[12rem] lg:text-[16rem] font-black text-transparent bg-clip-text bg-gradient-to-b from-slate-200/20 to-slate-100/5 opacity-40" 
+        />
+        
+        {/* Layer 2: Medium speed, medium size, slight offset */}
+        <MarqueeLayer 
+          items={topics} 
+          direction={1} 
+          duration={45} 
+          className="text-[5rem] md:text-[8rem] lg:text-[11rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-200/40 to-slate-100/10 opacity-60 ml-12" 
+        />
+        
+        {/* Layer 3: Fast, smaller, more visible */}
+        <MarqueeLayer 
+          items={fastWords} 
+          direction={-1} 
+          duration={25} 
+          className="text-[4rem] md:text-[6rem] lg:text-[8rem] font-black text-transparent bg-clip-text bg-gradient-to-tr from-slate-300/50 to-slate-200/20 opacity-80" 
+        />
       </div>
     </div>
   );
