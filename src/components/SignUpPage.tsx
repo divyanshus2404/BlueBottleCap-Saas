@@ -1,13 +1,95 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Mail, Lock, X, Loader2, ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { Logo } from "./Logo";
 import { ActiveView } from "../types";
+
+// Ultra-lightweight White Constellation Background Component
+const ConstellationBackground = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let particles: { x: number; y: number; vx: number; vy: number }[] = [];
+    let animationFrameId: number;
+
+    const resize = () => {
+      const parent = canvas.parentElement;
+      if (parent) {
+        canvas.width = parent.clientWidth;
+        canvas.height = parent.clientHeight;
+        initParticles();
+      }
+    };
+
+    const initParticles = () => {
+      particles = [];
+      const numParticles = window.innerWidth < 768 ? 40 : 80;
+      for (let i = 0; i < numParticles; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+        });
+      }
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+      ctx.lineWidth = 0.5;
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p.x - p2.x;
+          const dy = p.y - p2.y;
+          const distSq = dx * dx + dy * dy;
+
+          if (distSq < 15000) {
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 * (1 - distSq / 15000)})`;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener("resize", resize);
+    resize();
+    animate();
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="w-full h-full block" />;
+};
 
 interface SignUpPageProps {
   setCurrentView: (view: ActiveView) => void;
@@ -109,7 +191,15 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
       }
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "An authentication error occurred.");
+      let errorMsg = err.message || "An authentication error occurred.";
+      if (errorMsg.includes("auth/email-already-in-use")) {
+        errorMsg = "This email is already registered. Please sign in instead.";
+      } else if (errorMsg.includes("auth/invalid-credential") || errorMsg.includes("auth/wrong-password")) {
+        errorMsg = "Invalid email or password.";
+      } else if (errorMsg.includes("auth/weak-password")) {
+        errorMsg = "Password should be at least 6 characters.";
+      }
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -144,7 +234,10 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
 
       {/* LEFT PANE: Beautiful Visuals (Hidden on small screens) */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 border-r border-slate-800/50 flex-col justify-between p-12 overflow-hidden">
-        {/* Background Gradients */}
+        {/* Background Gradients & Constellation */}
+        <div className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
+          <ConstellationBackground />
+        </div>
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand-cobalt/20 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/20 blur-[120px] rounded-full pointer-events-none" />
 
