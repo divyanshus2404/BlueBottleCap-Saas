@@ -12,7 +12,7 @@ import { MagneticWrapper } from "./MagneticWrapper";
 import { TiltCard } from "./TiltCard";
 import { VelocityMarquee } from "./VelocityMarquee";
 import { SplitTextReveal } from "./SplitTextReveal";
-import SvgParticles from "./intro/SvgParticles";
+import NeuralBrainIntro from "./intro/NeuralBrainIntro";
 import useIntroAnimation from "../hooks/useIntroAnimation";
 
 if (typeof window !== "undefined") {
@@ -330,7 +330,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   return (
     <div ref={containerRef} className="bg-transparent min-h-screen">
       <div id="intro-overlay" className="fixed inset-0 z-50 bg-slate-950" />
-      <SvgParticles />
+      <NeuralBrainIntro />
       
       <Background3D />
       
