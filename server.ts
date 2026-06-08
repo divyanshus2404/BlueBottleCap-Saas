@@ -16,11 +16,17 @@ const app = express();
 const redisClient = createClient({
   url: process.env.REDIS_URL || "redis://localhost:6379",
 });
+let isRedisConnected = false;
 redisClient.on("error", (err) => console.error("Redis Client Error", err));
+redisClient.on("ready", () => { isRedisConnected = true; });
+
+// In-memory fallback if Redis is not available
+const memoryOtpStore = new Map<string, { otp: string; expiresAt: number }>();
+
 
 const otpRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 requests per windowMs
+  max: 100, // Limit each IP to 100 requests per windowMs
   message: { error: "Too many OTP requests from this IP, please try again after 15 minutes." },
   standardHeaders: true,
   legacyHeaders: false,
@@ -303,8 +309,16 @@ ${studentTypedSteps || "[Student did not type any text steps]"}
 
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       
-      // Store in Redis with an expiry of 10 minutes (600 seconds)
-      await redisClient.setEx(`otp:${email.toLowerCase()}`, 600, otp);
+      if (isRedisConnected) {
+        // Store in Redis with an expiry of 10 minutes (600 seconds)
+        await redisClient.setEx(`otp:${email.toLowerCase()}`, 600, otp);
+      } else {
+        // Fallback to memory
+        memoryOtpStore.set(`otp:${email.toLowerCase()}`, {
+          otp,
+          expiresAt: Date.now() + 600 * 1000,
+        });
+      }
 
       const mailer = await getTransporter();
       const info = await mailer.sendMail({
@@ -332,13 +346,30 @@ ${studentTypedSteps || "[Student did not type any text steps]"}
         return res.status(400).json({ error: "Email and OTP are required." });
       }
 
-      const record = await redisClient.get(`otp:${email.toLowerCase()}`);
+      let record: string | null = null;
+      const key = `otp:${email.toLowerCase()}`;
+
+      if (isRedisConnected) {
+        record = await redisClient.get(key);
+      } else {
+        const memEntry = memoryOtpStore.get(key);
+        if (memEntry && memEntry.expiresAt > Date.now()) {
+          record = memEntry.otp;
+        } else if (memEntry) {
+          memoryOtpStore.delete(key);
+        }
+      }
+
       if (!record) {
         return res.status(400).json({ error: "No OTP found for this email or it has expired. Please request a new one." });
       }
 
       if (record === otp) {
-        await redisClient.del(`otp:${email.toLowerCase()}`);
+        if (isRedisConnected) {
+          await redisClient.del(key);
+        } else {
+          memoryOtpStore.delete(key);
+        }
         return res.json({ success: true });
       } else {
         return res.status(400).json({ error: "Invalid OTP." });
@@ -519,34 +550,11 @@ app.use((err: any, req: any, res: any, next: any) => {
   });
 });
 
-// For local development and production running outside of Vercel
+// For local development running outside of Vercel
 if (!process.env.VERCEL) {
   const PORT = Number(process.env.PORT) || 3001;
-
-  const startLocalServer = async () => {
-    if (process.env.NODE_ENV !== "production") {
-      // @ts-ignore
-      const { createServer: createViteServer } = await import("vite");
-      const vite = await createViteServer({
-        server: { middlewareMode: true },
-        appType: "spa",
-      });
-      app.use(vite.middlewares);
-    } else {
-      const distPath = path.join(process.cwd(), "dist");
-      app.use(express.static(distPath));
-      app.get("*", (req, res) => {
-        res.sendFile(path.join(distPath, "index.html"));
-      });
-    }
-
-    app.listen(PORT, "0.0.0.0", () => {
-      console.log(`Express full-stack server listening on http://0.0.0.0:${PORT}`);
-    });
-  };
-
-  startLocalServer().catch((err) => {
-    console.error("Failed to start local server:", err);
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Express API backend listening on http://0.0.0.0:${PORT}`);
   });
 }
 

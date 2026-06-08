@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Mail, Lock, X, Loader2, ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import { Logo } from "./Logo";
 import { ActiveView } from "../types";
 
@@ -21,8 +23,72 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // OTP State
   const [isVerifyingOTP, setIsVerifyingOTP] = useState(false);
-  const [otp, setOtp] = useState("");
+  const [otpArray, setOtpArray] = useState<string[]>(Array(6).fill(""));
+  const [timer, setTimer] = useState(60);
+  const otpInputsRef = React.useRef<(HTMLInputElement | null)[]>([]);
+
+  // Timer Effect
+  React.useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isVerifyingOTP && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isVerifyingOTP, timer]);
+
+  const handleOtpChange = (index: number, value: string) => {
+    if (!/^\d*$/.test(value)) return;
+    const newOtp = [...otpArray];
+    // If user pastes a full code
+    if (value.length > 1) {
+      const pasted = value.slice(0, 6).split("");
+      for (let i = 0; i < pasted.length; i++) {
+        if (index + i < 6) newOtp[index + i] = pasted[i];
+      }
+      setOtpArray(newOtp);
+      const nextIndex = Math.min(index + pasted.length, 5);
+      otpInputsRef.current[nextIndex]?.focus();
+      return;
+    }
+
+    newOtp[index] = value;
+    setOtpArray(newOtp);
+
+    if (value !== "" && index < 5) {
+      otpInputsRef.current[index + 1]?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" && !otpArray[index] && index > 0) {
+      otpInputsRef.current[index - 1]?.focus();
+    }
+  };
+
+  const handleResend = async () => {
+    setError(null);
+    setSuccessMsg(null);
+    try {
+      const res = await fetch("http://localhost:3001/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); } catch { data = { error: text }; }
+      if (!res.ok) throw new Error(data.error || "Failed to resend OTP");
+      setSuccessMsg("OTP resent successfully!");
+      setTimer(60);
+    } catch (err: any) {
+      setError(err.message || "Failed to resend OTP");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,29 +98,8 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
 
     try {
       if (mode === "signup") {
-        if (!isVerifyingOTP) {
-          const res = await fetch("/api/auth/send-otp", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error || "Failed to send OTP");
-          
-          setSuccessMsg(`OTP sent to ${email}. Please check your inbox.`);
-          setIsVerifyingOTP(true);
-        } else {
-          const res = await fetch("/api/auth/verify-otp", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, otp }),
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error || "Invalid OTP");
-          
-          await signUp(email, password, name);
-          setCurrentView("create-profile");
-        }
+        await signUp(email, password, name);
+        setCurrentView("create-profile");
       } else if (mode === "signin") {
         await signIn(email, password);
         setCurrentView("dashboard");
@@ -190,7 +235,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
                 {mode === "forgot" && "Reset your password"}
               </h2>
               <p className="mt-3 text-slate-400">
-                {mode === "signin" && "Sign in to access your saved studies and premium plan"}
+                {mode === "signin" && "Sign in to access your dashboard"}
                 {mode === "signup" && !isVerifyingOTP && "Unlock high-power AI academic tools in seconds"}
                 {mode === "signup" && isVerifyingOTP && "We sent a 6-digit code to your email. Enter it below to verify."}
                 {mode === "forgot" && "Enter your email to receive a password reset link"}
@@ -217,7 +262,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {mode === "signup" && !isVerifyingOTP && (
-                <div className="space-y-1.5">
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-1.5">
                   <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                     Full Name
                   </label>
@@ -236,31 +281,32 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
                       className="w-full rounded-xl border border-slate-700 bg-slate-800/50 py-3.5 pl-12 pr-4 text-sm font-medium text-white placeholder-slate-500 focus:border-brand-cobalt focus:bg-slate-800 focus:ring-1 focus:ring-brand-cobalt focus:outline-none transition-all"
                     />
                   </div>
-                </div>
+                </motion.div>
               )}
 
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-4 flex items-center text-slate-500">
-                    <Mail className="w-5 h-5" />
-                  </span>
-                  <input
-                    type="email"
-                    required
-                    disabled={isVerifyingOTP}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@school.edu"
-                    className="w-full rounded-xl border border-slate-700 bg-slate-800/50 py-3.5 pl-12 pr-4 text-sm font-medium text-white placeholder-slate-500 focus:border-brand-cobalt focus:bg-slate-800 focus:ring-1 focus:ring-brand-cobalt focus:outline-none transition-all disabled:opacity-50"
-                  />
-                </div>
-              </div>
+              {!isVerifyingOTP && (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-1.5">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-4 flex items-center text-slate-500">
+                      <Mail className="w-5 h-5" />
+                    </span>
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@school.edu"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-800/50 py-3.5 pl-12 pr-4 text-sm font-medium text-white placeholder-slate-500 focus:border-brand-cobalt focus:bg-slate-800 focus:ring-1 focus:ring-brand-cobalt focus:outline-none transition-all disabled:opacity-50"
+                    />
+                  </div>
+                </motion.div>
+              )}
 
               {mode !== "forgot" && !isVerifyingOTP && (
-                <div className="space-y-1.5">
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-1.5">
                   <div className="flex justify-between items-center">
                     <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                       Password
@@ -288,47 +334,53 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
                       className="w-full rounded-xl border border-slate-700 bg-slate-800/50 py-3.5 pl-12 pr-4 text-sm font-medium text-white placeholder-slate-500 focus:border-brand-cobalt focus:bg-slate-800 focus:ring-1 focus:ring-brand-cobalt focus:outline-none transition-all"
                     />
                   </div>
-                </div>
-              )}
-
-              {mode === "signup" && isVerifyingOTP && (
-                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="space-y-1.5">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                    6-Digit OTP Code
-                  </label>
-                  <div className="relative">
-                    <span className="absolute inset-y-0 left-4 flex items-center text-slate-500">
-                      <Lock className="w-5 h-5" />
-                    </span>
-                    <input
-                      type="text"
-                      required
-                      maxLength={6}
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                      placeholder="123456"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-800/50 py-3.5 pl-12 pr-4 text-sm font-medium text-white placeholder-slate-500 focus:border-brand-cobalt focus:bg-slate-800 focus:ring-1 focus:ring-brand-cobalt focus:outline-none transition-all tracking-[0.5em] text-center"
-                    />
-                  </div>
-                  <div className="flex justify-between items-center mt-2">
-                    <button 
-                      type="button" 
-                      onClick={() => setIsVerifyingOTP(false)}
-                      className="text-[11px] font-bold text-slate-500 hover:text-white transition-colors cursor-pointer"
-                    >
-                      Change email
-                    </button>
-                    <button 
-                      type="button" 
-                      onClick={handleSubmit} // It will resend because we set isVerifyingOTP false above if they want to change, wait, a resend button is easier to handle as just another call. Let's just let them change email which goes back.
-                      className="text-[11px] font-bold text-brand-cobalt hover:text-white transition-colors cursor-pointer"
-                    >
-                    </button>
-                  </div>
                 </motion.div>
               )}
 
-              <button
+              {mode === "signup" && isVerifyingOTP && (
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="pt-4 pb-2">
+                  <div className="flex justify-between gap-2 sm:gap-3 mb-6">
+                    {otpArray.map((digit, i) => (
+                      <input
+                        key={i}
+                        ref={(el) => {
+                          otpInputsRef.current[i] = el;
+                        }}
+                        type="text"
+                        maxLength={1}
+                        value={digit}
+                        onChange={(e) => handleOtpChange(i, e.target.value)}
+                        onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                        className="w-10 h-12 sm:w-12 sm:h-14 text-center rounded-xl border border-slate-700 bg-slate-800/80 text-xl font-bold text-white focus:border-brand-cobalt focus:bg-slate-800 focus:ring-2 focus:ring-brand-cobalt focus:outline-none transition-all shadow-inner"
+                      />
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-between px-1">
+                    <button
+                      type="button"
+                      onClick={() => setIsVerifyingOTP(false)}
+                      className="text-xs font-bold text-slate-500 hover:text-slate-300 transition-colors"
+                    >
+                      Change email
+                    </button>
+                    
+                    {timer > 0 ? (
+                      <span className="text-xs font-bold text-slate-400 bg-slate-800 px-3 py-1.5 rounded-full">
+                        Resend code in {timer}s
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleResend}
+                        className="text-xs font-bold text-brand-cobalt hover:text-brand-sky transition-colors bg-brand-cobalt/10 px-3 py-1.5 rounded-full"
+                      >
+                        Resend OTP
+                      </button>
+                    )}
+                  </div>
+                </motion.div>
+              )}              <button
                 type="submit"
                 disabled={loading}
                 className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-cobalt to-indigo-600 py-3.5 text-sm font-bold text-white shadow-lg shadow-brand-cobalt/25 hover:shadow-brand-cobalt/40 hover:-translate-y-0.5 transition-all cursor-pointer disabled:opacity-50 disabled:hover:translate-y-0"
@@ -346,7 +398,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
               </button>
             </form>
 
-            {mode !== "forgot" && (
+            {mode !== "forgot" && !isVerifyingOTP && (
               <>
                 <div className="relative my-8 text-center">
                   <div className="absolute inset-0 flex items-center">

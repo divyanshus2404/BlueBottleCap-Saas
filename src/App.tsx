@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { ActiveView, UserStats, UsageStats, Flashcard, DailyActivity } from "./types";
+import { ActiveView, UserStats, UsageStats, Flashcard, DailyActivity, RecentActivityItem } from "./types";
 import { Navigation } from "./components/Navigation";
 import { Onboarding } from "./components/Onboarding";
 import { Dashboard } from "./components/Dashboard";
@@ -99,6 +99,8 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
   const [activeJob, setActiveJob] = useState<any | null>(null);
   const [dashboardLoading, setDashboardLoading] = useState<boolean>(false);
   const [lastLoggedDate, setLastLoggedDate] = useState<string>("");
+  const [loginCount, setLoginCount] = useState<number>(0);
+  const [recentActivities, setRecentActivities] = useState<RecentActivityItem[]>([]);
 
   // ─── Toast state ───────────────────────────────────────────────────────────
   const [toasts, setToasts] = useState<Toast[]>([]);
@@ -251,6 +253,8 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
       setActiveJob(null);
       setDashboardLoading(false);
       setLastLoggedDate("");
+      setLoginCount(0);
+      setRecentActivities([]);
 
       const savedPlan = (localStorage.getItem("bluebottlecap_active_plan") || "Free") as 'Free' | 'Basic' | 'Pro' | 'Elite';
       const savedStreak = localStorage.getItem("bluebottlecap_streak_days");
@@ -404,6 +408,22 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
             console.error("Failed to sync user to Supabase:", err);
           }
 
+          // Login Count Tracking
+          const currentLoginCount = typeof data.loginCount === "number" ? data.loginCount : 1;
+          
+          if (lastActive && lastActive < todayDateStr) {
+            // New session today, increment login count if we want, or just leave it.
+            // For welcome back vs welcome, we really just care if it's > 1.
+            // If they haven't logged in today, let's increment it so they get 'Welcome back'.
+            await updateDoc(userDocRef, { 
+              loginCount: currentLoginCount + 1,
+              lastLoggedDate: todayDateStr
+            });
+            setLoginCount(currentLoginCount + 1);
+          } else {
+            setLoginCount(currentLoginCount);
+          }
+
           setLastLoggedDate(data.lastLoggedDate || data.lastActiveDate || "");
 
           localStorage.setItem("bluebottlecap_active_plan", cleanPlan);
@@ -420,11 +440,13 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
             setDailyActivity(cloudActivity);
             localStorage.setItem("bluebottlecap_daily_activity", JSON.stringify(cloudActivity));
           } else {
-            const mockAct = generateDefaultActivity();
-            setDailyActivity(mockAct);
-            localStorage.setItem("bluebottlecap_daily_activity", JSON.stringify(mockAct));
-            await updateDoc(userDocRef, { dailyActivity: mockAct }).catch(e => console.error(e));
+            // Empty data for real users, no more fake 60 days!
+            setDailyActivity([]);
+            localStorage.setItem("bluebottlecap_daily_activity", JSON.stringify([]));
           }
+
+          const cloudRecent = Array.isArray(data.recentActivities) ? data.recentActivities : [];
+          setRecentActivities(cloudRecent);
 
           setTodayReviewsCount(cloudReviews);
           localStorage.setItem("bluebottlecap_today_reviews", String(cloudReviews));
@@ -435,7 +457,9 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
           setToolCreditsLeft(cloudToolCredits);
           localStorage.setItem("bluebottlecap_tool_credits", String(cloudToolCredits));
         } else {
-          const initialActivity = generateDefaultActivity();
+          // New User Document Initialization
+          const initialActivity: DailyActivity[] = [];
+          const initialRecent: RecentActivityItem[] = [];
           const initialReviews = 0;
           const initialPapers: string[] = [];
           const initialToolCredits = 5;
@@ -448,15 +472,22 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
             activePlan: "Free",
             creditsRemaining: 25,
             creditsLeft: 25,
-            streak: initialStreak,
-            streakDays: initialStreak,
-            hoursSaved: initialHours,
             dailyActivity: initialActivity,
+            recentActivities: initialRecent,
             todayReviewsCount: initialReviews,
             openedPapers: initialPapers,
             toolCreditsLeft: initialToolCredits,
-            createdAt: new Date().toISOString(),
-          }).catch(e => console.error(e));
+            streak: initialStreak,
+            streakDays: initialStreak,
+            hoursSaved: initialHours,
+            lastLoggedDate: new Date().toISOString().split("T")[0],
+            loginCount: 1,
+            studyMaterialUnlocked: false,
+          });
+
+          setDailyActivity(initialActivity);
+          setRecentActivities(initialRecent);
+          setLoginCount(1);
         }
       } catch (err) {
         console.error("Firestore user doc sync error:", err);
@@ -957,6 +988,8 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
           todayReviewsCount={todayReviewsCount}
           userName={currentUser?.displayName || currentUser?.email?.split("@")[0] || undefined}
           onShowToast={showToast}
+          loginCount={loginCount}
+          recentActivities={recentActivities}
         />
       )}
 

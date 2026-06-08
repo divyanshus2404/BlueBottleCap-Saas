@@ -89,3 +89,13 @@ export interface StudyAchievement {
   icon: string;
   unlocked: boolean;
 }
+
+export interface RecentActivityItem {
+  id: string;
+  tool: string;
+  target: string;
+  status: string;
+  cost: string;
+  date: string;
+  timestamp?: number;
+}

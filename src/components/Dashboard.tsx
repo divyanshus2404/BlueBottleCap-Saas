@@ -5,6 +5,10 @@ import { ActiveView, UsageStats, UserStats, DailyActivity, StudyAchievement } fr
 import { Sparkles, ArrowRight, Zap, FileText, ImageIcon, HardDrive, Cpu, History, AlertTriangle, BookOpen, Layers, Award, Calendar, Trophy, CheckCircle, Clock, Flame, Activity } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(useGSAP);
 
 
 interface DashboardProps {
@@ -17,6 +21,8 @@ interface DashboardProps {
   todayReviewsCount: number;
   userName?: string;
   onShowToast?: (message: string, type?: "success" | "error" | "info" | "warning") => void;
+  loginCount?: number;
+  recentActivities?: import("../types").RecentActivityItem[];
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -29,6 +35,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
   todayReviewsCount,
   userName,
   onShowToast,
+  loginCount = 1,
+  recentActivities = [],
 }) => {
   const { userProfile } = useAuth();
   const [activeTab, setActiveTab] = useState<"workspace" | "analytics">("workspace");
@@ -40,12 +48,40 @@ export const Dashboard: React.FC<DashboardProps> = ({
     return () => clearTimeout(timer);
   }, [activeTab]);
 
-  const recentActivities = [
-    { id: 1, tool: "AI PDF Reader", target: "cognitive_science_ch4.pdf", status: "Completed", cost: "1 Credit", date: "2 mins ago" },
-    { id: 2, tool: "Smart Summarizer", target: "Neuroplasticity Overview", status: "Success", cost: "1 Credit", date: "45 mins ago" },
-    { id: 3, tool: "Math Formula Solver", target: "calc_assignment_2.png", status: "Completed", cost: "Free", date: "2 hrs ago" },
-    { id: 4, tool: "AI Co-Pilot", target: "Drafted introduction", status: "Success", cost: "2 Credits", date: "Yesterday" }
-  ];
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  // Premium GSAP Welcome Animation
+  useGSAP(() => {
+    if (activeTab === "workspace") {
+      const tl = gsap.timeline();
+
+      tl.fromTo(".welcome-bg", 
+        { opacity: 0, scale: 1.05 },
+        { opacity: 1, scale: 1, duration: 1.2, ease: "power3.out" }
+      );
+
+      tl.fromTo(".welcome-text", 
+        { y: 40, opacity: 0, filter: "blur(10px)" },
+        { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8, stagger: 0.2 },
+        "-=0.6"
+      );
+
+      tl.fromTo(".stat-card", 
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.15, ease: "power2.out" },
+        "-=0.4"
+      );
+
+      tl.fromTo(".floating-icon", 
+        { y: 80, opacity: 0 },
+        { y: 0, opacity: 0.5, duration: 1, stagger: 0.2, ease: "elastic.out(1, 0.6)" },
+        "-=0.8"
+      );
+    }
+  }, { scope: containerRef, dependencies: [activeTab] });
+
+  // recentActivities is now passed as a prop from Firestore
+  // If no activities exist, we will show an empty state.
 
   const quickTools = [
     { name: "Smart Summarizer", desc: "Instantly compress full articles", icon: "📝", view: "tools" as ActiveView, toolId: "smart-summarizer" },
@@ -106,15 +142,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const chartLabels = chartData.map((cd) => cd.dayLabel);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div ref={containerRef} className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       
       {/* Top Profile Banner */}
-      <motion.div 
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8 flex flex-col md:flex-row items-center justify-between bg-white rounded-3xl p-6 border border-gray-100 shadow-xs"
+      <div 
+        className="welcome-bg relative overflow-hidden mb-8 flex flex-col md:flex-row items-center justify-between bg-white rounded-3xl p-6 border border-gray-100 shadow-xs"
       >
-        <div className="flex items-center gap-6">
+        {/* Floating Background Icons */}
+        <div className="absolute top-2 left-1/4 floating-icon text-3xl pointer-events-none drop-shadow-sm blur-[1px]">📘</div>
+        <div className="absolute bottom-2 left-1/3 floating-icon text-2xl pointer-events-none drop-shadow-sm blur-[0.5px]">🖊️</div>
+        <div className="absolute top-6 right-[30%] floating-icon text-4xl pointer-events-none drop-shadow-sm blur-[1px]">💻</div>
+        
+        <div className="flex items-center gap-6 relative z-10">
           <div className="h-16 w-16 rounded-full bg-gradient-to-tr from-brand-sky to-indigo-500 p-[2px] shadow-md">
             <div className="h-full w-full rounded-full bg-white flex items-center justify-center text-xl overflow-hidden">
               {userProfile?.photoURL ? (
@@ -126,15 +165,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-black text-slate-900 font-display">
-                Welcome back, {userName || userProfile?.displayName || "Scholar"}
+              <h1 className="welcome-text text-2xl font-black text-slate-900 font-display">
+                {loginCount <= 1 ? "Welcome," : "Welcome back,"} {userName || userProfile?.displayName || "Scholar"}
               </h1>
-              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-100">
+              <div className="welcome-text flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-100">
                 <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
                 <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wide">Live</span>
               </div>
             </div>
-            <p className="text-sm text-slate-500 font-medium mt-1">
+            <p className="welcome-text text-sm text-slate-500 font-medium mt-1">
               You've saved <span className="font-bold text-brand-cobalt">{userStats.hoursSaved} study hours</span> using AI Co-pilots.
             </p>
           </div>
@@ -147,14 +186,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <Flame className="w-4 h-4 fill-orange-500" /> {userStats.streakDays}
             </p>
           </div>
-          <div className="text-center px-4">
+          <div className="welcome-text text-center px-4">
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Study Plan</p>
             <p className="text-lg font-black text-brand-cobalt mt-1">
               {userStats.activePlan}
             </p>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Segment Tab Controller */}
       <div className="mb-8 flex gap-2 border-b border-gray-100 pb-px">
@@ -191,7 +230,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         >
           {/* Usage Stats Linear Bars */}
           <div className="grid gap-6 md:grid-cols-3">
-            <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+            <div className="stat-card rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg"><Cpu className="w-4 h-4" /></div>
@@ -205,7 +244,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <p className="text-[10px] text-slate-400 font-medium text-right">{aiPercent}% Used</p>
             </div>
 
-            <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+            <div className="stat-card rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-sky-50 text-sky-600 rounded-lg"><FileText className="w-4 h-4" /></div>
@@ -219,7 +258,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <p className="text-[10px] text-slate-400 font-medium text-right">{pdfPercent}% Used</p>
             </div>
 
-            <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+            <div className="stat-card rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg"><HardDrive className="w-4 h-4" /></div>
@@ -253,31 +292,43 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     <div className="col-span-2 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Time</div>
                   </div>
                   <div className="divide-y divide-gray-50">
-                    {recentActivities.map((act, i) => (
-                      <motion.div 
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        key={act.id} 
-                        className="px-6 py-4 grid grid-cols-12 gap-4 items-center hover:bg-slate-50 transition-colors cursor-default"
-                      >
-                        <div className="col-span-5">
-                          <p className="text-sm font-bold text-slate-900 truncate">{act.tool}</p>
-                          <p className="text-xs text-slate-500 truncate">{act.target}</p>
+                    {recentActivities.length === 0 ? (
+                      <div className="px-6 py-8 text-center border-t border-gray-50">
+                        <div className="mx-auto w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+                          <History className="w-5 h-5 text-slate-300" />
                         </div>
-                        <div className="col-span-3">
-                          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-100">
-                            <CheckCircle className="w-3 h-3" /> {act.status}
-                          </span>
-                        </div>
-                        <div className="col-span-2 text-xs font-medium text-slate-600">
-                          {act.cost}
-                        </div>
-                        <div className="col-span-2 text-right text-xs text-slate-400">
-                          {act.date}
-                        </div>
-                      </motion.div>
-                    ))}
+                        <h4 className="text-sm font-bold text-slate-900">No recent activity</h4>
+                        <p className="text-xs text-slate-500 mt-1 max-w-[200px] mx-auto">
+                          When you use tools like the Smart Summarizer or AI PDF Reader, your activity will appear here.
+                        </p>
+                      </div>
+                    ) : (
+                      recentActivities.map((act, i) => (
+                        <motion.div 
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.1 }}
+                          key={act.id} 
+                          className="px-6 py-4 grid grid-cols-12 gap-4 items-center hover:bg-slate-50 transition-colors cursor-default"
+                        >
+                          <div className="col-span-5">
+                            <p className="text-sm font-bold text-slate-900 truncate">{act.tool}</p>
+                            <p className="text-xs text-slate-500 truncate">{act.target}</p>
+                          </div>
+                          <div className="col-span-3">
+                            <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-100">
+                              <CheckCircle className="w-3 h-3" /> {act.status}
+                            </span>
+                          </div>
+                          <div className="col-span-2 text-xs font-medium text-slate-600">
+                            {act.cost}
+                          </div>
+                          <div className="col-span-2 text-right text-xs text-slate-400">
+                            {act.date}
+                          </div>
+                        </motion.div>
+                      ))
+                    )}
                   </div>
                 </div>
               </div>
