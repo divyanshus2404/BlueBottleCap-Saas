@@ -42,6 +42,13 @@ const ConstellationBackground = () => {
       }
     };
 
+    let mouse = { x: -1000, y: -1000 };
+    const handleMouseMove = (e: MouseEvent) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
@@ -52,12 +59,30 @@ const ConstellationBackground = () => {
         p.x += p.vx;
         p.y += p.vy;
 
+        // Mouse repulsion
+        const dxMouse = p.x - mouse.x;
+        const dyMouse = p.y - mouse.y;
+        const distMouseSq = dxMouse * dxMouse + dyMouse * dyMouse;
+        if (distMouseSq < 20000) {
+          p.x += dxMouse * 0.01;
+          p.y += dyMouse * 0.01;
+        }
+
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
         ctx.fill();
+
+        // Connect to mouse
+        if (distMouseSq < 20000) {
+          ctx.strokeStyle = `rgba(255, 255, 255, ${0.4 * (1 - distMouseSq / 20000)})`;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.stroke();
+        }
 
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
@@ -84,6 +109,7 @@ const ConstellationBackground = () => {
 
     return () => {
       window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);

@@ -147,6 +147,14 @@ export default function NeuralBrainIntro() {
           if (distSq < 22500) { // 150 squared
             p1.x += dx * 0.005;
             p1.y += dy * 0.005;
+            
+            // Connect to mouse for that interactive constellation feel
+            const alpha = 1 - (distSq / 22500);
+            ctx.strokeStyle = `rgba(${p1.strokeRGB}, ${alpha * 0.5})`;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
           }
         } else if (p1.isShattering) {
           p1.x += p1.shatterVx;
