@@ -1444,28 +1444,49 @@ Do not output markdown code fences, only output raw JSON.`
   };
 
   // PDF to Speech handler
-  const handleSpeechExtract = () => {
+  const handleSpeechExtract = async () => {
     if (!speechPdfFile) return;
     if (!checkAndUseCredit()) return;
     recordUsage("pdf-to-speech");
     setSpeechLoading(true);
 
     try {
-      // Simulate PDF Text Extraction
-      setTimeout(() => {
-        const textToSpeak = "Chapter 1. Thermodynamics. The first law of thermodynamics states that energy cannot be created or destroyed, only transformed from one form to another. This is often called the law of conservation of energy.";
-        setSpeechText(textToSpeak);
-        setSpeechLoading(false);
+      // Dynamically import pdfjs-dist
+      const pdfjs = await import("pdfjs-dist");
+      pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
+
+      const arrayBuffer = await speechPdfFile.arrayBuffer();
+      const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+      
+      let extractedText = "";
+      const maxPages = Math.min(pdf.numPages, 5); // Read up to first 5 pages
+      for (let i = 1; i <= maxPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map((item: any) => item.str).join(" ");
+        extractedText += pageText + "\\n\\n";
+      }
+
+      if (!extractedText.trim()) {
+        extractedText = "We couldn't detect any readable text in this document. It might be a scanned image.";
+      }
+
+      setSpeechText(extractedText);
+      setSpeechLoading(false);
+      
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        // Stop any currently playing audio
+        window.speechSynthesis.cancel();
         
-        if (typeof window !== "undefined" && window.speechSynthesis) {
-          const utterance = new SpeechSynthesisUtterance(textToSpeak);
-          utterance.rate = 0.9; // Slightly slower for lecture pace
-          utterance.onend = () => setIsSpeaking(false);
-          window.speechSynthesis.speak(utterance);
-          setIsSpeaking(true);
-        }
-      }, 1500);
+        const utterance = new SpeechSynthesisUtterance(extractedText);
+        utterance.rate = 0.9; // Slightly slower for lecture pace
+        utterance.onend = () => setIsSpeaking(false);
+        window.speechSynthesis.speak(utterance);
+        setIsSpeaking(true);
+      }
     } catch (e) {
+      console.error("PDF Extraction Error:", e);
+      setSpeechText("Error reading PDF text. Please try another file.");
       setSpeechLoading(false);
     }
   };
