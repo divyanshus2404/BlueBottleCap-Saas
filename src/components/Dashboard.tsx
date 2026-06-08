@@ -48,10 +48,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
   ];
 
   const quickTools = [
-    { name: "Smart Summarizer", desc: "Instantly compress full articles", icon: "📝", view: "tools" as ActiveView },
+    { name: "Smart Summarizer", desc: "Instantly compress full articles", icon: "📝", view: "tools" as ActiveView, toolId: "smart-summarizer" },
     { name: "AI PDF Reader", desc: "Interact with journals and papers", icon: "📖", view: "pdf-editor" as ActiveView },
-    { name: "Math Formula Solver", desc: "Visual LaTeX mathematical OCR", icon: "📐", view: "tools" as ActiveView },
-    { name: "PDF to Speech", desc: "Convert text into voice lecture", icon: "🔊", view: "tools" as ActiveView },
+    { name: "Math Formula Solver", desc: "Visual LaTeX mathematical OCR", icon: "📐", view: "tools" as ActiveView, toolId: "math-solver" },
+    { name: "PDF to Speech", desc: "Convert text into voice lecture", icon: "🔊", view: "tools" as ActiveView, toolId: "pdf-to-speech" },
   ];
 
   const calculatePercentage = (current: number, max: number) => {
@@ -295,7 +295,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     key={i}
-                    onClick={() => onNavigateTo(tool.view)}
+                    onClick={() => {
+                      if (tool.toolId) {
+                        localStorage.setItem("bluebottlecap_active_tool", tool.toolId);
+                      }
+                      onNavigateTo(tool.view);
+                    }}
                     className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md hover:border-brand-cobalt/30 transition-all cursor-pointer"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 border border-gray-100 text-lg">
