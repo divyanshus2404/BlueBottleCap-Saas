@@ -1,1 +1,6 @@
-"use client"; import App from "@/src/App"; export default function Page() { return <App initialView="dashboard" />; }
+"use client";
+import { Dashboard } from "@/src/components/Dashboard";
+
+export default function Page() {
+  return <Dashboard />;
+}

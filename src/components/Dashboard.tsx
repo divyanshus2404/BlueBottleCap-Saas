@@ -11,34 +11,47 @@ import { useGSAP } from "@gsap/react";
 gsap.registerPlugin(useGSAP);
 
 
-interface DashboardProps {
-  onNavigateTo: (view: ActiveView) => void;
-  userStats: UserStats;
-  usageStats: UsageStats;
-  dailyActivity: DailyActivity[];
-  achievements: StudyAchievement[];
-  onIncrementReviewCount: () => void;
-  todayReviewsCount: number;
-  userName?: string;
-  onShowToast?: (message: string, type?: "success" | "error" | "info" | "warning") => void;
-  loginCount?: number;
-  recentActivities?: import("../types").RecentActivityItem[];
-}
+import { useGlobalState } from "../context/GlobalStateContext";
+import { useRouter } from "next/navigation";
 
-export const Dashboard: React.FC<DashboardProps> = ({
-  onNavigateTo,
-  userStats,
-  usageStats,
-  dailyActivity,
-  achievements,
-  onIncrementReviewCount,
-  todayReviewsCount,
-  userName,
-  onShowToast,
-  loginCount = 1,
-  recentActivities = [],
-}) => {
+export const Dashboard: React.FC = () => {
+  const {
+    userStats,
+    usageStats,
+    dailyActivity,
+    todayReviewsCount,
+    handleIncrementReview: onIncrementReviewCount,
+    showToast: onShowToast,
+    loginCount,
+    recentActivities,
+  } = useGlobalState();
+  const router = useRouter();
+  const onNavigateTo = (view: ActiveView | string) => {
+    const paths: Record<string, string> = {
+      landing: '/',
+      dashboard: '/dashboard',
+      about: '/about',
+      'study-material-page': '/study-material',
+      'virtual-test': '/virtual-test',
+      tools: '/tools',
+      pricing: '/pricing',
+      flashcards: '/flashcards',
+      'seniors-opinion': '/seniors',
+      'create-profile': '/create-profile',
+      'pdf-editor': '/pdf-editor'
+    };
+    router.push(paths[view as string] || `/${view}`);
+  };
+
   const { userProfile } = useAuth();
+  const userName = userProfile?.name || "Scholar";
+  
+  // Reactively calculate achievements (moved from App.tsx)
+  const achievements = [
+    { id: "ach-1", name: "First Light", description: "Log in to the application to sync your scholar profile.", icon: "🏆", unlocked: true },
+    { id: "ach-2", name: "Consistent Scholar", description: "Maintain a study streak of 5 days or more.", icon: "🔥", unlocked: userStats.streakDays >= 5 },
+    { id: "ach-3", name: "Retention Master", description: "Build your knowledge base with 5 or more active flashcards.", icon: "🧠", unlocked: true },
+  ];
   const [activeTab, setActiveTab] = useState<"workspace" | "analytics">("workspace");
   const [isSyncing, setIsSyncing] = useState(true);
 

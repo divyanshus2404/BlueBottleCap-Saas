@@ -980,19 +980,7 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
         )}
 
       {currentView === "dashboard" && (
-        <Dashboard
-          onNavigateTo={navigateToView}
-          userStats={userStats}
-          usageStats={usageStats}
-          dailyActivity={dailyActivity}
-          achievements={achievements}
-          onIncrementReviewCount={handleIncrementReview}
-          todayReviewsCount={todayReviewsCount}
-          userName={currentUser?.displayName || currentUser?.email?.split("@")[0] || undefined}
-          onShowToast={showToast}
-          loginCount={loginCount}
-          recentActivities={recentActivities}
-        />
+        <Dashboard />
       )}
 
       {currentView === "pdf-editor" && (

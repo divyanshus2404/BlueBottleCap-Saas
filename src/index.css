@@ -11,23 +11,23 @@
   --color-brand-sky: #0EA5E9;
   --color-brand-cobalt: #2563EB;
 
-  /* Premium Dark Theme Colors */
-  --color-bg-primary: #0B0F1A;
-  --color-bg-secondary: #0F172A;
-  --color-bg-tertiary: #111827;
+  /* Premium Light Theme Colors */
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #f1f5f9;
+  --color-bg-tertiary: #e2e8f0;
   
-  --color-surface-glass: rgba(17, 24, 39, 0.6);
-  --color-surface-solid: #121A2F;
+  --color-surface-glass: rgba(255, 255, 255, 0.7);
+  --color-surface-solid: #ffffff;
   
-  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-subtle: rgba(0, 0, 0, 0.1);
   
-  --color-text-primary: #E6ECFF;
-  --color-text-secondary: #9AA4C7;
-  --color-text-muted: #6B7280;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
   
-  --color-accent: #4F7CFF;
-  --color-accent-soft: rgba(79, 124, 255, 0.15);
-  --color-accent-glow: rgba(79, 124, 255, 0.35);
+  --color-accent: #3b82f6;
+  --color-accent-soft: rgba(59, 130, 246, 0.15);
+  --color-accent-glow: rgba(59, 130, 246, 0.25);
 }
 
 @layer base {
@@ -57,11 +57,28 @@
 
 @layer components {
   .glass-card {
-    @apply bg-surface-glass backdrop-blur-xl border border-border-subtle rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.8)] transition-all duration-300;
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 1rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+  .glass-card:hover {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  }
+  
+  .glass-premium {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
   }
   
   .glass-panel {
-    @apply bg-surface-glass backdrop-blur-xl border border-border-subtle;
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.8);
   }
   
   .dark-glass-panel {
