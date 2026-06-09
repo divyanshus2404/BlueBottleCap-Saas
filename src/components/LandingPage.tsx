@@ -11,6 +11,7 @@ import { HeroBackgroundMarquee } from "./HeroBackgroundMarquee";
 import { SplitTextReveal } from "./SplitTextReveal";
 import NeuralBrainIntro from "./intro/NeuralBrainIntro";
 import { AuroraBackground } from "./AuroraBackground";
+import { ShaderBackground } from "./ShaderBackground";
 import useIntroAnimation from "../hooks/useIntroAnimation";
 
 if (typeof window !== "undefined") {
@@ -129,6 +130,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         }
       });
 
+      // Awwwards Premium: Pin the Hero Section
+      ScrollTrigger.create({
+        trigger: ".hero-section",
+        start: "top top",
+        end: "+=800",
+        pin: true,
+        scrub: true,
+      });
+
       const skewSetter = gsap.quickSetter(".hero-title .word", "skewY", "deg");
       let proxy = { skew: 0 };
       
@@ -182,7 +192,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       <div id="intro-overlay" className="fixed inset-0 z-50 bg-bg-primary" />
       <NeuralBrainIntro />
       
-      <AuroraBackground />
+      <ShaderBackground />
       
       {/* ── HERO SECTION ── */}
       <section className="hero-section relative pt-16 pb-20 md:pt-24 md:pb-28 min-h-screen flex flex-col justify-center perspective-1000 z-10 overflow-hidden">

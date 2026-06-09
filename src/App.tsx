@@ -26,7 +26,7 @@ import { LandingPage } from "./components/LandingPage";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { SmoothScroll } from "./components/SmoothScroll";
 import { LiquidTransition } from "./components/LiquidTransition";
-import { CustomCursor } from "./components/CustomCursor";
+import { Cursor } from "./components/Cursor";
 import { AboutPage } from "./components/AboutPage";
 import { GlobalBackground } from "./components/GlobalBackground";
 
@@ -940,7 +940,7 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
 
   return (
     <SmoothScroll>
-      <CustomCursor />
+      <Cursor />
       <LiquidTransition
         isAnimating={isTransitioning}
         onMidpoint={() => {
