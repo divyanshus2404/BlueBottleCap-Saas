@@ -51,23 +51,23 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete, userStats })
     <div className="mx-auto max-w-3xl px-4 py-12 md:py-16 fade-in">
       {/* Onboarding progress tracking */}
       <div className="mb-8 flex items-center justify-between">
-        <span className="text-xs font-bold uppercase tracking-widest text-accent">
+        <span className="text-xs font-bold uppercase tracking-widest text-brand-cobalt">
           Step {step} of 3
         </span>
         <div className="flex gap-2">
-          <div className={`h-1.5 w-12 rounded-full transition-all duration-300 ${step >= 1 ? "bg-accent" : "bg-gray-200"}`}></div>
-          <div className={`h-1.5 w-12 rounded-full transition-all duration-300 ${step >= 2 ? "bg-accent" : "bg-gray-200"}`}></div>
-          <div className={`h-1.5 w-12 rounded-full transition-all duration-300 ${step >= 3 ? "bg-accent" : "bg-gray-200"}`}></div>
+          <div className={`h-1.5 w-12 rounded-full transition-all duration-300 ${step >= 1 ? "bg-brand-cobalt" : "bg-gray-200"}`}></div>
+          <div className={`h-1.5 w-12 rounded-full transition-all duration-300 ${step >= 2 ? "bg-brand-cobalt" : "bg-gray-200"}`}></div>
+          <div className={`h-1.5 w-12 rounded-full transition-all duration-300 ${step >= 3 ? "bg-brand-cobalt" : "bg-gray-200"}`}></div>
         </div>
       </div>
 
       {step === 1 && (
         <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm md:p-10">
           <div className="mb-6 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-accent text-xl">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-brand-cobalt text-xl">
               🚀
             </div>
-            <h1 className="font-display text-2.5xl font-bold tracking-tight text-white md:text-3xl">
+            <h1 className="font-display text-2.5xl font-bold tracking-tight text-brand-navy md:text-3xl">
               Welcome to BlueBottleCap!
             </h1>
             <p className="mt-2 text-gray-500">
@@ -82,23 +82,23 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete, userStats })
                 <div
                   key={g.id}
                   onClick={() => toggleGoal(g.id)}
-                  className={`group relative cursor-pointer rounded-xl border p-5 transition-all hover:border-accent hover:bg-surface-solid ${
+                  className={`group relative cursor-pointer rounded-xl border p-5 transition-all hover:border-brand-cobalt hover:bg-slate-50/50 ${
                     active
-                      ? "border-accent bg-blue-50/10 shadow-sm"
+                      ? "border-brand-cobalt bg-blue-50/10 shadow-sm"
                       : "border-gray-100"
                   }`}
                 >
                   <div className="flex gap-3">
                     <span className="text-2xl leading-none">{g.icon}</span>
                     <div>
-                      <h3 className="font-semibold text-white">{g.title}</h3>
+                      <h3 className="font-semibold text-brand-navy">{g.title}</h3>
                       <p className="mt-1 text-xs text-gray-400 group-hover:text-gray-500 leading-normal">
                         {g.desc}
                       </p>
                     </div>
                   </div>
                   {active && (
-                    <span className="absolute right-3 top-3 rounded-full bg-accent p-0.5 text-white">
+                    <span className="absolute right-3 top-3 rounded-full bg-brand-cobalt p-0.5 text-white">
                       <Check className="h-3.5 w-3.5" />
                     </span>
                   )}
@@ -113,7 +113,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete, userStats })
               disabled={selectedGoals.length === 0}
               className={`flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white shadow-sm transition-all ${
                 selectedGoals.length > 0
-                  ? "bg-accent hover:bg-brand-navy cursor-pointer"
+                  ? "bg-brand-cobalt hover:bg-brand-navy cursor-pointer"
                   : "bg-gray-300 cursor-not-allowed"
               }`}
             >
@@ -130,7 +130,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete, userStats })
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-500 text-xl">
               ⚖️
             </div>
-            <h1 className="font-display text-2.5xl font-bold tracking-tight text-white">
+            <h1 className="font-display text-2.5xl font-bold tracking-tight text-brand-navy">
               Resource Allotments & Limits
             </h1>
             <p className="mt-2 text-sm text-gray-500">
@@ -139,13 +139,13 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete, userStats })
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-start gap-4 rounded-xl border border-gray-100 bg-surface-solid p-4">
+            <div className="flex items-start gap-4 rounded-xl border border-gray-100 bg-slate-50/50 p-4">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
                 <Sparkles className="w-5 h-5" />
               </div>
               <div className="grow">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-white">25 Monthly AI Co-Pilot Queries</h3>
+                  <h3 className="font-semibold text-brand-navy">25 Monthly AI Co-Pilot Queries</h3>
                   <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-[11px] font-bold text-indigo-700">
                     25 / month
                   </span>
@@ -156,13 +156,13 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete, userStats })
               </div>
             </div>
 
-            <div className="flex items-start gap-4 rounded-xl border border-gray-100 bg-surface-solid p-4">
+            <div className="flex items-start gap-4 rounded-xl border border-gray-100 bg-slate-50/50 p-4">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-600">
                 <Compass className="w-5 h-5" />
               </div>
               <div className="grow">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-white">5 Interactive PDF Annotations</h3>
+                  <h3 className="font-semibold text-brand-navy">5 Interactive PDF Annotations</h3>
                   <span className="rounded-full bg-teal-100 px-2 py-0.5 text-[11px] font-bold text-teal-700">
                     5 files
                   </span>
@@ -173,13 +173,13 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete, userStats })
               </div>
             </div>
 
-            <div className="flex items-start gap-4 rounded-xl border border-gray-100 bg-surface-solid p-4">
+            <div className="flex items-start gap-4 rounded-xl border border-gray-100 bg-slate-50/50 p-4">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-sky-600">
                 <Shield className="w-5 h-5" />
               </div>
               <div className="grow">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-white">500 MB Secure Cloud Storage</h3>
+                  <h3 className="font-semibold text-brand-navy">500 MB Secure Cloud Storage</h3>
                   <span className="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-bold text-sky-700">
                     500 MB
                   </span>
@@ -204,13 +204,13 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete, userStats })
           <div className="mt-8 flex justify-between">
             <button
               onClick={() => setStep(1)}
-              className="rounded-xl border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-surface-solid transition cursor-pointer"
+              className="rounded-xl border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-slate-50 transition cursor-pointer"
             >
               Back
             </button>
             <button
               onClick={() => setStep(3)}
-              className="flex items-center gap-2 rounded-xl bg-accent px-6 py-2.5 font-semibold text-white shadow-sm hover:bg-brand-navy transition cursor-pointer text-sm"
+              className="flex items-center gap-2 rounded-xl bg-brand-cobalt px-6 py-2.5 font-semibold text-white shadow-sm hover:bg-brand-navy transition cursor-pointer text-sm"
             >
               <span>Unlock 25 Free Credits</span>
               <ArrowRight className="w-4 h-4" />
@@ -233,11 +233,11 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete, userStats })
             <Award className="h-9 w-9 animate-pulse" />
           </div>
 
-          <h1 className="font-display text-3xl font-extrabold tracking-tight text-white md:text-4xl">
+          <h1 className="font-display text-3xl font-extrabold tracking-tight text-brand-navy md:text-4xl">
             You are All Set!
           </h1>
           <p className="mt-3 text-sm text-gray-600 max-w-md mx-auto leading-relaxed">
-            We've successfully credited your new scholar profile with <strong className="text-accent">25 high-speed AI queries</strong>. Your workspace is configured and ready.
+            We've successfully credited your new scholar profile with <strong className="text-brand-cobalt">25 high-speed AI queries</strong>. Your workspace is configured and ready.
           </p>
 
           <div className="my-8 rounded-xl border border-dashed border-teal-200 bg-teal-50/30 p-5 max-w-md mx-auto">
@@ -248,7 +248,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete, userStats })
               <div className="text-left">
                 <h4 className="text-sm font-bold text-teal-900">Scholar Quick Tip</h4>
                 <p className="text-xs text-teal-800 leading-normal mt-0.5">
-                  Try opening the <strong className="font-semibold text-accent underline cursor-pointer" onClick={onComplete}>AI PDF Reader</strong> tab first to highlight and explain complex passages inside a preloaded review paper!
+                  Try opening the <strong className="font-semibold text-brand-cobalt underline cursor-pointer" onClick={onComplete}>AI PDF Reader</strong> tab first to highlight and explain complex passages inside a preloaded review paper!
                 </p>
               </div>
             </div>

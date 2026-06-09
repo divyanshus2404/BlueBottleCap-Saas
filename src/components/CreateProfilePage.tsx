@@ -83,11 +83,11 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
   ];
 
   return (
-    <div className="min-h-screen bg-bg-primary font-sans flex flex-col text-white">
+    <div className="min-h-screen bg-slate-950 font-sans flex flex-col text-white">
       {/* Header */}
-      <header className="flex items-center justify-between px-8 py-6 border-b border-slate-800/50 bg-bg-primary/50 backdrop-blur-md sticky top-0 z-50">
+      <header className="flex items-center justify-between px-8 py-6 border-b border-slate-800/50 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-3">
-          <Logo className="w-8 h-8 text-accent" />
+          <Logo className="w-8 h-8 text-brand-cobalt" />
           <span className="text-xl font-black font-display tracking-tight">BlueBottleCap</span>
         </div>
         <button 
@@ -107,13 +107,13 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
         <div className="lg:col-span-5 flex flex-col items-center">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-black font-display mb-2">Design your Avatar</h1>
-            <p className="text-text-secondary">Make it yours. This will be visible on your dashboard and shared studies.</p>
+            <p className="text-slate-400">Make it yours. This will be visible on your dashboard and shared studies.</p>
           </div>
           
           <motion.div 
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-64 h-64 rounded-full border-4 border-slate-800 shadow-2xl overflow-hidden bg-bg-primary relative group"
+            className="w-64 h-64 rounded-full border-4 border-slate-800 shadow-2xl overflow-hidden bg-slate-900 relative group"
           >
             <div 
               className="w-full h-full"
@@ -128,7 +128,7 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
         </div>
 
         {/* Right Column: Customization Controls */}
-        <div className="lg:col-span-7 bg-bg-primary/50 border border-slate-800/50 rounded-3xl p-6 shadow-xl backdrop-blur-sm">
+        <div className="lg:col-span-7 bg-slate-900/50 border border-slate-800/50 rounded-3xl p-6 shadow-xl backdrop-blur-sm">
           
           {/* Tabs */}
           <div className="flex gap-2 overflow-x-auto pb-4 mb-6 border-b border-slate-800 hide-scrollbar">
@@ -138,8 +138,8 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all ${
                   activeTab === tab.id 
-                    ? 'bg-accent text-white shadow-lg shadow-brand-cobalt/20' 
-                    : 'text-text-secondary hover:bg-surface-solid hover:text-white'
+                    ? 'bg-brand-cobalt text-white shadow-lg shadow-brand-cobalt/20' 
+                    : 'text-slate-400 hover:bg-slate-800 hover:text-white'
                 }`}
               >
                 {tab.icon}
@@ -153,14 +153,14 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
             {activeTab === 'skin' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-4">Skin Tone</h3>
+                  <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Skin Tone</h3>
                   <div className="flex flex-wrap gap-3">
                     {SKIN_COLORS.map(color => (
                       <button
                         key={color}
                         onClick={() => setSkinColor(color)}
                         className={`w-12 h-12 rounded-full border-4 transition-all ${
-                          skinColor === color ? 'border-accent scale-110' : 'border-transparent hover:scale-105'
+                          skinColor === color ? 'border-brand-cobalt scale-110' : 'border-transparent hover:scale-105'
                         }`}
                         style={{ backgroundColor: `#${color}` }}
                       />
@@ -173,7 +173,7 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
             {activeTab === 'hair' && (
               <div className="space-y-8">
                 <div>
-                  <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-4">Hair Style</h3>
+                  <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Hair Style</h3>
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                     {TOPS.map(t => (
                       <button
@@ -181,8 +181,8 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
                         onClick={() => setTop(t)}
                         className={`py-3 px-2 rounded-xl text-xs font-bold transition-all border ${
                           top === t 
-                            ? 'bg-accent/20 border-accent text-accent' 
-                            : 'bg-surface-solid border-slate-700 text-text-primary hover:bg-slate-700'
+                            ? 'bg-brand-cobalt/20 border-brand-cobalt text-brand-cobalt' 
+                            : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
                         }`}
                       >
                         {t.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
@@ -191,14 +191,14 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-4">Hair Color</h3>
+                  <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Hair Color</h3>
                   <div className="flex flex-wrap gap-3">
                     {HAIR_COLORS.map(color => (
                       <button
                         key={color}
                         onClick={() => setHairColor(color)}
                         className={`w-10 h-10 rounded-full border-4 transition-all ${
-                          hairColor === color ? 'border-accent scale-110' : 'border-slate-800 hover:scale-105'
+                          hairColor === color ? 'border-brand-cobalt scale-110' : 'border-slate-800 hover:scale-105'
                         }`}
                         style={{ backgroundColor: `#${color}` }}
                       />
@@ -211,7 +211,7 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
             {activeTab === 'face' && (
               <div className="space-y-8">
                 <div>
-                  <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-4">Eyes</h3>
+                  <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Eyes</h3>
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                     {EYES.map(e => (
                       <button
@@ -219,8 +219,8 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
                         onClick={() => setEyes(e)}
                         className={`py-3 px-2 rounded-xl text-xs font-bold transition-all border ${
                           eyes === e 
-                            ? 'bg-accent/20 border-accent text-accent' 
-                            : 'bg-surface-solid border-slate-700 text-text-primary hover:bg-slate-700'
+                            ? 'bg-brand-cobalt/20 border-brand-cobalt text-brand-cobalt' 
+                            : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
                         }`}
                       >
                         {e.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
@@ -229,7 +229,7 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-4">Mouth</h3>
+                  <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Mouth</h3>
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                     {MOUTHS.map(m => (
                       <button
@@ -237,8 +237,8 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
                         onClick={() => setMouth(m)}
                         className={`py-3 px-2 rounded-xl text-xs font-bold transition-all border ${
                           mouth === m 
-                            ? 'bg-accent/20 border-accent text-accent' 
-                            : 'bg-surface-solid border-slate-700 text-text-primary hover:bg-slate-700'
+                            ? 'bg-brand-cobalt/20 border-brand-cobalt text-brand-cobalt' 
+                            : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
                         }`}
                       >
                         {m.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
@@ -252,7 +252,7 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
             {activeTab === 'clothes' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-4">Outfit</h3>
+                  <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Outfit</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {CLOTHING.map(c => (
                       <button
@@ -260,8 +260,8 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
                         onClick={() => setClothing(c)}
                         className={`py-4 px-2 rounded-xl text-xs font-bold transition-all border ${
                           clothing === c 
-                            ? 'bg-accent/20 border-accent text-accent' 
-                            : 'bg-surface-solid border-slate-700 text-text-primary hover:bg-slate-700'
+                            ? 'bg-brand-cobalt/20 border-brand-cobalt text-brand-cobalt' 
+                            : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
                         }`}
                       >
                         {c.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
@@ -275,7 +275,7 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
             {activeTab === 'accessories' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-4">Glasses & Accessories</h3>
+                  <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Glasses & Accessories</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {ACCESSORIES.map(a => (
                       <button
@@ -283,8 +283,8 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
                         onClick={() => setAccessories(a)}
                         className={`py-4 px-2 rounded-xl text-xs font-bold transition-all border ${
                           accessories === a 
-                            ? 'bg-accent/20 border-accent text-accent' 
-                            : 'bg-surface-solid border-slate-700 text-text-primary hover:bg-slate-700'
+                            ? 'bg-brand-cobalt/20 border-brand-cobalt text-brand-cobalt' 
+                            : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
                         }`}
                       >
                         {a === 'none' ? 'None' : a.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}

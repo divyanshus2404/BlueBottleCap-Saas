@@ -119,7 +119,7 @@ export default function NeuralBrainIntro() {
         gsap.to(p, {
           x: p.targetX,
           y: p.targetY,
-          duration: 0.8,
+          duration: 1.5,
           ease: "expo.inOut",
           onStart: () => { p.isForming = true; },
           onComplete: () => { brainIsFullyFormed = true; }
@@ -130,7 +130,7 @@ export default function NeuralBrainIntro() {
         duration: 0.15,
         yoyo: true,
         repeat: 3,
-        delay: 0.7,
+        delay: 1.4,
         ease: "power2.inOut"
       });
     };

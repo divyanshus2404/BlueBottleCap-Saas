@@ -47,7 +47,7 @@ const BottleAnimation: React.FC = () => {
         className={`max-w-md text-center transition-opacity duration-500 ${opened ? 'opacity-100' : 'opacity-0'}`}
         aria-live="polite"
       >
-        <h3 className="font-display text-xl font-bold text-white mb-2">
+        <h3 className="font-display text-xl font-bold text-brand-navy mb-2">
           <Sparkles className="inline w-5 h-5 mr-1 text-amber-400" />
           What you get
         </h3>
@@ -56,7 +56,7 @@ const BottleAnimation: React.FC = () => {
             <li key={f}>{f}</li>
           ))}
         </ul>
-        <blockquote className="italic text-gray-500 border-l-4 border-accent pl-4">
+        <blockquote className="italic text-gray-500 border-l-4 border-brand-cobalt pl-4">
           {quote}
         </blockquote>
       </div>

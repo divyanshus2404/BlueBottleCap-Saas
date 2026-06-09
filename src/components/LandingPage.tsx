@@ -189,7 +189,7 @@ const PostProcessingEffects = () => {
 
 function Background3D() {
   return (
-    <div className="fixed inset-0 -z-20 h-screen w-screen bg-transparent pointer-events-none">
+    <div className="fixed inset-0 -z-20 h-screen w-screen bg-slate-50">
       <Canvas camera={{ position: [0, 0, 8], fov: 45 }} className="w-full h-full">
         <SceneController />
         
@@ -294,7 +294,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         scale: 1,
         opacity: 1,
         duration: 1,
-        stagger: 0.3,
+        stagger: 0.2,
         ease: "back.out(1.2)",
         scrollTrigger: {
           trigger: ".testimonials-section",
@@ -375,7 +375,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         <HeroBackgroundMarquee />
 
         <div className="hero-content mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 text-center w-full mt-10 pointer-events-none">
-          <div className="hero-badge hero-reveal-element inline-flex items-center gap-1.5 rounded-full bg-surface-glass px-4 py-1.5 text-xs font-semibold text-slate-800 mb-6 backdrop-blur-md border border-border-subtle shadow-sm pointer-events-auto">
+          <div className="hero-badge hero-reveal-element inline-flex items-center gap-1.5 rounded-full bg-slate-100/80 px-4 py-1.5 text-xs font-semibold text-slate-800 mb-6 backdrop-blur-md border border-slate-200 shadow-sm pointer-events-auto">
             <Sparkles className="w-3.5 h-3.5 text-blue-500" />
             <span>The intelligent way to study</span>
           </div>
@@ -402,15 +402,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <div className="absolute inset-x-0 -top-px h-px bg-linear-to-r from-transparent via-blue-200 to-transparent"></div>
               
               {/* BROWSER BAR MOCK */}
-              <div className="rounded-xl md:rounded-3xl overflow-hidden bg-white border border-border-subtle shadow-inner relative z-10">
-                <div className="flex items-center justify-between px-4 py-3 bg-surface-solid border-b border-border-subtle">
+              <div className="rounded-xl md:rounded-3xl overflow-hidden bg-white border border-slate-200/50 shadow-inner relative z-10">
+                <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200/50">
                   <div className="flex space-x-2">
                     <div className="w-3 h-3 rounded-full bg-red-400 shadow-sm"></div>
                     <div className="w-3 h-3 rounded-full bg-amber-400 shadow-sm"></div>
                     <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-sm"></div>
                   </div>
                   <div className="flex-1 px-4 flex justify-center">
-                    <div className="bg-white rounded-md px-32 py-1.5 text-[9px] font-mono text-text-secondary flex items-center gap-2 shadow-sm border border-border-subtle">
+                    <div className="bg-white rounded-md px-32 py-1.5 text-[9px] font-mono text-slate-400 flex items-center gap-2 shadow-sm border border-slate-100">
                       <span>🔒</span> bluebottlecap.com/workspace
                     </div>
                   </div>
@@ -419,20 +419,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <div className="p-8 pb-16 bg-white flex justify-center relative overflow-hidden">
                   <div className="max-w-md text-left w-full space-y-6 relative z-10">
                     <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 rounded-2xl bg-surface-glass flex items-center justify-center font-black text-slate-700 text-2xl shadow-inner border border-border-subtle">S</div>
+                        <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center font-black text-slate-700 text-2xl shadow-inner border border-slate-200/50">S</div>
                         <div>
                           <div className="font-bold text-slate-900 text-lg">Welcome back, Scholar</div>
-                          <div className="text-sm text-text-muted">Your study streak is on fire! 🔥</div>
+                          <div className="text-sm text-slate-500">Your study streak is on fire! 🔥</div>
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="p-5 bg-surface-solid rounded-2xl border border-border-subtle shadow-sm">
-                          <div className="text-xs font-black tracking-widest text-text-secondary mb-1">MOCK TESTS</div>
-                          <div className="text-3xl font-black text-slate-900">12<span className="text-sm font-bold text-text-secondary ml-1">completed</span></div>
+                        <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm">
+                          <div className="text-xs font-black tracking-widest text-slate-400 mb-1">MOCK TESTS</div>
+                          <div className="text-3xl font-black text-slate-900">12<span className="text-sm font-bold text-slate-400 ml-1">completed</span></div>
                         </div>
-                        <div className="p-5 bg-surface-solid rounded-2xl border border-border-subtle shadow-sm">
-                          <div className="text-xs font-black tracking-widest text-text-secondary mb-1">CHAPTERS REVISED</div>
-                          <div className="text-3xl font-black text-slate-900">34<span className="text-sm font-bold text-text-secondary ml-1">/ 90</span></div>
+                        <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm">
+                          <div className="text-xs font-black tracking-widest text-slate-400 mb-1">CHAPTERS REVISED</div>
+                          <div className="text-3xl font-black text-slate-900">34<span className="text-sm font-bold text-slate-400 ml-1">/ 90</span></div>
                         </div>
                     </div>
                   </div>
@@ -460,7 +460,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       <VelocityMarquee text="STUDY SMARTER • RETAIN FASTER • ACE EXAMS • " className="my-0" />
 
       {/* ── HOW IT WORKS (FEATURES) ── */}
-      <section className="features-section py-40 bg-surface-solid backdrop-blur-2xl relative z-20">
+      <section className="features-section py-40 bg-slate-50/80 backdrop-blur-2xl relative z-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <SplitTextReveal 
             text="Everything you need to succeed." 
@@ -469,32 +469,32 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           
           <div className="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
             <TiltCard className="h-[400px]">
-              <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-border-subtle ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
+              <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
                 <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
                   <LiquidImage src="/images/physics.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
                 </div>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Premium Notes</h3>
-                <p className="text-text-muted leading-relaxed text-sm font-medium max-w-sm">Access exhaustive, topper-grade notes carefully organized by subject and chapter.</p>
+                <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Access exhaustive, topper-grade notes carefully organized by subject and chapter.</p>
               </div>
             </TiltCard>
             
             <TiltCard className="h-[400px]">
-              <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-border-subtle ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
+              <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
                 <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
                   <LiquidImage src="/images/chemistry.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
                 </div>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Virtual Test Mode</h3>
-                <p className="text-text-muted leading-relaxed text-sm font-medium max-w-sm">Practice past papers in an immersive, distraction-free environment with an active timer.</p>
+                <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Practice past papers in an immersive, distraction-free environment with an active timer.</p>
               </div>
             </TiltCard>
             
             <TiltCard className="h-[400px]">
-              <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-border-subtle ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
+              <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
                 <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
                   <LiquidImage src="/images/math.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
                 </div>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">AI Powered</h3>
-                <p className="text-text-muted leading-relaxed text-sm font-medium max-w-sm">Get instant solutions and flashcard generation to retain concepts longer.</p>
+                <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Get instant solutions and flashcard generation to retain concepts longer.</p>
               </div>
             </TiltCard>
           </div>
@@ -502,47 +502,47 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           <div className="mt-24 feature-card">
             <button
               onClick={() => onNavigate("study-material-page")}
-              className="inline-flex items-center gap-3 bg-bg-primary hover:bg-surface-solid text-white font-black text-lg px-10 py-5 rounded-2xl transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 cursor-pointer ring-4 ring-transparent hover:ring-slate-900/10"
+              className="inline-flex items-center gap-3 bg-slate-900 hover:bg-slate-800 text-white font-black text-lg px-10 py-5 rounded-2xl transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 cursor-pointer ring-4 ring-transparent hover:ring-slate-900/10"
             >
               <span>Explore Study Material</span>
               <BookOpen className="w-6 h-6" />
             </button>
-            <p className="text-sm text-text-secondary font-bold mt-5 uppercase tracking-widest">Free preview available · No signup needed</p>
+            <p className="text-sm text-slate-400 font-bold mt-5 uppercase tracking-widest">Free preview available · No signup needed</p>
           </div>
         </div>
       </section>
 
       {/* ── COACHING COMPARISON ── */}
-      <section className="comparison-section py-32 bg-white/90 backdrop-blur-xl border-y border-border-subtle overflow-hidden relative z-20 shadow-sm">
+      <section className="comparison-section py-32 bg-white/90 backdrop-blur-xl border-y border-slate-100 overflow-hidden relative z-20 shadow-sm">
         <div className="mx-auto max-w-5xl px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-black font-display text-slate-900 mb-20">
             Traditional Learning vs <br className="hidden sm:block" />BlueBottleCap
           </h2>
           
-          <div className="overflow-hidden border border-border-subtle rounded-[2rem] shadow-xl text-left text-sm md:text-lg bg-white/95 backdrop-blur-xl">
-            <div className="comparison-row grid grid-cols-3 bg-surface-solid border-b border-border-subtle font-black text-slate-900 p-6 sm:p-8">
-              <div className="col-span-1 uppercase tracking-widest text-xs text-text-secondary">Feature</div>
-              <div className="col-span-1 text-text-muted">Traditional</div>
+          <div className="overflow-hidden border border-slate-200 rounded-[2rem] shadow-xl text-left text-sm md:text-lg bg-white/95 backdrop-blur-xl">
+            <div className="comparison-row grid grid-cols-3 bg-slate-50 border-b border-slate-200 font-black text-slate-900 p-6 sm:p-8">
+              <div className="col-span-1 uppercase tracking-widest text-xs text-slate-400">Feature</div>
+              <div className="col-span-1 text-slate-500">Traditional</div>
               <div className="col-span-1 text-blue-600 flex items-center gap-2">
                 <Sparkles className="w-5 h-5 hidden sm:block" /> BlueBottleCap
               </div>
             </div>
             
-            <div className="comparison-row grid grid-cols-3 border-b border-border-subtle p-6 sm:p-8 hover:bg-surface-solid transition-colors">
+            <div className="comparison-row grid grid-cols-3 border-b border-slate-100 p-6 sm:p-8 hover:bg-slate-50 transition-colors">
               <div className="col-span-1 font-bold text-slate-700">Cost</div>
-              <div className="col-span-1 text-text-muted pr-4">₹1,00,000+ per year</div>
+              <div className="col-span-1 text-slate-500 pr-4">₹1,00,000+ per year</div>
               <div className="col-span-1 font-black text-slate-900">Extremely affordable.</div>
             </div>
             
-            <div className="comparison-row grid grid-cols-3 border-b border-border-subtle p-6 sm:p-8 hover:bg-surface-solid transition-colors">
+            <div className="comparison-row grid grid-cols-3 border-b border-slate-100 p-6 sm:p-8 hover:bg-slate-50 transition-colors">
               <div className="col-span-1 font-bold text-slate-700">Material</div>
-              <div className="col-span-1 text-text-muted pr-4">Heavy, outdated books.</div>
+              <div className="col-span-1 text-slate-500 pr-4">Heavy, outdated books.</div>
               <div className="col-span-1 font-bold text-slate-900">Digital, constantly updated notes.</div>
             </div>
 
-            <div className="comparison-row grid grid-cols-3 p-6 sm:p-8 hover:bg-surface-solid transition-colors">
+            <div className="comparison-row grid grid-cols-3 p-6 sm:p-8 hover:bg-slate-50 transition-colors">
               <div className="col-span-1 font-bold text-slate-700">Tests</div>
-              <div className="col-span-1 text-text-muted pr-4">Rigid schedule.</div>
+              <div className="col-span-1 text-slate-500 pr-4">Rigid schedule.</div>
               <div className="col-span-1 font-bold text-slate-900">Take full mock tests instantly.</div>
             </div>
           </div>
@@ -550,13 +550,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── TESTIMONIALS / TRUST ── */}
-      <section className="testimonials-section py-40 bg-surface-solid backdrop-blur-2xl border-b border-border-subtle relative z-20">
+      <section className="testimonials-section py-40 bg-slate-50/90 backdrop-blur-2xl border-b border-slate-200 relative z-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-black font-display text-slate-900 mb-6">Built for serious students.</h2>
-          <p className="text-text-muted mb-20 font-medium text-xl">Trusted by ambitious learners everywhere.</p>
+          <p className="text-slate-500 mb-20 font-medium text-xl">Trusted by ambitious learners everywhere.</p>
           
           <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto text-left">
-            <div className="testimonial-card bg-white p-12 rounded-[2rem] border border-border-subtle shadow-xl relative transition-transform hover:-translate-y-2">
+            <div className="testimonial-card bg-white p-12 rounded-[2rem] border border-slate-100 shadow-xl relative transition-transform hover:-translate-y-2">
               <div className="absolute -top-6 -left-2 text-slate-100 text-9xl font-serif leading-none">"</div>
               <p className="text-slate-700 leading-relaxed font-medium mb-10 relative z-10 text-lg">I was struggling to find good concise notes until I found this suite. The interactive UI and the mock test environment is better than anything else out there.</p>
               <div className="flex items-center gap-5">
@@ -568,7 +568,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            <div className="testimonial-card bg-white p-12 rounded-[2rem] border border-border-subtle shadow-xl relative transition-transform hover:-translate-y-2">
+            <div className="testimonial-card bg-white p-12 rounded-[2rem] border border-slate-100 shadow-xl relative transition-transform hover:-translate-y-2">
               <div className="absolute -top-6 -left-2 text-slate-100 text-9xl font-serif leading-none">"</div>
               <p className="text-slate-700 leading-relaxed font-medium mb-10 relative z-10 text-lg">The layout is just gorgeous and distraction-free. No ads, no annoying popups, just pure study material and test modes that help me stay focused for hours.</p>
               <div className="flex items-center gap-5">
@@ -584,21 +584,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── CTA SECTION ── */}
-      <section className="cta-section py-40 text-center relative overflow-hidden bg-bg-primary text-white z-20">
+      <section className="cta-section py-40 text-center relative overflow-hidden bg-slate-900 text-white z-20">
         <div className="cta-glow absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/40 via-slate-900 to-slate-900 opacity-80 blur-3xl pointer-events-none" />
         
         <div className="mx-auto max-w-4xl px-4 relative z-10 space-y-12">
           <h2 className="font-display text-5xl sm:text-7xl font-black tracking-tight leading-tight drop-shadow-2xl">
             Stop procrastinating.
           </h2>
-          <p className="text-2xl text-text-primary max-w-2xl mx-auto font-medium leading-relaxed">
+          <p className="text-2xl text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed">
             Join thousands of ambitious students and start your serious prep tonight.
           </p>
           <div className="pt-10 flex justify-center items-center">
             <MagneticWrapper strength={60}>
               <button
                 onClick={() => onNavigate("onboarding")}
-                className="rounded-2xl bg-white text-slate-900 hover:bg-surface-solid px-14 py-7 font-black text-2xl cursor-pointer shadow-2xl transition-colors ring-8 ring-white/10 hover:ring-white/20 w-full sm:w-auto"
+                className="rounded-2xl bg-white text-slate-900 hover:bg-slate-50 px-14 py-7 font-black text-2xl cursor-pointer shadow-2xl transition-colors ring-8 ring-white/10 hover:ring-white/20 w-full sm:w-auto"
               >
                 Start Studying Smarter
               </button>
@@ -608,9 +608,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-slate-800 bg-bg-primary py-16 relative z-20 text-center">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-xs text-text-muted space-y-4">
-          <span className="font-display font-black text-text-secondary text-xl tracking-tight">BlueBottleCap</span>
+      <footer className="border-t border-slate-800 bg-slate-950 py-16 relative z-20 text-center">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-xs text-slate-500 space-y-4">
+          <span className="font-display font-black text-slate-400 text-xl tracking-tight">BlueBottleCap</span>
           <p className="font-mono text-[11px] uppercase tracking-widest mt-2">© 2026 BlueBottleCap Suite. All Rights Reserved.</p>
         </div>
       </footer>

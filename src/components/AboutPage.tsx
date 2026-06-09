@@ -46,7 +46,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
   }, []);
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-surface-solid pt-32 pb-32 overflow-hidden">
+    <div ref={containerRef} className="min-h-screen bg-slate-50 pt-32 pb-32 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Back Button */}
@@ -54,7 +54,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           <MagneticWrapper strength={30}>
             <button 
               onClick={() => onNavigate("landing")}
-              className="inline-flex items-center gap-2 text-sm font-bold text-text-muted hover:text-slate-900 transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Home
@@ -68,9 +68,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           <div className="lg:col-span-5 about-content relative z-10">
             <TiltCard className="h-[600px] w-full">
               <div className="w-full h-full rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white relative group bg-white flex items-center justify-center">
-                <div className="absolute inset-0 bg-surface-glass flex flex-col items-center justify-center -z-10 p-8 text-center border-2 border-dashed border-slate-300 rounded-[2rem]">
-                  <div className="text-text-secondary font-bold mb-2">Image Missing</div>
-                  <div className="text-text-secondary text-sm">Please drag your photo into <br/><code className="bg-slate-200 px-1 py-0.5 rounded text-xs text-slate-600">public/images/founder.jpg</code></div>
+                <div className="absolute inset-0 bg-slate-100 flex flex-col items-center justify-center -z-10 p-8 text-center border-2 border-dashed border-slate-300 rounded-[2rem]">
+                  <div className="text-slate-400 font-bold mb-2">Image Missing</div>
+                  <div className="text-slate-400 text-sm">Please drag your photo into <br/><code className="bg-slate-200 px-1 py-0.5 rounded text-xs text-slate-600">public/images/founder.jpg</code></div>
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/20 to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100 z-20 pointer-events-none mix-blend-overlay"></div>
                 <img 
@@ -125,11 +125,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               </p>
             </div>
             
-            <div className="about-content pt-8 border-t border-border-subtle">
+            <div className="about-content pt-8 border-t border-slate-200">
               <MagneticWrapper strength={40}>
                 <button 
                   onClick={() => onNavigate("study-material-page")}
-                  className="bg-bg-primary hover:bg-surface-solid text-white px-8 py-4 rounded-2xl font-black text-lg transition-transform hover:-translate-y-1 shadow-xl hover:shadow-2xl"
+                  className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-2xl font-black text-lg transition-transform hover:-translate-y-1 shadow-xl hover:shadow-2xl"
                 >
                   Explore Study Material
                 </button>
@@ -144,42 +144,42 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         <div className="mt-40 faq-section max-w-3xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-black font-display text-slate-900 mb-4">Frequently Asked Questions</h2>
-            <p className="text-lg text-text-muted font-medium">Everything you need to know about the platform.</p>
+            <p className="text-lg text-slate-500 font-medium">Everything you need to know about the platform.</p>
           </div>
           
           <div className="space-y-6">
-            <details className="faq-item group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-border-subtle overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+            <details className="faq-item group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-slate-200 overflow-hidden [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex items-center justify-between cursor-pointer p-6 sm:p-8 font-black text-xl text-slate-900 select-none">
                 What exactly does BlueBottleCap do?
-                <span className="transition-transform duration-300 group-open:-rotate-180 bg-surface-solid rounded-full p-2 text-text-secondary group-hover:text-slate-900 group-hover:bg-surface-glass">
+                <span className="transition-transform duration-300 group-open:-rotate-180 bg-slate-50 rounded-full p-2 text-slate-400 group-hover:text-slate-900 group-hover:bg-slate-100">
                   <svg fill="none" height="24" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="24"><path d="M19 9l-7 7-7-7"></path></svg>
                 </span>
               </summary>
-              <div className="p-6 sm:p-8 pt-0 text-slate-600 leading-relaxed font-medium text-lg border-t border-border-subtle mt-2">
+              <div className="p-6 sm:p-8 pt-0 text-slate-600 leading-relaxed font-medium text-lg border-t border-slate-100 mt-2">
                 BlueBottleCap is an intelligent study platform designed specifically for ambitious students. It aggregates premium, chapter-wise notes and Previous Year Question (PYQ) papers across universities and competitive exams. Beyond just a PDF library, it features an immersive, distraction-free AI mock test environment that instantly grades your answers, generates flashcards, and helps you retain information faster.
               </div>
             </details>
 
-            <details className="faq-item group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-border-subtle overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+            <details className="faq-item group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-slate-200 overflow-hidden [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex items-center justify-between cursor-pointer p-6 sm:p-8 font-black text-xl text-slate-900 select-none">
                 Are the study materials and PYQs updated?
-                <span className="transition-transform duration-300 group-open:-rotate-180 bg-surface-solid rounded-full p-2 text-text-secondary group-hover:text-slate-900 group-hover:bg-surface-glass">
+                <span className="transition-transform duration-300 group-open:-rotate-180 bg-slate-50 rounded-full p-2 text-slate-400 group-hover:text-slate-900 group-hover:bg-slate-100">
                   <svg fill="none" height="24" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="24"><path d="M19 9l-7 7-7-7"></path></svg>
                 </span>
               </summary>
-              <div className="p-6 sm:p-8 pt-0 text-slate-600 leading-relaxed font-medium text-lg border-t border-border-subtle mt-2">
+              <div className="p-6 sm:p-8 pt-0 text-slate-600 leading-relaxed font-medium text-lg border-t border-slate-100 mt-2">
                 Yes! As a solo developer and student, I understand how crucial accurate data is. I've built automation systems that continuously source and verify the latest exam patterns, ensuring the database stays relevant to current academic requirements.
               </div>
             </details>
 
-            <details className="faq-item group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-border-subtle overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+            <details className="faq-item group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-slate-200 overflow-hidden [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex items-center justify-between cursor-pointer p-6 sm:p-8 font-black text-xl text-slate-900 select-none">
                 Can I request specific university papers?
-                <span className="transition-transform duration-300 group-open:-rotate-180 bg-surface-solid rounded-full p-2 text-text-secondary group-hover:text-slate-900 group-hover:bg-surface-glass">
+                <span className="transition-transform duration-300 group-open:-rotate-180 bg-slate-50 rounded-full p-2 text-slate-400 group-hover:text-slate-900 group-hover:bg-slate-100">
                   <svg fill="none" height="24" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="24"><path d="M19 9l-7 7-7-7"></path></svg>
                 </span>
               </summary>
-              <div className="p-6 sm:p-8 pt-0 text-slate-600 leading-relaxed font-medium text-lg border-t border-border-subtle mt-2">
+              <div className="p-6 sm:p-8 pt-0 text-slate-600 leading-relaxed font-medium text-lg border-t border-slate-100 mt-2">
                 Absolutely. We have a rapidly expanding database, but if your specific university or exam isn't listed yet, you can request it through the dashboard and I prioritize adding those resources within a few days.
               </div>
             </details>

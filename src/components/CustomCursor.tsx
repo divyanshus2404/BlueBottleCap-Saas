@@ -122,13 +122,11 @@ export const CustomCursor = () => {
     <>
       <div 
         ref={cursorRef} 
-        className="fixed top-0 left-0 w-10 h-10 rounded-full border border-white pointer-events-none z-[9998] mix-blend-difference"
-        style={{ opacity: 0 }}
+        className="fixed top-0 left-0 w-10 h-10 rounded-full border border-white pointer-events-none z-[9998] opacity-0 mix-blend-difference"
       />
       <div 
         ref={dotRef} 
-        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-white pointer-events-none z-[9999] mix-blend-difference"
-        style={{ opacity: 0 }}
+        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-white pointer-events-none z-[9999] opacity-0 mix-blend-difference"
       />
     </>
   );

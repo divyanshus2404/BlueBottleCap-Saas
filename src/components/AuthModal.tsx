@@ -65,7 +65,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-bg-primary/60 backdrop-blur-xs" onClick={onClose}></div>
+      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs" onClick={onClose}></div>
 
       {/* Modal Card */}
       <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-gray-150 bg-white/90 p-8 shadow-2xl backdrop-blur-md fade-in">
@@ -80,8 +80,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
         {/* Logo & Header */}
         <div className="mb-6 text-center">
-          <Logo className="mx-auto h-12 w-12 text-accent" />
-          <h2 className="mt-4 font-display text-2xl font-black text-white">
+          <Logo className="mx-auto h-12 w-12 text-brand-cobalt" />
+          <h2 className="mt-4 font-display text-2xl font-black text-brand-navy">
             {mode === "signin" && "Welcome Back"}
             {mode === "signup" && "Create Account"}
             {mode === "forgot" && "Reset Password"}
@@ -123,7 +123,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Jane Doe"
-                  className="w-full rounded-xl border border-gray-200 bg-surface-solid py-3 pl-10.5 pr-4 text-xs font-semibold text-white focus:border-accent focus:bg-white focus:outline-hidden transition"
+                  className="w-full rounded-xl border border-gray-200 bg-slate-50/50 py-3 pl-10.5 pr-4 text-xs font-semibold text-brand-navy focus:border-brand-cobalt focus:bg-white focus:outline-hidden transition"
                 />
               </div>
             </div>
@@ -144,7 +144,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@school.edu"
-                className="w-full rounded-xl border border-gray-200 bg-surface-solid py-3 pl-10.5 pr-4 text-xs font-semibold text-white focus:border-accent focus:bg-white focus:outline-hidden transition"
+                className="w-full rounded-xl border border-gray-200 bg-slate-50/50 py-3 pl-10.5 pr-4 text-xs font-semibold text-brand-navy focus:border-brand-cobalt focus:bg-white focus:outline-hidden transition"
               />
             </div>
           </div>
@@ -160,7 +160,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   <button
                     type="button"
                     onClick={() => setMode("forgot")}
-                    className="text-[10px] font-extrabold text-accent hover:underline font-mono"
+                    className="text-[10px] font-extrabold text-brand-cobalt hover:underline font-mono"
                   >
                     Forgot?
                   </button>
@@ -176,7 +176,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full rounded-xl border border-gray-200 bg-surface-solid py-3 pl-10.5 pr-4 text-xs font-semibold text-white focus:border-accent focus:bg-white focus:outline-hidden transition"
+                  className="w-full rounded-xl border border-gray-200 bg-slate-50/50 py-3 pl-10.5 pr-4 text-xs font-semibold text-brand-navy focus:border-brand-cobalt focus:bg-white focus:outline-hidden transition"
                 />
               </div>
             </div>
@@ -214,7 +214,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <button
               onClick={handleGoogleSignIn}
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-200 bg-white hover:bg-surface-solid py-3 text-xs font-bold text-gray-600 transition cursor-pointer disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-200 bg-white hover:bg-slate-50 py-3 text-xs font-bold text-gray-600 transition cursor-pointer disabled:opacity-50"
             >
               <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24">
                 <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.2-5.136 4.2A5.727 5.727 0 0 1 8.2 12.9a5.727 5.727 0 0 1 5.79-5.7 5.666 5.666 0 0 1 3.93 1.545l3.1-3.1A9.913 9.913 0 0 0 13.99 2.1a10.8 10.8 0 0 0-10.8 10.8 10.8 10.8 0 0 0 10.8 10.8c5.73 0 9.87-3.955 9.87-9.87a9.23 9.23 0 0 0-.21-2.145H12.24Z"/>
@@ -229,7 +229,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           {mode === "signin" && (
             <p className="text-gray-400">
               New to BlueBottleCap?{" "}
-              <button onClick={() => setMode("signup")} className="font-extrabold text-accent hover:underline cursor-pointer">
+              <button onClick={() => setMode("signup")} className="font-extrabold text-brand-cobalt hover:underline cursor-pointer">
                 Create an account
               </button>
             </p>
@@ -237,13 +237,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           {mode === "signup" && (
             <p className="text-gray-400">
               Already have an account?{" "}
-              <button onClick={() => setMode("signin")} className="font-extrabold text-accent hover:underline cursor-pointer">
+              <button onClick={() => setMode("signin")} className="font-extrabold text-brand-cobalt hover:underline cursor-pointer">
                 Sign in
               </button>
             </p>
           )}
           {mode === "forgot" && (
-            <button onClick={() => setMode("signin")} className="font-extrabold text-accent hover:underline cursor-pointer">
+            <button onClick={() => setMode("signin")} className="font-extrabold text-brand-cobalt hover:underline cursor-pointer">
               Back to Sign In
             </button>
           )}
