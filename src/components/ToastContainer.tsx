@@ -34,11 +34,11 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onDismis
         return (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex items-start gap-3 rounded-xl bg-white dark:bg-slate-900 shadow-lg shadow-slate-200/80 px-4 py-3 text-sm text-slate-700 font-medium animate-in slide-in-from-right-4 fade-in duration-200 ${borders[toast.type]}`}
+            className={`pointer-events-auto flex items-start gap-3 rounded-xl bg-white shadow-lg shadow-slate-200/80 px-4 py-3 text-sm text-slate-700 font-medium animate-in slide-in-from-right-4 fade-in duration-200 ${borders[toast.type]}`}
           >
             {icons[toast.type]}
             <span className="leading-snug flex-1">{toast.message}</span>
-            <button onClick={() => onDismiss(toast.id)} className="shrink-0 text-gray-300 hover:text-gray-500 dark:text-slate-400 transition cursor-pointer ml-1">
+            <button onClick={() => onDismiss(toast.id)} className="shrink-0 text-gray-300 hover:text-gray-500 transition cursor-pointer ml-1">
               <X className="w-3.5 h-3.5" />
             </button>
           </div>

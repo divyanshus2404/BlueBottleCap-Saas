@@ -325,7 +325,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
   }, [studySubject]);
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-[calc(100vh-73px)] w-full bg-[#f8fafc] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(99,102,241,0.15),rgba(255,255,255,0))] dark:bg-slate-950/50 fade-in text-brand-navy dark:text-white relative overflow-hidden">
+    <div className="flex flex-col lg:flex-row min-h-[calc(100vh-73px)] w-full bg-[#f8fafc] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(99,102,241,0.15),rgba(255,255,255,0))] fade-in text-brand-navy relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
         <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-brand-cobalt/5 blur-3xl" />
@@ -333,13 +333,13 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
       </div>
         
         {/* LEFT SIDEBAR NAVIGATION PANEL */}
-        <aside className="w-full lg:w-64 bg-white dark:bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 p-6 flex flex-col justify-between shrink-0 print:hidden">
+        <aside className="w-full lg:w-64 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 p-6 flex flex-col justify-between shrink-0 print:hidden">
           <div className="space-y-6">
 
             {/* ← Back to Home button */}
             <button
               onClick={() => onGoHome()}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-500 hover:text-brand-navy dark:text-white hover:bg-slate-100 dark:bg-slate-800 transition cursor-pointer select-none text-left"
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-500 hover:text-brand-navy hover:bg-slate-100 transition cursor-pointer select-none text-left"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back to Home</span>
@@ -351,7 +351,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                 E
               </div>
               <div className="text-left">
-                <span className="font-display text-sm font-bold tracking-tight text-brand-navy dark:text-white block leading-none">
+                <span className="font-display text-sm font-bold tracking-tight text-brand-navy block leading-none">
                   BlueBottleCap
                 </span>
                 <span className="text-[9px] uppercase tracking-wider font-mono text-gray-400 font-bold leading-none mt-1 block">
@@ -361,12 +361,12 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
             </div>
 
             {/* Profile widget */}
-            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-3.5 flex items-center gap-3">
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 flex items-center gap-3">
               <div className="h-9 w-9 rounded-full bg-slate-200 overflow-hidden flex items-center justify-center font-bold text-xs text-brand-cobalt">
                 JA
               </div>
               <div className="text-left min-w-0">
-                <strong className="block text-xs font-black truncate text-brand-navy dark:text-white">JEE Aspirant</strong>
+                <strong className="block text-xs font-black truncate text-brand-navy ">JEE Aspirant</strong>
                 <div className="group relative inline-flex items-center gap-1 mt-0.5">
                   <span className="block text-[10px] font-bold text-brand-cobalt">Rank: #1240</span>
                   <div className="cursor-help w-3 h-3 rounded-full border border-brand-cobalt/50 text-brand-cobalt flex items-center justify-center text-[8px] font-bold bg-brand-cobalt/5 hover:bg-brand-cobalt hover:text-white transition-colors">i</div>
@@ -397,7 +397,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                     className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-left ${
                       isActive 
                         ? "bg-slate-900 text-white shadow-3xs" 
-                        : "text-slate-650 hover:bg-slate-100 dark:bg-slate-800 hover:text-brand-navy dark:text-white"
+                        : "text-slate-650 hover:bg-slate-100 hover:text-brand-navy "
                     }`}
                   >
                     {item.icon}
@@ -424,7 +424,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
         </aside>
 
         {/* Main Content Pane */}
-        <main className="flex-1 p-6 md:p-8 bg-white/40 backdrop-blur-2xl border-l border-white/60 dark:bg-slate-900/80 min-h-[500px] relative z-10 shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.05)]">
+        <main className="flex-1 p-6 md:p-8 bg-white/40 backdrop-blur-2xl border-l border-white/60 min-h-[500px] relative z-10 shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.05)]">
           
           {/* TIMED TEST WORKSPACE (IF ACTIVE) */}
           {activeTest ? (
@@ -434,20 +434,20 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
               <div className="flex justify-between items-center flex-wrap gap-4 border-b border-slate-150 pb-4">
                 <button
                   onClick={() => handleExitTest()}
-                  className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-brand-navy dark:text-white cursor-pointer select-none print:hidden"
+                  className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-brand-navy cursor-pointer select-none print:hidden"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <span>Exit Assessment</span>
                 </button>
 
-                <h3 className="text-sm font-black font-display text-brand-navy dark:text-white max-w-xs truncate print:text-2xl print:max-w-full print:whitespace-normal">
+                <h3 className="text-sm font-black font-display text-brand-navy max-w-xs truncate print:text-2xl print:max-w-full print:whitespace-normal">
                   {activeTest.name}
                 </h3>
 
                 <div className="flex items-center gap-2.5 print:hidden">
                   <button
                     onClick={() => window.print()}
-                    className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-800 px-3 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900 transition"
+                    className="flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 :bg-slate-900 transition"
                   >
                     <FileText className="w-4 h-4" />
                     <span className="hidden sm:inline">Export PDF</span>
@@ -465,7 +465,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                     disabled={testSubmitted}
                     className={`rounded-xl border px-3 py-2 text-xs font-bold transition cursor-pointer select-none disabled:opacity-35 ${
                       testTimerActive 
-                        ? "bg-slate-100 dark:bg-slate-800 border-slate-350 text-slate-700" 
+                        ? "bg-slate-100 border-slate-350 text-slate-700" 
                         : "bg-slate-900 hover:bg-slate-800 text-white border-transparent"
                     }`}
                   >
@@ -485,11 +485,11 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
 
               {/* Marks Calculator Score Card */}
               {testSubmitted && (
-                <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-50 to-white p-6 grid gap-6 md:grid-cols-12 items-center shadow-xs fade-in text-left">
+                <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-6 grid gap-6 md:grid-cols-12 items-center shadow-xs fade-in text-left">
                   {/* Score details */}
-                  <div className="md:col-span-5 text-center border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 pb-6 md:pb-0 pr-0 md:pr-6 space-y-2">
+                  <div className="md:col-span-5 text-center border-b md:border-b-0 md:border-r border-slate-200 pb-6 md:pb-0 pr-0 md:pr-6 space-y-2">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-mono">Mock Result Scoreboard</span>
-                    <div className="text-5xl font-black text-brand-navy dark:text-white font-display flex items-baseline justify-center">
+                    <div className="text-5xl font-black text-brand-navy font-display flex items-baseline justify-center">
                       {testScore}
                       <span className="text-sm font-semibold text-slate-400 ml-1">/ {totalPossibleScore}</span>
                     </div>
@@ -518,10 +518,10 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                     </div>
 
                     {/* Rank Predictor note */}
-                    <div className="col-span-2 sm:col-span-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-3.5 text-left text-xs leading-relaxed text-slate-650 font-sans shadow-3xs flex gap-2">
+                    <div className="col-span-2 sm:col-span-4 bg-white rounded-xl border border-slate-200 p-3.5 text-left text-xs leading-relaxed text-slate-650 font-sans shadow-3xs flex gap-2">
                       <span className="text-base leading-none select-none">🎯</span>
                       <div className="text-sm">
-                        <strong className="font-extrabold text-slate-800 dark:text-slate-200">BlueBottleCap Percentile Predictor:</strong>
+                        <strong className="font-extrabold text-slate-800 ">BlueBottleCap Percentile Predictor:</strong>
                         <p className="text-[10.5px] text-slate-500 mt-0.5">
                           {testScore >= totalPossibleScore * 0.6 
                             ? "Splendid attempt! This score equates to the 98.5th percentile in JEE Mains mocks. Target Advanced levels next."
@@ -541,7 +541,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                   const userAns = testSelectedAnswers[q.id];
                   const isCorrect = userAns === q.answer;
                   return (
-                    <div key={q.id} className="rounded-2xl border border-slate-200 dark:border-slate-800 p-5 bg-white dark:bg-slate-900 space-y-4 hover:border-slate-300 transition shadow-3xs text-left">
+                    <div key={q.id} className="rounded-2xl border border-slate-200 p-5 bg-white space-y-4 hover:border-slate-300 transition shadow-3xs text-left">
                       
                       <div className="flex justify-between items-start gap-3">
                         <div className="flex items-center gap-2">
@@ -552,7 +552,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                         {testSubmitted && (
                           <span className={`rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase leading-none font-mono ${
                             !userAns 
-                              ? "bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-800" 
+                              ? "bg-slate-100 text-slate-500 border border-slate-200 " 
                               : isCorrect 
                                 ? "bg-emerald-50 border border-emerald-250 text-emerald-700" 
                                 : "bg-rose-50 border border-rose-250 text-rose-700"
@@ -562,7 +562,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                         )}
                       </div>
 
-                      <p className="text-xs font-bold text-slate-800 dark:text-slate-200 leading-normal">{q.question}</p>
+                      <p className="text-xs font-bold text-slate-800 leading-normal">{q.question}</p>
 
                       {/* MCQs Option labels */}
                       <div className="grid gap-2 sm:grid-cols-2 pt-1">
@@ -571,8 +571,8 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                             key={opt}
                             className={`p-3 rounded-xl border text-xs font-semibold text-left select-none ${
                               userAns === opt.charAt(0)
-                                ? "bg-slate-50 dark:bg-slate-950 border-slate-900 text-brand-navy dark:text-white"
-                                : "bg-white dark:bg-slate-900 border-slate-150 text-slate-650"
+                                ? "bg-slate-50 border-slate-900 text-brand-navy "
+                                : "bg-white border-slate-150 text-slate-650"
                             }`}
                           >
                             {opt}
@@ -581,21 +581,21 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                       </div>
 
                         {/* OMR Selector Row */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-150 print:hidden">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50 p-3.5 rounded-xl border border-slate-150 print:hidden">
                         <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest font-mono">Select Answer:</span>
                         <div className="flex gap-4">
                           {["A", "B", "C", "D"].map((optLetter) => {
                             const isChosen = userAns === optLetter;
                             const isCorrectOpt = q.answer === optLetter;
                             
-                            let btnStyle = "border-slate-350 text-slate-600 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:bg-slate-800";
+                            let btnStyle = "border-slate-350 text-slate-600 bg-white hover:bg-slate-100 ";
                             if (testSubmitted) {
                               if (isCorrectOpt) {
                                 btnStyle = "bg-emerald-600 text-white border-transparent shadow-3xs scale-105 font-black";
                               } else if (isChosen) {
                                 btnStyle = "bg-rose-600 text-white border-transparent shadow-3xs scale-105 font-black";
                               } else {
-                                btnStyle = "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-400 opacity-50";
+                                btnStyle = "bg-slate-100 border-slate-200 text-slate-400 opacity-50";
                               }
                             } else if (isChosen) {
                               btnStyle = "bg-slate-900 text-white border-transparent shadow-3xs scale-105 font-bold";
@@ -626,12 +626,12 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                               <span>View derivation & tricks</span>
                               <ChevronRight className="w-3.5 h-3.5 group-open:rotate-90 transition-transform" />
                             </summary>
-                            <div className="mt-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-150 p-4 space-y-3 font-mono text-[10.5px] leading-relaxed text-slate-700 fade-in print:bg-white print:border-none print:p-0">
+                            <div className="mt-3 rounded-xl bg-slate-50 border border-slate-150 p-4 space-y-3 font-mono text-[10.5px] leading-relaxed text-slate-700 fade-in print:bg-white print:border-none print:p-0">
                               <div className="flex items-center gap-1.5 font-bold text-emerald-800 text-[10px] leading-none mb-1 font-sans">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                                 Correct Option: {q.answer}
                               </div>
-                              <p className="whitespace-pre-line border-t border-slate-200 dark:border-slate-800/50 pt-2 print:border-t-0">{q.solution}</p>
+                              <p className="whitespace-pre-line border-t border-slate-200 pt-2 print:border-t-0">{q.solution}</p>
                               <div className="rounded-xl bg-rose-50 border border-rose-100 p-4 flex gap-3 text-rose-800 leading-normal font-sans">
                                 <AlertTriangle className="w-4 h-4 shrink-0 text-rose-500 mt-0.5" />
                                 <div>
@@ -661,10 +661,10 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                   {/* Dashboard Welcome Header block */}
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-5">
                     <div>
-                      <h2 className="font-display text-3xl font-black tracking-tight text-brand-navy dark:text-white">
+                      <h2 className="font-display text-3xl font-black tracking-tight text-brand-navy ">
                         Welcome back, JEE Aspirant.
                       </h2>
-                      <p className="text-xs text-gray-500 dark:text-slate-400 font-semibold mt-1">
+                      <p className="text-xs text-gray-500 font-semibold mt-1">
                         Your current readiness index is above the 85th percentile.
                       </p>
                     </div>
@@ -672,7 +672,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                     <a
                       href="/downloads/jee-syllabus.pdf"
                       download="jee-syllabus.pdf"
-                      className="rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:bg-slate-950 px-4 py-2 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-3xs"
+                      className="rounded-xl border border-slate-200 hover:bg-slate-50 px-4 py-2 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-3xs"
                     >
                       <BookOpen className="w-3.5 h-3.5 text-slate-500" />
                       <span>Syllabus PDF</span>
@@ -683,7 +683,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                   <div className="grid gap-6 md:grid-cols-3">
                     
                     {/* Circle Circular readiness score card */}
-                    <div className="bg-white/70 backdrop-blur-xl dark:bg-slate-900 border border-white dark:border-slate-800/80 rounded-3xl p-6 flex flex-col justify-between items-center text-center space-y-4 shadow-xl shadow-slate-200/40 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                    <div className="bg-white/70 backdrop-blur-xl border border-white rounded-3xl p-6 flex flex-col justify-between items-center text-center space-y-4 shadow-xl shadow-slate-200/40 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
                       <div className="flex justify-between items-center w-full">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">Readiness Score</span>
                         <div className="h-4 w-4 text-slate-400 font-black cursor-pointer text-xs" title="Calculated based on mock correctness and syllabus scope">ⓘ</div>
@@ -705,7 +705,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                             style={{ transform: "rotate(-90deg)", transformOrigin: "50% 50%" }}
                           />
                         </svg>
-                        <div className="absolute text-3xl font-black text-slate-800 dark:text-slate-200 font-display">
+                        <div className="absolute text-3xl font-black text-slate-800 font-display">
                           <span className="animate-fade-in" style={{ animationDelay: '0.5s', animationFillMode: 'both' }}>
                             78
                           </span><span className="text-sm font-bold text-slate-400">%</span>
@@ -721,7 +721,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                     </div>
 
                     {/* Subject Performance bar chart card */}
-                    <div className="bg-white/70 backdrop-blur-xl dark:bg-slate-900 border border-white dark:border-slate-800/80 rounded-3xl p-6 md:col-span-2 flex flex-col justify-between shadow-xl shadow-slate-200/40 hover:-translate-y-1 transition-transform duration-300">
+                    <div className="bg-white/70 backdrop-blur-xl border border-white rounded-3xl p-6 md:col-span-2 flex flex-col justify-between shadow-xl shadow-slate-200/40 hover:-translate-y-1 transition-transform duration-300">
                       <div className="flex justify-between items-center w-full mb-4">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">Subject Performance (Last 5 Mocks)</span>
                         <span className="text-xs font-bold text-slate-500 hover:underline cursor-pointer">Details</span>
@@ -760,7 +760,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                         </div>
                       </div>
 
-                      <div className="flex justify-between text-[11px] font-bold text-slate-800 dark:text-slate-200 pt-3">
+                      <div className="flex justify-between text-[11px] font-bold text-slate-800 pt-3">
                         <div>PHY: <span className="text-indigo-650">82%</span></div>
                         <div>CHEM: <span className="text-teal-650">88%</span></div>
                         <div>MATH: <span className="text-amber-650">65%</span></div>
@@ -772,17 +772,17 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                   <div className="grid gap-6 md:grid-cols-2">
                     
                     {/* Upcoming schedule list card */}
-                    <div className="bg-white/70 backdrop-blur-xl dark:bg-slate-900 border border-white dark:border-slate-800/80 rounded-3xl p-6 space-y-4 shadow-xl shadow-slate-200/40 hover:-translate-y-1 transition-transform duration-300">
+                    <div className="bg-white/70 backdrop-blur-xl border border-white rounded-3xl p-6 space-y-4 shadow-xl shadow-slate-200/40 hover:-translate-y-1 transition-transform duration-300">
                       <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">Upcoming Schedule</h4>
                       
                       <div className="space-y-3">
-                        <div className="flex items-center gap-4 p-3 rounded-2xl border border-white/60 bg-white/50 backdrop-blur-md dark:bg-slate-950/50 hover:bg-white/80 transition-colors cursor-pointer">
+                        <div className="flex items-center gap-4 p-3 rounded-2xl border border-white/60 bg-white/50 backdrop-blur-md hover:bg-white/80 transition-colors cursor-pointer">
                           <div className="bg-red-550/90 text-white rounded-xl p-2.5 text-center shrink-0 w-12 shadow-3xs leading-tight">
                             <span className="block text-[10px] font-mono font-bold uppercase">Oct</span>
                             <strong className="block text-base font-black leading-none">12</strong>
                           </div>
                           <div className="flex-1 min-w-0 text-left">
-                            <strong className="block text-xs text-brand-navy dark:text-white truncate">Full Syllabus Mock #4</strong>
+                            <strong className="block text-xs text-brand-navy truncate">Full Syllabus Mock #4</strong>
                             <span className="text-[10px] text-slate-400 font-bold block">Duration: 180 min</span>
                           </div>
                           <button
@@ -793,13 +793,13 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                           </button>
                         </div>
 
-                        <div className="flex items-center gap-4 p-3 rounded-2xl border border-white/60 bg-white/50 backdrop-blur-md dark:bg-slate-950/50 hover:bg-white/80 transition-colors cursor-pointer">
+                        <div className="flex items-center gap-4 p-3 rounded-2xl border border-white/60 bg-white/50 backdrop-blur-md hover:bg-white/80 transition-colors cursor-pointer">
                           <div className="bg-slate-900 text-white rounded-xl p-2.5 text-center shrink-0 w-12 shadow-3xs leading-tight">
                             <span className="block text-[10px] font-mono font-bold uppercase">Oct</span>
                             <strong className="block text-base font-black leading-none">15</strong>
                           </div>
                           <div className="flex-1 min-w-0 text-left">
-                            <strong className="block text-xs text-brand-navy dark:text-white truncate">Topic Test: Electromagnetism</strong>
+                            <strong className="block text-xs text-brand-navy truncate">Topic Test: Electromagnetism</strong>
                             <span className="text-[10px] text-slate-400 font-bold block">Duration: 60 min</span>
                           </div>
                           <span className="rounded-lg bg-teal-50 text-teal-700 border border-teal-150 px-2.5 py-1.5 text-[9px] font-bold uppercase font-mono">
@@ -813,26 +813,26 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                     <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                       <div
                         onClick={() => setActiveSidebarTab("study-material")}
-                        className="bg-white/70 backdrop-blur-xl dark:bg-slate-900 border border-white dark:border-slate-800/80 rounded-3xl p-5 hover:border-slate-350 transition cursor-pointer select-none text-left space-y-4 shadow-xl shadow-slate-200/40 flex flex-col justify-between hover:-translate-y-1 duration-300"
+                        className="bg-white/70 backdrop-blur-xl border border-white rounded-3xl p-5 hover:border-slate-350 transition cursor-pointer select-none text-left space-y-4 shadow-xl shadow-slate-200/40 flex flex-col justify-between hover:-translate-y-1 duration-300"
                       >
                         <div className="h-8 w-8 rounded-lg bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center font-display font-black text-sm">
                           Σ
                         </div>
                         <div>
-                          <strong className="block text-xs font-bold text-brand-navy dark:text-white">Formula Sheets</strong>
+                          <strong className="block text-xs font-bold text-brand-navy ">Formula Sheets</strong>
                           <p className="text-[10px] text-slate-400 mt-1 leading-relaxed font-semibold">Quick reference for all Physics and Chemistry derivations.</p>
                         </div>
                       </div>
 
                       <div
                         onClick={() => setActiveSidebarTab("support")}
-                        className="bg-white/70 backdrop-blur-xl dark:bg-slate-900 border border-white dark:border-slate-800/80 rounded-3xl p-5 hover:border-slate-350 transition cursor-pointer select-none text-left space-y-4 shadow-xl shadow-slate-200/40 flex flex-col justify-between hover:-translate-y-1 duration-300"
+                        className="bg-white/70 backdrop-blur-xl border border-white rounded-3xl p-5 hover:border-slate-350 transition cursor-pointer select-none text-left space-y-4 shadow-xl shadow-slate-200/40 flex flex-col justify-between hover:-translate-y-1 duration-300"
                       >
                         <div className="h-8 w-8 rounded-lg bg-teal-50 text-teal-650 border border-teal-100 flex items-center justify-center font-black text-sm">
                           ✉
                         </div>
                         <div>
-                          <strong className="block text-xs font-bold text-brand-navy dark:text-white">Doubt Solving</strong>
+                          <strong className="block text-xs font-bold text-brand-navy ">Doubt Solving</strong>
                           <p className="text-[10px] text-slate-400 mt-1 leading-relaxed font-semibold">Connect with experts and clear complex math traps.</p>
                         </div>
                       </div>
@@ -849,22 +849,22 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                   {/* Subject mode toggle */}
                   <div className="flex justify-between items-center flex-wrap gap-4 border-b border-slate-100 pb-5">
                     <div>
-                      <h2 className="font-display text-2.5xl font-black tracking-tight text-brand-navy dark:text-white">
+                      <h2 className="font-display text-2.5xl font-black tracking-tight text-brand-navy ">
                         Select Mock Assessment
                       </h2>
-                      <p className="text-xs text-gray-500 dark:text-slate-400 font-semibold mt-1">
+                      <p className="text-xs text-gray-500 font-semibold mt-1">
                         Attempt realistic mock tests to analyze percentile rankings.
                       </p>
                     </div>
 
                     {/* Mode tabs */}
-                    <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex gap-1 border border-slate-200 dark:border-slate-800">
+                    <div className="bg-slate-100 p-1 rounded-xl flex gap-1 border border-slate-200 ">
                       <button
                         onClick={() => setMockTypeTab("repeated")}
                         className={`rounded-lg px-3.5 py-1.5 text-[10.5px] font-bold transition select-none cursor-pointer ${
                           mockTypeTab === "repeated" 
-                            ? "bg-white dark:bg-slate-900 text-slate-900 shadow-3xs" 
-                            : "text-slate-500 hover:text-slate-800 dark:text-slate-200"
+                            ? "bg-white text-slate-900 shadow-3xs" 
+                            : "text-slate-500 hover:text-slate-800 "
                         }`}
                       >
                         Repeated Questions Mode
@@ -873,8 +873,8 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                         onClick={() => setMockTypeTab("chapter")}
                         className={`rounded-lg px-3.5 py-1.5 text-[10.5px] font-bold transition select-none cursor-pointer ${
                           mockTypeTab === "chapter" 
-                            ? "bg-white dark:bg-slate-900 text-slate-900 shadow-3xs" 
-                            : "text-slate-500 hover:text-slate-800 dark:text-slate-200"
+                            ? "bg-white text-slate-900 shadow-3xs" 
+                            : "text-slate-500 hover:text-slate-800 "
                         }`}
                       >
                         10-Yr Chapter Mocks
@@ -892,7 +892,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                         return (
                           <div 
                             key={testId} 
-                            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 hover:border-slate-350 transition rounded-3xl p-5.5 space-y-5 shadow-3xs text-left flex flex-col justify-between"
+                            className="bg-white border border-slate-200 hover:border-slate-350 transition rounded-3xl p-5.5 space-y-5 shadow-3xs text-left flex flex-col justify-between"
                           >
                             <div className="space-y-2">
                               <div className="flex justify-between items-center">
@@ -909,7 +909,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                                 </span>
                               </div>
 
-                              <strong className="block text-base font-black tracking-tight text-brand-navy dark:text-white">
+                              <strong className="block text-base font-black tracking-tight text-brand-navy ">
                                 {test.name}
                               </strong>
                               <p className="text-[10.5px] text-slate-550 leading-relaxed font-semibold">
@@ -949,7 +949,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
 
                   {/* RENDER MODE: 10-YR CHAPTER MOCKS */}
                   {mockTypeTab === "chapter" && (
-                    <div className="max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6.5 space-y-6 shadow-3xs text-left">
+                    <div className="max-w-xl bg-white border border-slate-200 rounded-3xl p-6.5 space-y-6 shadow-3xs text-left">
                       {/* Topic filters */}
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div>
@@ -957,7 +957,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                           <select
                             value={selectedSubject}
                             onChange={(e) => setSelectedSubject(e.target.value as any)}
-                            className="w-full rounded-xl border border-slate-250 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-xs font-semibold focus:border-slate-900 focus:outline-hidden text-brand-navy dark:text-white cursor-pointer"
+                            className="w-full rounded-xl border border-slate-250 bg-white px-3.5 py-2.5 text-xs font-semibold focus:border-slate-900 focus:outline-hidden text-brand-navy cursor-pointer"
                           >
                             <option value="Physics">Physics</option>
                             <option value="Chemistry">Chemistry</option>
@@ -970,7 +970,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                           <select
                             value={selectedChapterName}
                             onChange={(e) => setSelectedChapterName(e.target.value)}
-                            className="w-full rounded-xl border border-slate-250 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-xs font-semibold focus:border-slate-900 focus:outline-hidden text-brand-navy dark:text-white cursor-pointer"
+                            className="w-full rounded-xl border border-slate-250 bg-white px-3.5 py-2.5 text-xs font-semibold focus:border-slate-900 focus:outline-hidden text-brand-navy cursor-pointer"
                           >
                             {chaptersList.map((chap) => (
                               <option key={chap.name} value={chap.name}>{chap.name}</option>
@@ -985,11 +985,11 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                         const isUnlocked = purchasedTests.includes(testId);
                         
                         return (
-                          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 p-5 bg-slate-50 dark:bg-slate-950/50 space-y-4">
+                          <div className="rounded-2xl border border-slate-200 p-5 bg-slate-50 space-y-4">
                             <div className="flex justify-between items-start">
                               <div className="space-y-0.5">
                                 <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 font-mono">{selectedSubject} Assessment</span>
-                                <strong className="block text-sm font-black text-brand-navy dark:text-white leading-normal">{selectedChapterName}</strong>
+                                <strong className="block text-sm font-black text-brand-navy leading-normal">{selectedChapterName}</strong>
                               </div>
                               <span className="rounded-full bg-slate-200 text-slate-700 px-2.5 py-0.5 text-[9px] font-bold font-mono">₹120</span>
                             </div>
@@ -1025,7 +1025,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                           </div>
                         );
                       })() : (
-                        <div className="text-center p-8 text-xs text-slate-400 font-bold border border-dashed rounded-2xl bg-slate-50 dark:bg-slate-950">
+                        <div className="text-center p-8 text-xs text-slate-400 font-bold border border-dashed rounded-2xl bg-slate-50 ">
                           Select a chapter from the options above.
                         </div>
                       )}
@@ -1069,7 +1069,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                     {/* Header row */}
                     <div className="flex items-start justify-between mb-6">
                       <div>
-                        <h2 className="font-display text-xl font-black tracking-tight text-brand-navy dark:text-white">
+                        <h2 className="font-display text-xl font-black tracking-tight text-brand-navy ">
                           Chapter-wise Study Material
                         </h2>
                         <p className="text-xs text-gray-400 font-semibold mt-1">
@@ -1099,7 +1099,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                           className={`px-3 py-1.5 rounded-xl text-[11px] font-black transition cursor-pointer ${
                             studySubject === subj
                               ? "bg-brand-navy text-white"
-                              : "bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200"
+                              : "bg-slate-100 text-slate-500 hover:bg-slate-200"
                           }`}
                         >
                           {subj}
@@ -1125,7 +1125,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                             className={`w-full text-left px-2.5 py-2 rounded-xl text-[11px] font-bold transition flex items-center justify-between gap-1 ${
                               studyChapter === ch.chapter
                                 ? "bg-brand-navy text-white"
-                                : "text-slate-600 hover:bg-slate-100 dark:bg-slate-800"
+                                : "text-slate-600 hover:bg-slate-100 "
                             } ${!studyMaterialUnlocked && ch.chapter !== chaptersForSubject[0]?.chapter ? "opacity-50" : ""}`}
                           >
                             <span className="truncate leading-snug">{ch.chapter}</span>
@@ -1142,14 +1142,14 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                           <>
                             <div className="flex items-center justify-between">
                               <div>
-                                <h3 className="font-bold text-sm text-brand-navy dark:text-white">{currentChapterData.chapter}</h3>
+                                <h3 className="font-bold text-sm text-brand-navy ">{currentChapterData.chapter}</h3>
                                 <span className="text-[10px] text-slate-400 font-bold">Class {currentChapterData.class} · {currentChapterData.subject}</span>
                               </div>
                             </div>
 
                             {/* Key Concepts Accordion */}
                             <div>
-                              <p className="text-[11px] font-black text-brand-navy dark:text-white uppercase tracking-wider mb-2">Key Concepts</p>
+                              <p className="text-[11px] font-black text-brand-navy uppercase tracking-wider mb-2">Key Concepts</p>
                               <div className="space-y-2">
                                 {currentChapterData.keyConcepts.map((concept, idx) => {
                                   const isBlurred = !studyMaterialUnlocked && idx >= 2;
@@ -1157,13 +1157,13 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                                   return (
                                     <div
                                       key={idx}
-                                      className={`rounded-2xl border border-slate-100 bg-white dark:bg-slate-900 overflow-hidden ${isBlurred ? "blur-[3px] pointer-events-none select-none" : ""}`}
+                                      className={`rounded-2xl border border-slate-100 bg-white overflow-hidden ${isBlurred ? "blur-[3px] pointer-events-none select-none" : ""}`}
                                     >
                                       <button
                                         onClick={() => setExpandedConcept(isOpen ? null : idx)}
-                                        className="w-full flex items-center justify-between px-3.5 py-2.5 text-left cursor-pointer hover:bg-slate-50 dark:bg-slate-950 transition"
+                                        className="w-full flex items-center justify-between px-3.5 py-2.5 text-left cursor-pointer hover:bg-slate-50 transition"
                                       >
-                                        <span className="text-xs font-bold text-brand-navy dark:text-white">{concept.title}</span>
+                                        <span className="text-xs font-bold text-brand-navy ">{concept.title}</span>
                                         {isOpen ? <ChevronUp className="w-3.5 h-3.5 text-slate-400 shrink-0" /> : <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />}
                                       </button>
                                       {isOpen && (
@@ -1194,10 +1194,10 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                                 <div className="blur-[3px] pointer-events-none select-none space-y-5">
                                   {/* Important Points preview */}
                                   <div>
-                                    <p className="text-[11px] font-black text-brand-navy dark:text-white uppercase tracking-wider mb-2">Important Points</p>
+                                    <p className="text-[11px] font-black text-brand-navy uppercase tracking-wider mb-2">Important Points</p>
                                     <div className="space-y-1.5">
                                       {currentChapterData.importantPoints.map((pt, i) => (
-                                        <div key={i} className="flex items-start gap-2 bg-white dark:bg-slate-900 rounded-xl px-3 py-2 border border-slate-100">
+                                        <div key={i} className="flex items-start gap-2 bg-white rounded-xl px-3 py-2 border border-slate-100">
                                           <span className="text-brand-cobalt font-black text-xs shrink-0 mt-0.5">{i+1}.</span>
                                           <p className="text-[11px] text-slate-600">{pt}</p>
                                         </div>
@@ -1206,18 +1206,18 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                                   </div>
                                   {/* Questions preview */}
                                   <div>
-                                    <p className="text-[11px] font-black text-brand-navy dark:text-white uppercase tracking-wider mb-2">Practice Questions</p>
+                                    <p className="text-[11px] font-black text-brand-navy uppercase tracking-wider mb-2">Practice Questions</p>
                                     {currentChapterData.questions.slice(0,2).map((q, i) => (
-                                      <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 p-3 mb-2">
-                                        <p className="text-[11px] font-bold text-brand-navy dark:text-white">{q.text}</p>
+                                      <div key={i} className="bg-white rounded-2xl border border-slate-100 p-3 mb-2">
+                                        <p className="text-[11px] font-bold text-brand-navy ">{q.text}</p>
                                       </div>
                                     ))}
                                   </div>
                                 </div>
                                 {/* Lock overlay */}
-                                <div className="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-slate-900/60 rounded-2xl">
+                                <div className="absolute inset-0 flex flex-col items-center justify-center bg-white rounded-2xl">
                                   <Lock className="w-8 h-8 text-slate-300 mb-3" />
-                                  <p className="text-xs font-black text-brand-navy dark:text-white mb-1">Premium Content</p>
+                                  <p className="text-xs font-black text-brand-navy mb-1">Premium Content</p>
                                   <p className="text-[10px] text-slate-400 font-semibold mb-4 text-center px-4">
                                     Unlock all chapters, important points &amp; practice questions for ₹281 (one-time)
                                   </p>
@@ -1237,10 +1237,10 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                             {studyMaterialUnlocked && (
                               <>
                                 <div>
-                                  <p className="text-[11px] font-black text-brand-navy dark:text-white uppercase tracking-wider mb-2">Important Points</p>
+                                  <p className="text-[11px] font-black text-brand-navy uppercase tracking-wider mb-2">Important Points</p>
                                   <div className="space-y-1.5">
                                     {currentChapterData.importantPoints.map((pt, i) => (
-                                      <div key={i} className="flex items-start gap-2 bg-white dark:bg-slate-900 rounded-xl px-3 py-2 border border-slate-100">
+                                      <div key={i} className="flex items-start gap-2 bg-white rounded-xl px-3 py-2 border border-slate-100">
                                         <span className="text-brand-cobalt font-black text-xs shrink-0 mt-0.5">{i+1}.</span>
                                         <p className="text-[11px] text-slate-600">{pt}</p>
                                       </div>
@@ -1250,7 +1250,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
 
                                 {/* Practice Questions */}
                                 <div>
-                                  <p className="text-[11px] font-black text-brand-navy dark:text-white uppercase tracking-wider mb-2">Practice Questions</p>
+                                  <p className="text-[11px] font-black text-brand-navy uppercase tracking-wider mb-2">Practice Questions</p>
                                   <div className="space-y-3">
                                     {currentChapterData.questions.map((q, qi) => {
                                       const qKey = `${studySubject}-${studyChapter}-${qi}`;
@@ -1261,9 +1261,9 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                                         ? "bg-amber-100 text-amber-700"
                                         : "bg-purple-100 text-purple-700";
                                       return (
-                                        <div key={qi} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 p-4 space-y-3">
+                                        <div key={qi} className="bg-white rounded-2xl border border-slate-100 p-4 space-y-3">
                                           <div className="flex items-start justify-between gap-2">
-                                            <p className="text-[12px] font-bold text-brand-navy dark:text-white leading-snug">{q.text}</p>
+                                            <p className="text-[12px] font-bold text-brand-navy leading-snug">{q.text}</p>
                                             <span className={`text-[9px] font-black px-2 py-0.5 rounded-full shrink-0 ${tagColor}`}>{q.type}</span>
                                           </div>
                                           <div className="grid grid-cols-2 gap-1.5">
@@ -1273,7 +1273,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                                                 className={`text-[11px] px-2.5 py-1.5 rounded-xl border font-semibold ${
                                                   isRevealed && opt.startsWith(q.answer + ".")
                                                     ? "bg-green-100 border-green-300 text-green-800 font-bold"
-                                                    : "bg-slate-50 dark:bg-slate-950 border-slate-100 text-slate-600"
+                                                    : "bg-slate-50 border-slate-100 text-slate-600"
                                                 }`}
                                               >
                                                 {opt}
@@ -1287,7 +1287,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                                           )}
                                           <button
                                             onClick={() => setRevealedAnswers(prev => ({ ...prev, [qKey]: !prev[qKey] }))}
-                                            className="text-[10px] font-black text-brand-cobalt hover:text-brand-navy dark:text-white transition cursor-pointer"
+                                            className="text-[10px] font-black text-brand-cobalt hover:text-brand-navy transition cursor-pointer"
                                           >
                                             {isRevealed ? "Hide Answer" : "Reveal Answer & Solution"}
                                           </button>
@@ -1320,7 +1320,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                             key={i}
                             href={sheet.url}
                             download={sheet.url.split("/").pop()}
-                            className="flex items-center gap-2 text-[10px] font-bold text-slate-500 hover:text-brand-navy dark:text-white hover:bg-slate-100 dark:bg-slate-800 rounded-xl px-3 py-2 transition border border-slate-100 bg-white dark:bg-slate-900"
+                            className="flex items-center gap-2 text-[10px] font-bold text-slate-500 hover:text-brand-navy hover:bg-slate-100 rounded-xl px-3 py-2 transition border border-slate-100 bg-white "
                           >
                             <FileText className="w-3 h-3 shrink-0" />
                             {sheet.name}
@@ -1336,20 +1336,20 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
               {activeSidebarTab === "performance" && (
                 <div className="space-y-8 fade-in">
                   <div>
-                    <h2 className="font-display text-2.5xl font-black tracking-tight text-brand-navy dark:text-white">
+                    <h2 className="font-display text-2.5xl font-black tracking-tight text-brand-navy ">
                       Assessment Log
                     </h2>
-                    <p className="text-xs text-gray-500 dark:text-slate-400 font-semibold mt-1">
+                    <p className="text-xs text-gray-500 font-semibold mt-1">
                       Check your scores, correctness percentages, and timeline performance metrics.
                     </p>
                   </div>
 
                   {performanceHistory.length > 0 ? (
-                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-3xl shadow-3xs overflow-hidden">
+                    <div className="bg-white border border-slate-200 rounded-3xl shadow-3xs overflow-hidden">
                       <div className="overflow-x-auto">
                         <table className="w-full text-left text-xs border-collapse">
                           <thead>
-                            <tr className="bg-slate-50 dark:bg-slate-950 border-b border-slate-100 text-slate-400 uppercase tracking-widest font-mono text-[9px] font-bold">
+                            <tr className="bg-slate-50 border-b border-slate-100 text-slate-400 uppercase tracking-widest font-mono text-[9px] font-bold">
                               <th className="p-4 font-bold">Assessment</th>
                               <th className="p-4 font-bold">Attempted Date</th>
                               <th className="p-4 font-bold text-center">Score</th>
@@ -1359,8 +1359,8 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                           </thead>
                           <tbody className="divide-y divide-slate-100 font-medium">
                             {performanceHistory.map((item, index) => (
-                              <tr key={index} className="hover:bg-slate-50 dark:bg-slate-950/50">
-                                <td className="p-4 font-bold text-slate-800 dark:text-slate-200">{item.testName}</td>
+                              <tr key={index} className="hover:bg-slate-50 ">
+                                <td className="p-4 font-bold text-slate-800 ">{item.testName}</td>
                                 <td className="p-4 text-slate-400 font-mono text-[10px] font-bold">{item.date}</td>
                                 <td className="p-4 text-center font-display font-bold text-slate-700">
                                   {item.score} <span className="text-[10px] text-slate-400 font-semibold">/ {item.maxScore}</span>
@@ -1386,7 +1386,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                       </div>
                     </div>
                   ) : (
-                    <div className="text-center p-12 border border-dashed rounded-3xl bg-slate-50 dark:bg-slate-950 text-slate-400 font-bold text-xs space-y-2 select-none">
+                    <div className="text-center p-12 border border-dashed rounded-3xl bg-slate-50 text-slate-400 font-bold text-xs space-y-2 select-none">
                       <Award className="w-8 h-8 text-slate-300 mx-auto" />
                       <p>No assessment attempts logged yet. Head to the Mock Tests tab to take your first test.</p>
                     </div>
@@ -1398,18 +1398,18 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
               {activeSidebarTab === "support" && (
                 <div className="space-y-8 fade-in">
                   <div>
-                    <h2 className="font-display text-2.5xl font-black tracking-tight text-brand-navy dark:text-white">
+                    <h2 className="font-display text-2.5xl font-black tracking-tight text-brand-navy ">
                       Student Help Desk
                     </h2>
-                    <p className="text-xs text-gray-500 dark:text-slate-400 font-semibold mt-1">
+                    <p className="text-xs text-gray-500 font-semibold mt-1">
                       Have questions regarding payments, content mistakes, or system issues? Drop us a query.
                     </p>
                   </div>
 
-                  <div className="max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6.5 shadow-3xs text-left space-y-4">
+                  <div className="max-w-lg bg-white border border-slate-200 rounded-3xl p-6.5 shadow-3xs text-left space-y-4">
                     <div className="space-y-1">
                       <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500">Query Category</label>
-                      <select className="w-full rounded-xl border border-slate-250 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-xs font-semibold focus:border-slate-900 focus:outline-hidden text-brand-navy dark:text-white cursor-pointer">
+                      <select className="w-full rounded-xl border border-slate-250 bg-white px-3.5 py-2.5 text-xs font-semibold focus:border-slate-900 focus:outline-hidden text-brand-navy cursor-pointer">
                         <option>Payment Dispute / Razorpay Refund</option>
                         <option>MCQ Answer Correction / Question Error</option>
                         <option>AI Teacher Feedback Suggestions</option>
@@ -1422,7 +1422,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                       <textarea
                         rows={4}
                         placeholder="Explain your problem or feedback..."
-                        className="w-full rounded-xl border border-slate-250 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-xs font-semibold focus:border-slate-900 focus:outline-hidden focus:ring-1 focus:ring-slate-900 text-brand-navy dark:text-white shadow-3xs"
+                        className="w-full rounded-xl border border-slate-250 bg-white px-3.5 py-2.5 text-xs font-semibold focus:border-slate-900 focus:outline-hidden focus:ring-1 focus:ring-slate-900 text-brand-navy shadow-3xs"
                       />
                     </div>
 

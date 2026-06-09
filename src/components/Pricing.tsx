@@ -29,8 +29,8 @@ export const Pricing: React.FC<PricingProps> = ({
       priceMonthly: 0,
       priceAnnual: 0,
       buttonText: "Start Free",
-      color: "border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900",
-      badgeColor: "bg-slate-100 dark:bg-slate-800 text-slate-700",
+      color: "border-slate-200 bg-white ",
+      badgeColor: "bg-slate-100 text-slate-700",
       icon: "⚡",
       features: [
         "3 daily AI tool runs limits",
@@ -185,20 +185,20 @@ export const Pricing: React.FC<PricingProps> = ({
         <span className="rounded-full bg-blue-50 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-brand-cobalt">
           Simple, transparent pricing
         </span>
-        <h1 className="mt-3 font-display text-3xl font-black text-brand-navy dark:text-white md:text-4.5xl tracking-tight">
+        <h1 className="mt-3 font-display text-3xl font-black text-brand-navy md:text-4.5xl tracking-tight">
           Choose the plan that's right for you
         </h1>
-        <p className="mt-2 text-sm text-gray-500 dark:text-slate-400 max-w-md mx-auto">
+        <p className="mt-2 text-sm text-gray-500 max-w-md mx-auto">
           From PDF editing to AI-powered writing, image processing to career tools—everything you need to succeed.
         </p>
 
         {/* Toggle billing period */}
         <div className="mt-6 flex flex-col sm:flex-row justify-center items-center gap-4">
-          <div className="inline-flex items-center gap-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 p-1">
+          <div className="inline-flex items-center gap-1.5 rounded-xl bg-slate-100 p-1">
             <button
               onClick={() => setBillingCycle("monthly")}
               className={`rounded-lg px-4 py-1.5 text-xs font-bold transition-all ${
-                billingCycle === "monthly" ? "bg-white dark:bg-slate-900 text-brand-navy dark:text-white shadow-xs" : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:text-white"
+                billingCycle === "monthly" ? "bg-white text-brand-navy shadow-xs" : "text-gray-500 hover:text-gray-900 "
               }`}
             >
               Monthly billing
@@ -206,7 +206,7 @@ export const Pricing: React.FC<PricingProps> = ({
             <button
               onClick={() => setBillingCycle("annual")}
               className={`rounded-lg px-4 py-1.5 text-xs font-bold transition-all ${
-                billingCycle === "annual" ? "bg-white dark:bg-slate-900 text-brand-navy dark:text-white shadow-xs" : "text-gray-500 dark:text-slate-400 hover:text-gray-950"
+                billingCycle === "annual" ? "bg-white text-brand-navy shadow-xs" : "text-gray-500 hover:text-gray-950"
               }`}
             >
               Annual billing
@@ -248,7 +248,7 @@ export const Pricing: React.FC<PricingProps> = ({
                 </h3>
 
                 <div className="mt-3 flex items-baseline">
-                  <span className="font-display text-3.5xl font-black tracking-tight text-brand-navy dark:text-white">
+                  <span className="font-display text-3.5xl font-black tracking-tight text-brand-navy ">
                     ₹{priceToShow}
                   </span>
                   <span className="ml-1 text-xs text-gray-400">
@@ -256,9 +256,9 @@ export const Pricing: React.FC<PricingProps> = ({
                   </span>
                 </div>
 
-                <ul className="mt-6 space-y-3 border-t border-gray-100 dark:border-slate-800 pt-5 text-left">
+                <ul className="mt-6 space-y-3 border-t border-gray-100 pt-5 text-left">
                   {p.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-xs text-gray-600 dark:text-slate-400">
+                    <li key={f} className="flex items-start gap-2 text-xs text-gray-600 ">
                       <Check className="h-3.5 w-3.5 text-emerald-500 shrink-0 mt-0.5" />
                       <span>{f}</span>
                     </li>
@@ -268,7 +268,7 @@ export const Pricing: React.FC<PricingProps> = ({
 
               <div className="mt-8 pt-2">
                 {isActive ? (
-                  <div className="rounded-xl bg-slate-50 dark:bg-slate-950 font-bold p-3 text-center text-xs text-gray-400 border border-slate-100 uppercase tracking-widest font-mono select-none">
+                  <div className="rounded-xl bg-slate-50 font-bold p-3 text-center text-xs text-gray-400 border border-slate-100 uppercase tracking-widest font-mono select-none">
                     {p.id === "Free" ? "✓ Current (Locked)" : "✓ Current Plan"}
                   </div>
                 ) : (
@@ -277,7 +277,7 @@ export const Pricing: React.FC<PricingProps> = ({
                     className={`w-full flex items-center justify-center gap-1.5 rounded-xl py-3 text-xs font-bold transition cursor-pointer select-none border ${
                       p.isPopular 
                         ? "bg-purple-600 hover:bg-purple-700 text-white border-purple-600" 
-                        : "bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:bg-slate-800 text-brand-navy dark:text-white border-slate-200 dark:border-slate-800/80"
+                        : "bg-slate-50 hover:bg-slate-100 text-brand-navy border-slate-200 "
                     }`}
                   >
                     {p.id !== "Free" && <Zap className="h-3.5 w-3.5 fill-amber-300 text-amber-300 mr-0.5" />}
@@ -292,7 +292,7 @@ export const Pricing: React.FC<PricingProps> = ({
 
       {/* Frequently Asked Questions */}
       <div className="mt-20 border-t border-gray-250 pt-16">
-        <h2 className="text-center font-display text-2xl font-black text-brand-navy dark:text-white tracking-tight md:text-3xl mb-8">
+        <h2 className="text-center font-display text-2xl font-black text-brand-navy tracking-tight md:text-3xl mb-8">
           Frequently asked questions
         </h2>
         <div className="mx-auto max-w-3xl grid gap-6 md:grid-cols-2">
@@ -314,8 +314,8 @@ export const Pricing: React.FC<PricingProps> = ({
               a: "You'll keep absolute full access to your premium folder tier until the end of your billing period, then automatically shift back to Free."
             }
           ].map((faq, i) => (
-            <div key={i} className="rounded-2xl border border-slate-200 dark:border-slate-800/60 p-6 bg-white dark:bg-slate-900 shadow-3xs">
-              <h4 className="font-extrabold text-sm text-brand-navy dark:text-white">{faq.q}</h4>
+            <div key={i} className="rounded-2xl border border-slate-200 p-6 bg-white shadow-3xs">
+              <h4 className="font-extrabold text-sm text-brand-navy ">{faq.q}</h4>
               <p className="mt-2 text-xs text-slate-505 font-medium leading-relaxed">{faq.a}</p>
             </div>
           ))}
@@ -325,19 +325,19 @@ export const Pricing: React.FC<PricingProps> = ({
       {/* CHECKOUT EMULATOR PROCESS LOADING SCREEN */}
       {loadingStep >= 0 && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-xs fade-in">
-          <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl relative border border-slate-100">
+          <div className="max-w-md w-full bg-white rounded-3xl p-6 shadow-2xl relative border border-slate-100">
             
             {!showReceipt ? (
               <div className="text-center py-10 space-y-4">
                 <Loader2 className="mx-auto h-12 w-12 text-brand-cobalt animate-spin" />
-                <h3 className="font-display text-xl font-bold text-brand-navy dark:text-white">Securing payment portal</h3>
-                <p className="text-xs text-gray-500 dark:text-slate-400 italic max-w-xs mx-auto">
+                <h3 className="font-display text-xl font-bold text-brand-navy ">Securing payment portal</h3>
+                <p className="text-xs text-gray-500 italic max-w-xs mx-auto">
                   {loadingStep === 1 && "Connecting secure gateway servers..."}
                   {loadingStep === 2 && "Validating Student ID with regional database registers..."}
                   {loadingStep === 3 && `Configuring license credentials for ${selectedPlan} Scholar...`}
                   {loadingStep === 4 && "Generating transaction token and billing receipt..."}
                 </p>
-                <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                   <div 
                     className="bg-brand-cobalt h-1.5 rounded-full transition-all duration-300"
                     style={{ width: `${loadingStep * 25}%` }}
@@ -349,11 +349,11 @@ export const Pricing: React.FC<PricingProps> = ({
                 <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-teal-50 text-teal-600">
                   <ShieldCheck className="h-7 w-7" />
                 </div>
-                <h3 className="font-display text-2xl font-black text-brand-navy dark:text-white">Payment Approved!</h3>
-                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Your license is securely upgraded. Below is your compiled invoice:</p>
+                <h3 className="font-display text-2xl font-black text-brand-navy ">Payment Approved!</h3>
+                <p className="text-xs text-gray-500 font-medium">Your license is securely upgraded. Below is your compiled invoice:</p>
 
                 {/* Stylized academic purchases invoice */}
-                <div className="rounded-2xl border border-dashed border-gray-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 p-5 text-left text-xs font-mono space-y-2">
+                <div className="rounded-2xl border border-dashed border-gray-200 bg-slate-50 p-5 text-left text-xs font-mono space-y-2">
                   <div className="flex justify-between border-b border-gray-150 pb-2 mb-2 font-bold text-slate-700">
                     <span>BlueBottleCap Invoice</span>
                     <span>No. BBC-2026-X839</span>
@@ -366,7 +366,7 @@ export const Pricing: React.FC<PricingProps> = ({
                     <span>Account Tier</span>
                     <span className="text-right text-brand-cobalt font-bold">{selectedPlan} Scholar License</span>
                   </div>
-                  <div className="flex justify-between text-gray-500 dark:text-slate-400">
+                  <div className="flex justify-between text-gray-500 ">
                     <span>Duration</span>
                     <span className="text-right text-gray-700">1 calendar month (Renewable)</span>
                   </div>
@@ -374,7 +374,7 @@ export const Pricing: React.FC<PricingProps> = ({
                     <span>Auth Token</span>
                     <span className="text-right text-slate-700">BBC_Pro_Lic_591AF19</span>
                   </div>
-                  <div className="flex justify-between font-bold text-sm text-brand-navy dark:text-white border-t border-dashed border-gray-150 pt-2 mt-2 leading-none">
+                  <div className="flex justify-between font-bold text-sm text-brand-navy border-t border-dashed border-gray-150 pt-2 mt-2 leading-none">
                     <span>Total Charged</span>
                     <span>₹{billingCycle === "monthly" ? plans.find(pl => pl.id === selectedPlan)?.priceMonthly : plans.find(pl => pl.id === selectedPlan)?.priceAnnual} INR</span>
                   </div>
@@ -385,7 +385,7 @@ export const Pricing: React.FC<PricingProps> = ({
                     onClick={() => {
                       window.print();
                     }}
-                    className="flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 dark:border-slate-800 hover:bg-slate-50 dark:bg-slate-950 px-4 py-3 text-xs font-bold text-gray-600 dark:text-slate-400 transition"
+                    className="flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 hover:bg-slate-50 px-4 py-3 text-xs font-bold text-gray-600 transition"
                   >
                     <Printer className="w-4 h-4" />
                     <span>Print</span>
