@@ -84,6 +84,9 @@
 }
 
 @layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
   .perspective-1000 {
     perspective: 1000px;
   }
@@ -96,4 +99,28 @@
   .rotate-y-180 {
     transform: rotateY(180deg);
   }
+  .animate-float-slow {
+    animation: floatSlow 6s ease-in-out infinite;
+  }
+  .animate-float-fast {
+    animation: floatFast 4s ease-in-out infinite;
+  }
+  .animate-bounce-subtle {
+    animation: bounceSubtle 2s ease-in-out infinite;
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+@keyframes floatFast {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-10px) scale(1.05); }
+}
+
+@keyframes bounceSubtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }

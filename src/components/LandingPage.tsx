@@ -219,6 +219,56 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             Stop wasting time gathering scattered notes. Get premium study material, instant AI-driven answers, and immersive test modes — all in one place.
           </p>
 
+          <div className="hero-reveal-element mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 pointer-events-auto">
+            <button
+              onClick={() => onNavigate("tools")}
+              className="group relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-linear-to-br from-blue-600 to-indigo-700 px-8 py-4 font-display text-lg font-bold text-white shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_60px_-15px_rgba(37,99,235,0.7)]"
+            >
+              <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-150%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(150%)]">
+                <div className="relative h-full w-8 bg-white/20" />
+              </div>
+              <Sparkles className="w-5 h-5 animate-bounce-subtle" />
+              Start Your Streak
+            </button>
+            <button
+              onClick={() => {
+                const el = document.querySelector('.features-section');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="inline-flex items-center gap-2 rounded-2xl border-2 border-slate-200 bg-white/50 px-8 py-4 font-display text-lg font-bold text-slate-700 backdrop-blur-sm transition-all hover:bg-slate-50 hover:border-blue-200"
+            >
+              See how it works
+            </button>
+          </div>
+
+          <div className="hero-reveal-element mt-8 flex flex-col items-center justify-center gap-2 pointer-events-auto">
+            <div className="flex -space-x-3">
+              {[
+                "https://api.dicebear.com/7.x/notionists/svg?seed=Felix",
+                "https://api.dicebear.com/7.x/notionists/svg?seed=Aneka",
+                "https://api.dicebear.com/7.x/notionists/svg?seed=John",
+                "https://api.dicebear.com/7.x/notionists/svg?seed=Sara",
+                "https://api.dicebear.com/7.x/notionists/svg?seed=Mike"
+              ].map((avatar, i) => (
+                <img key={i} src={avatar} alt="User avatar" className="w-10 h-10 rounded-full border-2 border-white bg-slate-100 shadow-sm" />
+              ))}
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="flex gap-1 text-amber-400 mb-1">
+                {[...Array(5)].map((_, i) => <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>)}
+              </div>
+              <p className="text-sm font-semibold text-slate-600">Loved by <span className="text-blue-600 font-bold">15,000+</span> ambitious students.</p>
+            </div>
+          </div>
+
+          {/* Quirky floating elements */}
+          <div className="absolute top-10 left-10 w-16 h-16 bg-blue-500/10 rounded-2xl backdrop-blur-xl border border-blue-200/50 flex items-center justify-center animate-float-slow hidden md:flex pointer-events-none -rotate-12">
+            <Brain className="w-8 h-8 text-blue-500" />
+          </div>
+          <div className="absolute top-40 right-10 w-20 h-20 bg-indigo-500/10 rounded-full backdrop-blur-xl border border-indigo-200/50 flex items-center justify-center animate-float-fast hidden md:flex pointer-events-none rotate-12">
+            <Zap className="w-10 h-10 text-indigo-500" />
+          </div>
+
           {/* MOCK DASHBOARD PREVIEW UI */}
           <div className="hero-dashboard hero-reveal-element mt-14 max-w-5xl mx-auto relative group transform-gpu pointer-events-auto">
             <div className="absolute inset-0 bg-linear-to-b from-blue-100 to-transparent blur-3xl opacity-80 rounded-[3rem] -z-10 transition duration-700 group-hover:scale-105" />
@@ -409,31 +459,35 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── CTA SECTION ── */}
-      <section className="cta-section py-40 text-center relative overflow-hidden bg-slate-900 text-white z-20">
-        <div className="cta-glow absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/40 via-slate-900 to-slate-900 opacity-80 blur-3xl pointer-events-none" />
-        
-        <div className="mx-auto max-w-4xl px-4 relative z-10 space-y-12">
-          <h2 className="font-display text-5xl sm:text-7xl font-black tracking-tight leading-tight drop-shadow-2xl">
-            Stop procrastinating.
+      <section className="cta-section py-40 text-center relative overflow-hidden bg-linear-to-b from-blue-700 to-indigo-900 text-white z-20">
+        <div className="cta-glow absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400/30 via-indigo-900/50 to-transparent opacity-100 blur-3xl pointer-events-none" />
+        <div className="relative z-10 max-w-4xl mx-auto px-6">
+          <h2 className="text-5xl md:text-7xl font-display font-black mb-8 leading-tight drop-shadow-xl text-white">
+            Ready to upgrade your<br/>
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-300 to-blue-200">academic life?</span>
           </h2>
-          <p className="text-2xl text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed">
-            Join thousands of ambitious students and start your serious prep tonight.
+          <p className="text-xl md:text-2xl text-blue-100 mb-14 font-medium max-w-2xl mx-auto drop-shadow-sm">
+            Join 15,000+ top students who have already transformed their grades with BlueBottleCap.
           </p>
-          <div className="pt-10 flex justify-center items-center">
-            <MagneticWrapper strength={60}>
-              <button
-                onClick={() => onNavigate("onboarding")}
-                className="rounded-2xl bg-white text-slate-900 hover:bg-slate-50 px-14 py-7 font-black text-2xl cursor-pointer shadow-2xl transition-colors ring-8 ring-white/10 hover:ring-white/20 w-full sm:w-auto"
-              >
-                Start Studying Smarter
-              </button>
-            </MagneticWrapper>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
+            <button 
+              onClick={() => onNavigate("tools")}
+              className="rounded-2xl bg-white text-indigo-700 font-display hover:bg-slate-50 px-14 py-7 font-black text-2xl cursor-pointer shadow-[0_0_50px_-10px_rgba(255,255,255,0.5)] transition-all hover:scale-105 hover:shadow-[0_0_80px_-15px_rgba(255,255,255,0.7)] w-full sm:w-auto"
+            >
+              Start for Free
+            </button>
+            <button 
+              onClick={() => onNavigate("dashboard")}
+              className="rounded-2xl bg-transparent border-2 border-white/30 text-white font-display hover:bg-white/10 px-14 py-7 font-bold text-xl cursor-pointer transition-colors w-full sm:w-auto"
+            >
+              View Dashboard
+            </button>
           </div>
         </div>
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-slate-800 bg-slate-950 py-16 relative z-20 text-center">
+      <footer className="border-t border-indigo-800 bg-indigo-950 py-16 relative z-20 text-center">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-xs text-slate-500 space-y-4">
           <span className="font-display font-black text-slate-400 text-xl tracking-tight">BlueBottleCap</span>
           <p className="font-mono text-[11px] uppercase tracking-widest mt-2">© 2026 BlueBottleCap Suite. All Rights Reserved.</p>
