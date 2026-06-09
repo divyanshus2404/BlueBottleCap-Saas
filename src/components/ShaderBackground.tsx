@@ -40,7 +40,7 @@ function Plane() {
 
 export const ShaderBackground: React.FC = () => {
   return (
-    <div className="fixed inset-0 -z-20 w-screen h-screen">
+    <div className="fixed inset-0 z-0 w-screen h-screen pointer-events-none">
       <Canvas dpr={[1, 1.5]}>
         <Plane />
       </Canvas>

@@ -1042,13 +1042,13 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
         <AboutPage onNavigate={navigateToView} />
       )}
       {currentView === "seniors-opinion" && (
-        <div className="fade-in">
+        <div className="flex-grow relative z-10 pt-16 transition-all duration-300">
           <SeniorsOpinionPage onNavigate={navigateToView} />
         </div>
       )}
 
       {currentView === "flashcards" && (
-        <div className="fade-in min-h-[calc(100vh-64px)] bg-slate-50 bg-bg-primary">
+        <div className="fade-in min-h-[calc(100vh-64px)] bg-transparent">
           <FlashcardsPage flashcards={flashcards} onUpdateFlashcard={handleUpdateFlashcard} />
         </div>
       )}
