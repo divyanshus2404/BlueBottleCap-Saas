@@ -1,12 +1,8 @@
-import React, { useRef, useEffect, useMemo } from "react";
-import { Sparkles, BookOpen } from "lucide-react";
+import React, { useRef, useEffect } from "react";
+import { Sparkles, BookOpen, Brain, Layers, Clock, FileText, Download, Zap, Shield, Target, Smartphone } from "lucide-react";
 import { ActiveView } from "../types";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import * as THREE from "three";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { EffectComposer, Bloom, ChromaticAberration, Noise } from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
 import { LiquidImage } from "./LiquidImage";
 import { MagneticWrapper } from "./MagneticWrapper";
 import { TiltCard } from "./TiltCard";
@@ -14,6 +10,7 @@ import { VelocityMarquee } from "./VelocityMarquee";
 import { HeroBackgroundMarquee } from "./HeroBackgroundMarquee";
 import { SplitTextReveal } from "./SplitTextReveal";
 import NeuralBrainIntro from "./intro/NeuralBrainIntro";
+import { AuroraBackground } from "./AuroraBackground";
 import useIntroAnimation from "../hooks/useIntroAnimation";
 
 if (typeof window !== "undefined") {
@@ -24,188 +21,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface LandingPageProps {
   onNavigate: (view: ActiveView) => void;
-}
-
-// ─── 3D SHADERS & COMPONENTS ────────────────────────────────────────────────
-
-// VERTEX SHADER: Handles shape distortion and mouse bending
-const vertexShader = `
-  uniform float uTime;
-  uniform vec2 uMouse;
-  varying vec2 vUv;
-  varying vec3 vPosition;
-  varying vec3 vNormal;
-
-  void main() {
-    vUv = uv;
-    vPosition = position;
-    vNormal = normal;
-
-    vec3 pos = position;
-    
-    // Liquid distortion
-    float noiseFreq = 1.2;
-    float noiseAmp = 0.6;
-    vec3 noisePos = vec3(pos.x * noiseFreq + uTime, pos.y * noiseFreq + uTime, pos.z);
-    
-    pos.x += sin(noisePos.y) * noiseAmp;
-    pos.y += cos(noisePos.z) * noiseAmp;
-    pos.z += sin(noisePos.x) * noiseAmp;
-    
-    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-    
-    // Mouse hover warping (bending space around the cursor)
-    vec2 viewMouse = uMouse * 8.0; 
-    float dist = distance(mvPosition.xy, viewMouse);
-    float force = smoothstep(4.0, 0.0, dist); 
-    
-    mvPosition.xy += normalize(mvPosition.xy - viewMouse) * force * 1.5;
-    
-    gl_Position = projectionMatrix * mvPosition;
-  }
-`;
-
-// FRAGMENT SHADER: Light "Apple Frost" Glass
-const fragmentShader = `
-  uniform float uTime;
-  varying vec2 vUv;
-  varying vec3 vPosition;
-  varying vec3 vNormal;
-
-  void main() {
-    // Frosted Glass Colors
-    vec3 color1 = vec3(0.94, 0.96, 1.0); // Light blue
-    vec3 color2 = vec3(0.88, 0.94, 1.0); // Cyan tint
-    vec3 color3 = vec3(1.0, 1.0, 1.0);   // Pure white
-    
-    // Melting color blend
-    float mix1 = sin(vUv.x * 4.0 + uTime * 0.4) * 0.5 + 0.5;
-    float mix2 = cos(vUv.y * 6.0 - uTime * 0.3) * 0.5 + 0.5;
-    
-    vec3 finalColor = mix(color1, color2, mix1);
-    finalColor = mix(finalColor, color3, mix2);
-    
-    // Fresnel / Glass Edge Refraction (Darkens edges slightly)
-    float fresnel = dot(vNormal, vec3(0.0, 0.0, 1.0));
-    fresnel = clamp(1.0 - fresnel, 0.0, 1.0);
-    fresnel = pow(fresnel, 2.5);
-    
-    finalColor -= fresnel * 0.15; // subtle edge definition
-    
-    gl_FragColor = vec4(finalColor, 0.5); // semi-transparent
-  }
-`;
-
-const CustomShape = ({ position, scale }: { position: [number, number, number], scale: number }) => {
-  const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const meshRef = useRef<THREE.Mesh>(null);
-
-  useFrame((state) => {
-    if (materialRef.current) {
-      materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      materialRef.current.uniforms.uMouse.value.lerp(
-        new THREE.Vector2(state.pointer.x, state.pointer.y),
-        0.1
-      );
-    }
-    if (meshRef.current) {
-      meshRef.current.rotation.x += 0.002;
-      meshRef.current.rotation.y += 0.003;
-    }
-  });
-
-  const uniforms = useMemo(
-    () => ({
-      uTime: { value: 0 },
-      uMouse: { value: new THREE.Vector2(0, 0) },
-    }),
-    []
-  );
-
-  return (
-    <mesh ref={meshRef} position={position} scale={scale}>
-      <icosahedronGeometry args={[1, 32]} />
-      <shaderMaterial
-        ref={materialRef}
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-        uniforms={uniforms}
-        transparent={true}
-        side={THREE.DoubleSide}
-      />
-    </mesh>
-  );
-};
-
-const SceneController = () => {
-  const { camera } = useThree();
-
-  useFrame(() => {
-    const scrollY = window.scrollY;
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = maxScroll > 0 ? Math.min(Math.max(scrollY / maxScroll, 0), 1) : 0;
-
-    const targetZ = 8 - progress * 25; 
-    const targetRotZ = progress * Math.PI * 0.3;
-    const targetRotY = progress * Math.PI * 0.15;
-
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.05);
-    camera.rotation.z = THREE.MathUtils.lerp(camera.rotation.z, targetRotZ, 0.05);
-    camera.rotation.y = THREE.MathUtils.lerp(camera.rotation.y, targetRotY, 0.05);
-  });
-
-  return null;
-};
-
-const PostProcessingEffects = () => {
-  const aberrationRef = useRef<any>(null);
-  
-  useFrame(() => {
-    if (aberrationRef.current && (window as any).globalScrollProxy) {
-      // Calculate a target offset based on the absolute scroll velocity
-      const velocity = Math.abs((window as any).globalScrollProxy.velocity);
-      // Clamp the max intensity
-      const intensity = Math.min(velocity * 0.0001, 0.02);
-      
-      const targetOffset = new THREE.Vector2(intensity, intensity);
-      aberrationRef.current.offset.lerp(targetOffset, 0.1);
-    }
-  });
-
-  return (
-    <EffectComposer multisampling={0}>
-      <Bloom luminanceThreshold={0.5} mipmapBlur intensity={1.5} />
-      <Noise opacity={0.03} />
-      <ChromaticAberration
-        ref={aberrationRef}
-        blendFunction={BlendFunction.NORMAL}
-        offset={new THREE.Vector2(0, 0)}
-        radialModulation={false}
-        modulationOffset={0}
-      />
-    </EffectComposer>
-  );
-};
-
-function Background3D() {
-  return (
-    <div className="fixed inset-0 -z-20 h-screen w-screen bg-slate-50">
-      <Canvas camera={{ position: [0, 0, 8], fov: 45 }} className="w-full h-full">
-        <SceneController />
-        
-        {/* A deep tunnel of frosted liquid geometry */}
-        <CustomShape position={[-3.5, 1.5, 0]} scale={1.8} />
-        <CustomShape position={[3.5, -1.0, -3]} scale={1.4} />
-        <CustomShape position={[-2.0, -3.0, -6]} scale={1.2} />
-        <CustomShape position={[4.0, 3.0, -9]} scale={2.0} />
-        <CustomShape position={[-3.0, 2.0, -12]} scale={1.6} />
-        <CustomShape position={[2.5, -2.5, -15]} scale={1.9} />
-        <CustomShape position={[-4.5, -1.0, -18]} scale={2.2} />
-        <CustomShape position={[3.0, 2.0, -21]} scale={1.5} />
-        <CustomShape position={[-2.0, -3.0, -24]} scale={2.5} />
-      </Canvas>
-    </div>
-  );
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
@@ -367,7 +182,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       <div id="intro-overlay" className="fixed inset-0 z-50 bg-bg-primary" />
       <NeuralBrainIntro />
       
-      <Background3D />
+      <AuroraBackground />
       
       {/* ── HERO SECTION ── */}
       <section className="hero-section relative pt-16 pb-20 md:pt-24 md:pb-28 min-h-screen flex flex-col justify-center perspective-1000 z-10 overflow-hidden">
