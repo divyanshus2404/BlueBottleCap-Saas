@@ -75,7 +75,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           >
             <Logo className="h-10 w-10 text-accent" />
             <div>
-              <span className="font-display text-lg font-bold tracking-tight text-white text-white transition-colors duration-300">
+              <span className="font-display text-lg font-bold tracking-tight text-slate-900 dark:text-white transition-colors duration-300">
                 Blue<span className="text-accent dark:text-blue-400 bg-linear-to-r from-brand-cobalt to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">BottleCap</span>
               </span>
               <span className="block text-[10px] uppercase tracking-wider font-mono text-gray-400 text-text-muted font-medium leading-none transition-colors duration-300">

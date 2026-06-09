@@ -215,14 +215,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   useEffect(() => {
     let ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
-      tl.from(".hero-badge", { y: 30, opacity: 0, duration: 1, delay: 0.1 })
-        .from(".hero-title .word", { y: 40, opacity: 0, duration: 1.2, stagger: 0.1 }, "-=0.8")
-        .from(".hero-desc", { y: 20, opacity: 0, duration: 1 }, "-=1.0")
-        .from(".hero-dashboard", { 
+      tl.fromTo(".hero-badge", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1, delay: 0.1 })
+        .fromTo(".hero-title .word", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2, stagger: 0.1 }, "-=0.8")
+        .fromTo(".hero-desc", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, "-=1.0")
+        .fromTo(".hero-dashboard", { 
           y: 120, 
           rotationX: 25, 
           scale: 0.9,
-          opacity: 0, 
+          opacity: 0 
+        }, {
+          y: 0,
+          rotationX: 0,
+          scale: 1,
+          opacity: 1, 
           duration: 1.5, 
           ease: "expo.out" 
         }, "-=0.8");
@@ -250,9 +255,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         }
       });
 
-      gsap.from(".feature-card", {
+      gsap.fromTo(".feature-card", {
         y: 60,
         opacity: 0,
+      }, {
+        y: 0,
+        opacity: 1,
         duration: 1,
         stagger: 0.2,
         ease: "power3.out",
@@ -262,9 +270,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         }
       });
 
-      gsap.from(".comparison-row", {
+      gsap.fromTo(".comparison-row", {
         x: -30,
         opacity: 0,
+      }, {
+        x: 0,
+        opacity: 1,
         duration: 0.8,
         stagger: 0.15,
         ease: "power2.out",
@@ -274,10 +285,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         }
       });
       
-      gsap.from(".testimonial-card", {
+      gsap.fromTo(".testimonial-card", {
         y: 50,
         scale: 0.95,
         opacity: 0,
+      }, {
+        y: 0,
+        scale: 1,
+        opacity: 1,
         duration: 1,
         stagger: 0.3,
         ease: "back.out(1.2)",
