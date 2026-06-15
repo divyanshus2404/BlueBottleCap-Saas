@@ -65,8 +65,8 @@ const MarqueeLayer: React.FC<MarqueeLayerProps> = ({ items, direction, duration,
     <div className={`w-full overflow-hidden flex whitespace-nowrap select-none ${className}`}>
       <div ref={trackRef} className="flex min-w-max items-center marquee-track">
         {/* Render twice for seamless loop */}
-        <h1 className="tracking-tighter uppercase pr-12">{textString}</h1>
-        <h1 className="tracking-tighter uppercase pr-12">{textString}</h1>
+        <div className="tracking-tighter uppercase pr-12">{textString}</div>
+        <div className="tracking-tighter uppercase pr-12">{textString}</div>
       </div>
     </div>
   );

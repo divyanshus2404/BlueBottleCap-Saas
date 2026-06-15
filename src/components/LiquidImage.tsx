@@ -61,7 +61,7 @@ const ImagePlane = ({ src }: { src: string }) => {
 
   useFrame((state) => {
     if (materialRef.current) {
-      materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+      materialRef.current.uniforms.uTime.value = state.clock.getElapsedTime();
       
       // Map pointer coordinates from [-1, 1] center origin to [0, 1] bottom-left origin for UVs
       const targetX = (state.pointer.x + 1) / 2;

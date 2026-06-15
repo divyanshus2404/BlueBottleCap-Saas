@@ -31,9 +31,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   useEffect(() => {
     let ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
-      tl.fromTo(".hero-badge", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1, delay: 0.1 })
-        .fromTo(".hero-title .word", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2, stagger: 0.1 }, "-=0.8")
-        .fromTo(".hero-desc", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, "-=1.0")
+      tl.fromTo(".hero-badge", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, delay: 0 })
+        .fromTo(".hero-title .word", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, stagger: 0.05 }, "-=0.4")
+        .fromTo(".hero-desc", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, "-=0.6")
         .fromTo(".hero-dashboard", { 
           y: 120, 
           rotationX: 25, 
@@ -346,7 +346,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             <TiltCard className="h-[400px]">
               <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
                 <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
-                  <LiquidImage src="/images/physics.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+                  <LiquidImage src="/images/physics.webp" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
                 </div>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Premium Notes</h3>
                 <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Access exhaustive, topper-grade notes carefully organized by subject and chapter.</p>
@@ -356,7 +356,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             <TiltCard className="h-[400px]">
               <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
                 <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
-                  <LiquidImage src="/images/chemistry.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+                  <LiquidImage src="/images/chemistry.webp" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
                 </div>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Virtual Test Mode</h3>
                 <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Practice past papers in an immersive, distraction-free environment with an active timer.</p>
@@ -366,7 +366,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             <TiltCard className="h-[400px]">
               <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
                 <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
-                  <LiquidImage src="/images/math.png" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+                  <LiquidImage src="/images/math.webp" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
                 </div>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">AI Powered</h3>
                 <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Get instant solutions and flashcard generation to retain concepts longer.</p>

@@ -43,8 +43,9 @@ export const Navigation: React.FC<NavigationProps> = ({
         
         {/* Logo Section */}
         <MagneticWrapper strength={30}>
-          <div 
-            onClick={() => handleLinkClick("landing")} 
+          <a 
+            href="/"
+            onClick={(e) => { e.preventDefault(); handleLinkClick("landing"); }}
             className="flex cursor-pointer items-center gap-2.5 transition-opacity hover:opacity-90"
           >
             <Logo className="h-10 w-10 text-brand-cobalt" />
@@ -56,7 +57,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                 STUDENT AI SUITE
               </span>
             </div>
-          </div>
+          </a>
         </MagneticWrapper>
 
         {/* Desktop Navigation */}
@@ -65,9 +66,10 @@ export const Navigation: React.FC<NavigationProps> = ({
             const isActive = currentView === link.view;
             const isLocked = false;
             return (
-              <button
+              <a
                 key={link.view}
-                onClick={() => handleLinkClick(link.view)}
+                href={`/${link.view === "study-material-page" ? "study-material" : link.view}`}
+                onClick={(e) => { e.preventDefault(); handleLinkClick(link.view); }}
                 className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-300 ${
                   isActive
                     ? "bg-brand-cobalt/5 text-brand-cobalt "
@@ -79,7 +81,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                 {isLocked && (
                   <Lock className="w-3 h-3 text-gray-400/80 ml-0.5 shrink-0" />
                 )}
-              </button>
+              </a>
             );
           })}
         </nav>
@@ -134,6 +136,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle Menu"
             className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -149,9 +152,10 @@ export const Navigation: React.FC<NavigationProps> = ({
               const isActive = currentView === link.view;
               const isLocked = false;
               return (
-                <button
+                <a
                   key={link.view}
-                  onClick={() => handleLinkClick(link.view)}
+                  href={`/${link.view === "study-material-page" ? "study-material" : link.view}`}
+                  onClick={(e) => { e.preventDefault(); handleLinkClick(link.view); }}
                   className={`flex w-full items-center gap-2.5 rounded-lg px-4 py-3 text-sm font-semibold transition-all duration-300 ${
                     isActive
                       ? "bg-brand-cobalt/5 text-brand-cobalt "
@@ -163,7 +167,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                   {isLocked && (
                     <Lock className="w-3.5 h-3.5 text-gray-400/80 shrink-0" />
                   )}
-                </button>
+                </a>
               );
             })}
           </div>

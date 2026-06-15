@@ -8,7 +8,7 @@ function Plane() {
 
   useFrame((state) => {
     if (materialRef.current) {
-      materialRef.current.uniforms.u_time.value = state.clock.elapsedTime;
+      materialRef.current.uniforms.u_time.value = state.clock.getElapsedTime();
     }
   });
 
@@ -41,7 +41,7 @@ function Plane() {
 export const ShaderBackground: React.FC = () => {
   return (
     <div className="fixed inset-0 z-0 w-screen h-screen pointer-events-none">
-      <Canvas dpr={[1, 1.5]}>
+      <Canvas dpr={1} camera={{ position: [0, 0, 1] }}>
         <Plane />
       </Canvas>
     </div>

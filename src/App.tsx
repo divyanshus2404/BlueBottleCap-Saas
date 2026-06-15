@@ -351,7 +351,10 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
       } else {
         setToolCreditsLeft(5);
       }
-      setCurrentView("landing");
+      const publicViews = ["landing", "about", "study-material-page", "pricing", "tools", "seniors", "virtual-test"];
+      if (!publicViews.includes(currentView)) {
+        setCurrentView("landing");
+      }
       return;
     }
 
@@ -569,7 +572,7 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
       }
     }).catch(err => console.error("Error loading flashcards:", err));
 
-    if (currentView === "landing") {
+    if (currentView === "landing" && !initialView) {
       setCurrentView("dashboard");
     }
 
