@@ -27,7 +27,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { SmoothScroll } from "./components/SmoothScroll";
 import { LiquidTransition } from "./components/LiquidTransition";
 import { Cursor } from "./components/Cursor";
-import { CinematicIntro } from "./components/CinematicIntro";
+
 import { AboutPage } from "./components/AboutPage";
 import { GlobalBackground } from "./components/GlobalBackground";
 
@@ -942,11 +942,8 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
     },
   ];
 
-  const [isIntroComplete, setIsIntroComplete] = useState(false);
-
   return (
     <SmoothScroll>
-      {!isIntroComplete && <CinematicIntro onComplete={() => setIsIntroComplete(true)} />}
       <Cursor />
       <LiquidTransition
         isAnimating={isTransitioning}
