@@ -1499,7 +1499,7 @@ Do not output markdown code fences, only output raw JSON.`
 
                             {/* Question text */}
                             <div className="space-y-4">
-                              <p className="text-sm font-bold text-white leading-relaxed font-sans bg-surface-solid p-4 rounded-xl border border-border-subtle">
+                              <p className="text-sm font-bold text-slate-900 leading-relaxed font-sans bg-surface-solid p-4 rounded-xl border border-border-subtle">
                                 {activeQuestion.question}
                               </p>
 
@@ -2058,7 +2058,7 @@ Do not output markdown code fences, only output raw JSON.`
                                   )}
                                 </div>
 
-                                <p className="text-xs font-bold text-white leading-normal">{q.question}</p>
+                                <p className="text-xs font-bold text-slate-900 leading-normal">{q.question}</p>
 
                                 {/* OMR bubble row */}
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-solid p-3 rounded-xl border border-slate-150">
