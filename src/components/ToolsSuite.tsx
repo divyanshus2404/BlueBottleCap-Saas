@@ -1264,22 +1264,22 @@ Do not output markdown code fences, only output raw JSON.`
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen w-full bg-slate-900 text-slate-100 fade-in overflow-hidden">
+    <div className="flex flex-col lg:flex-row min-h-screen w-full bg-slate-50 text-slate-900 fade-in overflow-hidden">
       
       {/* LEFT SIDEBAR: Tools Directory */}
       <motion.div 
-        className="w-full lg:w-[350px] shrink-0 border-r border-slate-800 bg-[#0A0F1C] p-5 flex flex-col gap-6 lg:h-screen lg:sticky lg:top-0 overflow-y-auto custom-scrollbar shadow-[4px_0_24px_rgba(0,0,0,0.5)] z-20"
+        className="w-full lg:w-[350px] shrink-0 border-r border-border-subtle bg-white flex flex-col lg:h-screen lg:sticky lg:top-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20"
         initial={{ x: -20, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
       >
         {/* Page Header (moved below active workspace) */}
-      <div className="mb-6 pb-6 border-b border-slate-800">
+      <div className="p-5 pb-4 border-b border-border-subtle shrink-0">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-1 text-left">
-            <h2 className="font-display text-2.5xl font-black text-white tracking-tight">
+            <h2 className="font-display text-2.5xl font-black text-slate-900 tracking-tight">
               All Tools
             </h2>
-            <p className="text-xs text-slate-400 font-medium">
+            <p className="text-xs text-slate-500 font-medium">
               40+ tools to boost your productivity
             </p>
           </div>
@@ -1291,7 +1291,7 @@ Do not output markdown code fences, only output raw JSON.`
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               placeholder="Search tools..."
-              className="w-full rounded-xl border border-border-subtle bg-white pl-4 pr-10 py-2.5 text-xs font-semibold focus:border-accent focus:outline-hidden focus:ring-1 focus:ring-brand-cobalt text-white shadow-3xs"
+              className="w-full rounded-xl border border-border-subtle bg-white pl-4 pr-10 py-2.5 text-xs font-semibold focus:border-accent focus:outline-hidden focus:ring-1 focus:ring-brand-cobalt text-slate-900 shadow-3xs"
             />
             <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
           </div>
@@ -1306,7 +1306,7 @@ Do not output markdown code fences, only output raw JSON.`
               className={`rounded-xl px-4 py-2 text-xs font-bold transition-all duration-150 cursor-pointer ${
                 activeTab === t.key
                   ? "bg-brand-navy text-white shadow-3xs"
-                  : "bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300"
+                  : "bg-white hover:bg-slate-100 border border-border-subtle text-slate-600"
               }`}
             >
               {t.label}
@@ -1314,9 +1314,10 @@ Do not output markdown code fences, only output raw JSON.`
           ))}
         </div>
       </div>
+        <div className="flex-1 overflow-y-auto custom-scrollbar p-5">
         {/* Grid containing ALL tools */}
       <div className="flex flex-col gap-3 select-none pb-12">
-        {filteredTools.map((tool) => {
+          {filteredTools.map((tool) => {
           const isCurrentChoice = selectedToolId === tool.id;
           const showLock = tool.locked && !isPremiumPlan;
           
@@ -1329,10 +1330,10 @@ Do not output markdown code fences, only output raw JSON.`
                 e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
                 e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
               }}
-              className={`group flex flex-col justify-between rounded-2xl border p-5 bg-slate-900 transition-all cursor-pointer relative overflow-hidden ${
+              className={`group flex flex-col justify-between rounded-2xl border p-5 bg-white transition-all cursor-pointer relative overflow-hidden ${
                 isCurrentChoice 
                   ? "border-accent ring-1 ring-brand-cobalt shadow-xs" 
-                  : "border-slate-800 hover:border-slate-600 hover:shadow-xs"
+                  : "border-border-subtle hover:border-slate-300 hover:shadow-xs"
               }`}
             >
               {/* SPOTLIGHT HOVER EFFECT */}
@@ -1345,7 +1346,7 @@ Do not output markdown code fences, only output raw JSON.`
               
               <div className="relative z-10">
                 <div className="flex justify-between items-start">
-                  <h3 className="font-display font-extrabold text-sm tracking-tight text-white group-hover:text-accent transition-colors duration-150">
+                  <h3 className="font-display font-extrabold text-sm tracking-tight text-slate-900 group-hover:text-accent transition-colors duration-150">
                     {tool.name}
                   </h3>
 
@@ -1376,10 +1377,11 @@ Do not output markdown code fences, only output raw JSON.`
           );
         })}
       </div>
+        </div>
       </motion.div>
 
       {/* RIGHT MAIN WORKSPACE */}
-      <div className="flex-1 p-4 lg:p-8 overflow-y-auto bg-slate-900 relative lg:h-screen z-10 custom-scrollbar">
+      <div className="flex-1 p-4 lg:p-8 overflow-y-auto bg-slate-50 relative lg:h-screen z-10 custom-scrollbar">
         <AnimatePresence mode="wait">
           {selectedToolId ? (
             <motion.div 
@@ -3069,13 +3071,13 @@ Do not output markdown code fences, only output raw JSON.`
                <div className="text-center space-y-6 flex flex-col items-center">
                  <div className="relative">
                    <div className="absolute inset-0 bg-brand-cobalt blur-3xl opacity-20 rounded-full animate-pulse"></div>
-                   <div className="w-24 h-24 rounded-full bg-slate-800/80 flex items-center justify-center ring-1 ring-slate-700 shadow-2xl relative z-10 backdrop-blur-md">
+                   <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center ring-1 ring-border-subtle shadow-xl relative z-10 backdrop-blur-md">
                      <Sparkles className="w-10 h-10 text-accent" />
                    </div>
                  </div>
                  <div className="space-y-2">
-                   <h3 className="text-3xl font-black font-display text-white tracking-tight">Select a tool to begin</h3>
-                   <p className="text-slate-400 max-w-sm mx-auto text-sm leading-relaxed">Choose from our collection of interactive utilities in the sidebar to boost your productivity.</p>
+                   <h3 className="text-3xl font-black font-display text-slate-900 tracking-tight">Select a tool to begin</h3>
+                   <p className="text-slate-500 max-w-sm mx-auto text-sm leading-relaxed">Choose from our collection of interactive utilities in the sidebar to boost your productivity.</p>
                  </div>
                </div>
             </motion.div>
