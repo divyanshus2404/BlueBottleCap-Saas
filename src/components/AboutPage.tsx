@@ -64,29 +64,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
 
         <div className="grid lg:grid-cols-12 gap-16 items-start">
           
-          {/* Image Column */}
-          <div className="lg:col-span-5 about-content relative z-10">
-            <TiltCard className="h-[600px] w-full">
-              <div className="w-full h-full rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white relative group bg-white flex items-center justify-center">
-
-                <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/20 to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100 z-20 pointer-events-none mix-blend-overlay"></div>
-                <img 
-                  src="/images/founder.jpg" 
-                  alt="Divyanshu Singh - Founder" 
-                  className="w-full h-full object-cover object-top relative z-10 transition-transform duration-700 group-hover:scale-[1.03]"
-                  onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0'; }}
-                />
-              </div>
-            </TiltCard>
-            
-            <div className="mt-8 text-center lg:text-left about-content">
-              <h3 className="font-display font-black text-2xl text-slate-900">Divyanshu Singh</h3>
-              <p className="text-blue-600 font-bold uppercase tracking-widest text-sm mt-1">Founder & Developer</p>
-            </div>
-          </div>
-
           {/* Text Column */}
-          <div className="lg:col-span-7 space-y-12">
+          <div className="lg:col-span-12 max-w-4xl mx-auto space-y-12">
             <SplitTextReveal 
               text="The Story Behind BlueBottleCap" 
               className="text-5xl md:text-6xl lg:text-7xl font-black font-display text-slate-900 leading-[1.1] text-left !justify-start" 
@@ -115,11 +94,16 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                 </p>
               </div>
 
-              <p className="text-xl font-bold text-slate-900 italic relative">
+              <p className="text-xl font-bold text-slate-900 italic relative mb-4">
                 <span className="absolute -left-6 -top-2 text-4xl text-slate-200 font-serif">"</span>
                 Whatever you decide to do in life, I hope this tool helps you get there. Wish you all the best, mate.
                 <span className="absolute -right-4 -bottom-4 text-4xl text-slate-200 font-serif">"</span>
               </p>
+
+              <div className="mt-8 about-content">
+                <h3 className="font-display font-black text-xl text-slate-900">— Divyanshu Singh</h3>
+                <p className="text-blue-600 font-bold uppercase tracking-widest text-sm mt-1">Founder & Developer</p>
+              </div>
             </div>
             
             <div className="about-content pt-8 border-t border-slate-200">
