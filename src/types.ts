@@ -1,4 +1,4 @@
-export type ActiveView = 'landing' | 'onboarding' | 'dashboard' | 'pdf-editor' | 'tools' | 'pricing' | 'signup' | 'create-profile' | 'virtual-test' | 'study-material-page' | 'seniors-opinion' | 'flashcards' | 'about';
+export type ActiveView = 'landing' | 'onboarding' | 'dashboard' | 'pdf-editor' | 'tools' | 'pricing' | 'signup' | 'create-profile' | 'virtual-test' | 'study-material-page' | 'seniors-opinion' | 'flashcards' | 'about' | 'roadmaps';
 
 export interface UsageMetric {
   current: number;
@@ -98,4 +98,28 @@ export interface RecentActivityItem {
   cost: string;
   date: string;
   timestamp?: number;
+}
+
+export interface RoadmapNode {
+  id: string;
+  title: string;
+  description: string;
+  status: "completed" | "current" | "locked";
+  duration: string;
+}
+
+export interface PeerGroup {
+  id: string;
+  name: string;
+  avatar: string;
+  members: number;
+  currentNodeId: string;
+}
+
+export interface Roadmap {
+  id: string;
+  title: string;
+  prompt: string;
+  nodes: RoadmapNode[];
+  coincidingGroups: PeerGroup[];
 }

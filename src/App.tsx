@@ -10,6 +10,7 @@ import { ToolsSuite } from "./components/ToolsSuite";
 import { VirtualTestMode } from "./components/VirtualTestMode";
 import { StudyMaterialPage } from "./components/StudyMaterialPage";
 import SeniorsOpinionPage from "./components/SeniorsOpinionPage";
+import { RoadmapBuilder } from "./components/RoadmapBuilder";
 import { FlashcardsPage } from "./components/FlashcardsPage";
 import { Pricing } from "./components/Pricing";
 import { Paywall } from "./components/Paywall";
@@ -1041,6 +1042,9 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
         <StudyMaterialPage
           onNavigate={navigateToView}
         />
+      )}
+      {currentView === "roadmaps" && (
+        <RoadmapBuilder onNavigate={navigateToView} />
       )}
       {currentView === "about" && (
         <AboutPage onNavigate={navigateToView} />
