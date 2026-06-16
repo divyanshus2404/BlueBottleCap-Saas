@@ -9,10 +9,8 @@ import { TiltCard } from "./TiltCard";
 import { VelocityMarquee } from "./VelocityMarquee";
 import { HeroBackgroundMarquee } from "./HeroBackgroundMarquee";
 import { SplitTextReveal } from "./SplitTextReveal";
-import NeuralBrainIntro from "./intro/NeuralBrainIntro";
 import { AuroraBackground } from "./AuroraBackground";
 import { ShaderBackground } from "./ShaderBackground";
-import useIntroAnimation from "../hooks/useIntroAnimation";
 
 if (typeof window !== "undefined") {
   (window as any).globalScrollProxy = { velocity: 0 };
@@ -25,28 +23,28 @@ interface LandingPageProps {
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
-  useIntroAnimation();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
-      tl.fromTo(".hero-badge", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, delay: 0 })
-        .fromTo(".hero-title .word", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, stagger: 0.05 }, "-=0.4")
-        .fromTo(".hero-desc", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, "-=0.6")
-        .fromTo(".hero-dashboard", { 
-          y: 120, 
-          rotationX: 25, 
-          scale: 0.9,
-          opacity: 0 
-        }, {
+      // Hero animations removed for instant load
+      
+      // Feature cards stagger animation
+      gsap.fromTo(
+        ".feature-card",
+        { y: 50, opacity: 0 },
+        {
           y: 0,
-          rotationX: 0,
-          scale: 1,
-          opacity: 1, 
-          duration: 1.5, 
-          ease: "expo.out" 
-        }, "-=0.8");
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".features-grid",
+            start: "top 80%",
+          },
+        }
+      );
 
       gsap.to(".hero-dashboard", {
         y: -150,
@@ -189,8 +187,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           })
         }}
       />
-      <div id="intro-overlay" className="fixed inset-0 z-50 bg-bg-primary" />
-      <NeuralBrainIntro />
       
       <ShaderBackground />
       
