@@ -1382,16 +1382,8 @@ Do not output markdown code fences, only output raw JSON.`
 
       {/* RIGHT MAIN WORKSPACE */}
       <div className="flex-1 p-4 lg:p-8 overflow-y-auto bg-slate-50 relative lg:h-screen z-10 custom-scrollbar">
-        <AnimatePresence mode="wait">
           {selectedToolId ? (
-            <motion.div 
-              key={selectedToolId} 
-              initial={{ opacity: 0, scale: 0.98, y: 10 }} 
-              animate={{ opacity: 1, scale: 1, y: 0 }} 
-              exit={{ opacity: 0, scale: 0.98, y: -10 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="w-full max-w-5xl mx-auto"
-            >
+            <div key={selectedToolId} className="w-full max-w-5xl mx-auto fade-in">
               <div id="active-workspace-anchor" className="mb-12">
         <div className="rounded-3xl border border-border-subtle/80 bg-white p-6 shadow-xs relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1.5 bg-linear-to-r from-brand-cobalt via-indigo-500 to-brand-sky"></div>
@@ -3058,16 +3050,9 @@ Do not output markdown code fences, only output raw JSON.`
           </div>
         </div>
       </div>
-            </motion.div>
+            </div>
           ) : (
-            <motion.div
-              key="empty-state"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.05 }}
-              transition={{ duration: 0.4 }}
-              className="h-full flex flex-col items-center justify-center min-h-[70vh]"
-            >
+            <div key="empty-state" className="h-full flex flex-col items-center justify-center min-h-[70vh] fade-in">
                <div className="text-center space-y-6 flex flex-col items-center">
                  <div className="relative">
                    <div className="absolute inset-0 bg-brand-cobalt blur-3xl opacity-20 rounded-full animate-pulse"></div>
@@ -3080,9 +3065,8 @@ Do not output markdown code fences, only output raw JSON.`
                    <p className="text-slate-500 max-w-sm mx-auto text-sm leading-relaxed">Choose from our collection of interactive utilities in the sidebar to boost your productivity.</p>
                  </div>
                </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
       </div> {/* Close RIGHT MAIN WORKSPACE */}
 
       {/* UPGRADE PREMIUM PLAN PRO MODAL */}
