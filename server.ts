@@ -344,8 +344,6 @@ ${studentTypedSteps || "[Student did not type any text steps]"}
     }
   });
 
-  });
-
   app.post("/api/auth/send-otp", otpRateLimiter, async (req, res) => {
     try {
       const { email } = req.body;
