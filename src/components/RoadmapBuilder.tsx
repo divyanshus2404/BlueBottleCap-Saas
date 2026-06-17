@@ -32,17 +32,35 @@ export const RoadmapBuilder: React.FC<{ onNavigate: (view: ActiveView) => void }
   const [nodesRevealed, setNodesRevealed] = useState(0);
   const [requestedGroups, setRequestedGroups] = useState<Record<string, boolean>>({});
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!prompt.trim()) return;
     setIsGenerating(true);
     setActiveRoadmap(null);
     setNodesRevealed(0);
 
-    // Simulate AI generation delay
-    setTimeout(() => {
-      setIsGenerating(false);
+    try {
+      const res = await fetch("/api/gemini/generate-roadmap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
+      });
+      if (!res.ok) throw new Error("Failed to generate roadmap");
+      const data = await res.json();
+      
+      setActiveRoadmap({
+        id: `rm-${Date.now()}`,
+        title: `Path: ${prompt}`,
+        prompt,
+        nodes: data.nodes || [],
+        coincidingGroups: data.coincidingGroups || []
+      });
+    } catch (err) {
+      console.error(err);
+      // Fallback if API fails
       setActiveRoadmap({ ...mockRoadmaps.default, title: `Path: ${prompt}`, prompt });
-    }, 2500);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   // Node reveal effect
