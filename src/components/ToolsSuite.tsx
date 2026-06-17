@@ -1556,8 +1556,8 @@ Do not output markdown code fences, only output raw JSON.`
                               }}
                               className={`w-full text-left p-3 rounded-xl border transition select-none flex justify-between items-center cursor-pointer ${
                                 isActive 
-                                  ? "bg-indigo-600/5 border-indigo-600 text-white font-bold shadow-xs" 
-                                  : "bg-white border-slate-200 hover:bg-slate-50 text-slate-650"
+                                  ? "bg-indigo-600/5 border-indigo-600 text-indigo-700 font-bold shadow-xs" 
+                                  : "bg-white border-slate-200 hover:bg-slate-50 text-slate-600"
                               }`}
                             >
                               <div className="space-y-0.5 min-w-0">
