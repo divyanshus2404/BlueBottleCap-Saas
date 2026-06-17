@@ -23,6 +23,7 @@ import {
   LogOut,
   Sliders,
   DollarSign,
+  Sparkles,
   ArrowLeft,
   Zap,
   FileText,
@@ -411,10 +412,10 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
           <div className="pt-8 border-t border-slate-100 space-y-4">
             <button
               onClick={() => onUpgradeClick()}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-brand-cobalt hover:bg-brand-navy text-white py-2.5 text-xs font-bold transition cursor-pointer select-none"
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-cobalt to-indigo-500 hover:from-indigo-600 hover:to-indigo-500 shadow-md text-white py-3 text-xs font-black uppercase tracking-wider transition cursor-pointer select-none border border-indigo-400/30 group"
             >
-              <Sliders className="w-3.5 h-3.5" />
-              <span>Configure Pricing</span>
+              <Sparkles className="w-4 h-4 text-indigo-100 group-hover:scale-110 transition-transform" />
+              <span>Unlock Premium</span>
             </button>
             <div className="flex justify-between text-[10px] text-slate-400 font-bold px-1 select-none">
               <span>Settings</span>
