@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ActiveView, UserStats } from "../types";
-import { Zap, Sparkles, BookOpen, Layers, Menu, X, Check, Award, Lock, Timer, Sun, Moon, CreditCard, Info, Map } from "lucide-react";
+import { Zap, Sparkles, BookOpen, Layers, Menu, X, Check, Award, Lock, Timer, Sun, Moon, CreditCard, Info, Map, Home } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Logo } from "./Logo";
 import { MagneticWrapper } from "./MagneticWrapper";
@@ -26,6 +26,7 @@ export const Navigation: React.FC<NavigationProps> = ({
 
 
   const navLinks: { view: ActiveView; label: string; icon: React.ReactNode }[] = [
+    { view: "landing", label: "Home", icon: <Home className="w-4 h-4" /> },
     { view: "dashboard", label: "Dashboard", icon: <Layers className="w-4 h-4" /> },
     { view: "roadmaps", label: "Roadmaps", icon: <Map className="w-4 h-4" /> },
     { view: "about", label: "About", icon: <Info className="w-4 h-4" /> },
