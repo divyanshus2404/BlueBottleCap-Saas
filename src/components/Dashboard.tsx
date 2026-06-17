@@ -343,39 +343,39 @@ export const Dashboard: React.FC = () => {
               </div>
 
               <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
-                <div className="min-w-full">
-                  <div className="bg-surface-solid border-b border-gray-100 px-6 py-3 grid grid-cols-12 gap-4">
-                    <div className="col-span-5 text-xs font-bold text-text-muted uppercase tracking-wider">Action</div>
-                    <div className="col-span-3 text-xs font-bold text-text-muted uppercase tracking-wider">Status</div>
-                    <div className="col-span-2 text-xs font-bold text-text-muted uppercase tracking-wider">Cost</div>
-                    <div className="col-span-2 text-right text-xs font-bold text-text-muted uppercase tracking-wider">Time</div>
-                  </div>
-                  <div className="divide-y divide-gray-50">
-                    {recentActivities.length === 0 ? (
-                      <div className="px-6 py-12 text-center flex flex-col items-center justify-center bg-gradient-to-b from-white to-slate-50">
-                        <div className="relative mb-6">
-                          <div className="absolute inset-0 bg-blue-200 blur-[30px] rounded-full opacity-50 mix-blend-multiply"></div>
-                          <div className="w-20 h-20 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-3xl shadow-xl flex items-center justify-center transform rotate-3 relative z-10 hover:rotate-6 hover:scale-105 transition-all duration-300">
-                            <Sparkles className="w-10 h-10 text-white" />
-                          </div>
-                          <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full border-4 border-white z-20 flex items-center justify-center shadow-sm">
-                            <Zap className="w-4 h-4 text-yellow-900" />
-                          </div>
-                        </div>
-                        <h4 className="text-lg font-black text-slate-900 mb-2">Ready to level up?</h4>
-                        <p className="text-sm text-slate-500 max-w-[280px] mx-auto mb-6 leading-relaxed">
-                          Your study journey begins here. Jump into an AI session and watch the hours saved pile up!
-                        </p>
-                        <button 
-                          onClick={() => onNavigateTo('tools')}
-                          className="px-6 py-3 rounded-xl bg-slate-900 text-white text-sm font-bold shadow-lg hover:bg-indigo-600 hover:shadow-indigo-500/25 transition-all duration-300 flex items-center gap-2 group"
-                        >
-                          Start your first AI Session
-                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </button>
+                {recentActivities.length === 0 ? (
+                  <div className="px-6 py-12 text-center flex flex-col items-center justify-center bg-gradient-to-b from-white to-slate-50">
+                    <div className="relative mb-6">
+                      <div className="absolute inset-0 bg-blue-200 blur-[30px] rounded-full opacity-50 mix-blend-multiply"></div>
+                      <div className="w-20 h-20 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-3xl shadow-xl flex items-center justify-center transform rotate-3 relative z-10 hover:rotate-6 hover:scale-105 transition-all duration-300">
+                        <Sparkles className="w-10 h-10 text-white" />
                       </div>
-                    ) : (
-                      recentActivities.map((act, i) => (
+                      <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full border-4 border-white z-20 flex items-center justify-center shadow-sm">
+                        <Zap className="w-4 h-4 text-yellow-900" />
+                      </div>
+                    </div>
+                    <h4 className="text-lg font-black text-slate-900 mb-2">Ready to level up?</h4>
+                    <p className="text-sm text-slate-500 max-w-[280px] mx-auto mb-6 leading-relaxed">
+                      Your study journey begins here. Jump into an AI session and watch the hours saved pile up!
+                    </p>
+                    <button 
+                      onClick={() => onNavigateTo('tools')}
+                      className="px-6 py-3 rounded-xl bg-slate-900 text-white text-sm font-bold shadow-lg hover:bg-indigo-600 hover:shadow-indigo-500/25 transition-all duration-300 flex items-center gap-2 group"
+                    >
+                      Start your first AI Session
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="min-w-full">
+                    <div className="bg-surface-solid border-b border-gray-100 px-6 py-3 grid grid-cols-12 gap-4">
+                      <div className="col-span-5 text-xs font-bold text-text-muted uppercase tracking-wider">Action</div>
+                      <div className="col-span-3 text-xs font-bold text-text-muted uppercase tracking-wider">Status</div>
+                      <div className="col-span-2 text-xs font-bold text-text-muted uppercase tracking-wider">Cost</div>
+                      <div className="col-span-2 text-right text-xs font-bold text-text-muted uppercase tracking-wider">Time</div>
+                    </div>
+                    <div className="divide-y divide-gray-50">
+                      {recentActivities.map((act, i) => (
                         <motion.div 
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
@@ -395,14 +395,14 @@ export const Dashboard: React.FC = () => {
                           <div className="col-span-2 text-xs font-medium text-slate-600">
                             {act.cost}
                           </div>
-                          <div className="col-span-2 text-right text-xs text-text-secondary">
+                          <div className="col-span-2 text-right text-xs text-text-muted font-medium">
                             {act.date}
                           </div>
                         </motion.div>
-                      ))
-                    )}
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
