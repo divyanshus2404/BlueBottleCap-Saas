@@ -177,7 +177,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
           }
         },
         prefill: {
-          name: currentUser?.displayName || "JEE Aspirant",
+          name: currentUser?.displayName || "Scholar",
           email: currentUser?.email || "student@bluebottlecap.com",
         },
         theme: { color: "#1E293B" },
@@ -364,10 +364,10 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
             {/* Profile widget */}
             <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 flex items-center gap-3">
               <div className="h-9 w-9 rounded-full bg-slate-200 overflow-hidden flex items-center justify-center font-bold text-xs text-brand-cobalt">
-                JA
+                SC
               </div>
               <div className="text-left min-w-0">
-                <strong className="block text-xs font-black truncate text-brand-navy ">JEE Aspirant</strong>
+                <strong className="block text-xs font-black truncate text-brand-navy ">Scholar</strong>
                 <div className="group relative inline-flex items-center gap-1 mt-0.5">
                   <span className="block text-[10px] font-bold text-brand-cobalt">Platform XP: 1,240 pts</span>
                   <div className="cursor-help w-3 h-3 rounded-full border border-brand-cobalt/50 text-brand-cobalt flex items-center justify-center text-[8px] font-bold bg-brand-cobalt/5 hover:bg-brand-cobalt hover:text-white transition-colors">i</div>
@@ -664,7 +664,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-5">
                     <div>
                       <h2 className="font-display text-3xl font-black tracking-tight text-brand-navy ">
-                        Welcome back, JEE Aspirant.
+                        Welcome back, Scholar.
                       </h2>
                       <p className="text-xs text-gray-500 font-semibold mt-1">
                         Your current readiness index is above the 85th percentile.
@@ -1059,7 +1059,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                       onUnlockStudyMaterial();
                       onToast("🎉 Study material unlocked! Enjoy all chapters.", "success");
                     },
-                    prefill: { name: "JEE Aspirant" },
+                    prefill: { name: "Scholar" },
                     theme: { color: "#1e3a5f" },
                   };
                   const rzp = new (window as any).Razorpay(options);
