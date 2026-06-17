@@ -47,6 +47,7 @@ interface ToolsSuiteProps {
   toolCreditsLeft: number;
   onUseToolCredit: () => boolean;
   onUpgradeClick: () => void;
+  onGoBack?: () => void;
 }
 
 import { createZip, getValidPdfBlob, createDocxBlob, createPdfToJpgZip } from "../utils/fileGenerators";
@@ -59,6 +60,7 @@ export const ToolsSuite: React.FC<ToolsSuiteProps> = ({
   toolCreditsLeft,
   onUseToolCredit,
   onUpgradeClick,
+  onGoBack,
 }) => {
   const { subjects: jeePyqData, loading: firebaseLoading, loadChapterQuestions } = useFirebaseJEE();
   const [activeChapterQuestions, setActiveChapterQuestions] = useState<JEEQuestion[]>([]);
@@ -1294,6 +1296,15 @@ Do not output markdown code fences, only output raw JSON.`
       >
         {/* Page Header (moved below active workspace) */}
       <div className="p-5 pb-4 border-b border-slate-200 shrink-0">
+        {onGoBack && (
+          <button 
+            onClick={onGoBack}
+            className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-indigo-600 transition-colors mb-4 group cursor-pointer"
+          >
+            <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Back to Dashboard
+          </button>
+        )}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-1 text-left">
             <h2 className="font-display text-2.5xl font-black text-slate-900 tracking-tight">

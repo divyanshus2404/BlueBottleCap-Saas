@@ -1012,6 +1012,7 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
             return true;
           }}
           onUpgradeClick={() => navigateToView("pricing")}
+          onGoBack={() => navigateToView("dashboard")}
         />
       )}
 
@@ -1024,6 +1025,7 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
           toolCreditsLeft={toolCreditsLeft}
           onUseToolCredit={handleUseToolCredit}
           onUpgradeClick={() => navigateToView("pricing")}
+          onGoBack={() => navigateToView("dashboard")}
         />
       )}
 

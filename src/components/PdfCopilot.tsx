@@ -12,6 +12,7 @@ interface PdfCopilotProps {
   openedPapers: string[];
   onOpenPaper: (paperId: string) => boolean;
   onUpgradeClick: () => void;
+  onGoBack?: () => void;
 }
 
 const MOCK_PAPERS_LIBRARY = [] as any[];
@@ -55,6 +56,7 @@ export const PdfCopilot: React.FC<PdfCopilotProps> = ({
   openedPapers,
   onOpenPaper,
   onUpgradeClick,
+  onGoBack,
 }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedText, setSelectedText] = useState<string>("");
@@ -644,6 +646,16 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
   return (
     <div className="w-full px-4 py-8 sm:px-6 lg:px-8 fade-in min-h-[calc(100vh-73px)]">
       
+      {onGoBack && (
+        <button 
+          onClick={onGoBack}
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-indigo-600 transition-colors mb-4 group cursor-pointer"
+        >
+          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          Back to Dashboard
+        </button>
+      )}
+
       {/* Page header warnings */}
       {errors && (
         <div className="mb-4 flex items-center gap-2 rounded-xl bg-orange-50 p-4 text-xs font-bold text-amber-800 border border-orange-100">
