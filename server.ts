@@ -162,11 +162,11 @@ try {
         contents: systemPrompt,
         config: {
           temperature: 0.7,
+          responseMimeType: "application/json"
         }
       });
 
-      let responseText = response.text || "";
-      responseText = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
+      let responseText = response.text || "{}";
       
       const parsedData = JSON.parse(responseText);
       return res.json(parsedData);
@@ -344,48 +344,6 @@ ${studentTypedSteps || "[Student did not type any text steps]"}
     }
   });
 
-  app.post("/api/gemini/generate-roadmap", geminiRateLimiter, async (req, res) => {
-    try {
-      const { prompt } = req.body;
-      const client = getAIClient();
-
-      const systemInstruction = `You are an expert AI academic mentor and curriculum architect.
-Your goal is to generate an optimal roadmap for a student based on their input.
-Always output a JSON object containing two main keys: 'nodes' (array) and 'coincidingGroups' (array).
-The 'nodes' array must contain 4 to 8 milestones. Each node object must have:
-- id: a unique string like "n-1"
-- title: concise milestone title
-- description: short description
-- status: exactly one of "completed", "current", or "locked" (make the first one completed, second current, rest locked)
-- duration: e.g. "Week 1", "Week 2-3"
-The 'coincidingGroups' array must contain 2 to 4 peer groups. Each group object must have:
-- id: a unique string like "g-1"
-- name: catchy study group name
-- avatar: a single emoji
-- members: random integer between 2 and 30
-- currentNodeId: the id of one of the nodes you generated (e.g., "n-2").`;
-
-      const response = await client.models.generateContent({
-        model: "gemini-3.5-flash",
-        contents: prompt,
-        config: {
-          systemInstruction,
-          responseMimeType: "application/json",
-        },
-      });
-
-      let jsonText = response.text || "{}";
-      // Ensure we parse it cleanly if it has markdown formatting
-      if (jsonText.startsWith("\`\`\`json")) {
-        jsonText = jsonText.replace(/^\`\`\`json/, "").replace(/\`\`\`$/, "");
-      }
-      const data = JSON.parse(jsonText);
-
-      res.json(data);
-    } catch (err: any) {
-      console.error(err);
-      res.status(500).json({ error: err.message || "An error occurred during roadmap generation." });
-    }
   });
 
   app.post("/api/auth/send-otp", otpRateLimiter, async (req, res) => {
