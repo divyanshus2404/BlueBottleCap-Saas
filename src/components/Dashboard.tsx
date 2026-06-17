@@ -13,7 +13,6 @@ gsap.registerPlugin(useGSAP);
 
 import { useGlobalState } from "../context/GlobalStateContext";
 import { useRouter } from "next/navigation";
-import { AdminSeeder } from "./AdminSeeder";
 
 export const Dashboard: React.FC = () => {
   const {
@@ -158,8 +157,6 @@ export const Dashboard: React.FC = () => {
   return (
     <div ref={containerRef} className="mx-auto max-w-[1600px] w-full px-4 py-12 sm:px-8 lg:px-12 min-h-screen pb-32">
       
-      <AdminSeeder />
-
       {/* Top Profile Banner */}
       <div 
         className="welcome-bg relative overflow-hidden mb-8 flex flex-col md:flex-row items-center justify-between bg-white rounded-3xl p-6 border border-gray-100 shadow-xs"
