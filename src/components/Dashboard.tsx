@@ -157,6 +157,17 @@ export const Dashboard: React.FC = () => {
   const chartPointsStr = chartPointsArray.map((pt) => `${pt.x},${pt.y}`).join(" ");
   const chartLabels = chartData.map((cd) => cd.dayLabel);
 
+  const hour = new Date().getHours();
+  let timeGreeting = "Welcome";
+  if (hour < 12) timeGreeting = "Good morning";
+  else if (hour < 18) timeGreeting = "Good afternoon";
+  else if (hour < 22) timeGreeting = "Good evening";
+  else timeGreeting = "Late night session";
+  const greetingPrefix = loginCount <= 1 ? timeGreeting : `${timeGreeting} back`;
+
+  const scholarLevel = Math.floor(userStats.hoursSaved / 5) + 1;
+  const levelProgress = ((userStats.hoursSaved % 5) / 5) * 100;
+
   return (
     <div ref={containerRef} className="mx-auto max-w-[1600px] w-full px-4 py-12 sm:px-8 lg:px-12 min-h-screen pb-32">
       
@@ -182,7 +193,7 @@ export const Dashboard: React.FC = () => {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="welcome-text text-2xl font-black text-slate-900 font-display">
-                {loginCount <= 1 ? "Welcome," : "Welcome back,"} {userName || userProfile?.displayName || "Scholar"}
+                {greetingPrefix}, {userName || userProfile?.displayName || "Scholar"}!
               </h1>
               <div className="welcome-text flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-100">
                 <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
@@ -195,18 +206,19 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
         
-        <div className="flex gap-4 mt-4 md:mt-0">
-          <div className="text-center px-6 border-r border-gray-100">
+        <div className="flex gap-4 mt-4 md:mt-0 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+          <div className="text-center px-4 border-r border-gray-200">
             <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Active Streak</p>
             <p className="text-xl font-black text-orange-500 mt-1 flex items-center justify-center gap-1">
               <Flame className="w-4 h-4 fill-orange-500" /> {userStats.streakDays}
             </p>
           </div>
-          <div className="welcome-text text-center px-4">
-            <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Study Plan</p>
-            <p className="text-lg font-black text-accent mt-1">
-              {userStats.activePlan}
-            </p>
+          <div className="text-center px-4">
+            <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Scholar Level {scholarLevel}</p>
+            <div className="mt-2 w-24 h-2.5 bg-slate-200 rounded-full overflow-hidden relative">
+              <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" style={{ width: `${levelProgress}%` }}></div>
+            </div>
+            <p className="text-[9px] font-bold text-slate-400 mt-1">{5 - (userStats.hoursSaved % 5)} hrs to level up</p>
           </div>
         </div>
       </div>
