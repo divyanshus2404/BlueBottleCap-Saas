@@ -369,11 +369,11 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
               <div className="text-left min-w-0">
                 <strong className="block text-xs font-black truncate text-brand-navy ">JEE Aspirant</strong>
                 <div className="group relative inline-flex items-center gap-1 mt-0.5">
-                  <span className="block text-[10px] font-bold text-brand-cobalt">Rank: #1240</span>
+                  <span className="block text-[10px] font-bold text-brand-cobalt">Platform XP: 1,240 pts</span>
                   <div className="cursor-help w-3 h-3 rounded-full border border-brand-cobalt/50 text-brand-cobalt flex items-center justify-center text-[8px] font-bold bg-brand-cobalt/5 hover:bg-brand-cobalt hover:text-white transition-colors">i</div>
                   <div className="absolute left-0 top-full mt-2 w-48 p-2.5 bg-slate-800 text-slate-200 text-[10px] font-medium leading-relaxed rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 pointer-events-none">
-                    <strong className="text-white block mb-1">Disclaimer</strong>
-                    These ranks are not related to any real exam. They are simply a fun way to encourage consistency and put students to work!
+                    <strong className="text-white block mb-1">Platform XP</strong>
+                    Experience points (XP) are earned by completing practice tests and maintaining streaks. They track your platform engagement, not real-world exam percentiles.
                   </div>
                 </div>
               </div>
