@@ -276,8 +276,9 @@ export const Dashboard: React.FC = () => {
         >
           {/* Usage Stats Linear Bars */}
           <div className="grid gap-6 md:grid-cols-3">
-            <div className="stat-card rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-              <div className="flex justify-between items-center mb-4">
+            <div className="stat-card rounded-2xl border border-yellow-200 bg-[#fef08a] p-6 shadow-[0_4px_20px_rgba(250,204,21,0.15)] relative overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-yellow-400 rounded-full mix-blend-multiply opacity-30 blur-[30px]"></div>
+              <div className="flex justify-between items-center mb-4 relative z-10">
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg"><Cpu className="w-4 h-4" /></div>
                   <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">AI Co-Pilot Credit</h3>
@@ -290,8 +291,9 @@ export const Dashboard: React.FC = () => {
               <p className="text-[10px] text-text-secondary font-medium text-right">{aiPercent}% Used</p>
             </div>
 
-            <div className="stat-card rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-              <div className="flex justify-between items-center mb-4">
+            <div className="stat-card rounded-2xl border border-emerald-200 bg-[#dcfce7] p-6 shadow-[0_4px_20px_rgba(52,211,153,0.15)] relative overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-400 rounded-full mix-blend-multiply opacity-30 blur-[30px]"></div>
+              <div className="flex justify-between items-center mb-4 relative z-10">
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-sky-50 text-sky-600 rounded-lg"><FileText className="w-4 h-4" /></div>
                   <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">PDF Spots</h3>
@@ -304,8 +306,9 @@ export const Dashboard: React.FC = () => {
               <p className="text-[10px] text-text-secondary font-medium text-right">{pdfPercent}% Used</p>
             </div>
 
-            <div className="stat-card rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-              <div className="flex justify-between items-center mb-4">
+            <div className="stat-card rounded-2xl border border-purple-200 bg-[#f3e8ff] p-6 shadow-[0_4px_20px_rgba(168,85,247,0.15)] relative overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-400 rounded-full mix-blend-multiply opacity-30 blur-[30px]"></div>
+              <div className="flex justify-between items-center mb-4 relative z-10">
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg"><HardDrive className="w-4 h-4" /></div>
                   <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">Cloud Storage</h3>
@@ -388,7 +391,10 @@ export const Dashboard: React.FC = () => {
                 </h2>
               </div>
               <div className="grid gap-3">
-                {quickTools.map((tool, i) => (
+                {quickTools.map((tool, i) => {
+                  const bgColors = ["bg-[#fce7f3] border-pink-200", "bg-[#e0e7ff] border-indigo-200", "bg-[#ffedd5] border-orange-200", "bg-[#ccfbf1] border-teal-200"];
+                  const iconColors = ["bg-white text-pink-500", "bg-white text-indigo-500", "bg-white text-orange-500", "bg-white text-teal-500"];
+                  return (
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     key={i}
@@ -398,18 +404,18 @@ export const Dashboard: React.FC = () => {
                       }
                       onNavigateTo(tool.view);
                     }}
-                    className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md hover:border-accent/30 transition-all cursor-pointer"
+                    className={`flex items-center gap-4 rounded-2xl border ${bgColors[i % bgColors.length]} p-4 shadow-sm hover:shadow-md transition-all cursor-pointer`}
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-surface-solid border border-gray-100 text-lg">
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconColors[i % iconColors.length]} text-lg shadow-sm`}>
                       {tool.icon}
                     </div>
                     <div>
                       <h3 className="text-sm font-bold text-slate-900">{tool.name}</h3>
-                      <p className="text-[10px] text-text-muted">{tool.desc}</p>
+                      <p className="text-[10px] text-slate-600 font-medium">{tool.desc}</p>
                     </div>
-                    <ArrowRight className="ml-auto w-4 h-4 text-text-primary" />
+                    <ArrowRight className="ml-auto w-4 h-4 text-slate-700" />
                   </motion.div>
-                ))}
+                )})}
               </div>
             </div>
           </div>
@@ -509,7 +515,8 @@ export const Dashboard: React.FC = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
-              <div className="rounded-2xl border border-gray-100 bg-surface-solid p-6 flex flex-col justify-between">
+              <div className="rounded-2xl border border-indigo-200 bg-[#e0e7ff] shadow-[0_4px_20px_rgba(99,102,241,0.15)] p-6 flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-300 rounded-full mix-blend-multiply opacity-30 blur-[30px]"></div>
                 <div>
                   <h4 className="text-base font-bold text-slate-900 mb-1">Basic Progress Export</h4>
                   <p className="text-xs text-text-muted leading-relaxed mb-4">
@@ -525,8 +532,9 @@ export const Dashboard: React.FC = () => {
               </div>
 
               <div className={`rounded-2xl border p-6 flex flex-col justify-between relative overflow-hidden ${
-                userStats.streakDays >= 30 ? "border-accent bg-accent/5" : "border-gray-100 bg-surface-solid"
+                userStats.streakDays >= 30 ? "border-pink-300 bg-[#fce7f3] shadow-[0_4px_20px_rgba(236,72,153,0.15)]" : "border-pink-200 bg-[#fdf2f8] opacity-90"
               }`}>
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-pink-300 rounded-full mix-blend-multiply opacity-30 blur-[30px]"></div>
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-1">
                     <h4 className={`text-base font-bold ${userStats.streakDays >= 30 ? "text-accent" : "text-slate-900"}`}>
