@@ -470,7 +470,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               onClick={() => onNavigate("tools")}
               className="rounded-2xl bg-white text-indigo-700 font-display hover:bg-slate-50 px-14 py-7 font-black text-2xl cursor-pointer shadow-[0_0_50px_-10px_rgba(255,255,255,0.5)] transition-all hover:scale-105 hover:shadow-[0_0_80px_-15px_rgba(255,255,255,0.7)] w-full sm:w-auto"
             >
-              Start for Free
+              Explore AI Tools
             </button>
             <button 
               onClick={() => onNavigate("dashboard")}
