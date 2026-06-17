@@ -31,7 +31,8 @@ import { Cursor } from "./components/Cursor";
 
 import { AboutPage } from "./components/AboutPage";
 import { GlobalBackground } from "./components/GlobalBackground";
-
+import { TermsAndConditions } from "./components/TermsAndConditions";
+import { Footer } from "./components/Footer";
 let toastIdCounter = 0;
 
 
@@ -1075,6 +1076,14 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
 
       {currentView === "create-profile" && (
         <CreateProfilePage setCurrentView={navigateToView} />
+      )}
+
+      {currentView === "terms" && (
+        <TermsAndConditions onBack={() => navigateToView("landing")} />
+      )}
+
+      {["landing", "pricing", "about", "roadmaps", "terms"].includes(currentView) && (
+        <Footer setActiveView={navigateToView} />
       )}
 
       </ErrorBoundary>

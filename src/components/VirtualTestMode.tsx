@@ -412,10 +412,11 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
           <div className="pt-8 border-t border-slate-100 space-y-4">
             <button
               onClick={() => onUpgradeClick()}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-cobalt to-indigo-500 hover:from-indigo-600 hover:to-indigo-500 shadow-md text-white py-3 text-xs font-black uppercase tracking-wider transition cursor-pointer select-none border border-indigo-400/30 group"
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-cobalt to-indigo-500 hover:from-indigo-600 hover:to-indigo-500 shadow-[0_0_20px_rgba(37,99,235,0.6)] animate-pulse hover:animate-none text-white py-3 text-xs font-black uppercase tracking-wider transition cursor-pointer select-none border border-indigo-400/50 group relative overflow-hidden"
             >
-              <Sparkles className="w-4 h-4 text-indigo-100 group-hover:scale-110 transition-transform" />
-              <span>Unlock Premium</span>
+              <div className="absolute inset-0 bg-white/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <Sparkles className="w-4 h-4 text-indigo-100 group-hover:scale-110 transition-transform relative z-10" />
+              <span className="relative z-10">Unlock Premium</span>
             </button>
             <div className="flex justify-between text-[10px] text-slate-400 font-bold px-1 select-none">
               <span>Settings</span>
