@@ -1268,12 +1268,12 @@ Do not output markdown code fences, only output raw JSON.`
       
       {/* LEFT SIDEBAR: Tools Directory */}
       <motion.div 
-        className="w-full lg:w-[350px] shrink-0 border-r border-border-subtle bg-white flex flex-col lg:h-screen lg:sticky lg:top-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20"
+        className="w-full lg:w-[350px] shrink-0 border-r border-slate-200 bg-white flex flex-col lg:h-screen lg:sticky lg:top-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20"
         initial={{ x: -20, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
       >
         {/* Page Header (moved below active workspace) */}
-      <div className="p-5 pb-4 border-b border-border-subtle shrink-0">
+      <div className="p-5 pb-4 border-b border-slate-200 shrink-0">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-1 text-left">
             <h2 className="font-display text-2.5xl font-black text-slate-900 tracking-tight">
@@ -1291,7 +1291,7 @@ Do not output markdown code fences, only output raw JSON.`
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               placeholder="Search tools..."
-              className="w-full rounded-xl border border-border-subtle bg-white pl-4 pr-10 py-2.5 text-xs font-semibold focus:border-accent focus:outline-hidden focus:ring-1 focus:ring-brand-cobalt text-slate-900 shadow-3xs"
+              className="w-full rounded-xl border border-slate-200 bg-white pl-4 pr-10 py-2.5 text-xs font-semibold focus:border-indigo-600 focus:outline-hidden focus:ring-1 focus:ring-brand-cobalt text-slate-900 shadow-3xs"
             />
             <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
           </div>
@@ -1306,7 +1306,7 @@ Do not output markdown code fences, only output raw JSON.`
               className={`rounded-xl px-4 py-2 text-xs font-bold transition-all duration-150 cursor-pointer ${
                 activeTab === t.key
                   ? "bg-brand-navy text-white shadow-3xs"
-                  : "bg-white hover:bg-slate-100 border border-border-subtle text-slate-600"
+                  : "bg-white hover:bg-slate-100 border border-slate-200 text-slate-600"
               }`}
             >
               {t.label}
@@ -1332,8 +1332,8 @@ Do not output markdown code fences, only output raw JSON.`
               }}
               className={`group flex flex-col justify-between rounded-2xl border p-5 bg-white transition-all cursor-pointer relative overflow-hidden ${
                 isCurrentChoice 
-                  ? "border-accent ring-1 ring-brand-cobalt shadow-xs" 
-                  : "border-border-subtle hover:border-slate-300 hover:shadow-xs"
+                  ? "border-indigo-600 ring-1 ring-brand-cobalt shadow-xs" 
+                  : "border-slate-200 hover:border-slate-300 hover:shadow-xs"
               }`}
             >
               {/* SPOTLIGHT HOVER EFFECT */}
@@ -1346,7 +1346,7 @@ Do not output markdown code fences, only output raw JSON.`
               
               <div className="relative z-10">
                 <div className="flex justify-between items-start">
-                  <h3 className="font-display font-extrabold text-sm tracking-tight text-slate-900 group-hover:text-accent transition-colors duration-150">
+                  <h3 className="font-display font-extrabold text-sm tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors duration-150">
                     {tool.name}
                   </h3>
 
@@ -1359,13 +1359,13 @@ Do not output markdown code fences, only output raw JSON.`
                     </div>
                   )}
                 </div>
-                <p className="mt-2 text-xs text-text-muted font-medium leading-relaxed max-w-xs">
+                <p className="mt-2 text-xs text-slate-400 font-medium leading-relaxed max-w-xs">
                   {tool.desc}
                 </p>
               </div>
 
               {/* Bottom arrow panel styling */}
-              <div className="mt-6 flex items-center justify-between text-accent relative z-10">
+              <div className="mt-6 flex items-center justify-between text-indigo-600 relative z-10">
                 <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                 <span className="text-[10px] uppercase tracking-wider font-mono font-bold text-slate-400">
                   {tool.category === "exam" && "Exam Prep"}
@@ -1385,13 +1385,13 @@ Do not output markdown code fences, only output raw JSON.`
           {selectedToolId ? (
             <div key={selectedToolId} className="w-full max-w-5xl mx-auto fade-in">
               <div id="active-workspace-anchor" className="mb-12">
-        <div className="rounded-3xl border border-border-subtle/80 bg-white p-6 shadow-xs relative overflow-hidden">
+        <div className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-xs relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1.5 bg-linear-to-r from-brand-cobalt via-indigo-500 to-brand-sky"></div>
           
-          <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-border-subtle pb-4 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-200 pb-4 mb-6">
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[9px] font-bold text-accent uppercase font-mono tracking-widest">
+                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[9px] font-bold text-indigo-600 uppercase font-mono tracking-widest">
                   Live Interactive Utility
                 </span>
                 <span className="text-xs text-gray-400">•</span>
@@ -1452,13 +1452,13 @@ Do not output markdown code fences, only output raw JSON.`
               return (
                 <div className="space-y-6 fade-in text-white">
                   {/* Topic and Chapter Controls */}
-                  <div className="bg-surface-solid border border-border-subtle/80 rounded-2xl p-4 grid gap-4 md:grid-cols-3 items-end">
+                  <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 grid gap-4 md:grid-cols-3 items-end">
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-text-muted mb-1.5">Select Subject</label>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Select Subject</label>
                       <select
                         value={pyqSubject}
                         onChange={(e) => setPyqSubject(e.target.value as any)}
-                        className="w-full rounded-xl border border-border-subtle p-2.5 text-xs font-semibold focus:border-accent text-white bg-white"
+                        className="w-full rounded-xl border border-slate-200 p-2.5 text-xs font-semibold focus:border-indigo-600 text-white bg-white"
                       >
                         <option value="Physics">Physics</option>
                         <option value="Chemistry">Chemistry</option>
@@ -1467,11 +1467,11 @@ Do not output markdown code fences, only output raw JSON.`
                     </div>
 
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-text-muted mb-1.5">Select Chapter</label>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Select Chapter</label>
                       <select
                         value={pyqChapterName}
                         onChange={(e) => setPyqChapterName(e.target.value)}
-                        className="w-full rounded-xl border border-border-subtle p-2.5 text-xs font-semibold focus:border-accent text-white bg-white"
+                        className="w-full rounded-xl border border-slate-200 p-2.5 text-xs font-semibold focus:border-indigo-600 text-white bg-white"
                       >
                         {chaptersList.map((ch, idx) => (
                           <option key={idx} value={ch.name}>{ch.name}</option>
@@ -1480,15 +1480,15 @@ Do not output markdown code fences, only output raw JSON.`
                     </div>
 
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-text-muted mb-1.5">Workspace Mode</label>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Workspace Mode</label>
                       <div className="flex bg-slate-200 p-1 rounded-xl gap-1">
                         <button
                           type="button"
                           onClick={() => setPyqMode("practice")}
                           className={`flex-1 text-center py-1.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
                             pyqMode === "practice" 
-                              ? "bg-accent text-white shadow-sm" 
-                              : "text-text-muted hover:bg-surface-glass"
+                              ? "bg-indigo-600 text-white shadow-sm" 
+                              : "text-slate-400 hover:bg-white/70"
                           }`}
                         >
                           Practice Mode
@@ -1503,8 +1503,8 @@ Do not output markdown code fences, only output raw JSON.`
                           }}
                           className={`flex-1 text-center py-1.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
                             pyqMode === "test" 
-                              ? "bg-accent text-white shadow-sm" 
-                              : "text-text-muted hover:bg-surface-glass"
+                              ? "bg-indigo-600 text-white shadow-sm" 
+                              : "text-slate-400 hover:bg-white/70"
                           }`}
                         >
                           Test Mode (OMR)
@@ -1518,7 +1518,7 @@ Do not output markdown code fences, only output raw JSON.`
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                       {/* Left Sidebar Navigator */}
                       <div className="lg:col-span-3 space-y-2 max-h-[380px] overflow-y-auto pr-1">
-                        <h4 className="text-[10px] font-bold uppercase tracking-wider text-text-secondary mb-2">Questions Navigator</h4>
+                        <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Questions Navigator</h4>
                         {questionsList.map((q, idx) => {
                           const isActive = idx === practiceActiveQuestionIdx;
                           const isImp = importantFlags.includes(q.id);
@@ -1536,12 +1536,12 @@ Do not output markdown code fences, only output raw JSON.`
                               }}
                               className={`w-full text-left p-3 rounded-xl border transition select-none flex justify-between items-center cursor-pointer ${
                                 isActive 
-                                  ? "bg-accent/5 border-accent text-white font-bold shadow-xs" 
-                                  : "bg-white border-border-subtle hover:bg-surface-solid text-slate-650"
+                                  ? "bg-indigo-600/5 border-indigo-600 text-white font-bold shadow-xs" 
+                                  : "bg-white border-slate-200 hover:bg-slate-50 text-slate-650"
                               }`}
                             >
                               <div className="space-y-0.5 min-w-0">
-                                <span className="text-[9px] font-bold text-text-secondary font-mono">{q.year}</span>
+                                <span className="text-[9px] font-bold text-slate-500 font-mono">{q.year}</span>
                                 <div className="text-xs truncate font-semibold">Q{idx + 1}: {q.question.substring(0, 45)}...</div>
                               </div>
                               <div className="flex gap-1.5 shrink-0 ml-2">
@@ -1557,14 +1557,14 @@ Do not output markdown code fences, only output raw JSON.`
                       {/* Right Center Workspace Card */}
                       <div className="lg:col-span-9">
                         {activeQuestion ? (
-                          <div className="rounded-2xl border border-border-subtle/80 p-5 bg-white shadow-xs space-y-4">
+                          <div className="rounded-2xl border border-slate-200/80 p-5 bg-white shadow-xs space-y-4">
                             {/* Card Header & Flags */}
-                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-border-subtle pb-3 gap-3">
+                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-slate-200 pb-3 gap-3">
                               <div className="flex items-center gap-2">
-                                <span className="rounded-md bg-surface-glass text-white px-2 py-0.5 text-[9px] font-bold font-mono">
+                                <span className="rounded-md bg-white/70 text-white px-2 py-0.5 text-[9px] font-bold font-mono">
                                   {activeQuestion.year}
                                 </span>
-                                <span className="text-[10px] text-text-secondary font-bold uppercase tracking-wider font-mono">
+                                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">
                                   Q{practiceActiveQuestionIdx + 1} of {questionsList.length}
                                 </span>
                               </div>
@@ -1577,7 +1577,7 @@ Do not output markdown code fences, only output raw JSON.`
                                   className={`rounded-lg px-2.5 py-1 text-[10px] font-bold transition flex items-center gap-1 cursor-pointer border ${
                                     importantFlags.includes(activeQuestion.id)
                                       ? "bg-amber-50 border-amber-300 text-amber-700 shadow-3xs"
-                                      : "bg-surface-solid border-border-subtle text-text-muted hover:bg-surface-glass"
+                                      : "bg-slate-50 border-slate-200 text-slate-400 hover:bg-white/70"
                                   }`}
                                 >
                                   <Star className={`w-3 h-3 ${importantFlags.includes(activeQuestion.id) ? "fill-amber-500 text-amber-500" : ""}`} />
@@ -1590,7 +1590,7 @@ Do not output markdown code fences, only output raw JSON.`
                                   className={`rounded-lg px-2.5 py-1 text-[10px] font-bold transition flex items-center gap-1 cursor-pointer border ${
                                     doneFlags.includes(activeQuestion.id)
                                       ? "bg-emerald-50 border-emerald-300 text-emerald-700 shadow-3xs"
-                                      : "bg-surface-solid border-border-subtle text-text-muted hover:bg-surface-glass"
+                                      : "bg-slate-50 border-slate-200 text-slate-400 hover:bg-white/70"
                                   }`}
                                 >
                                   <CheckCircle2 className="w-3 h-3" />
@@ -1603,7 +1603,7 @@ Do not output markdown code fences, only output raw JSON.`
                                   className={`rounded-lg px-2.5 py-1 text-[10px] font-bold transition flex items-center gap-1 cursor-pointer border ${
                                     revisionFlags.includes(activeQuestion.id)
                                       ? "bg-orange-50 border-orange-300 text-orange-700 shadow-3xs"
-                                      : "bg-surface-solid border-border-subtle text-text-muted hover:bg-surface-glass"
+                                      : "bg-slate-50 border-slate-200 text-slate-400 hover:bg-white/70"
                                   }`}
                                 >
                                   <RefreshCw className="w-3 h-3" />
@@ -1614,12 +1614,12 @@ Do not output markdown code fences, only output raw JSON.`
 
                             {/* Question text */}
                             <div className="space-y-4">
-                              <p className="text-sm font-bold text-slate-900 leading-relaxed font-sans bg-surface-solid p-4 rounded-xl border border-border-subtle">
+                              <p className="text-sm font-bold text-slate-900 leading-relaxed font-sans bg-slate-50 p-4 rounded-xl border border-slate-200">
                                 {activeQuestion.question}
                               </p>
 
                               {/* Tabs Switcher within Question Practice Card */}
-                              <div className="flex border-b border-border-subtle pb-0 gap-2 overflow-x-auto select-none hide-scrollbar">
+                              <div className="flex border-b border-slate-200 pb-0 gap-2 overflow-x-auto select-none hide-scrollbar">
                                 {[
                                   { key: "options", label: "Multiple Choice" },
                                   { key: "teacher", label: "AI Teacher (Mistake Analyzer)" },
@@ -1632,8 +1632,8 @@ Do not output markdown code fences, only output raw JSON.`
                                     onClick={() => setActivePracticeTab(tab.key as any)}
                                     className={`px-3 py-2 text-xs font-bold transition-all relative border-b-2 cursor-pointer whitespace-nowrap ${
                                       activePracticeTab === tab.key
-                                        ? "border-accent text-accent"
-                                        : "border-transparent text-text-secondary hover:text-slate-700"
+                                        ? "border-indigo-600 text-indigo-600"
+                                        : "border-transparent text-slate-500 hover:text-slate-700"
                                     }`}
                                   >
                                     {tab.label}
@@ -1658,8 +1658,8 @@ Do not output markdown code fences, only output raw JSON.`
                                             }}
                                             className={`rounded-xl border p-4 text-left text-xs font-semibold transition cursor-pointer select-none ${
                                               isSelected 
-                                                ? "border-accent bg-accent/5 text-accent" 
-                                                : "border-border-subtle bg-white hover:bg-surface-solid text-slate-700"
+                                                ? "border-indigo-600 bg-indigo-600/5 text-indigo-600" 
+                                                : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
                                             }`}
                                           >
                                             <span className="font-bold mr-1.5 uppercase font-mono">{optLetter}.</span>
@@ -1668,11 +1668,11 @@ Do not output markdown code fences, only output raw JSON.`
                                         );
                                       })}
                                     </div>
-                                    <div className="flex justify-between items-center text-xs text-text-secondary pt-2 font-mono">
+                                    <div className="flex justify-between items-center text-xs text-slate-500 pt-2 font-mono">
                                       <span>Select an option to record your practice answer.</span>
                                       <button 
                                         onClick={() => setActivePracticeTab("solution")} 
-                                        className="text-accent hover:underline font-bold"
+                                        className="text-indigo-600 hover:underline font-bold"
                                       >
                                         Check correct answer &rarr;
                                       </button>
@@ -1685,25 +1685,25 @@ Do not output markdown code fences, only output raw JSON.`
                                   <div className="space-y-4 fade-in">
                                     <div className="space-y-1">
                                       <h5 className="text-xs font-bold text-slate-700">JEE Socratic AI Mentor</h5>
-                                      <p className="text-[10px] text-text-secondary">Upload your notebook rough-work or write your solving steps. The AI will audit your steps and guide you on exactly where you made a mistake without giving away the final answer.</p>
+                                      <p className="text-[10px] text-slate-500">Upload your notebook rough-work or write your solving steps. The AI will audit your steps and guide you on exactly where you made a mistake without giving away the final answer.</p>
                                     </div>
 
                                     <div className="grid md:grid-cols-2 gap-4">
                                       {/* Written text steps */}
                                       <div className="space-y-2">
-                                        <label className="block text-[10px] font-bold uppercase tracking-wider text-text-muted">Option 1: Type your steps</label>
+                                        <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Option 1: Type your steps</label>
                                         <textarea
                                           value={typedSteps}
                                           onChange={(e) => setTypedSteps(e.target.value)}
                                           placeholder="e.g. Total Charge Q1 = σ * 4πR^2. Q2 = -σ * 16πR^2. I summed the potentials V = V1 + V2 + V3 but inside shell 3..."
-                                          className="w-full h-32 rounded-xl border border-border-subtle p-3 text-xs font-medium focus:border-accent text-white bg-white resize-none"
+                                          className="w-full h-32 rounded-xl border border-slate-200 p-3 text-xs font-medium focus:border-indigo-600 text-white bg-white resize-none"
                                         />
                                       </div>
 
                                       {/* Handwritten solution photo upload */}
                                       <div className="space-y-2">
-                                        <label className="block text-[10px] font-bold uppercase tracking-wider text-text-muted">Option 2: Upload rough-work photo</label>
-                                        <div className="relative border-2 border-dashed border-border-subtle rounded-xl h-32 flex flex-col justify-center items-center bg-surface-solid hover:bg-surface-solid transition cursor-pointer overflow-hidden p-4 text-center">
+                                        <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Option 2: Upload rough-work photo</label>
+                                        <div className="relative border-2 border-dashed border-slate-200 rounded-xl h-32 flex flex-col justify-center items-center bg-slate-50 hover:bg-slate-50 transition cursor-pointer overflow-hidden p-4 text-center">
                                           <input 
                                             type="file"
                                             accept="image/*"
@@ -1712,14 +1712,14 @@ Do not output markdown code fences, only output raw JSON.`
                                           />
                                           {uploadedSolutionImage ? (
                                             <div className="space-y-1.5 w-full h-full flex flex-col justify-center items-center">
-                                              <img src={uploadedSolutionImage} alt="handwritten roughwork" className="max-h-16 w-auto object-contain rounded border border-border-subtle shadow-3xs" />
+                                              <img src={uploadedSolutionImage} alt="handwritten roughwork" className="max-h-16 w-auto object-contain rounded border border-slate-200 shadow-3xs" />
                                               <span className="text-[9px] font-bold text-emerald-600 truncate block max-w-full">Photo Loaded Successfully! Click to replace</span>
                                             </div>
                                           ) : (
                                             <>
-                                              <UploadCloud className="w-6 h-6 text-text-secondary" />
+                                              <UploadCloud className="w-6 h-6 text-slate-500" />
                                               <span className="text-[10px] font-bold text-slate-700 block mt-1">Upload steps snapshot</span>
-                                              <span className="text-[8px] text-text-secondary mt-0.5">Accepts notebook photos (PNG/JPG)</span>
+                                              <span className="text-[8px] text-slate-500 mt-0.5">Accepts notebook photos (PNG/JPG)</span>
                                             </>
                                           )}
                                         </div>
@@ -1741,7 +1741,7 @@ Do not output markdown code fences, only output raw JSON.`
                                         type="button"
                                         disabled={aiTeacherFeedbackLoading || (!typedSteps.trim() && !uploadedSolutionImage)}
                                         onClick={() => handleAnalyzeSolution(activeQuestion)}
-                                        className="rounded-xl bg-brand-navy hover:bg-accent disabled:bg-slate-200 disabled:text-text-secondary disabled:cursor-not-allowed text-white px-4 py-2.5 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer leading-none"
+                                        className="rounded-xl bg-brand-navy hover:bg-indigo-600 disabled:bg-slate-200 disabled:text-slate-500 disabled:cursor-not-allowed text-white px-4 py-2.5 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer leading-none"
                                       >
                                         {aiTeacherFeedbackLoading ? (
                                           <>
@@ -1760,7 +1760,7 @@ Do not output markdown code fences, only output raw JSON.`
                                     {/* Feedback Response */}
                                     {aiTeacherFeedback && (
                                       <div className="rounded-xl border border-indigo-100 bg-indigo-55/20 p-4 text-xs text-slate-750 font-serif leading-relaxed whitespace-pre-line relative shadow-inner">
-                                        <div className="absolute top-3 right-3 text-[10px] font-mono font-bold text-accent uppercase tracking-widest bg-accent/5 px-2 py-0.5 rounded leading-none font-sans">AI Teacher Feedback</div>
+                                        <div className="absolute top-3 right-3 text-[10px] font-mono font-bold text-indigo-600 uppercase tracking-widest bg-indigo-600/5 px-2 py-0.5 rounded leading-none font-sans">AI Teacher Feedback</div>
                                         {aiTeacherFeedback}
                                       </div>
                                     )}
@@ -1774,21 +1774,21 @@ Do not output markdown code fences, only output raw JSON.`
                                     <div className="space-y-4 fade-in">
                                       <div className="space-y-1">
                                         <h5 className="text-xs font-bold text-slate-700">Socratic Progressive Hints</h5>
-                                        <p className="text-[10px] text-text-secondary">Unlock hints one-by-one to help you think and derive the answer yourself instead of looking at the solution immediately.</p>
+                                        <p className="text-[10px] text-slate-500">Unlock hints one-by-one to help you think and derive the answer yourself instead of looking at the solution immediately.</p>
                                       </div>
 
                                       <div className="space-y-3.5 pt-2">
                                         {/* Hint 1 */}
                                         {revealedCount >= 1 ? (
-                                          <div className="rounded-xl bg-surface-glass p-3 text-xs leading-normal">
-                                            <strong className="block text-[10px] font-bold text-text-secondary uppercase tracking-wide mb-1 font-mono">Clue 1: Conceptual Foundation</strong>
+                                          <div className="rounded-xl bg-white/70 p-3 text-xs leading-normal">
+                                            <strong className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1 font-mono">Clue 1: Conceptual Foundation</strong>
                                             {activeQuestion.hints[0]}
                                           </div>
                                         ) : (
                                           <button
                                             type="button"
                                             onClick={() => setHintsRevealedCount(prev => ({ ...prev, [activeQuestion.id]: 1 }))}
-                                            className="w-full text-center py-2.5 rounded-xl border border-dashed border-slate-300 hover:border-accent bg-white hover:bg-accent/5 text-slate-650 hover:text-accent text-xs font-bold cursor-pointer transition select-none"
+                                            className="w-full text-center py-2.5 rounded-xl border border-dashed border-slate-300 hover:border-indigo-600 bg-white hover:bg-indigo-600/5 text-slate-650 hover:text-indigo-600 text-xs font-bold cursor-pointer transition select-none"
                                           >
                                             Reveal Clue 1: Conceptual Foundation
                                           </button>
@@ -1796,15 +1796,15 @@ Do not output markdown code fences, only output raw JSON.`
 
                                         {/* Hint 2 */}
                                         {revealedCount >= 2 ? (
-                                          <div className="rounded-xl bg-surface-glass p-3 text-xs leading-normal">
-                                            <strong className="block text-[10px] font-bold text-text-secondary uppercase tracking-wide mb-1 font-mono">Clue 2: Step Suggestion</strong>
+                                          <div className="rounded-xl bg-white/70 p-3 text-xs leading-normal">
+                                            <strong className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1 font-mono">Clue 2: Step Suggestion</strong>
                                             {activeQuestion.hints[1]}
                                           </div>
                                         ) : revealedCount >= 1 ? (
                                           <button
                                             type="button"
                                             onClick={() => setHintsRevealedCount(prev => ({ ...prev, [activeQuestion.id]: 2 }))}
-                                            className="w-full text-center py-2.5 rounded-xl border border-dashed border-slate-300 hover:border-accent bg-white hover:bg-accent/5 text-slate-655 hover:text-accent text-xs font-bold cursor-pointer transition select-none"
+                                            className="w-full text-center py-2.5 rounded-xl border border-dashed border-slate-300 hover:border-indigo-600 bg-white hover:bg-indigo-600/5 text-slate-655 hover:text-indigo-600 text-xs font-bold cursor-pointer transition select-none"
                                           >
                                             Reveal Clue 2: Step Suggestion
                                           </button>
@@ -1812,15 +1812,15 @@ Do not output markdown code fences, only output raw JSON.`
 
                                         {/* Hint 3 */}
                                         {revealedCount >= 3 ? (
-                                          <div className="rounded-xl bg-surface-glass p-3 text-xs leading-normal">
-                                            <strong className="block text-[10px] font-bold text-text-secondary uppercase tracking-wide mb-1 font-mono">Clue 3: Formula Check</strong>
+                                          <div className="rounded-xl bg-white/70 p-3 text-xs leading-normal">
+                                            <strong className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1 font-mono">Clue 3: Formula Check</strong>
                                             {activeQuestion.hints[2]}
                                           </div>
                                         ) : revealedCount >= 2 ? (
                                           <button
                                             type="button"
                                             onClick={() => setHintsRevealedCount(prev => ({ ...prev, [activeQuestion.id]: 3 }))}
-                                            className="w-full text-center py-2.5 rounded-xl border border-dashed border-slate-300 hover:border-accent bg-white hover:bg-accent/5 text-slate-655 hover:text-accent text-xs font-bold cursor-pointer transition select-none"
+                                            className="w-full text-center py-2.5 rounded-xl border border-dashed border-slate-300 hover:border-indigo-600 bg-white hover:bg-indigo-600/5 text-slate-655 hover:text-indigo-600 text-xs font-bold cursor-pointer transition select-none"
                                           >
                                             Reveal Clue 3: Formula Check
                                           </button>
@@ -1860,8 +1860,8 @@ Do not output markdown code fences, only output raw JSON.`
                                           </div>
 
                                           <div className="space-y-2">
-                                            <strong className="block text-[10px] font-bold text-text-secondary uppercase tracking-wide font-mono">Derivation & Calculations:</strong>
-                                            <div className="bg-surface-glass p-4 rounded-xl border border-border-subtle/80 leading-relaxed font-mono whitespace-pre-line text-slate-700 max-h-60 overflow-y-auto">
+                                            <strong className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide font-mono">Derivation & Calculations:</strong>
+                                            <div className="bg-white/70 p-4 rounded-xl border border-slate-200/80 leading-relaxed font-mono whitespace-pre-line text-slate-700 max-h-60 overflow-y-auto">
                                               {activeQuestion.solution}
                                             </div>
                                           </div>
@@ -1882,7 +1882,7 @@ Do not output markdown code fences, only output raw JSON.`
                             </div>
 
                             {/* Pagination navigator buttons inside question workspace */}
-                            <div className="flex justify-between items-center border-t border-border-subtle pt-3.5 select-none">
+                            <div className="flex justify-between items-center border-t border-slate-200 pt-3.5 select-none">
                               <button
                                 type="button"
                                 disabled={practiceActiveQuestionIdx === 0}
@@ -1893,7 +1893,7 @@ Do not output markdown code fences, only output raw JSON.`
                                   setAiTeacherFeedback("");
                                   setActivePracticeTab("options");
                                 }}
-                                className="flex items-center gap-1 text-text-secondary hover:text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed font-bold text-xs cursor-pointer transition"
+                                className="flex items-center gap-1 text-slate-500 hover:text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed font-bold text-xs cursor-pointer transition"
                               >
                                 <ChevronLeft className="w-4 h-4" />
                                 <span>Previous Question</span>
@@ -1909,7 +1909,7 @@ Do not output markdown code fences, only output raw JSON.`
                                   setAiTeacherFeedback("");
                                   setActivePracticeTab("options");
                                 }}
-                                className="flex items-center gap-1 text-text-secondary hover:text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed font-bold text-xs cursor-pointer transition"
+                                className="flex items-center gap-1 text-slate-500 hover:text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed font-bold text-xs cursor-pointer transition"
                               >
                                 <span>Next Question</span>
                                 <ChevronRight className="w-4 h-4" />
@@ -1917,7 +1917,7 @@ Do not output markdown code fences, only output raw JSON.`
                             </div>
                           </div>
                         ) : (
-                          <div className="text-center p-12 bg-surface-solid rounded-2xl border border-dashed text-text-secondary font-medium">
+                          <div className="text-center p-12 bg-slate-50 rounded-2xl border border-dashed text-slate-500 font-medium">
                             No active question context found. Select another subject/chapter.
                           </div>
                         )}
@@ -1928,7 +1928,7 @@ Do not output markdown code fences, only output raw JSON.`
                   {/* Test Mode / OMR Sheet View */}
                   {pyqMode === "test" && (
                     !testStarted ? (
-                      <div className="max-w-2xl mx-auto rounded-3xl border border-border-subtle bg-white p-8 md:p-10 shadow-lg text-left space-y-8 fade-in">
+                      <div className="max-w-2xl mx-auto rounded-3xl border border-slate-200 bg-white p-8 md:p-10 shadow-lg text-left space-y-8 fade-in">
                         {/* Header Section with elegant gradient background */}
                         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-navy to-brand-cobalt text-white p-6 md:p-8 shadow-md">
                           <div className="absolute top-0 right-0 -mt-6 -mr-6 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
@@ -1950,59 +1950,59 @@ Do not output markdown code fences, only output raw JSON.`
 
                         {/* Test Specifications Metrics Grid */}
                         <div className="grid grid-cols-3 gap-4">
-                          <div className="bg-surface-solid border border-border-subtle rounded-2xl p-4 text-center space-y-1">
-                            <span className="text-[9px] font-bold text-text-secondary uppercase tracking-widest block font-mono">Questions</span>
+                          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center space-y-1">
+                            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block font-mono">Questions</span>
                             <span className="text-2xl font-black text-white font-display">{questionsList.length}</span>
-                            <span className="text-[10px] font-semibold text-text-secondary block">MCQs</span>
+                            <span className="text-[10px] font-semibold text-slate-500 block">MCQs</span>
                           </div>
                           
-                          <div className="bg-surface-solid border border-border-subtle rounded-2xl p-4 text-center space-y-1">
-                            <span className="text-[9px] font-bold text-text-secondary uppercase tracking-widest block font-mono">Duration</span>
+                          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center space-y-1">
+                            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block font-mono">Duration</span>
                             <span className="text-2xl font-black text-white font-display">10</span>
-                            <span className="text-[10px] font-semibold text-text-secondary block">Minutes</span>
+                            <span className="text-[10px] font-semibold text-slate-500 block">Minutes</span>
                           </div>
 
-                          <div className="bg-surface-solid border border-border-subtle rounded-2xl p-4 text-center space-y-1">
-                            <span className="text-[9px] font-bold text-text-secondary uppercase tracking-widest block font-mono">Max Marks</span>
+                          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center space-y-1">
+                            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block font-mono">Max Marks</span>
                             <span className="text-2xl font-black text-white font-display">{questionsList.length * 4}</span>
-                            <span className="text-[10px] font-semibold text-text-secondary block">Points</span>
+                            <span className="text-[10px] font-semibold text-slate-500 block">Points</span>
                           </div>
                         </div>
 
                         {/* Marking Scheme Rules List */}
                         <div className="space-y-4">
-                          <h4 className="text-xs font-bold text-text-muted uppercase tracking-wider font-mono">Marking Scheme & Instructions</h4>
+                          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono">Marking Scheme & Instructions</h4>
                           
                           <div className="grid gap-3">
-                            <div className="flex items-start gap-3.5 p-3.5 rounded-xl border border-border-subtle bg-white shadow-3xs">
+                            <div className="flex items-start gap-3.5 p-3.5 rounded-xl border border-slate-200 bg-white shadow-3xs">
                               <span className="flex w-6 h-6 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-150 items-center justify-center text-xs font-black shrink-0 font-mono">+4</span>
                               <div className="space-y-0.5">
                                 <strong className="text-xs font-bold text-slate-800">Correct Answer</strong>
-                                <p className="text-[10.5px] text-text-muted leading-normal">Four marks (+4) will be awarded for each correct choice marked on the OMR bubble sheet.</p>
+                                <p className="text-[10.5px] text-slate-400 leading-normal">Four marks (+4) will be awarded for each correct choice marked on the OMR bubble sheet.</p>
                               </div>
                             </div>
 
-                            <div className="flex items-start gap-3.5 p-3.5 rounded-xl border border-border-subtle bg-white shadow-3xs">
+                            <div className="flex items-start gap-3.5 p-3.5 rounded-xl border border-slate-200 bg-white shadow-3xs">
                               <span className="flex w-6 h-6 rounded-full bg-rose-50 text-rose-600 border border-rose-150 items-center justify-center text-xs font-black shrink-0 font-mono">-1</span>
                               <div className="space-y-0.5">
                                 <strong className="text-xs font-bold text-slate-800">Incorrect Answer</strong>
-                                <p className="text-[10.5px] text-text-muted leading-normal">One mark (-1) will be deducted for every incorrect choice. Watch out for negative marking traps!</p>
+                                <p className="text-[10.5px] text-slate-400 leading-normal">One mark (-1) will be deducted for every incorrect choice. Watch out for negative marking traps!</p>
                               </div>
                             </div>
 
-                            <div className="flex items-start gap-3.5 p-3.5 rounded-xl border border-border-subtle bg-white shadow-3xs">
-                              <span className="flex w-6 h-6 rounded-full bg-surface-solid text-text-muted border border-border-subtle items-center justify-center text-xs font-black shrink-0 font-mono">0</span>
+                            <div className="flex items-start gap-3.5 p-3.5 rounded-xl border border-slate-200 bg-white shadow-3xs">
+                              <span className="flex w-6 h-6 rounded-full bg-slate-50 text-slate-400 border border-slate-200 items-center justify-center text-xs font-black shrink-0 font-mono">0</span>
                               <div className="space-y-0.5">
                                 <strong className="text-xs font-bold text-slate-800">Unattempted Questions</strong>
-                                <p className="text-[10.5px] text-text-muted leading-normal">No marks (0) are awarded or deducted for questions left unattempted. Skip if you are highly uncertain.</p>
+                                <p className="text-[10.5px] text-slate-400 leading-normal">No marks (0) are awarded or deducted for questions left unattempted. Skip if you are highly uncertain.</p>
                               </div>
                             </div>
 
-                            <div className="flex items-start gap-3.5 p-3.5 rounded-xl border border-border-subtle bg-white shadow-3xs">
+                            <div className="flex items-start gap-3.5 p-3.5 rounded-xl border border-slate-200 bg-white shadow-3xs">
                               <span className="flex w-6 h-6 rounded-full bg-indigo-50 text-indigo-650 border border-indigo-150 items-center justify-center text-xs font-bold shrink-0">🎲</span>
                               <div className="space-y-0.5">
                                 <strong className="text-xs font-bold text-slate-800">Shuffled Sequence</strong>
-                                <p className="text-[10.5px] text-text-muted leading-normal">Every test session generates a fresh randomized order of questions to mimic live computer-based test conditions.</p>
+                                <p className="text-[10.5px] text-slate-400 leading-normal">Every test session generates a fresh randomized order of questions to mimic live computer-based test conditions.</p>
                               </div>
                             </div>
                           </div>
@@ -2013,7 +2013,7 @@ Do not output markdown code fences, only output raw JSON.`
                           <button
                             type="button"
                             onClick={() => handleStartTest(questionsList)}
-                            className="w-full md:w-auto md:min-w-[240px] px-8 py-3.5 rounded-2xl bg-brand-navy hover:bg-accent active:scale-98 text-white font-bold text-sm tracking-wide shadow-md transition cursor-pointer select-none"
+                            className="w-full md:w-auto md:min-w-[240px] px-8 py-3.5 rounded-2xl bg-brand-navy hover:bg-indigo-600 active:scale-98 text-white font-bold text-sm tracking-wide shadow-md transition cursor-pointer select-none"
                           >
                             Start Timed Assessment
                           </button>
@@ -2022,7 +2022,7 @@ Do not output markdown code fences, only output raw JSON.`
                     ) : (
                       <div className="space-y-6 fade-in">
                         {/* OMR Test Header Toolbar */}
-                        <div className="flex justify-between items-center flex-wrap gap-4 border-b border-border-subtle pb-4">
+                        <div className="flex justify-between items-center flex-wrap gap-4 border-b border-slate-200 pb-4">
                           <div className="flex items-center gap-4">
                             <div className="flex items-center gap-1.5 rounded-xl bg-orange-50 border border-orange-200 px-3 py-2 text-xs font-bold text-orange-700 shadow-3xs font-mono">
                               <Timer className="w-4 h-4 text-orange-500 animate-pulse" />
@@ -2037,8 +2037,8 @@ Do not output markdown code fences, only output raw JSON.`
                               disabled={testSubmitted}
                               className={`rounded-xl border px-3 py-2 text-xs font-bold transition cursor-pointer select-none disabled:opacity-35 disabled:cursor-not-allowed ${
                                 testTimerActive 
-                                  ? "bg-surface-glass border-slate-300 text-slate-700" 
-                                  : "bg-brand-navy hover:bg-accent text-white border-transparent"
+                                  ? "bg-white/70 border-slate-300 text-slate-700" 
+                                  : "bg-brand-navy hover:bg-indigo-600 text-white border-transparent"
                               }`}
                             >
                               {testSubmitted ? "Time's Up" : (testTimerActive ? "Pause Timer" : "Resume Timer")}
@@ -2053,7 +2053,7 @@ Do not output markdown code fences, only output raw JSON.`
                                   handleStartTest(questionsList);
                                 }
                               }}
-                              className="rounded-xl border border-border-subtle hover:bg-surface-solid text-slate-655 px-4.5 py-2 text-xs font-bold cursor-pointer transition select-none"
+                              className="rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-655 px-4.5 py-2 text-xs font-bold cursor-pointer transition select-none"
                             >
                               Reset Test
                             </button>
@@ -2074,13 +2074,13 @@ Do not output markdown code fences, only output raw JSON.`
 
                         {/* Marks Calculator Score Card */}
                         {testSubmitted && (
-                          <div className="rounded-2xl border border-border-subtle bg-gradient-to-br from-slate-50 to-white p-6 grid gap-6 md:grid-cols-12 items-center shadow-xs fade-in">
+                          <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-6 grid gap-6 md:grid-cols-12 items-center shadow-xs fade-in">
                             {/* Score details */}
-                            <div className="md:col-span-5 text-center border-b md:border-b-0 md:border-r border-border-subtle pb-6 md:pb-0 pr-0 md:pr-6 space-y-2">
-                              <span className="text-[10px] font-bold uppercase tracking-widest text-text-secondary font-mono">JEE Scoring Dashboard</span>
+                            <div className="md:col-span-5 text-center border-b md:border-b-0 md:border-r border-slate-200 pb-6 md:pb-0 pr-0 md:pr-6 space-y-2">
+                              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 font-mono">JEE Scoring Dashboard</span>
                               <div className="text-5xl font-black text-white font-display flex items-baseline justify-center">
                                 {testScore}
-                                <span className="text-sm font-semibold text-text-secondary ml-1">/ {totalPossibleScore}</span>
+                                <span className="text-sm font-semibold text-slate-500 ml-1">/ {totalPossibleScore}</span>
                               </div>
                               <span className="rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 px-3.5 py-1 text-[10px] font-bold inline-block leading-none uppercase tracking-wider font-mono">
                                 {testScore >= 0 ? "Positive Marks" : "Negative Marks"}
@@ -2090,28 +2090,28 @@ Do not output markdown code fences, only output raw JSON.`
                             {/* Statistics breakdown */}
                             <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
                               <div className="space-y-1">
-                                <span className="text-[9px] font-bold text-text-secondary uppercase tracking-wide block font-mono">Correct (+4)</span>
+                                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide block font-mono">Correct (+4)</span>
                                 <div className="text-xl font-extrabold text-emerald-600 font-display">{correctCount}</div>
                               </div>
                               <div className="space-y-1">
-                                <span className="text-[9px] font-bold text-text-secondary uppercase tracking-wide block font-mono">Incorrect (-1)</span>
+                                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide block font-mono">Incorrect (-1)</span>
                                 <div className="text-xl font-extrabold text-rose-600 font-display">{incorrectCount}</div>
                               </div>
                               <div className="space-y-1">
-                                <span className="text-[9px] font-bold text-text-secondary uppercase tracking-wide block font-mono">Unattempted (0)</span>
-                                <div className="text-xl font-extrabold text-text-muted font-display">{unattemptedCount}</div>
+                                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide block font-mono">Unattempted (0)</span>
+                                <div className="text-xl font-extrabold text-slate-400 font-display">{unattemptedCount}</div>
                               </div>
                               <div className="space-y-1">
-                                <span className="text-[9px] font-bold text-text-secondary uppercase tracking-wide block font-mono">Accuracy</span>
-                                <div className="text-xl font-extrabold text-accent font-display">{testAccuracy}%</div>
+                                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide block font-mono">Accuracy</span>
+                                <div className="text-xl font-extrabold text-indigo-600 font-display">{testAccuracy}%</div>
                               </div>
 
                               {/* Rank Predictor note */}
-                              <div className="col-span-2 sm:col-span-4 bg-white rounded-xl border border-border-subtle p-3.5 text-left text-xs leading-relaxed text-slate-655 font-sans shadow-3xs flex gap-2">
+                              <div className="col-span-2 sm:col-span-4 bg-white rounded-xl border border-slate-200 p-3.5 text-left text-xs leading-relaxed text-slate-655 font-sans shadow-3xs flex gap-2">
                                 <span className="text-base leading-none select-none">🎯</span>
                                 <div>
                                   <strong className="font-extrabold text-slate-800">IIT Rank Predictor Insight:</strong>
-                                  <p className="text-[10px] text-text-muted mt-0.5">
+                                  <p className="text-[10px] text-slate-400 mt-0.5">
                                     {testScore >= activeTestList.length * 2 
                                       ? "Superb accuracy! You're on track for a top 2000 IIT rank. Keep optimizing your speed!"
                                       : testScore > 0 
@@ -2130,18 +2130,18 @@ Do not output markdown code fences, only output raw JSON.`
                             const userAns = testSelectedAnswers[q.id];
                             const isCorrect = userAns === q.answer;
                             return (
-                              <div key={q.id} className="rounded-xl border border-border-subtle p-5 bg-white space-y-4 hover:border-slate-350 transition shadow-3xs text-left">
+                              <div key={q.id} className="rounded-xl border border-slate-200 p-5 bg-white space-y-4 hover:border-slate-350 transition shadow-3xs text-left">
                                 <div className="flex justify-between items-start gap-3">
                                   <div className="flex items-center gap-2">
-                                    <span className="rounded bg-surface-glass text-white px-2 py-0.5 text-[9px] font-bold font-mono mr-1">Q{idx + 1}</span>
-                                    <span className="text-[10px] text-text-secondary font-bold uppercase tracking-wider font-mono">{q.year}</span>
+                                    <span className="rounded bg-white/70 text-white px-2 py-0.5 text-[9px] font-bold font-mono mr-1">Q{idx + 1}</span>
+                                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">{q.year}</span>
                                     {/* Star Flag and Refresh/Revision flag controls */}
                                     <div className="flex items-center gap-1.5 ml-2 border-l border-slate-250 pl-2">
                                       <button
                                         type="button"
                                         onClick={() => toggleFlag(q.id, "important")}
-                                        className={`p-1 rounded transition hover:bg-surface-solid cursor-pointer ${
-                                          importantFlags.includes(q.id) ? "text-amber-500" : "text-text-primary hover:text-text-secondary"
+                                        className={`p-1 rounded transition hover:bg-slate-50 cursor-pointer ${
+                                          importantFlags.includes(q.id) ? "text-amber-500" : "text-text-primary hover:text-slate-500"
                                         }`}
                                         title="Mark as Important"
                                       >
@@ -2150,8 +2150,8 @@ Do not output markdown code fences, only output raw JSON.`
                                       <button
                                         type="button"
                                         onClick={() => toggleFlag(q.id, "revision")}
-                                        className={`p-1 rounded transition hover:bg-surface-solid cursor-pointer ${
-                                          revisionFlags.includes(q.id) ? "text-orange-500" : "text-text-primary hover:text-text-secondary"
+                                        className={`p-1 rounded transition hover:bg-slate-50 cursor-pointer ${
+                                          revisionFlags.includes(q.id) ? "text-orange-500" : "text-text-primary hover:text-slate-500"
                                         }`}
                                         title="Needs Revision"
                                       >
@@ -2163,7 +2163,7 @@ Do not output markdown code fences, only output raw JSON.`
                                   {testSubmitted && (
                                     <span className={`rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase leading-none font-mono ${
                                       !userAns 
-                                        ? "bg-surface-glass text-text-muted border border-border-subtle" 
+                                        ? "bg-white/70 text-slate-400 border border-slate-200" 
                                         : isCorrect 
                                           ? "bg-emerald-50 border border-emerald-250 text-emerald-700" 
                                           : "bg-rose-50 border border-rose-250 text-rose-700"
@@ -2176,24 +2176,24 @@ Do not output markdown code fences, only output raw JSON.`
                                 <p className="text-xs font-bold text-slate-900 leading-normal">{q.question}</p>
 
                                 {/* OMR bubble row */}
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-solid p-3 rounded-xl border border-slate-150">
-                                  <span className="text-[9px] font-bold text-text-secondary uppercase tracking-widest font-mono">OMR Selection:</span>
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50 p-3 rounded-xl border border-slate-150">
+                                  <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest font-mono">OMR Selection:</span>
                                   <div className="flex gap-4">
                                     {["A", "B", "C", "D"].map((optLetter) => {
                                       const isChosen = userAns === optLetter;
                                       const isCorrectOpt = q.answer === optLetter;
                                       
-                                      let btnStyle = "border-slate-300 text-slate-600 bg-white hover:bg-surface-glass";
+                                      let btnStyle = "border-slate-300 text-slate-600 bg-white hover:bg-white/70";
                                       if (testSubmitted) {
                                         if (isCorrectOpt) {
                                           btnStyle = "bg-emerald-600 text-white border-transparent shadow-3xs scale-105 font-black";
                                         } else if (isChosen) {
                                           btnStyle = "bg-rose-600 text-white border-transparent shadow-3xs scale-105 font-black";
                                         } else {
-                                          btnStyle = "bg-surface-glass border-border-subtle text-text-secondary opacity-50";
+                                          btnStyle = "bg-white/70 border-slate-200 text-slate-500 opacity-50";
                                         }
                                       } else if (isChosen) {
-                                        btnStyle = "bg-accent text-white border-transparent shadow-3xs scale-105 font-bold";
+                                        btnStyle = "bg-indigo-600 text-white border-transparent shadow-3xs scale-105 font-bold";
                                       }
 
                                       return (
@@ -2217,16 +2217,16 @@ Do not output markdown code fences, only output raw JSON.`
                                 {testSubmitted && (
                                   <div className="pt-2">
                                     <details className="group">
-                                      <summary className="text-[10px] font-bold text-accent hover:underline cursor-pointer list-none flex items-center gap-1 select-none">
+                                      <summary className="text-[10px] font-bold text-indigo-600 hover:underline cursor-pointer list-none flex items-center gap-1 select-none">
                                         <span>View detailed derivation & traps</span>
                                         <ChevronRight className="w-3.5 h-3.5 group-open:rotate-90 transition-transform" />
                                       </summary>
-                                      <div className="mt-3 rounded-xl bg-surface-solid border border-slate-150 p-4 space-y-3 font-mono text-[10.5px] leading-relaxed text-slate-700 fade-in">
+                                      <div className="mt-3 rounded-xl bg-slate-50 border border-slate-150 p-4 space-y-3 font-mono text-[10.5px] leading-relaxed text-slate-700 fade-in">
                                         <div className="flex items-center gap-1.5 font-bold text-emerald-800 text-[10px] leading-none mb-1 font-sans">
                                           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                                           Correct Choice: Option {q.answer}
                                         </div>
-                                        <p className="whitespace-pre-line border-t border-border-subtle pt-2">{q.solution}</p>
+                                        <p className="whitespace-pre-line border-t border-slate-200 pt-2">{q.solution}</p>
                                         <div className="rounded-xl bg-rose-50 border border-rose-100 p-4 flex gap-3 text-rose-800 leading-normal font-sans">
                                           <AlertTriangle className="w-4 h-4 shrink-0 text-rose-500 animate-bounce-subtle mt-0.5" />
                                           <div>
@@ -2263,11 +2263,11 @@ Do not output markdown code fences, only output raw JSON.`
                         onChange={(e) => setPyqInput(e.target.value)}
                         rows={6}
                         placeholder="Paste past exam paper questions here..."
-                        className="w-full rounded-xl border border-gray-200 p-4 text-xs font-medium focus:border-accent text-white"
+                        className="w-full rounded-xl border border-gray-200 p-4 text-xs font-medium focus:border-indigo-600 text-white"
                       />
                     </div>
                     
-                    <div className="relative rounded-xl border-2 border-dashed border-gray-200 p-4 text-center bg-surface-solid hover:bg-slate-55 transition cursor-pointer">
+                    <div className="relative rounded-xl border-2 border-dashed border-gray-200 p-4 text-center bg-slate-50 hover:bg-slate-55 transition cursor-pointer">
                       <input
                         type="file"
                         accept=".pdf,.png,.jpg,.jpeg"
@@ -2291,7 +2291,7 @@ Do not output markdown code fences, only output raw JSON.`
                     <button
                       onClick={handlePyqAnalyze}
                       disabled={pyqLoading || (!pyqInput.trim() && !pyqFile)}
-                      className="rounded-xl bg-brand-navy hover:bg-accent disabled:bg-slate-200 disabled:text-text-secondary disabled:cursor-not-allowed text-white px-5 py-3 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer leading-none"
+                      className="rounded-xl bg-brand-navy hover:bg-indigo-600 disabled:bg-slate-200 disabled:text-slate-500 disabled:cursor-not-allowed text-white px-5 py-3 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer leading-none"
                     >
                       {pyqLoading ? (
                         <>
@@ -2309,18 +2309,18 @@ Do not output markdown code fences, only output raw JSON.`
 
                   <div>
                     {pyqResult ? (
-                      <div className="rounded-2xl border border-slate-150 bg-surface-solid p-5 space-y-4 fade-in h-full">
+                      <div className="rounded-2xl border border-slate-150 bg-slate-50 p-5 space-y-4 fade-in h-full">
                         <div className="flex justify-between items-center border-b border-slate-150 pb-2 mb-2">
                           <span className="font-extrabold text-sm text-white">Analysis Output</span>
-                          <span className="text-xs text-text-secondary font-mono font-bold">
+                          <span className="text-xs text-slate-500 font-mono font-bold">
                             Total Questions: {pyqResult.totalQuestionsAnalyzed}
                           </span>
                         </div>
 
                         <div className="space-y-3">
-                          <h4 className="text-xs font-bold uppercase tracking-wider text-text-secondary">Topic Frequency Weights:</h4>
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Topic Frequency Weights:</h4>
                           {pyqResult.topics.map((topic, i) => (
-                            <div key={i} className="space-y-1.5 bg-white p-3 rounded-xl border border-border-subtle">
+                            <div key={i} className="space-y-1.5 bg-white p-3 rounded-xl border border-slate-200">
                               <div className="flex justify-between items-center text-xs">
                                 <span className="font-bold text-white">{topic.name}</span>
                                 <div className="flex items-center gap-1.5">
@@ -2332,7 +2332,7 @@ Do not output markdown code fences, only output raw JSON.`
                                   <span className="font-mono font-bold text-slate-600">{topic.weight}% ({topic.frequency}x)</span>
                                 </div>
                               </div>
-                              <div className="w-full bg-surface-glass h-1.5 rounded-full overflow-hidden">
+                              <div className="w-full bg-white/70 h-1.5 rounded-full overflow-hidden">
                                 <div 
                                   className={`h-full rounded-full transition-all duration-500 ${
                                     topic.priority === "High" ? "bg-rose-500" :
@@ -2347,7 +2347,7 @@ Do not output markdown code fences, only output raw JSON.`
                         </div>
 
                         <div className="space-y-2 pt-2">
-                          <h4 className="text-xs font-bold uppercase tracking-wider text-text-secondary">Actionable Recommendations:</h4>
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Actionable Recommendations:</h4>
                           <ul className="list-disc list-inside space-y-1.5 pl-1">
                             {pyqResult.recommendations.map((rec, i) => (
                               <li key={i} className="text-xs font-medium text-slate-600 leading-relaxed">
@@ -2358,10 +2358,10 @@ Do not output markdown code fences, only output raw JSON.`
                         </div>
                       </div>
                     ) : (
-                      <div className="rounded-2xl border border-dashed border-border-subtle bg-surface-solid/20 p-8 flex flex-col justify-center items-center text-center h-full text-text-secondary">
+                      <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/20 p-8 flex flex-col justify-center items-center text-center h-full text-slate-500">
                         <FileText className="w-10 h-10 mb-2.5 text-text-primary" />
-                        <span className="text-xs font-bold text-text-muted uppercase">Analysis Results Map</span>
-                        <p className="text-[10px] text-text-secondary mt-1 max-w-xs leading-normal">
+                        <span className="text-xs font-bold text-slate-400 uppercase">Analysis Results Map</span>
+                        <p className="text-[10px] text-slate-500 mt-1 max-w-xs leading-normal">
                           Run the analyzer to map syllabus weightages and retrieve custom exam preparation strategy recommendations.
                         </p>
                       </div>
@@ -2382,7 +2382,7 @@ Do not output markdown code fences, only output raw JSON.`
                       value={plannerExamName}
                       onChange={(e) => setPlannerExamName(e.target.value)}
                       placeholder="e.g. JEE Mains 2026, B.Tech Sem 2"
-                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-accent text-white bg-white"
+                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-white bg-white"
                     />
                   </div>
                   <div>
@@ -2392,7 +2392,7 @@ Do not output markdown code fences, only output raw JSON.`
                       value={plannerSubject}
                       onChange={(e) => setPlannerSubject(e.target.value)}
                       placeholder="e.g. Physics, Chemistry, Maths"
-                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-accent text-white bg-white"
+                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-white bg-white"
                     />
                   </div>
                   <div>
@@ -2401,7 +2401,7 @@ Do not output markdown code fences, only output raw JSON.`
                       type="date"
                       value={plannerDate}
                       onChange={(e) => setPlannerDate(e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-accent text-white bg-white"
+                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-white bg-white"
                     />
                   </div>
                 </div>
@@ -2418,7 +2418,7 @@ Do not output markdown code fences, only output raw JSON.`
                         onChange={(e) => setPlannerHours(parseInt(e.target.value) || 6)}
                         className="w-full accent-brand-cobalt cursor-pointer"
                       />
-                      <span className="font-mono text-xs font-bold text-white whitespace-nowrap bg-surface-glass rounded-lg px-2.5 py-1.5">{plannerHours} Hrs/day</span>
+                      <span className="font-mono text-xs font-bold text-white whitespace-nowrap bg-white/70 rounded-lg px-2.5 py-1.5">{plannerHours} Hrs/day</span>
                     </div>
                   </div>
                   <div>
@@ -2428,7 +2428,7 @@ Do not output markdown code fences, only output raw JSON.`
                       value={plannerWeak}
                       onChange={(e) => setPlannerWeak(e.target.value)}
                       placeholder="e.g. Integration, Organic synthesis"
-                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-accent text-white bg-white"
+                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-white bg-white"
                     />
                   </div>
                 </div>
@@ -2437,7 +2437,7 @@ Do not output markdown code fences, only output raw JSON.`
                   <button
                     onClick={handleStudyPlannerGenerate}
                     disabled={plannerLoading || !plannerSubject.trim()}
-                    className="rounded-xl bg-brand-navy hover:bg-accent disabled:bg-slate-200 disabled:text-text-secondary disabled:cursor-not-allowed text-white px-5 py-3 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer leading-none"
+                    className="rounded-xl bg-brand-navy hover:bg-indigo-600 disabled:bg-slate-200 disabled:text-slate-500 disabled:cursor-not-allowed text-white px-5 py-3 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer leading-none"
                   >
                     {plannerLoading ? (
                       <>
@@ -2454,13 +2454,13 @@ Do not output markdown code fences, only output raw JSON.`
                 </div>
 
                 {generatedPlan.length > 0 && (
-                  <div className="space-y-4 pt-4 border-t border-border-subtle">
+                  <div className="space-y-4 pt-4 border-t border-slate-200">
                     <h3 className="font-display font-extrabold text-sm text-white tracking-tight mb-3">
                       Your Day-by-Day Exam Prep Schedule
                     </h3>
                     <div className="grid gap-3.5 md:grid-cols-5">
                       {generatedPlan.map((d, i) => (
-                        <div key={i} className="rounded-2xl border border-slate-150 bg-surface-solid p-4 hover:border-accent hover:bg-white transition flex flex-col justify-between">
+                        <div key={i} className="rounded-2xl border border-slate-150 bg-slate-50 p-4 hover:border-indigo-600 hover:bg-white transition flex flex-col justify-between">
                           <div className="space-y-2">
                             <span className="rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[9px] font-bold uppercase font-mono tracking-wider">{d.day}</span>
                             <div className="space-y-1">
@@ -2468,7 +2468,7 @@ Do not output markdown code fences, only output raw JSON.`
                               <ul className="text-xs space-y-1">
                                 {d.topics.map((t, idx) => (
                                   <li key={idx} className="font-semibold text-slate-800 leading-normal flex items-start gap-1">
-                                    <span className="text-accent mt-0.5">•</span>
+                                    <span className="text-indigo-600 mt-0.5">•</span>
                                     {t}
                                   </li>
                                 ))}
@@ -2476,7 +2476,7 @@ Do not output markdown code fences, only output raw JSON.`
                             </div>
                           </div>
                           
-                          <div className="mt-4 pt-3 border-t border-border-subtle/60 text-[10px] font-medium text-text-muted leading-relaxed italic">
+                          <div className="mt-4 pt-3 border-t border-slate-200/60 text-[10px] font-medium text-slate-400 leading-relaxed italic">
                             {d.notes}
                           </div>
                         </div>
@@ -2501,11 +2501,11 @@ Do not output markdown code fences, only output raw JSON.`
                         onChange={(e) => setNotesInput(e.target.value)}
                         rows={6}
                         placeholder="Paste study material text here to convert into flashcard study sets..."
-                        className="w-full rounded-xl border border-gray-200 p-4 text-xs font-medium focus:border-accent text-white"
+                        className="w-full rounded-xl border border-gray-200 p-4 text-xs font-medium focus:border-indigo-600 text-white"
                       />
                     </div>
 
-                    <div className="relative rounded-xl border-2 border-dashed border-gray-200 p-4 text-center bg-surface-solid hover:bg-slate-55 transition cursor-pointer">
+                    <div className="relative rounded-xl border-2 border-dashed border-gray-200 p-4 text-center bg-slate-50 hover:bg-slate-55 transition cursor-pointer">
                       <input
                         type="file"
                         accept=".pdf"
@@ -2529,7 +2529,7 @@ Do not output markdown code fences, only output raw JSON.`
                     <button
                       onClick={handleNotesToFlashcardsGenerate}
                       disabled={flashcardLoading || (!notesInput.trim() && !notesFile)}
-                      className="rounded-xl bg-brand-navy hover:bg-accent disabled:bg-slate-200 disabled:text-text-secondary disabled:cursor-not-allowed text-white px-5 py-3 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer leading-none"
+                      className="rounded-xl bg-brand-navy hover:bg-indigo-600 disabled:bg-slate-200 disabled:text-slate-500 disabled:cursor-not-allowed text-white px-5 py-3 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer leading-none"
                     >
                       {flashcardLoading ? (
                         <>
@@ -2562,7 +2562,7 @@ Do not output markdown code fences, only output raw JSON.`
                           >
                             {/* Front Side */}
                             <div className="absolute inset-0 w-full h-full rounded-3xl bg-white p-5 flex flex-col justify-between backface-hidden">
-                              <span className="rounded-full bg-surface-glass text-text-muted px-2 py-0.5 text-[8px] font-bold uppercase font-mono tracking-wider w-max">
+                              <span className="rounded-full bg-white/70 text-slate-400 px-2 py-0.5 text-[8px] font-bold uppercase font-mono tracking-wider w-max">
                                 {extractedFlashcards[flippedCards.length % extractedFlashcards.length]?.category || "Revision Card"}
                               </span>
                               <div className="text-center font-display font-extrabold text-sm text-white leading-relaxed py-2">
@@ -2573,7 +2573,7 @@ Do not output markdown code fences, only output raw JSON.`
 
                             {/* Back Side */}
                             <div className="absolute inset-0 w-full h-full rounded-3xl bg-indigo-50/40 p-5 flex flex-col justify-between backface-hidden rotate-y-180 border border-indigo-150">
-                              <span className="rounded-full bg-indigo-100/70 text-accent px-2 py-0.5 text-[8px] font-bold uppercase font-mono tracking-wider w-max">
+                              <span className="rounded-full bg-indigo-100/70 text-indigo-600 px-2 py-0.5 text-[8px] font-bold uppercase font-mono tracking-wider w-max">
                                 Explanation
                               </span>
                               <div className="text-center text-xs font-semibold text-slate-700 leading-relaxed font-mono py-2 overflow-y-auto max-h-[100px]">
@@ -2602,7 +2602,7 @@ Do not output markdown code fences, only output raw JSON.`
                               setFlippedCards(prev => prev.slice(0, -1));
                             }}
                             disabled={flippedCards.length === 0}
-                            className="rounded-xl border border-border-subtle bg-white hover:bg-surface-solid text-slate-700 px-4 py-2 text-xs font-bold leading-none cursor-pointer disabled:opacity-40"
+                            className="rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 text-xs font-bold leading-none cursor-pointer disabled:opacity-40"
                           >
                             Prev Card
                           </button>
@@ -2613,17 +2613,17 @@ Do not output markdown code fences, only output raw JSON.`
                             onClick={() => {
                               setFlippedCards(prev => [...prev, `cycle-${Date.now()}`]);
                             }}
-                            className="rounded-xl border border-border-subtle bg-white hover:bg-surface-solid text-slate-700 px-4 py-2 text-xs font-bold leading-none cursor-pointer"
+                            className="rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 text-xs font-bold leading-none cursor-pointer"
                           >
                             Next Card
                           </button>
                         </div>
                       </div>
                     ) : (
-                      <div className="rounded-2xl border border-dashed border-border-subtle bg-surface-solid/20 p-8 flex flex-col justify-center items-center text-center h-full text-text-secondary">
+                      <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/20 p-8 flex flex-col justify-center items-center text-center h-full text-slate-500">
                         <Brain className="w-10 h-10 mb-2.5 text-text-primary" />
-                        <span className="text-xs font-bold text-text-muted uppercase">Flashcards Preview Panel</span>
-                        <p className="text-[10px] text-text-secondary mt-1 max-w-xs leading-normal">
+                        <span className="text-xs font-bold text-slate-400 uppercase">Flashcards Preview Panel</span>
+                        <p className="text-[10px] text-slate-500 mt-1 max-w-xs leading-normal">
                           Convert lecture slide content into cards, then interactively flip them with full answer keys.
                         </p>
                       </div>
@@ -2646,7 +2646,7 @@ Do not output markdown code fences, only output raw JSON.`
                       value={conceptInput}
                       onChange={(e) => setConceptInput(e.target.value)}
                       placeholder="e.g. Fourier Transform, Heuristic search, Thermodynamics 2nd Law"
-                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-accent text-white bg-white"
+                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-white bg-white"
                     />
                   </div>
                   <div>
@@ -2654,7 +2654,7 @@ Do not output markdown code fences, only output raw JSON.`
                     <select
                       value={conceptStyle}
                       onChange={(e) => setConceptStyle(e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-semibold focus:border-accent text-white bg-white"
+                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-semibold focus:border-indigo-600 text-white bg-white"
                     >
                       <option value="analogies">Simple Analogies</option>
                       <option value="socratic">Socratic Method</option>
@@ -2668,7 +2668,7 @@ Do not output markdown code fences, only output raw JSON.`
                   <button
                     onClick={handleConceptExplain}
                     disabled={conceptLoading || !conceptInput.trim()}
-                    className="rounded-xl bg-brand-navy hover:bg-accent disabled:bg-slate-200 disabled:text-text-secondary disabled:cursor-not-allowed text-white px-5 py-3 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer leading-none"
+                    className="rounded-xl bg-brand-navy hover:bg-indigo-600 disabled:bg-slate-200 disabled:text-slate-500 disabled:cursor-not-allowed text-white px-5 py-3 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer leading-none"
                   >
                     {conceptLoading ? (
                       <>
@@ -2685,7 +2685,7 @@ Do not output markdown code fences, only output raw JSON.`
                 </div>
 
                 {conceptExplanation && (
-                  <div className="rounded-2xl border border-slate-150 bg-surface-solid p-5 font-sans space-y-3 text-slate-700 fade-in">
+                  <div className="rounded-2xl border border-slate-150 bg-slate-50 p-5 font-sans space-y-3 text-slate-700 fade-in">
                     <h5 className="font-extrabold text-sm text-white border-b border-gray-150 pb-2 mb-2">
                       Syllabus Intuition: {conceptInput} ({conceptStyle})
                     </h5>
@@ -2709,7 +2709,7 @@ Do not output markdown code fences, only output raw JSON.`
                     onChange={(e) => setSummaryInput(e.target.value)}
                     rows={6}
                     placeholder="Paste long textbook pages or study paragraphs to condense..."
-                    className="w-full rounded-xl border border-gray-200 p-4 text-xs font-medium focus:border-accent text-white"
+                    className="w-full rounded-xl border border-gray-200 p-4 text-xs font-medium focus:border-indigo-600 text-white"
                   />
                 </div>
 
@@ -2717,7 +2717,7 @@ Do not output markdown code fences, only output raw JSON.`
                   <button
                     onClick={handleSummaryGenerate}
                     disabled={summaryLoading || !summaryInput.trim()}
-                    className="rounded-xl bg-brand-navy hover:bg-accent disabled:bg-slate-200 disabled:text-text-secondary disabled:cursor-not-allowed text-white px-5 py-3 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer leading-none"
+                    className="rounded-xl bg-brand-navy hover:bg-indigo-600 disabled:bg-slate-200 disabled:text-slate-500 disabled:cursor-not-allowed text-white px-5 py-3 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer leading-none"
                   >
                     {summaryLoading ? (
                       <>
@@ -2734,7 +2734,7 @@ Do not output markdown code fences, only output raw JSON.`
                 </div>
 
                 {summaryOutput && (
-                  <div className="rounded-2xl border border-slate-150 bg-surface-solid p-5 font-sans space-y-3 text-slate-700 fade-in">
+                  <div className="rounded-2xl border border-slate-150 bg-slate-50 p-5 font-sans space-y-3 text-slate-700 fade-in">
                     <h5 className="font-extrabold text-sm text-white border-b border-gray-150 pb-2 mb-2 flex items-center gap-1.5">
                       <FileCheck2 className="w-4 h-4 text-emerald-500" />
                       Revision Summary Cheat-sheet
@@ -2750,7 +2750,7 @@ Do not output markdown code fences, only output raw JSON.`
             {/* Math Formula Solver */}
             {selectedToolId === "math-solver" && (
               <div className="space-y-4 fade-in">
-                <div className="relative rounded-xl border-2 border-dashed border-gray-200 p-6 text-center bg-surface-solid hover:bg-surface-solid transition cursor-pointer">
+                <div className="relative rounded-xl border-2 border-dashed border-gray-200 p-6 text-center bg-slate-50 hover:bg-slate-50 transition cursor-pointer">
                   <input
                     type="file"
                     accept="image/*"
@@ -2766,15 +2766,15 @@ Do not output markdown code fences, only output raw JSON.`
                   />
                   {!mathImage ? (
                     <div className="flex flex-col items-center justify-center pointer-events-none">
-                      <div className="p-3 bg-indigo-50 text-accent rounded-full mb-2">
+                      <div className="p-3 bg-indigo-50 text-indigo-600 rounded-full mb-2">
                         <UploadCloud className="w-6 h-6" />
                       </div>
                       <p className="text-sm font-semibold text-slate-700">Upload Formula Image</p>
-                      <p className="text-xs text-text-secondary mt-1">Supports handwritten and printed LaTeX (JPG, PNG)</p>
+                      <p className="text-xs text-slate-500 mt-1">Supports handwritten and printed LaTeX (JPG, PNG)</p>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">
-                      <img src={mathImage} alt="Math Equation" className="max-h-48 object-contain rounded-lg shadow-sm border border-border-subtle" />
+                      <img src={mathImage} alt="Math Equation" className="max-h-48 object-contain rounded-lg shadow-sm border border-slate-200" />
                       <button onClick={(e) => { e.stopPropagation(); setMathImage(null); setMathResult(""); }} className="mt-3 text-xs text-red-500 hover:underline">Remove Image</button>
                     </div>
                   )}
@@ -2784,7 +2784,7 @@ Do not output markdown code fences, only output raw JSON.`
                   <button 
                     disabled={!mathImage || mathLoading}
                     onClick={handleMathSolve}
-                    className="bg-accent hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 transition"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 transition"
                   >
                     {mathLoading ? <><Loader2 className="w-4 h-4 animate-spin" /> Solving...</> : <><Sparkles className="w-4 h-4" /> Solve Formula</>}
                   </button>
@@ -2804,7 +2804,7 @@ Do not output markdown code fences, only output raw JSON.`
             {/* PDF Compressor */}
             {selectedToolId === "pdf-compressor" && (
               <div className="space-y-4 fade-in">
-                <div className="relative rounded-xl border-2 border-dashed border-gray-200 p-6 text-center bg-surface-solid hover:bg-slate-55 transition cursor-pointer">
+                <div className="relative rounded-xl border-2 border-dashed border-gray-200 p-6 text-center bg-slate-50 hover:bg-slate-55 transition cursor-pointer">
                   <input
                     type="file"
                     accept=".pdf"
@@ -2835,7 +2835,7 @@ Do not output markdown code fences, only output raw JSON.`
                 <button
                   onClick={triggerPDFCompress}
                   disabled={compressProgress >= 0 && compressProgress < 100}
-                  className="rounded-xl bg-brand-navy hover:bg-accent text-white px-5 py-3 text-xs font-bold transition leading-none cursor-pointer"
+                  className="rounded-xl bg-brand-navy hover:bg-indigo-600 text-white px-5 py-3 text-xs font-bold transition leading-none cursor-pointer"
                 >
                   Optimize PDF vectors size
                 </button>
@@ -2843,11 +2843,11 @@ Do not output markdown code fences, only output raw JSON.`
                 {compressProgress >= 0 && (
                   <div className="space-y-2 fade-in">
                     <div className="flex justify-between text-xs font-semibold">
-                      <span className="text-text-muted">Rescaling coordinates system...</span>
+                      <span className="text-slate-400">Rescaling coordinates system...</span>
                       <span className="font-mono text-white font-bold">{compressProgress}%</span>
                     </div>
-                    <div className="bg-surface-glass h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-accent h-1.5 rounded-full transition-all duration-300" style={{ width: `${compressProgress}%` }}></div>
+                    <div className="bg-white/70 h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300" style={{ width: `${compressProgress}%` }}></div>
                     </div>
 
                     {compressFinished && (
@@ -2880,7 +2880,7 @@ Do not output markdown code fences, only output raw JSON.`
             {/* Image Compressor */}
             {selectedToolId === "image-compressor" && (
               <div className="space-y-4 fade-in">
-                <div className="relative rounded-xl border-2 border-dashed border-gray-200 p-6 text-center bg-surface-solid hover:bg-slate-55 transition cursor-pointer">
+                <div className="relative rounded-xl border-2 border-dashed border-gray-200 p-6 text-center bg-slate-50 hover:bg-slate-55 transition cursor-pointer">
                   <input
                     type="file"
                     accept="image/*"
@@ -2908,7 +2908,7 @@ Do not output markdown code fences, only output raw JSON.`
                   )}
                 </div>
 
-                <div className="space-y-1.5 p-4 rounded-xl bg-surface-solid border border-border-subtle">
+                <div className="space-y-1.5 p-4 rounded-xl bg-slate-50 border border-slate-200">
                   <div className="flex justify-between text-xs font-semibold text-slate-700">
                     <span>Target Image Quality: {imageCompressQuality}%</span>
                     <span className="text-[10px] text-gray-400 font-mono">10% (max compression) - 100% (max quality)</span>
@@ -2934,7 +2934,7 @@ Do not output markdown code fences, only output raw JSON.`
                     handleImageProcessReal(uploadedFile as any, "image-compressor");
                   }} 
                   disabled={processingToolId === selectedToolId && processingProgress < 100}
-                  className="rounded-xl bg-brand-navy hover:bg-accent text-white px-5 py-3 text-xs font-bold transition leading-none cursor-pointer"
+                  className="rounded-xl bg-brand-navy hover:bg-indigo-600 text-white px-5 py-3 text-xs font-bold transition leading-none cursor-pointer"
                 >
                   {processingToolId === selectedToolId && processingProgress < 100 
                     ? "Processing..." 
@@ -2944,11 +2944,11 @@ Do not output markdown code fences, only output raw JSON.`
                 {processingToolId === selectedToolId && processingProgress >= 0 && (
                   <div className="space-y-2 pt-2 fade-in text-xs">
                     <div className="flex justify-between font-semibold">
-                      <span className="text-text-muted">Compressing snapshot weight...</span>
+                      <span className="text-slate-400">Compressing snapshot weight...</span>
                       <span className="font-mono text-white font-bold">{processingProgress}%</span>
                     </div>
-                    <div className="bg-surface-glass h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-accent h-1.5 rounded-full transition-all duration-300" style={{ width: `${processingProgress}%` }}></div>
+                    <div className="bg-white/70 h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300" style={{ width: `${processingProgress}%` }}></div>
                     </div>
 
                     {processingProgress === 100 && processedBlob && (
@@ -2979,7 +2979,7 @@ Do not output markdown code fences, only output raw JSON.`
             {/* PDF to Speech */}
             {selectedToolId === "pdf-to-speech" && (
               <div className="space-y-4 fade-in">
-                <div className="relative rounded-xl border-2 border-dashed border-gray-200 p-6 text-center bg-surface-solid hover:bg-surface-solid transition cursor-pointer">
+                <div className="relative rounded-xl border-2 border-dashed border-gray-200 p-6 text-center bg-slate-50 hover:bg-slate-50 transition cursor-pointer">
                   <input
                     type="file"
                     accept="application/pdf"
@@ -2998,7 +2998,7 @@ Do not output markdown code fences, only output raw JSON.`
                         <FileText className="w-6 h-6" />
                       </div>
                       <p className="text-sm font-semibold text-slate-700">Upload PDF Note</p>
-                      <p className="text-xs text-text-secondary mt-1">Accepts text-based PDFs up to 10MB</p>
+                      <p className="text-xs text-slate-500 mt-1">Accepts text-based PDFs up to 10MB</p>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">
@@ -3013,16 +3013,16 @@ Do not output markdown code fences, only output raw JSON.`
                   <button 
                     disabled={!speechPdfFile || speechLoading}
                     onClick={handleSpeechExtract}
-                    className="bg-brand-navy hover:bg-surface-solid text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 transition"
+                    className="bg-brand-navy hover:bg-slate-50 text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 transition"
                   >
                     {speechLoading ? <><Loader2 className="w-4 h-4 animate-spin" /> Extracting Text...</> : <><Volume2 className="w-4 h-4" /> Convert to Speech</>}
                   </button>
                 </div>
 
                 {speechText && (
-                  <div className="mt-6 p-5 bg-white border border-border-subtle shadow-sm rounded-2xl">
+                  <div className="mt-6 p-5 bg-white border border-slate-200 shadow-sm rounded-2xl">
                     <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2"><Volume2 className="w-4 h-4 text-accent" /> Lecture Transcript</h3>
+                      <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2"><Volume2 className="w-4 h-4 text-indigo-600" /> Lecture Transcript</h3>
                       <button 
                         onClick={() => {
                           if (isSpeaking) {
@@ -3035,12 +3035,12 @@ Do not output markdown code fences, only output raw JSON.`
                             setIsSpeaking(true);
                           }
                         }}
-                        className={`text-xs px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition ${isSpeaking ? "bg-red-50 text-red-600 hover:bg-red-100" : "bg-accent/10 text-accent hover:bg-accent/20"}`}
+                        className={`text-xs px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition ${isSpeaking ? "bg-red-50 text-red-600 hover:bg-red-100" : "bg-indigo-600/10 text-indigo-600 hover:bg-indigo-600/20"}`}
                       >
                         {isSpeaking ? "Stop Playing" : "Play Audio"}
                       </button>
                     </div>
-                    <div className="text-sm text-slate-600 leading-relaxed max-h-48 overflow-y-auto pr-2 custom-scrollbar border-l-2 border-accent/30 pl-3">
+                    <div className="text-sm text-slate-600 leading-relaxed max-h-48 overflow-y-auto pr-2 custom-scrollbar border-l-2 border-indigo-600/30 pl-3">
                       {speechText}
                     </div>
                   </div>
@@ -3056,8 +3056,8 @@ Do not output markdown code fences, only output raw JSON.`
                <div className="text-center space-y-6 flex flex-col items-center">
                  <div className="relative">
                    <div className="absolute inset-0 bg-brand-cobalt blur-3xl opacity-20 rounded-full animate-pulse"></div>
-                   <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center ring-1 ring-border-subtle shadow-xl relative z-10 backdrop-blur-md">
-                     <Sparkles className="w-10 h-10 text-accent" />
+                   <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center ring-1 ring-slate-200 shadow-xl relative z-10 backdrop-blur-md">
+                     <Sparkles className="w-10 h-10 text-indigo-600" />
                    </div>
                  </div>
                  <div className="space-y-2">
@@ -3072,7 +3072,7 @@ Do not output markdown code fences, only output raw JSON.`
       {/* UPGRADE PREMIUM PLAN PRO MODAL */}
       {showUpgradeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-xs fade-in">
-          <div className="max-w-md w-full bg-white rounded-3xl p-6.5 shadow-2xl relative border border-border-subtle text-center space-y-4">
+          <div className="max-w-md w-full bg-white rounded-3xl p-6.5 shadow-2xl relative border border-slate-200 text-center space-y-4">
             
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-orange-600 ring-4 ring-orange-500/5">
               <Lock className="h-6 w-6" />
@@ -3088,22 +3088,22 @@ Do not output markdown code fences, only output raw JSON.`
             </div>
 
             {/* Mini invoice pricing banner */}
-            <div className="rounded-2xl border border-dashed border-gray-200 bg-surface-solid p-4 text-left text-xs space-y-1.5 font-sans">
+            <div className="rounded-2xl border border-dashed border-gray-200 bg-slate-50 p-4 text-left text-xs space-y-1.5 font-sans">
               <div className="flex justify-between font-bold text-white">
                 <span>⭐ Recommended Choice</span>
                 <span className="text-purple-600">Most Popular</span>
               </div>
-              <div className="flex justify-between text-text-muted">
+              <div className="flex justify-between text-slate-400">
                 <span>Pro Scholar Plan</span>
                 <span className="font-semibold text-slate-800">₹149 / month</span>
               </div>
-              <p className="text-[10px] text-text-secondary mt-1">Includes unlimited AI exam tools, spaced study planner, notes-to-flashcard maker, and early exam mocks access!</p>
+              <p className="text-[10px] text-slate-500 mt-1">Includes unlimited AI exam tools, spaced study planner, notes-to-flashcard maker, and early exam mocks access!</p>
             </div>
 
             <div className="flex gap-2.5 pt-2">
               <button
                 onClick={() => setShowUpgradeModal(false)}
-                className="w-1/2 rounded-xl border border-gray-200 hover:bg-surface-solid py-3 text-xs font-bold text-gray-600 transition cursor-pointer"
+                className="w-1/2 rounded-xl border border-gray-200 hover:bg-slate-50 py-3 text-xs font-bold text-gray-600 transition cursor-pointer"
               >
                 Maybe Later
               </button>
