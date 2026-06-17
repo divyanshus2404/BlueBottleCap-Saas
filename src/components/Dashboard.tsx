@@ -395,6 +395,7 @@ export const Dashboard: React.FC = () => {
                   return (
                   <motion.div
                     whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     key={i}
                     onClick={() => {
                       if (tool.toolId) {
@@ -402,16 +403,16 @@ export const Dashboard: React.FC = () => {
                       }
                       onNavigateTo(tool.view);
                     }}
-                    className={`flex items-center gap-4 rounded-2xl border ${bgColors[i % bgColors.length]} p-4 shadow-sm hover:shadow-md transition-all cursor-pointer`}
+                    className={`flex items-center gap-4 rounded-2xl border ${bgColors[i % bgColors.length]} p-4 shadow-sm hover:shadow-lg transition-all cursor-pointer group`}
                   >
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconColors[i % iconColors.length]} text-lg shadow-sm`}>
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconColors[i % iconColors.length]} text-lg shadow-sm transform group-hover:scale-110 group-hover:-rotate-12 transition-all duration-300`}>
                       {tool.icon}
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900">{tool.name}</h3>
+                      <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors duration-300">{tool.name}</h3>
                       <p className="text-[10px] text-slate-600 font-medium">{tool.desc}</p>
                     </div>
-                    <ArrowRight className="ml-auto w-4 h-4 text-slate-700" />
+                    <ArrowRight className="ml-auto w-4 h-4 text-slate-400 group-hover:text-indigo-500 transform group-hover:translate-x-1 transition-all duration-300" />
                   </motion.div>
                 )})}
               </div>
