@@ -1264,7 +1264,7 @@ Do not output markdown code fences, only output raw JSON.`
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen w-full bg-slate-50 text-slate-900 fade-in overflow-hidden">
+    <div className="flex flex-col lg:flex-row min-h-screen w-full bg-slate-50 text-slate-900 fade-in relative">
       
       {/* LEFT SIDEBAR: Tools Directory */}
       <motion.div 
@@ -1381,7 +1381,7 @@ Do not output markdown code fences, only output raw JSON.`
       </motion.div>
 
       {/* RIGHT MAIN WORKSPACE */}
-      <div className="flex-1 p-4 lg:p-8 overflow-y-auto bg-slate-50 relative lg:h-screen z-10 custom-scrollbar">
+      <div className="flex-1 p-4 lg:p-8 bg-slate-50 relative z-10 custom-scrollbar pb-24">
           {selectedToolId ? (
             <div key={selectedToolId} className="w-full max-w-5xl mx-auto fade-in">
               <div id="active-workspace-anchor" className="mb-12">
