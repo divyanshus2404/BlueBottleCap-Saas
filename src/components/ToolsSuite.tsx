@@ -1478,7 +1478,7 @@ Do not output markdown code fences, only output raw JSON.`
                       <select
                         value={pyqSubject}
                         onChange={(e) => setPyqSubject(e.target.value as any)}
-                        className="w-full rounded-xl border border-slate-200 p-2.5 text-xs font-semibold focus:border-indigo-600 text-white bg-white"
+                        className="w-full rounded-xl border border-slate-200 p-2.5 text-xs font-semibold focus:border-indigo-600 text-slate-800 bg-white"
                       >
                         <option value="Physics">Physics</option>
                         <option value="Chemistry">Chemistry</option>
@@ -1491,7 +1491,7 @@ Do not output markdown code fences, only output raw JSON.`
                       <select
                         value={pyqChapterName}
                         onChange={(e) => setPyqChapterName(e.target.value)}
-                        className="w-full rounded-xl border border-slate-200 p-2.5 text-xs font-semibold focus:border-indigo-600 text-white bg-white"
+                        className="w-full rounded-xl border border-slate-200 p-2.5 text-xs font-semibold focus:border-indigo-600 text-slate-800 bg-white"
                       >
                         {chaptersList.map((ch, idx) => (
                           <option key={idx} value={ch.name}>{ch.name}</option>
@@ -1716,7 +1716,7 @@ Do not output markdown code fences, only output raw JSON.`
                                           value={typedSteps}
                                           onChange={(e) => setTypedSteps(e.target.value)}
                                           placeholder="e.g. Total Charge Q1 = σ * 4πR^2. Q2 = -σ * 16πR^2. I summed the potentials V = V1 + V2 + V3 but inside shell 3..."
-                                          className="w-full h-32 rounded-xl border border-slate-200 p-3 text-xs font-medium focus:border-indigo-600 text-white bg-white resize-none"
+                                          className="w-full h-32 rounded-xl border border-slate-200 p-3 text-xs font-medium focus:border-indigo-600 text-slate-800 bg-white resize-none"
                                         />
                                       </div>
 
@@ -2402,7 +2402,7 @@ Do not output markdown code fences, only output raw JSON.`
                       value={plannerExamName}
                       onChange={(e) => setPlannerExamName(e.target.value)}
                       placeholder="e.g. JEE Mains 2026, B.Tech Sem 2"
-                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-white bg-white"
+                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-slate-800 bg-white"
                     />
                   </div>
                   <div>
@@ -2412,7 +2412,7 @@ Do not output markdown code fences, only output raw JSON.`
                       value={plannerSubject}
                       onChange={(e) => setPlannerSubject(e.target.value)}
                       placeholder="e.g. Physics, Chemistry, Maths"
-                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-white bg-white"
+                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-slate-800 bg-white"
                     />
                   </div>
                   <div>
@@ -2421,7 +2421,7 @@ Do not output markdown code fences, only output raw JSON.`
                       type="date"
                       value={plannerDate}
                       onChange={(e) => setPlannerDate(e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-white bg-white"
+                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-slate-800 bg-white"
                     />
                   </div>
                 </div>
@@ -2448,7 +2448,7 @@ Do not output markdown code fences, only output raw JSON.`
                       value={plannerWeak}
                       onChange={(e) => setPlannerWeak(e.target.value)}
                       placeholder="e.g. Integration, Organic synthesis"
-                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-white bg-white"
+                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-slate-800 bg-white"
                     />
                   </div>
                 </div>
@@ -2666,7 +2666,7 @@ Do not output markdown code fences, only output raw JSON.`
                       value={conceptInput}
                       onChange={(e) => setConceptInput(e.target.value)}
                       placeholder="e.g. Fourier Transform, Heuristic search, Thermodynamics 2nd Law"
-                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-white bg-white"
+                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-medium focus:border-indigo-600 text-slate-800 bg-white"
                     />
                   </div>
                   <div>
@@ -2674,7 +2674,7 @@ Do not output markdown code fences, only output raw JSON.`
                     <select
                       value={conceptStyle}
                       onChange={(e) => setConceptStyle(e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-semibold focus:border-indigo-600 text-white bg-white"
+                      className="w-full rounded-xl border border-gray-200 p-3 text-xs font-semibold focus:border-indigo-600 text-slate-800 bg-white"
                     >
                       <option value="analogies">Simple Analogies</option>
                       <option value="socratic">Socratic Method</option>
