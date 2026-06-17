@@ -242,23 +242,23 @@ export const Dashboard: React.FC = () => {
       </button>
 
       {/* Segment Tab Controller - Beautiful Buttons */}
-      <div className="mb-8 flex flex-wrap gap-3">
+      <div className="mb-8 flex flex-wrap gap-3 bg-white p-2 rounded-2xl shadow-sm border border-slate-100 inline-flex">
         <button
           onClick={() => setActiveTab("workspace")}
-          className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+          className={`px-8 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
             activeTab === "workspace" 
-              ? "bg-white text-accent border-2 border-accent shadow-sm" 
-              : "bg-surface-solid border-2 border-transparent text-text-muted hover:bg-gray-100 hover:text-slate-800"
+              ? "bg-indigo-50 text-indigo-700 border-2 border-indigo-200 shadow-sm" 
+              : "bg-transparent border-2 border-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-800"
           }`}
         >
           📚 Study Workspace
         </button>
         <button
           onClick={() => setActiveTab("analytics")}
-          className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+          className={`px-8 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
             activeTab === "analytics" 
-              ? "bg-white text-accent border-2 border-accent shadow-sm" 
-              : "bg-surface-solid border-2 border-transparent text-text-muted hover:bg-gray-100 hover:text-slate-800"
+              ? "bg-indigo-50 text-indigo-700 border-2 border-indigo-200 shadow-sm" 
+              : "bg-transparent border-2 border-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-800"
           }`}
         >
           📊 Stats & Streaks
