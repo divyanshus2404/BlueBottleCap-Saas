@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ActiveView, UserStats } from "../types";
-import { Zap, Sparkles, BookOpen, Layers, Menu, X, Check, Award, Lock, Timer, Sun, Moon, CreditCard, Info, Map, Home } from "lucide-react";
+import { Zap, Sparkles, BookOpen, Layers, Menu, X, Check, Award, Lock, Timer, Sun, Moon, CreditCard, Info, Map, Home, ChevronLeft } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Logo } from "./Logo";
 import { MagneticWrapper } from "./MagneticWrapper";
@@ -43,8 +43,24 @@ export const Navigation: React.FC<NavigationProps> = ({
     <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/85 backdrop-blur-md transition-colors duration-300">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
-        {/* Logo Section */}
-        <MagneticWrapper strength={30}>
+        {/* Left Side: Back Button & Logo Section */}
+        <div className="flex items-center gap-3">
+          {currentView !== "landing" && currentView !== "dashboard" && (
+            <button
+              onClick={() => {
+                if (window.history.length > 2) {
+                  window.history.back();
+                } else {
+                  handleLinkClick("dashboard");
+                }
+              }}
+              className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 transition-colors shadow-xs cursor-pointer group"
+              title="Go Back"
+            >
+              <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+            </button>
+          )}
+          <MagneticWrapper strength={30}>
           <a 
             href="/"
             onClick={(e) => { e.preventDefault(); handleLinkClick("landing"); }}
@@ -61,6 +77,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             </div>
           </a>
         </MagneticWrapper>
+        </div>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-2">
