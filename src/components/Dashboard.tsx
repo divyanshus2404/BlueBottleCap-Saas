@@ -155,7 +155,7 @@ export const Dashboard: React.FC = () => {
   const chartLabels = chartData.map((cd) => cd.dayLabel);
 
   return (
-    <div ref={containerRef} className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div ref={containerRef} className="mx-auto max-w-[1600px] w-full px-4 py-12 sm:px-8 lg:px-12 min-h-screen pb-32">
       
       {/* Top Profile Banner */}
       <div 
