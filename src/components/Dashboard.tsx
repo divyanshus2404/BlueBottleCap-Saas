@@ -13,6 +13,7 @@ gsap.registerPlugin(useGSAP);
 
 import { useGlobalState } from "../context/GlobalStateContext";
 import { useRouter } from "next/navigation";
+import { WeeklyWrapped } from "./WeeklyWrapped";
 
 export const Dashboard: React.FC = () => {
   const {
@@ -26,6 +27,8 @@ export const Dashboard: React.FC = () => {
     recentActivities,
   } = useGlobalState();
   const router = useRouter();
+  const [showWrapped, setShowWrapped] = useState(false);
+
   const onNavigateTo = (view: ActiveView | string) => {
     const paths: Record<string, string> = {
       landing: '/',
@@ -472,10 +475,10 @@ export const Dashboard: React.FC = () => {
               <h3 className="font-display text-lg font-black text-slate-900 flex items-center gap-2">
                 <HardDrive className="w-5 h-5 text-slate-700" /> Reports & Data Export
               </h3>
-              <p className="text-sm text-text-muted mt-1">Download your raw study data or generate deep AI-driven analysis reports.</p>
+              <p className="text-sm text-text-muted mt-1">Download your raw study data, view your Spotify-style Wrapped, or generate deep AI-driven analysis reports.</p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <div className="rounded-2xl border border-gray-100 bg-surface-solid p-6 flex flex-col justify-between">
                 <div>
                   <h4 className="text-base font-bold text-slate-900 mb-1">Basic Progress Export</h4>
@@ -528,10 +531,38 @@ export const Dashboard: React.FC = () => {
                   )}
                 </div>
               </div>
+              
+              {/* Weekly Wrapped Export */}
+              <div className="rounded-2xl border border-fuchsia-100 bg-gradient-to-br from-fuchsia-50 to-indigo-50 p-6 flex flex-col justify-between relative overflow-hidden group">
+                <div className="absolute -top-12 -right-12 w-32 h-32 bg-fuchsia-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 group-hover:opacity-70 transition-opacity"></div>
+                <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 group-hover:opacity-70 transition-opacity"></div>
+                <div className="relative z-10">
+                  <h4 className="text-base font-black text-slate-900 mb-1 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-fuchsia-500" /> Weekly Wrapped
+                  </h4>
+                  <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                    See a vibrant, Spotify-style recap of your week's studying. Share your ranking and time saved directly to Instagram or Snapchat!
+                  </p>
+                </div>
+                <button 
+                  onClick={() => setShowWrapped(true)}
+                  className="relative z-10 w-full py-2.5 rounded-xl bg-gradient-to-r from-fuchsia-600 to-indigo-600 text-white hover:from-fuchsia-500 hover:to-indigo-500 text-sm font-bold shadow-lg shadow-fuchsia-500/20 transition flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <ImageIcon className="w-4 h-4" /> Generate Image
+                </button>
+              </div>
             </div>
           </div>
 
         </motion.div>
+      )}
+
+      {/* Render the Wrapped modal */}
+      {showWrapped && (
+        <WeeklyWrapped 
+          onClose={() => setShowWrapped(false)} 
+          userStats={userStats} 
+        />
       )}
     </div>
   );
