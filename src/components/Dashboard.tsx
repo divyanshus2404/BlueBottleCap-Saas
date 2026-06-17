@@ -340,14 +340,27 @@ export const Dashboard: React.FC = () => {
                   </div>
                   <div className="divide-y divide-gray-50">
                     {recentActivities.length === 0 ? (
-                      <div className="px-6 py-8 text-center border-t border-gray-50">
-                        <div className="mx-auto w-12 h-12 bg-surface-solid rounded-full flex items-center justify-center mb-3">
-                          <History className="w-5 h-5 text-text-primary" />
+                      <div className="px-6 py-12 text-center flex flex-col items-center justify-center bg-gradient-to-b from-white to-slate-50">
+                        <div className="relative mb-6">
+                          <div className="absolute inset-0 bg-blue-200 blur-[30px] rounded-full opacity-50 mix-blend-multiply"></div>
+                          <div className="w-20 h-20 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-3xl shadow-xl flex items-center justify-center transform rotate-3 relative z-10 hover:rotate-6 hover:scale-105 transition-all duration-300">
+                            <Sparkles className="w-10 h-10 text-white" />
+                          </div>
+                          <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full border-4 border-white z-20 flex items-center justify-center shadow-sm">
+                            <Zap className="w-4 h-4 text-yellow-900" />
+                          </div>
                         </div>
-                        <h4 className="text-sm font-bold text-slate-900">No recent activity</h4>
-                        <p className="text-xs text-text-muted mt-1 max-w-[200px] mx-auto">
-                          When you use tools like the Smart Summarizer or AI PDF Reader, your activity will appear here.
+                        <h4 className="text-lg font-black text-slate-900 mb-2">Ready to level up?</h4>
+                        <p className="text-sm text-slate-500 max-w-[280px] mx-auto mb-6 leading-relaxed">
+                          Your study journey begins here. Jump into an AI session and watch the hours saved pile up!
                         </p>
+                        <button 
+                          onClick={() => onNavigateTo('tools')}
+                          className="px-6 py-3 rounded-xl bg-slate-900 text-white text-sm font-bold shadow-lg hover:bg-indigo-600 hover:shadow-indigo-500/25 transition-all duration-300 flex items-center gap-2 group"
+                        >
+                          Start your first AI Session
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </button>
                       </div>
                     ) : (
                       recentActivities.map((act, i) => (
