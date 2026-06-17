@@ -132,6 +132,50 @@ try {
     res.json({ status: "ok", message: "BlueBottleCap backend active" });
   });
 
+  app.post("/api/gemini/generate-roadmap", geminiRateLimiter, async (req, res) => {
+    try {
+      const { prompt } = req.body;
+      if (!prompt || typeof prompt !== "string") {
+        return res.status(400).json({ error: "Valid prompt is required" });
+      }
+
+      const ai = getAIClient();
+      const systemPrompt = `You are an expert academic counselor and course architect. Create a realistic, 5-to-8 step chronological learning roadmap for the following topic/goal: "${prompt}". 
+      Return the result STRICTLY as a JSON object containing two keys: "nodes" and "coincidingGroups".
+      "nodes" must be an array of objects where each object has:
+      - "id": a unique string like "n-1"
+      - "title": a short, punchy title for the step
+      - "description": a 1-sentence description of what to study
+      - "status": string "completed" for the first node, "current" for the second node, and "locked" for the rest
+      - "duration": a string like "Week 1", "Week 2-3", or "Month 1"
+      "coincidingGroups" must be an array of 2 to 4 objects representing mock peer study groups related to the topic, where each object has:
+      - "id": a unique string like "g-1"
+      - "name": a fun, creative name for the study group (e.g. "React Masters", "Chemistry Connoisseurs")
+      - "avatar": a single relevant emoji
+      - "members": a random integer between 3 and 40
+      - "currentNodeId": the id of one of the nodes (e.g., "n-2")
+
+      Do NOT wrap the response in markdown blocks like \`\`\`json. Return pure JSON only.`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: systemPrompt,
+        config: {
+          temperature: 0.7,
+        }
+      });
+
+      let responseText = response.text || "";
+      responseText = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
+      
+      const parsedData = JSON.parse(responseText);
+      return res.json(parsedData);
+    } catch (err: any) {
+      console.error("Gemini roadmap generation error:", err);
+      return res.status(500).json({ error: "Failed to generate roadmap" });
+    }
+  });
+
   app.post("/api/gemini/summarize", geminiRateLimiter, async (req, res) => {
     try {
       const { text, focus } = req.body;

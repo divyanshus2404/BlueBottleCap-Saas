@@ -155,13 +155,14 @@ export const RoadmapBuilder: React.FC<{ onNavigate: (view: ActiveView) => void }
         {activeRoadmap && !isGenerating && (
           <div className="mt-12 lg:grid lg:grid-cols-12 gap-8 items-start pb-20">
             
+            
             {/* The Timeline Graph */}
-            <div className="lg:col-span-8 relative">
+            <div className="lg:col-span-8 relative w-full pt-10">
               
-              {/* Vertical Path Line */}
-              <div className="absolute left-[39px] md:left-[47px] top-8 bottom-0 w-1 bg-slate-200 rounded-full overflow-hidden">
+              {/* Central DNA Spine */}
+              <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-1.5 bg-indigo-100 rounded-full overflow-hidden">
                 <motion.div 
-                  className="w-full bg-gradient-to-b from-brand-cobalt to-indigo-500 origin-top"
+                  className="w-full bg-gradient-to-b from-brand-cobalt via-indigo-500 to-purple-500 origin-top"
                   initial={{ scaleY: 0 }}
                   animate={{ scaleY: nodesRevealed / activeRoadmap.nodes.length }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
@@ -169,61 +170,142 @@ export const RoadmapBuilder: React.FC<{ onNavigate: (view: ActiveView) => void }
                 />
               </div>
 
-              <div className="space-y-8">
+              <div className="space-y-16 lg:space-y-24 relative z-10 pb-20">
                 {activeRoadmap.nodes.map((node, idx) => {
                   const isRevealed = idx < nodesRevealed;
                   const groupsAtThisNode = activeRoadmap.coincidingGroups.filter(g => g.currentNodeId === node.id);
+                  const isEven = idx % 2 === 0;
 
                   return (
                     <motion.div 
                       key={node.id}
-                      initial={{ opacity: 0, x: -20, filter: "blur(10px)" }}
-                      animate={isRevealed ? { opacity: 1, x: 0, filter: "blur(0px)" } : {}}
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                      className={`relative flex items-start gap-4 md:gap-6 ${!isRevealed ? 'hidden' : ''}`}
+                      initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+                      animate={isRevealed ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+                      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                      className={`relative w-full flex items-center ${!isRevealed ? 'hidden' : ''} ${isEven ? 'justify-start' : 'justify-end'}`}
                     >
-                      {/* Node Icon */}
-                      <div className="relative z-10 flex-shrink-0">
-                        <div className={`w-20 h-20 md:w-24 md:h-24 rounded-full flex flex-col items-center justify-center border-4 ${
-                          node.status === 'completed' ? 'bg-emerald-50 border-emerald-500 text-emerald-600' :
-                          node.status === 'current' ? 'bg-indigo-50 border-brand-cobalt text-brand-cobalt shadow-[0_0_20px_rgba(79,70,229,0.3)] ring-4 ring-indigo-500/20' :
-                          'bg-white border-slate-200 text-slate-400'
-                        }`}>
-                          {node.status === 'completed' && <CheckCircle2 className="w-6 h-6 md:w-8 md:h-8 mb-1" />}
-                          {node.status === 'current' && <ArrowRight className="w-6 h-6 md:w-8 md:h-8 mb-1" />}
-                          {node.status === 'locked' && <CircleDashed className="w-6 h-6 md:w-8 md:h-8 mb-1" />}
-                          <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-wider">{node.duration}</span>
-                        </div>
-                      </div>
-
-                      {/* Node Content */}
-                      <div className={`flex-1 bg-white rounded-2xl p-5 md:p-6 border shadow-sm transition-all duration-300 hover:shadow-md ${
-                        node.status === 'current' ? 'border-brand-cobalt/50 shadow-indigo-100' : 'border-slate-200'
-                      }`}>
-                        <h3 className="text-lg font-bold text-slate-900 mb-2 font-display">{node.title}</h3>
-                        <p className="text-sm text-slate-600 leading-relaxed">{node.description}</p>
-                        
-                        {/* Peer Groups sitting on this node */}
-                        {groupsAtThisNode.length > 0 && (
-                          <div className="mt-4 pt-4 border-t border-slate-100">
-                            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1">
-                              <Users className="w-3 h-3" />
-                              Peers currently here
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              {groupsAtThisNode.map(group => (
-                                <div key={group.id} className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-full pl-1 pr-3 py-1">
-                                  <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-xs text-xs border border-slate-100">
-                                    {group.avatar}
+                      
+                      {/* Desktop Layout (Alternating DNA Structure) */}
+                      <div className="hidden lg:flex items-center w-full relative">
+                        {/* Node Content Container - Left Side */}
+                        {isEven && (
+                          <div className="w-[45%] pr-12 text-right flex justify-end">
+                            <div className={`w-full max-w-sm bg-white rounded-3xl p-6 border shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-xl relative ${
+                              node.status === 'current' ? 'border-brand-cobalt shadow-indigo-100 ring-2 ring-indigo-500/20' : 'border-slate-200'
+                            }`}>
+                              <h3 className="text-xl font-bold text-slate-900 mb-2 font-display">{node.title}</h3>
+                              <p className="text-sm text-slate-600 leading-relaxed">{node.description}</p>
+                              {groupsAtThisNode.length > 0 && (
+                                <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col items-end">
+                                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                                    Peers currently here <Users className="w-3 h-3" />
+                                  </p>
+                                  <div className="flex flex-wrap justify-end gap-2">
+                                    {groupsAtThisNode.map(group => (
+                                      <div key={group.id} className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-full pl-2 pr-1 py-1">
+                                        <span className="text-[10px] text-slate-500 tracking-tighter">({group.members})</span>
+                                        <span className="text-xs font-bold text-slate-700">{group.name}</span>
+                                        <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-xs text-xs border border-slate-100">{group.avatar}</div>
+                                      </div>
+                                    ))}
                                   </div>
-                                  <span className="text-xs font-bold text-slate-700">{group.name}</span>
-                                  <span className="text-[10px] text-slate-500">({group.members})</span>
                                 </div>
-                              ))}
+                              )}
+                              
+                              {/* Curved Connector Line to Center */}
+                              <svg className="absolute top-1/2 -right-[48px] w-[48px] h-2 -translate-y-1/2 z-[-1]" preserveAspectRatio="none">
+                                <path d="M 0 4 Q 24 4 48 4" stroke={node.status === 'completed' ? '#10b981' : node.status === 'current' ? '#4f46e5' : '#e2e8f0'} strokeWidth="3" fill="none" strokeDasharray={node.status === 'locked' ? '4 4' : 'none'} className={node.status === 'current' ? 'animate-pulse' : ''} />
+                              </svg>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Center Icon */}
+                        <div className="absolute left-1/2 -translate-x-1/2 z-20">
+                          <motion.div 
+                            animate={node.status === 'current' ? { y: [0, -5, 0] } : {}}
+                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                            className={`w-16 h-16 rounded-full flex flex-col items-center justify-center border-4 shadow-lg backdrop-blur-md ${
+                              node.status === 'completed' ? 'bg-emerald-500 text-white border-white shadow-emerald-500/30' :
+                              node.status === 'current' ? 'bg-brand-cobalt text-white border-white shadow-brand-cobalt/40 ring-4 ring-indigo-500/20' :
+                              'bg-white text-slate-400 border-slate-200 shadow-slate-200/50'
+                            }`}
+                          >
+                            {node.status === 'completed' && <CheckCircle2 className="w-6 h-6 mb-0.5" />}
+                            {node.status === 'current' && <ArrowRight className="w-6 h-6 mb-0.5" />}
+                            {node.status === 'locked' && <CircleDashed className="w-6 h-6 mb-0.5" />}
+                            <span className="text-[9px] font-bold uppercase tracking-wider">{node.duration}</span>
+                          </motion.div>
+                        </div>
+
+                        {/* Node Content Container - Right Side */}
+                        {!isEven && (
+                          <div className="w-[45%] pl-12 ml-auto flex justify-start">
+                            <div className={`w-full max-w-sm bg-white rounded-3xl p-6 border shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-xl relative ${
+                              node.status === 'current' ? 'border-brand-cobalt shadow-indigo-100 ring-2 ring-indigo-500/20' : 'border-slate-200'
+                            }`}>
+                              <h3 className="text-xl font-bold text-slate-900 mb-2 font-display">{node.title}</h3>
+                              <p className="text-sm text-slate-600 leading-relaxed">{node.description}</p>
+                              {groupsAtThisNode.length > 0 && (
+                                <div className="mt-4 pt-4 border-t border-slate-100">
+                                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                                    <Users className="w-3 h-3" /> Peers currently here
+                                  </p>
+                                  <div className="flex flex-wrap gap-2">
+                                    {groupsAtThisNode.map(group => (
+                                      <div key={group.id} className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-full pl-1 pr-3 py-1">
+                                        <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-xs text-xs border border-slate-100">{group.avatar}</div>
+                                        <span className="text-xs font-bold text-slate-700">{group.name}</span>
+                                        <span className="text-[10px] text-slate-500 tracking-tighter">({group.members})</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* Curved Connector Line to Center */}
+                              <svg className="absolute top-1/2 -left-[48px] w-[48px] h-2 -translate-y-1/2 z-[-1]" preserveAspectRatio="none">
+                                <path d="M 0 4 Q 24 4 48 4" stroke={node.status === 'completed' ? '#10b981' : node.status === 'current' ? '#4f46e5' : '#e2e8f0'} strokeWidth="3" fill="none" strokeDasharray={node.status === 'locked' ? '4 4' : 'none'} className={node.status === 'current' ? 'animate-pulse' : ''} />
+                              </svg>
                             </div>
                           </div>
                         )}
                       </div>
+
+                      {/* Mobile Layout (Standard vertical list, hidden on large screens) */}
+                      <div className="lg:hidden flex w-full relative pl-8">
+                        {/* Mobile Icon */}
+                        <div className="absolute left-[-24px] top-1/2 -translate-y-1/2 z-20">
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center border-4 shadow-sm ${
+                            node.status === 'completed' ? 'bg-emerald-500 text-white border-white' :
+                            node.status === 'current' ? 'bg-brand-cobalt text-white border-white ring-2 ring-indigo-500/20' :
+                            'bg-white text-slate-400 border-slate-200'
+                          }`}>
+                            {node.status === 'completed' && <CheckCircle2 className="w-5 h-5" />}
+                            {node.status === 'current' && <ArrowRight className="w-5 h-5" />}
+                            {node.status === 'locked' && <CircleDashed className="w-5 h-5" />}
+                          </div>
+                        </div>
+
+                        <div className={`w-full bg-white rounded-2xl p-5 border shadow-sm relative ${
+                          node.status === 'current' ? 'border-brand-cobalt shadow-indigo-100 ring-1 ring-indigo-500/20' : 'border-slate-200'
+                        }`}>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">{node.duration}</span>
+                          <h3 className="text-lg font-bold text-slate-900 mb-1.5 font-display">{node.title}</h3>
+                          <p className="text-sm text-slate-600">{node.description}</p>
+                          {groupsAtThisNode.length > 0 && (
+                            <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap gap-2">
+                                {groupsAtThisNode.map(group => (
+                                  <div key={group.id} className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-full pl-1 pr-2 py-1">
+                                    <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center text-[10px] border border-slate-100">{group.avatar}</div>
+                                    <span className="text-[10px] font-bold text-slate-700">{group.name}</span>
+                                  </div>
+                                ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
                     </motion.div>
                   );
                 })}
