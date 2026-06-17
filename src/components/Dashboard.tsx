@@ -241,29 +241,27 @@ export const Dashboard: React.FC = () => {
         </div>
       </button>
 
-      {/* Segment Tab Controller */}
-      <div className="mb-8 flex gap-2 border-b border-gray-100 pb-px">
+      {/* Segment Tab Controller - Beautiful Buttons */}
+      <div className="mb-8 flex flex-wrap gap-3">
         <button
           onClick={() => setActiveTab("workspace")}
-          className={`px-5 py-3 text-sm font-bold transition-all relative ${
-            activeTab === "workspace" ? "text-accent" : "text-text-muted hover:text-slate-800"
+          className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+            activeTab === "workspace" 
+              ? "bg-white text-accent border-2 border-accent shadow-sm" 
+              : "bg-surface-solid border-2 border-transparent text-text-muted hover:bg-gray-100 hover:text-slate-800"
           }`}
         >
           📚 Study Workspace
-          {activeTab === "workspace" && (
-            <motion.div layoutId="tab-indicator" className="absolute bottom-0 left-0 w-full h-0.5 bg-accent" />
-          )}
         </button>
         <button
           onClick={() => setActiveTab("analytics")}
-          className={`px-5 py-3 text-sm font-bold transition-all relative ${
-            activeTab === "analytics" ? "text-accent" : "text-text-muted hover:text-slate-800"
+          className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+            activeTab === "analytics" 
+              ? "bg-white text-accent border-2 border-accent shadow-sm" 
+              : "bg-surface-solid border-2 border-transparent text-text-muted hover:bg-gray-100 hover:text-slate-800"
           }`}
         >
           📊 Stats & Streaks
-          {activeTab === "analytics" && (
-            <motion.div layoutId="tab-indicator" className="absolute bottom-0 left-0 w-full h-0.5 bg-accent" />
-          )}
         </button>
       </div>
 
