@@ -1082,7 +1082,7 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
         <TermsAndConditions onBack={() => navigateToView("landing")} />
       )}
 
-      {["landing", "pricing", "about", "roadmaps", "terms"].includes(currentView) && (
+      {currentView !== "virtual-test" && currentView !== "pdf-editor" && (
         <Footer setActiveView={navigateToView} />
       )}
 
