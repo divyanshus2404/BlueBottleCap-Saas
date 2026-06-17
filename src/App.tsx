@@ -5,6 +5,8 @@ import { ActiveView, UserStats, UsageStats, Flashcard, DailyActivity, RecentActi
 import { Navigation } from "./components/Navigation";
 import { Onboarding } from "./components/Onboarding";
 import { Dashboard } from "./components/Dashboard";
+import { Sidebar } from "./components/Sidebar";
+import { TopAppBar } from "./components/TopAppBar";
 import { PdfCopilot } from "./components/PdfCopilot";
 import { ToolsSuite } from "./components/ToolsSuite";
 import { VirtualTestMode } from "./components/VirtualTestMode";
@@ -960,134 +962,130 @@ export default function App({ initialView }: { initialView?: ActiveView }) {
           setPendingView(null);
         }}
       />
-      <div className="min-h-screen bg-transparent font-sans antialiased flex flex-col">
-        <GlobalBackground />
-      {/* Unified top header navigation */}
-      <Navigation
-        currentView={currentView}
-        onViewChange={navigateToView}
-        userStats={userStats}
-        onLoginClick={() => navigateToView("signup")}
-      />
+      {(() => {
+        const isAuthView = ["landing", "signup", "pricing", "about", "terms", "create-profile"].includes(currentView);
+        
+        if (isAuthView) {
+          return (
+            <div className="min-h-screen bg-transparent font-sans antialiased flex flex-col">
+              <GlobalBackground />
+              <Navigation
+                currentView={currentView}
+                onViewChange={navigateToView}
+                userStats={userStats}
+                onLoginClick={() => navigateToView("signup")}
+              />
+              <AuthModal
+                isOpen={isAuthModalOpen}
+                onClose={() => setIsAuthModalOpen(false)}
+              />
+              <ErrorBoundary>
+                {currentView === "landing" && <LandingPage onNavigate={navigateToView} />}
+                {currentView === "pricing" && (
+                  <Pricing
+                    userStats={userStats}
+                    onUpgradeApproved={handleUpgradeAccount}
+                    onNavigateTo={navigateToView}
+                  />
+                )}
+                {currentView === "signup" && <SignUpPage setCurrentView={navigateToView} />}
+                {currentView === "create-profile" && <CreateProfilePage setCurrentView={navigateToView} />}
+                {currentView === "about" && <AboutPage onNavigate={navigateToView} />}
+                {currentView === "terms" && <TermsAndConditions onBack={() => navigateToView("landing")} />}
+                <Footer setActiveView={navigateToView} />
+              </ErrorBoundary>
+            </div>
+          );
+        }
 
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-      />
-
-      {/* VIEW CONDITIONAL RENDERS */}
-      <ErrorBoundary>
-        {currentView === "landing" && <LandingPage onNavigate={navigateToView} />}
-        {currentView === "onboarding" && (
-          <Onboarding
-            onComplete={() => navigateToView("dashboard")}
-            userStats={userStats}
-          />
-        )}
-
-      {currentView === "dashboard" && (
-        <Dashboard />
-      )}
-
-      {currentView === "pdf-editor" && (
-        <PdfCopilot
-          userStats={userStats}
-          onIncrementQuery={incrementAiQueriesUsed}
-          onAddFlashcard={handleAddFlashcard}
-          openedPapers={openedPapers}
-          onOpenPaper={(paperId) => {
-            if (userStats.activePlan === "Free" && openedPapers.length >= 3 && !openedPapers.includes(paperId)) {
-              return false;
-            }
-            setOpenedPapers((prev) => {
-              if (prev.includes(paperId)) return prev;
-              const next = [...prev, paperId];
-              localStorage.setItem("bluebottlecap_opened_papers", JSON.stringify(next));
-              if (currentUser) {
-                const userDocRef = doc(db, "users", currentUser.uid);
-                updateDoc(userDocRef, { openedPapers: next }).catch(err => console.error(err));
-              }
-              return next;
-            });
-            return true;
-          }}
-          onUpgradeClick={() => navigateToView("pricing")}
-        />
-      )}
-
-      {currentView === "tools" && (
-        <ToolsSuite
-          userStats={userStats}
-          flashcards={flashcards}
-          onAddFlashcard={handleAddFlashcard}
-          onIncrementQuery={incrementAiQueriesUsed}
-          toolCreditsLeft={toolCreditsLeft}
-          onUseToolCredit={handleUseToolCredit}
-          onUpgradeClick={() => navigateToView("pricing")}
-        />
-      )}
-
-      {currentView === "virtual-test" && (
-        <VirtualTestMode
-          userStats={userStats}
-          onUpgradeClick={() => navigateToView("pricing")}
-          onToast={(msg, type) => showToast(msg, type)}
-          purchasedTests={userStats.purchasedTests || []}
-          onPurchaseSuccess={handlePurchaseTest}
-          studyMaterialUnlocked={userStats.studyMaterialUnlocked || false}
-          onUnlockStudyMaterial={handleUnlockStudyMaterial}
-          onGoHome={() => navigateToView("dashboard")}
-        />
-      )}
-      {currentView === "study-material-page" && (
-        <StudyMaterialPage
-          onNavigate={navigateToView}
-        />
-      )}
-      {currentView === "roadmaps" && (
-        <RoadmapBuilder onNavigate={navigateToView} />
-      )}
-      {currentView === "about" && (
-        <AboutPage onNavigate={navigateToView} />
-      )}
-      {currentView === "seniors-opinion" && (
-        <div className="flex-grow relative z-10 pt-16 transition-all duration-300">
-          <SeniorsOpinionPage onNavigate={navigateToView} />
-        </div>
-      )}
-
-      {currentView === "flashcards" && (
-        <div className="fade-in min-h-[calc(100vh-64px)] bg-transparent">
-          <FlashcardsPage flashcards={flashcards} onUpdateFlashcard={handleUpdateFlashcard} />
-        </div>
-      )}
-
-      {currentView === "pricing" && (
-        <Pricing
-          userStats={userStats}
-          onUpgradeApproved={handleUpgradeAccount}
-          onNavigateTo={navigateToView}
-        />
-      )}
-
-      {currentView === "signup" && (
-        <SignUpPage setCurrentView={navigateToView} />
-      )}
-
-      {currentView === "create-profile" && (
-        <CreateProfilePage setCurrentView={navigateToView} />
-      )}
-
-      {currentView === "terms" && (
-        <TermsAndConditions onBack={() => navigateToView("landing")} />
-      )}
-
-      {currentView !== "virtual-test" && currentView !== "pdf-editor" && (
-        <Footer setActiveView={navigateToView} />
-      )}
-
-      </ErrorBoundary>
-      </div>
+        return (
+          <div className="flex h-screen bg-[#e2e8f0] font-sans antialiased overflow-hidden text-slate-900 w-full">
+            <Sidebar currentView={currentView} onViewChange={navigateToView} isPro={userStats.activePlan !== 'Free'} />
+            <div className="flex-1 flex flex-col h-full overflow-hidden relative">
+              <TopAppBar userProfile={currentUser as any} />
+              <div className="flex-1 overflow-y-auto pb-24 relative z-0">
+                <AuthModal
+                  isOpen={isAuthModalOpen}
+                  onClose={() => setIsAuthModalOpen(false)}
+                />
+                <ErrorBoundary>
+                  {currentView === "onboarding" && (
+                    <Onboarding
+                      onComplete={() => navigateToView("dashboard")}
+                      userStats={userStats}
+                    />
+                  )}
+                  {currentView === "dashboard" && <Dashboard />}
+                  {currentView === "pdf-editor" && (
+                    <PdfCopilot
+                      userStats={userStats}
+                      onIncrementQuery={incrementAiQueriesUsed}
+                      onAddFlashcard={handleAddFlashcard}
+                      openedPapers={openedPapers}
+                      onOpenPaper={(paperId) => {
+                        if (userStats.activePlan === "Free" && openedPapers.length >= 3 && !openedPapers.includes(paperId)) {
+                          return false;
+                        }
+                        setOpenedPapers((prev) => {
+                          if (prev.includes(paperId)) return prev;
+                          const next = [...prev, paperId];
+                          localStorage.setItem("bluebottlecap_opened_papers", JSON.stringify(next));
+                          if (currentUser) {
+                            const userDocRef = doc(db, "users", currentUser.uid);
+                            updateDoc(userDocRef, { openedPapers: next }).catch(err => console.error(err));
+                          }
+                          return next;
+                        });
+                        return true;
+                      }}
+                      onUpgradeClick={() => navigateToView("pricing")}
+                    />
+                  )}
+                  {currentView === "tools" && (
+                    <ToolsSuite
+                      userStats={userStats}
+                      flashcards={flashcards}
+                      onAddFlashcard={handleAddFlashcard}
+                      onIncrementQuery={incrementAiQueriesUsed}
+                      toolCreditsLeft={toolCreditsLeft}
+                      onUseToolCredit={handleUseToolCredit}
+                      onUpgradeClick={() => navigateToView("pricing")}
+                    />
+                  )}
+                  {currentView === "virtual-test" && (
+                    <VirtualTestMode
+                      userStats={userStats}
+                      onUpgradeClick={() => navigateToView("pricing")}
+                      onToast={(msg, type) => showToast(msg, type)}
+                      purchasedTests={userStats.purchasedTests || []}
+                      onPurchaseSuccess={handlePurchaseTest}
+                      studyMaterialUnlocked={userStats.studyMaterialUnlocked || false}
+                      onUnlockStudyMaterial={handleUnlockStudyMaterial}
+                      onGoHome={() => navigateToView("dashboard")}
+                    />
+                  )}
+                  {currentView === "study-material-page" && (
+                    <StudyMaterialPage onNavigate={navigateToView} />
+                  )}
+                  {currentView === "roadmaps" && (
+                    <RoadmapBuilder onNavigate={navigateToView} />
+                  )}
+                  {currentView === "seniors-opinion" && (
+                    <div className="flex-grow relative z-10 pt-8 transition-all duration-300">
+                      <SeniorsOpinionPage onNavigate={navigateToView} />
+                    </div>
+                  )}
+                  {currentView === "flashcards" && (
+                    <div className="fade-in min-h-[calc(100vh-64px)] bg-transparent">
+                      <FlashcardsPage flashcards={flashcards} onUpdateFlashcard={handleUpdateFlashcard} />
+                    </div>
+                  )}
+                </ErrorBoundary>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </SmoothScroll>
   );
 }
