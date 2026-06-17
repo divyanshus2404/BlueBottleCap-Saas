@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Flashcard, UserStats } from "../types";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../supabaseClient";
-import { jeePyqData } from "../data/jeePyqs";
+import { JEEQuestion } from "../data/jeePyqs";
+import { useFirebaseJEE } from "../hooks/useFirebaseJEE";
 import { 
   Sparkles, 
   ArrowRight, 
@@ -59,6 +60,10 @@ export const ToolsSuite: React.FC<ToolsSuiteProps> = ({
   onUseToolCredit,
   onUpgradeClick,
 }) => {
+  const { subjects: jeePyqData, loading: firebaseLoading, loadChapterQuestions } = useFirebaseJEE();
+  const [activeChapterQuestions, setActiveChapterQuestions] = useState<JEEQuestion[]>([]);
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
+
   const { currentUser } = useAuth();
   const [dailyUsageCount, setDailyUsageCount] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<"all" | "exam" | "revision" | "files">("all");
@@ -167,7 +172,20 @@ export const ToolsSuite: React.FC<ToolsSuiteProps> = ({
       setTestSelectedAnswers({});
       setShuffledQuestions([]);
     }
-  }, [pyqSubject]);
+  }, [pyqSubject, jeePyqData]);
+
+  // Fetch questions when chapter changes
+  useEffect(() => {
+    async function fetchQuestions() {
+      if (!pyqChapterName) return;
+      setLoadingQuestions(true);
+      const qs = await loadChapterQuestions(pyqSubject.toLowerCase(), pyqChapterName.replace(/\s+/g, '-').toLowerCase());
+      setActiveChapterQuestions(qs);
+      setPracticeActiveQuestionIdx(0);
+      setLoadingQuestions(false);
+    }
+    fetchQuestions();
+  }, [pyqChapterName, pyqSubject]);
 
   useEffect(() => {
     setPracticeActiveQuestionIdx(0);
@@ -244,10 +262,7 @@ export const ToolsSuite: React.FC<ToolsSuiteProps> = ({
       console.error(err);
       
       // Socratic fallback logic for Socratic responses if cloud AI backend is offline/unconfigured
-      const matchingQ = jeePyqData
-        .flatMap(s => s.chapters)
-        .flatMap(c => c.questions)
-        .find(q => q.id === question.id);
+      const matchingQ = activeChapterQuestions.find(q => q.id === question.id);
 
       const commonMistakeText = matchingQ?.commonMistakes || "Check arithmetic steps.";
       const socraticFallback = `🎓 **JEE Teacher Guidance (Local Fallback)**:\n\nIt seems we had trouble connecting to the cloud AI, but here is a guided clue based on typical student errors:\n\n* **Common Pitfall**: ${commonMistakeText}\n* **Guiding Hint**: Double check if you applied the correct conductor shielding rules or integration limit bounds (from 0 to π/2).\n\nTry checking your formulas and re-attempting!`;
@@ -1265,6 +1280,11 @@ Do not output markdown code fences, only output raw JSON.`
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen w-full bg-slate-50 text-slate-900 fade-in relative">
+      {firebaseLoading && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
+          <Loader2 className="w-8 h-8 animate-spin text-brand-cobalt" />
+        </div>
+      )}
       
       {/* LEFT SIDEBAR: Tools Directory */}
       <motion.div 
@@ -1423,7 +1443,7 @@ Do not output markdown code fences, only output raw JSON.`
               const activeSubjectData = jeePyqData.find(s => s.name === pyqSubject);
               const chaptersList = activeSubjectData ? activeSubjectData.chapters : [];
               const activeChapter = chaptersList.find(c => c.name === pyqChapterName) || chaptersList[0];
-              const questionsList = activeChapter ? activeChapter.questions : [];
+              const questionsList = activeChapterQuestions;
               const activeQuestion = questionsList[practiceActiveQuestionIdx] || null;
               const activeTestList = shuffledQuestions.length > 0 ? shuffledQuestions : questionsList;
 

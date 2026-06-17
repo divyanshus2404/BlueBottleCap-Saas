@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { UserStats } from "../types";
-import { jeePyqData, JEEQuestion } from "../data/jeePyqs";
-import { repeatedTestsData, RepeatedTest } from "../data/repeatedJeePyqs";
+import { JEEQuestion } from "../data/jeePyqs";
+import { useFirebaseJEE } from "../hooks/useFirebaseJEE";
+import { Loader2 } from "lucide-react";
 import { studyMaterial, getChaptersBySubject, getChapterByName } from "../data/studyMaterial";
 import {
   Timer,
@@ -57,6 +58,8 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
   onGoHome,
 }) => {
   const { currentUser } = useAuth();
+  const { mockTests: repeatedTestsData, subjects: jeePyqData, loading: firebaseLoading, loadChapterQuestions } = useFirebaseJEE();
+  const [startingTestId, setStartingTestId] = useState<string | null>(null);
 
   // Navigation Sidebar tab
   const [activeSidebarTab, setActiveSidebarTab] = useState<"dashboard" | "mock-tests" | "study-material" | "performance" | "support">("dashboard");
@@ -104,7 +107,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
     if (subjectData && subjectData.chapters.length > 0) {
       setSelectedChapterName(subjectData.chapters[0].name);
     }
-  }, [selectedSubject]);
+  }, [selectedSubject, jeePyqData]);
 
   // Countdown timer hook
   useEffect(() => {
@@ -188,6 +191,19 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
     } catch (err: any) {
       console.error(err);
       onToast(err.message || "Payment initiation failed", "error");
+    }
+  };
+
+  const handleStartChapterTest = async (testId: string, testName: string) => {
+    if (!activeSubjectData || !activeChapter) return;
+    setStartingTestId(testId);
+    try {
+      const questions = await loadChapterQuestions(activeSubjectData.name.toLowerCase(), activeChapter.name.replace(/\s+/g, '-').toLowerCase());
+      handleStartTest(testId, testName, questions);
+    } catch (e) {
+      onToast("Failed to load questions", "error");
+    } finally {
+      setStartingTestId(null);
     }
   };
 
@@ -327,6 +343,12 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
 
   return (
     <div className="flex flex-col lg:flex-row min-h-[calc(100vh-73px)] w-full bg-[#f8fafc] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(99,102,241,0.15),rgba(255,255,255,0))] fade-in text-brand-navy relative overflow-hidden">
+      {firebaseLoading && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
+          <Loader2 className="w-8 h-8 animate-spin text-brand-cobalt" />
+        </div>
+      )}
+      
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
         <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-brand-cobalt/5 blur-3xl" />
@@ -1002,17 +1024,17 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
 
                             <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-4">
                               <div className="flex gap-4 text-[10px] font-bold text-slate-400 font-mono">
-                                <span>Q: {activeChapterQuestions.length} MCQs</span>
+                                <span>Q: {activeChapterQuestions?.length || 10} MCQs</span>
                                 <span>10 Mins</span>
                               </div>
 
                               {isUnlocked ? (
                                 <button
-                                  onClick={() => handleStartTest(testId, `${selectedChapterName} Timed Mock`, activeChapterQuestions)}
+                                  onClick={() => handleStartChapterTest(testId, `${selectedChapterName} Timed Mock`)}
                                   className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 text-xs transition cursor-pointer select-none flex items-center gap-1 leading-none shadow-3xs"
                                 >
-                                  <Check className="w-3.5 h-3.5" />
-                                  <span>Attempt Mock</span>
+                                  {startingTestId === testId ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                                  <span>{startingTestId === testId ? "Loading..." : "Attempt Mock"}</span>
                                 </button>
                               ) : (
                                 <button
@@ -1361,7 +1383,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                           </thead>
                           <tbody className="divide-y divide-slate-100 font-medium">
                             {performanceHistory.map((item, index) => (
-                              <tr key={index} className="hover:bg-slate-50 ">
+                              <tr key={index} className="hover:bg-bg-slate-50 ">
                                 <td className="p-4 font-bold text-slate-800 ">{item.testName}</td>
                                 <td className="p-4 text-slate-400 font-mono text-[10px] font-bold">{item.date}</td>
                                 <td className="p-4 text-center font-display font-bold text-slate-700">
