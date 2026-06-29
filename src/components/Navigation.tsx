@@ -1,43 +1,33 @@
 "use client";
 
-import React from "react";
-import { ActiveView, UserStats } from "../types";
+import React, { useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Zap, Sparkles, BookOpen, Layers, Menu, X, Check, Award, Lock, Timer, Sun, Moon, CreditCard, Info, Map, Home, ChevronLeft } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useGlobalState } from "../context/GlobalStateContext";
 import { Logo } from "./Logo";
 import { MagneticWrapper } from "./MagneticWrapper";
 
 interface NavigationProps {
-  currentView: ActiveView;
-  onViewChange: (view: ActiveView) => void;
-  userStats: UserStats;
   onLoginClick: () => void;
 }
 
 export const Navigation: React.FC<NavigationProps> = ({
-  currentView,
-  onViewChange,
-  userStats,
   onLoginClick,
 }) => {
   const { currentUser, userProfile, signOutUser } = useAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const { userStats } = useGlobalState();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
-
-
-  const navLinks: { view: ActiveView; label: string; icon: React.ReactNode }[] = [
-    { view: "landing", label: "Home", icon: <Home className="w-4 h-4" /> },
-    { view: "dashboard", label: "Dashboard", icon: <Layers className="w-4 h-4" /> },
-    { view: "roadmaps", label: "Roadmaps", icon: <Map className="w-4 h-4" /> },
-    { view: "about", label: "About", icon: <Info className="w-4 h-4" /> },
-    { view: "study-material-page", label: "Study Material", icon: <BookOpen className="w-4 h-4" /> },
-    { view: "virtual-test", label: "Virtual Test Mode", icon: <Timer className="w-4 h-4" /> },
+  const navLinks = [
+    { href: "/", label: "Home", icon: <Home className="w-4 h-4" /> },
+    { href: "/pdf-editor", label: "PDF Copilot", icon: <Sparkles className="w-4 h-4" /> },
+    { href: "/dashboard", label: "Dashboard", icon: <Layers className="w-4 h-4" /> },
+    { href: "/about", label: "About", icon: <Info className="w-4 h-4" /> },
   ];
-
-  const handleLinkClick = (view: ActiveView) => {
-    onViewChange(view);
-    setMobileMenuOpen(false);
-  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/85 backdrop-blur-md transition-colors duration-300">
@@ -45,15 +35,9 @@ export const Navigation: React.FC<NavigationProps> = ({
         
         {/* Left Side: Back Button & Logo Section */}
         <div className="flex items-center gap-3">
-          {currentView !== "landing" && currentView !== "dashboard" && (
+          {pathname !== "/" && pathname !== "/dashboard" && (
             <button
-              onClick={() => {
-                if (window.history.length > 2) {
-                  window.history.back();
-                } else {
-                  handleLinkClick("dashboard");
-                }
-              }}
+              onClick={() => router.back()}
               className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 transition-colors shadow-xs cursor-pointer group"
               title="Go Back"
             >
@@ -61,9 +45,9 @@ export const Navigation: React.FC<NavigationProps> = ({
             </button>
           )}
           <MagneticWrapper strength={30}>
-          <a 
+          <Link 
             href="/"
-            onClick={(e) => { e.preventDefault(); handleLinkClick("landing"); }}
+            onClick={() => setMobileMenuOpen(false)}
             className="flex cursor-pointer items-center gap-2.5 transition-opacity hover:opacity-90"
           >
             <Logo className="h-10 w-10 text-brand-cobalt" />
@@ -75,20 +59,19 @@ export const Navigation: React.FC<NavigationProps> = ({
                 STUDENT AI SUITE
               </span>
             </div>
-          </a>
+          </Link>
         </MagneticWrapper>
         </div>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-2">
           {navLinks.map((link) => {
-            const isActive = currentView === link.view;
+            const isActive = pathname === link.href;
             const isLocked = false;
             return (
-              <a
-                key={link.view}
-                href={`/${link.view === "study-material-page" ? "study-material" : link.view}`}
-                onClick={(e) => { e.preventDefault(); handleLinkClick(link.view); }}
+              <Link
+                key={link.href}
+                href={link.href}
                 className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-300 ${
                   isActive
                     ? "bg-brand-cobalt/5 text-brand-cobalt "
@@ -100,7 +83,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                 {isLocked && (
                   <Lock className="w-3 h-3 text-gray-400/80 ml-0.5 shrink-0" />
                 )}
-              </a>
+              </Link>
             );
           })}
         </nav>
@@ -168,13 +151,13 @@ export const Navigation: React.FC<NavigationProps> = ({
         <div className="border-t border-gray-100 bg-white px-4 py-3 md:hidden fade-in shadow-xl transition-colors duration-300">
           <div className="space-y-1">
             {navLinks.map((link) => {
-              const isActive = currentView === link.view;
+              const isActive = pathname === link.href;
               const isLocked = false;
               return (
-                <a
-                  key={link.view}
-                  href={`/${link.view === "study-material-page" ? "study-material" : link.view}`}
-                  onClick={(e) => { e.preventDefault(); handleLinkClick(link.view); }}
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
                   className={`flex w-full items-center gap-2.5 rounded-lg px-4 py-3 text-sm font-semibold transition-all duration-300 ${
                     isActive
                       ? "bg-brand-cobalt/5 text-brand-cobalt "
@@ -186,7 +169,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                   {isLocked && (
                     <Lock className="w-3.5 h-3.5 text-gray-400/80 shrink-0" />
                   )}
-                </a>
+                </Link>
               );
             })}
           </div>
@@ -243,7 +226,10 @@ export const Navigation: React.FC<NavigationProps> = ({
 
             {userStats.activePlan === "Free" || userStats.activePlan === "Basic" ? (
               <button
-                onClick={() => handleLinkClick("pricing")}
+                onClick={() => {
+                  router.push("/pricing");
+                  setMobileMenuOpen(false);
+                }}
                 className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-linear-to-r from-brand-cobalt to-indigo-600 py-3 text-sm font-semibold text-white shadow-md cursor-pointer"
               >
                 <Zap className="h-4 w-4 fill-amber-400 text-amber-400" />
@@ -251,7 +237,10 @@ export const Navigation: React.FC<NavigationProps> = ({
               </button>
             ) : (
               <button
-                onClick={() => handleLinkClick("dashboard")}
+                onClick={() => {
+                  router.push("/dashboard");
+                  setMobileMenuOpen(false);
+                }}
                 className="flex w-full items-center justify-center rounded-xl border border-gray-200 py-3 text-sm font-semibold text-gray-700"
               >
                 Go to Dashboard

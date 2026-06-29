@@ -7,7 +7,6 @@ import { SplitTextReveal } from "./SplitTextReveal";
 import { TiltCard } from "./TiltCard";
 import { ActiveView } from "../types";
 import { MagneticWrapper } from "./MagneticWrapper";
-import { LiquidImage } from "./LiquidImage";
 
 gsap.registerPlugin(ScrollTrigger);
 

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import React from "react";
 import { Providers } from "./providers";
+import ClientLayout from "./ClientLayout";
 
 export const viewport: Viewport = {
   themeColor: "#0f172a",
@@ -11,28 +12,28 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bluebottlecap.com"),
-  title: "BlueBottleCap AI Student Suite",
-  description: "Advanced Academic Workspace for College and University Students. Rebuild your syllabus, generate flashcards, compress files, and master your exams.",
-  keywords: ["AI study", "student tools", "flashcard generator", "pdf compressor", "JEE preparation", "college student productivity"],
+  title: "BlueBottleCap — AI Exam Prep for JEE, B.Tech & Engineering",
+  description: "The AI-powered study workspace built for Indian engineering students. Upload your PDFs, chat with an AI co-pilot, and prepare smarter for JEE, GATE, and B.Tech exams.",
+  keywords: ["JEE preparation", "B.Tech study tool", "AI PDF study", "engineering exam prep", "GATE preparation", "Indian engineering students", "AI copilot for students", "PDF chat AI"],
   openGraph: {
-    title: "BlueBottleCap AI Student Suite",
-    description: "Advanced Academic Workspace for College and University Students. Rebuild your syllabus, generate flashcards, compress files, and master your exams.",
+    title: "BlueBottleCap — AI Exam Prep for JEE, B.Tech & Engineering",
+    description: "The AI-powered study workspace built for Indian engineering students. Upload your PDFs, chat with an AI co-pilot, and prepare smarter for JEE, GATE, and B.Tech exams.",
     url: "https://bluebottlecap.com",
     siteName: "BlueBottleCap",
     images: [
       {
-        url: "/og-image.jpg", // Ensure you add an og-image.jpg to public/
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
       },
     ],
-    locale: "en_US",
+    locale: "en_IN",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "BlueBottleCap AI Student Suite",
-    description: "Advanced Academic Workspace for College and University Students.",
+    title: "BlueBottleCap — AI Exam Prep for JEE & Engineering",
+    description: "Upload PDFs, chat with AI, and ace your engineering exams. Built for Indian students.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -50,7 +51,9 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased bg-slate-50 dark:bg-slate-950 min-h-screen text-slate-900 dark:text-slate-100 transition-colors duration-300">
         <Providers>
-          {children}
+          <ClientLayout>
+            {children}
+          </ClientLayout>
         </Providers>
       </body>
     </html>

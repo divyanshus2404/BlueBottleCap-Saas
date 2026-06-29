@@ -1,8 +1,16 @@
 "use client";
-
 import React from "react";
-import App from "@/src/App";
+import { LandingPage } from "@/src/components/LandingPage";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  return <App />;
+  const router = useRouter();
+  
+  const handleNavigate = (view: string) => {
+    if (view === "landing") router.push("/");
+    else if (view === "study-material-page") router.push("/study-material");
+    else router.push("/" + view);
+  };
+
+  return <LandingPage onNavigate={handleNavigate} />;
 }

@@ -30,6 +30,10 @@ export const Dashboard: React.FC = () => {
   const [showWrapped, setShowWrapped] = useState(false);
 
   const onNavigateTo = (view: ActiveView | string) => {
+    if (view === "waitlist") {
+      onShowToast && onShowToast("Added to waitlist! We'll notify you.", "success");
+      return;
+    }
     const paths: Record<string, string> = {
       landing: '/',
       dashboard: '/dashboard',
@@ -100,10 +104,9 @@ export const Dashboard: React.FC = () => {
   // If no activities exist, we will show an empty state.
 
   const quickTools = [
-    { name: "Smart Summarizer", desc: "Instantly compress full articles", icon: "📝", view: "tools" as ActiveView, toolId: "smart-summarizer" },
-    { name: "AI PDF Reader", desc: "Interact with journals and papers", icon: "📖", view: "pdf-editor" as ActiveView },
-    { name: "Math Formula Solver", desc: "Visual LaTeX mathematical OCR", icon: "📐", view: "tools" as ActiveView, toolId: "math-solver" },
-    { name: "PDF to Speech", desc: "Convert text into voice lecture", icon: "🔊", view: "tools" as ActiveView, toolId: "pdf-to-speech" },
+    { name: "AI PDF Copilot", desc: "Interact with journals and papers", icon: "📖", view: "pdf-editor" as ActiveView },
+    { name: "B.Tech Study Planner", desc: "Coming soon! Join waitlist", icon: "📅", view: "waitlist" as ActiveView },
+    { name: "JEE Question Generator", desc: "Coming soon! Join waitlist", icon: "📝", view: "waitlist" as ActiveView },
   ];
 
   const calculatePercentage = (current: number, max: number) => {
@@ -423,21 +426,37 @@ export const Dashboard: React.FC = () => {
                     whileTap={{ scale: 0.98 }}
                     key={i}
                     onClick={() => {
-                      if (tool.toolId) {
-                        localStorage.setItem("bluebottlecap_active_tool", tool.toolId);
+                      if ('toolId' in tool && tool.toolId) {
+                        localStorage.setItem("bluebottlecap_active_tool", tool.toolId as string);
                       }
                       onNavigateTo(tool.view);
                     }}
-                    className={`flex items-center gap-4 rounded-2xl border ${bgColors[i % bgColors.length]} p-4 shadow-sm hover:shadow-lg transition-all cursor-pointer group`}
+                    className={`flex items-center gap-4 rounded-2xl border ${
+                      tool.view === "waitlist" 
+                        ? "bg-slate-50 border-slate-200 opacity-70 grayscale-[0.5]" 
+                        : bgColors[i % bgColors.length]
+                    } p-4 shadow-sm hover:shadow-lg transition-all cursor-pointer group`}
                   >
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconColors[i % iconColors.length]} text-lg shadow-sm transform group-hover:scale-110 group-hover:-rotate-12 transition-all duration-300`}>
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${
+                      tool.view === "waitlist"
+                        ? "bg-slate-200 text-slate-500"
+                        : iconColors[i % iconColors.length]
+                    } text-lg shadow-sm transform group-hover:scale-110 group-hover:-rotate-12 transition-all duration-300`}>
                       {tool.icon}
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors duration-300">{tool.name}</h3>
-                      <p className="text-[10px] text-slate-600 font-medium">{tool.desc}</p>
+                      <h3 className={`text-sm font-bold ${
+                        tool.view === "waitlist" ? "text-slate-500" : "text-slate-900 group-hover:text-indigo-600"
+                      } transition-colors duration-300`}>{tool.name}</h3>
+                      <p className="text-[10px] text-slate-500 font-medium">{tool.desc}</p>
                     </div>
-                    <ArrowRight className="ml-auto w-4 h-4 text-slate-400 group-hover:text-indigo-500 transform group-hover:translate-x-1 transition-all duration-300" />
+                    {tool.view === "waitlist" ? (
+                      <div className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-slate-200">
+                        <span className="text-xs">🔒</span>
+                      </div>
+                    ) : (
+                      <ArrowRight className="ml-auto w-4 h-4 text-slate-400 group-hover:text-indigo-500 transform group-hover:translate-x-1 transition-all duration-300" />
+                    )}
                   </motion.div>
                 )})}
               </div>
@@ -529,72 +548,7 @@ export const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* Reports & Data Exports */}
-          <div className="rounded-3xl border border-gray-100 bg-white p-8 shadow-sm">
-            <div className="mb-6">
-              <h3 className="font-display text-lg font-black text-slate-900 flex items-center gap-2">
-                <HardDrive className="w-5 h-5 text-slate-700" /> Reports & Data Export
-              </h3>
-              <p className="text-sm text-text-muted mt-1">Download your raw study data, view your Spotify-style Wrapped, or generate deep AI-driven analysis reports.</p>
-            </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="rounded-2xl border border-indigo-200 bg-[#e0e7ff] shadow-[0_4px_20px_rgba(99,102,241,0.15)] p-6 flex flex-col justify-between relative overflow-hidden">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-300 rounded-full mix-blend-multiply opacity-30 blur-[30px]"></div>
-                <div>
-                  <h4 className="text-base font-bold text-slate-900 mb-1">Basic Progress Export</h4>
-                  <p className="text-xs text-text-muted leading-relaxed mb-4">
-                    Download a raw CSV file containing your daily study habits, tool usage statistics, and login history.
-                  </p>
-                </div>
-                <button 
-                  onClick={() => onShowToast && onShowToast("Downloading basic progress data...", "success")}
-                  className="w-full py-2.5 rounded-xl bg-white border border-gray-200 text-slate-700 hover:bg-surface-solid text-sm font-bold transition flex items-center justify-center gap-2 shadow-sm cursor-pointer"
-                >
-                  <FileText className="w-4 h-4" /> Download CSV Data
-                </button>
-              </div>
-
-              <div className={`rounded-2xl border p-6 flex flex-col justify-between relative overflow-hidden ${
-                userStats.streakDays >= 30 ? "border-pink-300 bg-[#fce7f3] shadow-[0_4px_20px_rgba(236,72,153,0.15)]" : "border-pink-200 bg-[#fdf2f8] opacity-90"
-              }`}>
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-pink-300 rounded-full mix-blend-multiply opacity-30 blur-[30px]"></div>
-                <div className="relative z-10">
-                  <div className="flex justify-between items-start mb-1">
-                    <h4 className={`text-base font-bold ${userStats.streakDays >= 30 ? "text-accent" : "text-slate-900"}`}>
-                      Deep Analysis Report
-                    </h4>
-                    <span className="bg-white border border-gray-200 text-accent text-[9px] font-black uppercase px-2 py-0.5 rounded shadow-xs">
-                      1st Free, Then Paid
-                    </span>
-                  </div>
-                  <p className="text-xs text-text-muted leading-relaxed mb-4">
-                    Track your live progress, identify areas of weakness, pinpoint where you work most efficiently, and map your academic interests.
-                  </p>
-                </div>
-
-                <div className="relative z-10">
-                  {userStats.streakDays >= 30 ? (
-                    <button 
-                      onClick={() => onShowToast && onShowToast("Generating your AI Deep Analysis Report...", "success")}
-                      className="w-full py-2.5 rounded-xl bg-accent text-white text-sm font-bold shadow-md hover:bg-brand-navy transition flex items-center justify-center gap-2 cursor-pointer"
-                    >
-                      <Sparkles className="w-4 h-4" /> Generate Detailed Report
-                    </button>
-                  ) : (
-                    <div className="w-full">
-                      <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mb-3">
-                        <div className="bg-accent h-1.5 rounded-full" style={{ width: `${Math.min((userStats.streakDays / 30) * 100, 100)}%` }}></div>
-                      </div>
-                      <button disabled className="w-full py-2.5 rounded-xl bg-white text-text-secondary text-sm font-bold flex items-center justify-center gap-2 cursor-not-allowed border border-gray-200">
-                        🔒 Unlocks at 30-Day Streak ({userStats.streakDays}/30)
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
 
         </motion.div>
       )}

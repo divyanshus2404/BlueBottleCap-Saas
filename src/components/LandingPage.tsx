@@ -3,14 +3,11 @@ import { Sparkles, BookOpen, Brain, Layers, Clock, FileText, Download, Zap, Shie
 import { ActiveView } from "../types";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { LiquidImage } from "./LiquidImage";
 import { MagneticWrapper } from "./MagneticWrapper";
 import { TiltCard } from "./TiltCard";
 import { VelocityMarquee } from "./VelocityMarquee";
 import { HeroBackgroundMarquee } from "./HeroBackgroundMarquee";
 import { SplitTextReveal } from "./SplitTextReveal";
-import { AuroraBackground } from "./AuroraBackground";
-import { ShaderBackground } from "./ShaderBackground";
 
 if (typeof window !== "undefined") {
   (window as any).globalScrollProxy = { velocity: 0 };
@@ -188,43 +185,38 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         }}
       />
       
-      <ShaderBackground />
-      
       {/* ── HERO SECTION ── */}
       <section className="hero-section relative pt-16 pb-20 md:pt-24 md:pb-28 min-h-screen flex flex-col justify-center perspective-1000 z-10 overflow-hidden">
 
         <HeroBackgroundMarquee />
 
         <div className="hero-content mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 text-center w-full mt-10 pointer-events-none">
-          <div className="hero-badge hero-reveal-element inline-flex items-center gap-1.5 rounded-full bg-slate-100/80 px-4 py-1.5 text-xs font-semibold text-slate-800 mb-6 backdrop-blur-md border border-slate-200 shadow-sm pointer-events-auto">
+          <div className="hero-badge hero-reveal-element inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-4 py-1.5 text-xs font-semibold text-blue-700 mb-6 backdrop-blur-md border border-blue-200 shadow-sm pointer-events-auto">
             <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-            <span>The intelligent way to study</span>
+            <span>Early Access — Now open for JEE &amp; B.Tech students</span>
           </div>
           
           <h1 className="hero-title hero-reveal-element font-display text-4.5xl font-black tracking-tight text-slate-900 sm:text-6xl md:text-7xl leading-tight max-w-4xl mx-auto drop-shadow-sm pointer-events-auto">
-            <span className="word inline-block">The</span>{" "}
-            <span className="word inline-block">ultimate</span>{" "}
-            <span className="word inline-block">arsenal</span>{" "}
-            <span className="word inline-block">for</span>{" "}
+            <span className="word inline-block">AI exam prep for</span>{" "}
             <span className="word inline-block bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              every ambitious student.
+              JEE, B.Tech &amp; engineering.
             </span>
           </h1>
           
           <p className="hero-desc hero-reveal-element mt-6 mx-auto max-w-2xl text-base text-slate-600 md:text-xl leading-relaxed font-medium pointer-events-auto">
-            Stop wasting time gathering scattered notes. Get premium study material, instant AI-driven answers, and immersive test modes — all in one place.
+            Upload your syllabus PDF, ask questions in plain language, and get instant AI-powered answers — built for Indian engineering entrance exams and B.Tech coursework.
           </p>
 
           <div className="hero-reveal-element mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 pointer-events-auto">
             <button
-              onClick={() => onNavigate("tools")}
+              onClick={() => onNavigate("pdf-editor")}
               className="group relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-linear-to-br from-blue-600 to-indigo-700 px-8 py-4 font-display text-lg font-bold text-white shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_60px_-15px_rgba(37,99,235,0.7)]"
             >
               <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-150%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(150%)]">
                 <div className="relative h-full w-8 bg-white/20" />
               </div>
               <Sparkles className="w-5 h-5 animate-bounce-subtle" />
-              Start Your Streak
+              Start Free Study Session
             </button>
             <button
               onClick={() => {
@@ -233,7 +225,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               }}
               className="inline-flex items-center gap-2 rounded-2xl border-2 border-slate-200 bg-white/50 px-8 py-4 font-display text-lg font-bold text-slate-700 backdrop-blur-sm transition-all hover:bg-slate-50 hover:border-blue-200"
             >
-              See how it works
+              How it works
             </button>
           </div>
 
@@ -253,7 +245,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <div className="flex gap-1 text-amber-400 mb-1">
                 {[...Array(5)].map((_, i) => <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>)}
               </div>
-              <p className="text-sm font-semibold text-slate-600">Loved by <span className="text-blue-600 font-bold">15,000+</span> ambitious students.</p>
+              <p className="text-sm font-semibold text-slate-600">Used by early access students across India 🇮🇳</p>
             </div>
           </div>
 
@@ -342,7 +334,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             <TiltCard className="h-[400px]">
               <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
                 <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
-                  <LiquidImage src="/images/physics.webp" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+                  <img src="/images/physics.webp" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100 object-cover" alt="" />
                 </div>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Premium Notes</h3>
                 <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Access exhaustive, topper-grade notes carefully organized by subject and chapter.</p>
@@ -352,7 +344,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             <TiltCard className="h-[400px]">
               <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
                 <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
-                  <LiquidImage src="/images/chemistry.webp" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+                  <img src="/images/chemistry.webp" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100 object-cover" alt="" />
                 </div>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Virtual Test Mode</h3>
                 <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Practice past papers in an immersive, distraction-free environment with an active timer.</p>
@@ -362,7 +354,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             <TiltCard className="h-[400px]">
               <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
                 <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
-                  <LiquidImage src="/images/math.webp" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100" />
+                  <img src="/images/math.webp" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100 object-cover" alt="" />
                 </div>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">AI Powered</h3>
                 <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Get instant solutions and flashcard generation to retain concepts longer.</p>
@@ -372,13 +364,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
           <div className="mt-24 feature-card">
             <button
-              onClick={() => onNavigate("study-material-page")}
+              onClick={() => onNavigate("pdf-editor")}
               className="inline-flex items-center gap-3 bg-slate-900 hover:bg-slate-800 text-white font-black text-lg px-10 py-5 rounded-2xl transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 cursor-pointer ring-4 ring-transparent hover:ring-slate-900/10"
             >
-              <span>Explore Study Material</span>
-              <BookOpen className="w-6 h-6" />
+              <span>Try PDF Copilot Free</span>
+              <Sparkles className="w-6 h-6" />
             </button>
-            <p className="text-sm text-slate-400 font-bold mt-5 uppercase tracking-widest">Free preview available · No signup needed</p>
+            <p className="text-sm text-slate-400 font-bold mt-5 uppercase tracking-widest">No credit card needed · Upload any PDF instantly</p>
           </div>
         </div>
       </section>
@@ -429,24 +421,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto text-left">
             <div className="testimonial-card bg-white p-12 rounded-[2rem] border border-slate-100 shadow-xl relative transition-transform hover:-translate-y-2">
               <div className="absolute -top-6 -left-2 text-slate-100 text-9xl font-serif leading-none">"</div>
-              <p className="text-slate-700 leading-relaxed font-medium mb-10 relative z-10 text-lg">I was struggling to find good concise notes until I found this suite. The interactive UI and the mock test environment is better than anything else out there.</p>
+              <p className="text-slate-700 leading-relaxed font-medium mb-10 relative z-10 text-lg">I uploaded my GATE reference material and started asking questions in Hindi-English mix. The AI understood everything. This is exactly what I needed before exams.</p>
               <div className="flex items-center gap-5">
-                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full shadow-inner border-2 border-white"></div>
+                <img src="https://api.dicebear.com/7.x/notionists/svg?seed=RahulSharma" alt="Rahul" className="w-14 h-14 rounded-full border-2 border-white bg-slate-100" />
                 <div>
                   <div className="font-black text-slate-900 text-xl">Rahul S.</div>
-                  <div className="text-sm text-blue-600 font-bold uppercase tracking-wide mt-1">Premium User</div>
+                  <div className="text-sm text-blue-600 font-bold uppercase tracking-wide mt-1">B.Tech CSE, NIT Trichy — Early Access</div>
                 </div>
               </div>
             </div>
 
             <div className="testimonial-card bg-white p-12 rounded-[2rem] border border-slate-100 shadow-xl relative transition-transform hover:-translate-y-2">
               <div className="absolute -top-6 -left-2 text-slate-100 text-9xl font-serif leading-none">"</div>
-              <p className="text-slate-700 leading-relaxed font-medium mb-10 relative z-10 text-lg">The layout is just gorgeous and distraction-free. No ads, no annoying popups, just pure study material and test modes that help me stay focused for hours.</p>
+              <p className="text-slate-700 leading-relaxed font-medium mb-10 relative z-10 text-lg">I used it during my JEE Advanced revision. The PDF chat feature is genuinely impressive — it explains derivations step by step, not just definitions. Clean UI too.</p>
               <div className="flex items-center gap-5">
-                <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full shadow-inner border-2 border-white"></div>
+                <img src="https://api.dicebear.com/7.x/notionists/svg?seed=AnanyaMehta" alt="Ananya" className="w-14 h-14 rounded-full border-2 border-white bg-slate-100" />
                 <div>
                   <div className="font-black text-slate-900 text-xl">Ananya M.</div>
-                  <div className="text-sm text-emerald-600 font-bold uppercase tracking-wide mt-1">Science Major</div>
+                  <div className="text-sm text-emerald-600 font-bold uppercase tracking-wide mt-1">JEE Aspirant, Delhi — Early Access</div>
                 </div>
               </div>
             </div>
@@ -459,24 +451,31 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         <div className="cta-glow absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400/30 via-indigo-900/50 to-transparent opacity-100 blur-3xl pointer-events-none" />
         <div className="relative z-10 max-w-4xl mx-auto px-6">
           <h2 className="text-5xl md:text-7xl font-display font-black mb-8 leading-tight drop-shadow-xl text-white">
-            Ready to upgrade your<br/>
+            Ready to upgrade your{" "}
             <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-300 to-blue-200">academic life?</span>
           </h2>
-          <p className="text-xl md:text-2xl text-blue-100 mb-14 font-medium max-w-2xl mx-auto drop-shadow-sm">
-            Join 15,000+ top students who have already transformed their grades with BlueBottleCap.
+          <p className="text-xl md:text-2xl text-blue-100 mb-6 font-medium max-w-2xl mx-auto drop-shadow-sm">
+            Join early-access engineering students using BlueBottleCap to study smarter before exams.
           </p>
+          <div className="flex items-center justify-center gap-3 text-sm text-blue-200 mb-12 font-medium">
+            <span className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span> Free to start</span>
+            <span className="text-white/30">•</span>
+            <span className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span> No credit card needed</span>
+            <span className="text-white/30">•</span>
+            <span className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span> 7-day refund guarantee</span>
+          </div>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
             <button 
-              onClick={() => onNavigate("tools")}
+              onClick={() => onNavigate("pdf-editor")}
               className="rounded-2xl bg-white text-indigo-700 font-display hover:bg-slate-50 px-14 py-7 font-black text-2xl cursor-pointer shadow-[0_0_50px_-10px_rgba(255,255,255,0.5)] transition-all hover:scale-105 hover:shadow-[0_0_80px_-15px_rgba(255,255,255,0.7)] w-full sm:w-auto"
             >
-              Explore AI Tools
+              Start Free Study Session
             </button>
             <button 
-              onClick={() => onNavigate("dashboard")}
+              onClick={() => onNavigate("signup")}
               className="rounded-2xl bg-transparent border-2 border-white/30 text-white font-display hover:bg-white/10 px-14 py-7 font-bold text-xl cursor-pointer transition-colors w-full sm:w-auto"
             >
-              View Dashboard
+              Create Free Account
             </button>
           </div>
         </div>

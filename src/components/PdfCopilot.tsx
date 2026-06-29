@@ -485,6 +485,9 @@ export const PdfCopilot: React.FC<PdfCopilotProps> = ({
         });
 
         if (!response.ok) {
+          if (response.status === 503) {
+            throw new Error("API_KEY_MISSING");
+          }
           throw new Error("Co-Pilot server refused connection.");
         }
         const data = await response.json();
@@ -501,7 +504,11 @@ export const PdfCopilot: React.FC<PdfCopilotProps> = ({
 
     } catch (err: any) {
       console.warn("Gemini Live Query failed:", err);
-      setErrors(err.message || "Failed to contact Gemini servers.");
+      if (err.message === "API_KEY_MISSING") {
+         setErrors("Missing GEMINI_API_KEY. Using simulated offline responses. Please configure your API key to enable live AI analysis.");
+      } else {
+         setErrors(err.message || "Failed to contact Gemini servers.");
+      }
 
       // Provide academic mock fallback values so the portal NEVER feels broken
       setTimeout(() => {
@@ -661,7 +668,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
         <div className="mb-4 flex items-center gap-2 rounded-xl bg-orange-50 p-4 text-xs font-bold text-amber-800 border border-orange-100">
           <AlertCircle className="h-5 w-5 text-amber-600 shrink-0" />
           <div className="grow">
-            <span>Simulated scholar response triggered. To connect live Gemini API, configure a valid GEMINI_API_KEY in secrets panel.</span>
+            <span>{errors}</span>
           </div>
           <button 
             onClick={() => setErrors(null)} 

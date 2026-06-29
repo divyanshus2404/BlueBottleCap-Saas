@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import { AboutPage } from "@/src/components/AboutPage";
+import { SignUpPage } from "@/src/components/SignUpPage";
 import { useRouter } from "next/navigation";
 
-export default function AboutRoute() {
+export default function SignUpRoute() {
   const router = useRouter();
 
   const handleNavigate = (view: string) => {
@@ -12,5 +12,5 @@ export default function AboutRoute() {
     else router.push("/" + view);
   };
 
-  return <AboutPage onNavigate={handleNavigate} />;
+  return <SignUpPage setCurrentView={handleNavigate} />;
 }

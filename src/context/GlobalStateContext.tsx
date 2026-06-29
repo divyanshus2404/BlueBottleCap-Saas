@@ -5,7 +5,6 @@ import { UserStats, UsageStats, Flashcard, DailyActivity, RecentActivityItem } f
 import { useAuth } from "./AuthContext";
 import { db } from "../firebase";
 import { doc, getDoc, setDoc, updateDoc, collection, getDocs, addDoc, onSnapshot, query, where } from "firebase/firestore";
-import { supabase } from "../supabaseClient";
 
 interface Toast {
   id: number;

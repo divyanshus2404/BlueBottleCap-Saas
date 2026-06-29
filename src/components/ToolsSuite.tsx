@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Flashcard, UserStats } from "../types";
 import { useAuth } from "../context/AuthContext";
-import { supabase } from "../supabaseClient";
 import { JEEQuestion } from "../data/jeePyqs";
 import { useFirebaseJEE } from "../hooks/useFirebaseJEE";
 import { 
@@ -290,25 +289,12 @@ export const ToolsSuite: React.FC<ToolsSuiteProps> = ({
     setTestStarted(true);
   };
 
-  // Fetch daily tool usage count from Supabase
+  // Fetch daily tool usage count
   useEffect(() => {
     const fetchDailyUsage = async () => {
       if (!currentUser) return;
-      try {
-        const today = new Date().toISOString().split("T")[0];
-        const { count, error } = await supabase
-          .from("tool_usage")
-          .select("*", { count: "exact", head: true })
-          .eq("user_id", currentUser.uid)
-          .gte("used_at", `${today}T00:00:00.000Z`)
-          .lte("used_at", `${today}T23:59:59.999Z`);
-        
-        if (!error && count !== null) {
-          setDailyUsageCount(count);
-        }
-      } catch (err) {
-        console.error("Failed to fetch daily tool usage count from Supabase:", err);
-      }
+      // TODO: Implement fetch daily usage count from Firebase
+      setDailyUsageCount(0);
     };
     fetchDailyUsage();
   }, [currentUser, selectedToolId]);
@@ -555,14 +541,7 @@ export const ToolsSuite: React.FC<ToolsSuiteProps> = ({
     if (isPremiumPlan) return;
     setDailyUsageCount(prev => prev + 1);
     if (!currentUser) return;
-    try {
-      await supabase.from("tool_usage").insert({
-        user_id: currentUser.uid,
-        tool_name: toolName
-      });
-    } catch (err) {
-      console.error("Error inserting tool usage in Supabase:", err);
-    }
+    // TODO: Implement record usage in Firebase
   };
 
   // Case converter actions
