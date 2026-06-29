@@ -4,8 +4,13 @@ import crypto from "crypto";
 // it sends a product id and the server decides the price. This prevents a user
 // from tampering with the amount in the browser.
 export const PRODUCTS = {
-  chapter_test: { amount: 12000, label: "Chapter Mock Test" }, // ₹120.00 in paise
-  study_material: { amount: 28100, label: "Full Chapter-wise Study Material" }, // ₹281.00 in paise
+  chapter_test: { amount: 12000, label: "Chapter Mock Test" }, // ₹120.00
+  study_material: { amount: 28100, label: "Full Chapter-wise Study Material" }, // ₹281.00
+  // Subscription plans (price in paise). Keep in sync with the Pricing page.
+  pro_monthly: { amount: 14900, label: "Pro plan — monthly" }, // ₹149
+  pro_annual: { amount: 11900, label: "Pro plan — annual (per month)" }, // ₹119
+  elite_monthly: { amount: 34900, label: "Power plan — monthly" }, // ₹349
+  elite_annual: { amount: 27900, label: "Power plan — annual (per month)" }, // ₹279
 } as const;
 
 export type ProductId = keyof typeof PRODUCTS;
