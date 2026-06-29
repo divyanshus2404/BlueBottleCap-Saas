@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { Sparkles, BookOpen, Brain, Layers, Clock, FileText, Download, Zap, Shield, Target, Smartphone } from "lucide-react";
-import { ActiveView } from "../types";
+import { ActiveView } from "@/src/types";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MagneticWrapper } from "./MagneticWrapper";
