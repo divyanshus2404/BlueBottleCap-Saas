@@ -3,10 +3,7 @@ import React, { useRef, useEffect } from "react";
 import { ArrowLeft, Heart } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitTextReveal } from "./SplitTextReveal";
-import { TiltCard } from "./TiltCard";
 import { ActiveView } from "../types";
-import { MagneticWrapper } from "./MagneticWrapper";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,160 +11,156 @@ interface AboutPageProps {
   onNavigate: (view: ActiveView) => void;
 }
 
+const FAQS: { q: string; a: string }[] = [
+  {
+    q: "What exactly does BlueBottleCap do?",
+    a: "BlueBottleCap is an intelligent study platform designed specifically for ambitious students. It aggregates premium, chapter-wise notes and Previous Year Question (PYQ) papers across universities and competitive exams. Beyond just a PDF library, it features an immersive, distraction-free AI mock test environment that instantly grades your answers, generates flashcards, and helps you retain information faster.",
+  },
+  {
+    q: "Are the study materials and PYQs updated?",
+    a: "Yes! As a solo developer and student, I understand how crucial accurate data is. I've built automation systems that continuously source and verify the latest exam patterns, ensuring the database stays relevant to current academic requirements.",
+  },
+  {
+    q: "Can I request specific university papers?",
+    a: "Absolutely. We have a rapidly expanding database, but if your specific university or exam isn't listed yet, you can request it through the dashboard and I prioritize adding those resources within a few days.",
+  },
+];
+
 export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let ctx = gsap.context(() => {
-      // Add a simple fade-in for the image and text block
+    const ctx = gsap.context(() => {
       gsap.from(".about-content", {
-        y: 40,
+        y: 24,
         opacity: 0,
-        duration: 1.2,
-        stagger: 0.2,
+        duration: 0.9,
+        stagger: 0.12,
         ease: "power3.out",
-        delay: 0.5
+        delay: 0.2,
       });
-      
       gsap.from(".faq-item", {
-        y: 30,
+        y: 20,
         opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
+        duration: 0.7,
+        stagger: 0.12,
         ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".faq-section",
-          start: "top 85%",
-        }
+        scrollTrigger: { trigger: ".faq-section", start: "top 85%" },
       });
     }, containerRef);
     return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-slate-50 pt-32 pb-32 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Back Button */}
-        <div className="mb-12 about-content">
-          <MagneticWrapper strength={30}>
-            <button 
-              onClick={() => onNavigate("landing")}
-              className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Home
-            </button>
-          </MagneticWrapper>
+    <div ref={containerRef} className="bbc relative min-h-screen overflow-hidden">
+      <div className="bbc-grid" aria-hidden="true" />
+
+      <div className="relative z-[2] mx-auto max-w-[1180px] px-7 pt-20 pb-28">
+        {/* Back */}
+        <div className="about-content mb-12">
+          <button
+            onClick={() => onNavigate("landing")}
+            className="inline-flex items-center gap-2 text-[14px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to home
+          </button>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-16 items-start">
-          
-          {/* Text Column */}
-          <div className="lg:col-span-12 max-w-4xl mx-auto space-y-12">
-            <SplitTextReveal 
-              text="The Story Behind BlueBottleCap" 
-              className="text-5xl md:text-6xl lg:text-7xl font-black font-display text-slate-900 leading-[1.1] text-left !justify-start" 
-            />
-            
-            <div className="prose prose-lg prose-slate about-content text-slate-600 leading-relaxed font-medium">
-              <p className="text-xl text-slate-700">
-                The idea began with a simple, frustrating realization: finding quality previous year question papers—whether for university finals or competitive prep exams—was needlessly difficult. Students were spending more time hunting for materials than actually studying them.
-              </p>
-              
-              <p>
-                I built this platform entirely on my own, dedicating it to students who want to cut the noise and just get to work.
-              </p>
+        <div className="mx-auto max-w-3xl">
+          <p className="bbc-eyebrow about-content">Our story</p>
+          <h1 className="bbc-serif about-content mt-[18px] text-[clamp(38px,5.2vw,62px)] leading-[1.04] tracking-[-.02em]">
+            The story behind{" "}
+            <em className="not-italic italic text-[var(--color-blue-ink)]">BlueBottleCap.</em>
+          </h1>
 
-              <h3 className="text-2xl font-black text-slate-900 mt-12 mb-4">Why are some features paid?</h3>
-              <p>
-                The answer is completely transparent. Running complex AI models, updating databases, and maintaining fast servers is incredibly expensive. I don't have venture capital funding or a corporate team backing me. I'm a solo entrepreneur who started this from a single idea, building it from the ground up.
+          <div className="about-content mt-10 space-y-6 text-[18px] leading-relaxed text-[var(--color-ink-soft)]">
+            <p className="text-[19px] text-[var(--color-ink)]">
+              The idea began with a simple, frustrating realization: finding quality previous year
+              question papers—whether for university finals or competitive prep exams—was needlessly
+              difficult. Students were spending more time hunting for materials than actually studying
+              them.
+            </p>
+            <p>
+              I built this platform entirely on my own, dedicating it to students who want to cut the
+              noise and just get to work.
+            </p>
+
+            <h3 className="bbc-serif pt-6 text-[26px] tracking-[-.01em] text-[var(--color-ink)]">
+              Why are some features paid?
+            </h3>
+            <p>
+              The answer is completely transparent. Running complex AI models, updating databases, and
+              maintaining fast servers is incredibly expensive. I don't have venture capital funding or
+              a corporate team backing me. I'm a solo entrepreneur who started this from a single idea,
+              building it from the ground up.
+            </p>
+
+            <div className="group relative overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-blue-wash)] p-8">
+              <Heart className="absolute -right-2 -top-2 h-28 w-28 text-[var(--color-blue-ink)] opacity-10 transition-transform duration-700 group-hover:rotate-12 group-hover:scale-110" />
+              <p className="relative z-10 text-[17px] font-medium text-[var(--color-ink)]">
+                If BlueBottleCap has helped you study smarter, retain information faster, or score
+                better on an exam, please consider supporting the project by upgrading or contributing.
+                Your support is the only thing keeping the servers running and allowing me to build even
+                better tools for you.
               </p>
-
-              <div className="bg-blue-50/50 border border-blue-100 rounded-3xl p-8 my-10 relative overflow-hidden group hover:bg-blue-50 transition-colors duration-500">
-                <div className="absolute top-0 right-0 p-8 opacity-10 transition-transform duration-700 group-hover:scale-110 group-hover:rotate-12">
-                  <Heart className="w-32 h-32 text-blue-600" />
-                </div>
-                <p className="relative z-10 text-slate-700 font-bold text-lg mb-0">
-                  If BlueBottleCap has helped you study smarter, retain information faster, or score better on an exam, please consider supporting the project by upgrading or contributing. Your support is the only thing keeping the servers running and allowing me to build even better tools for you.
-                </p>
-              </div>
-
-              <p className="text-xl font-bold text-slate-900 italic relative mb-4">
-                <span className="absolute -left-6 -top-2 text-4xl text-slate-200 font-serif">"</span>
-                Whatever you decide to do in life, I hope this tool helps you get there. Wish you all the best, mate.
-                <span className="absolute -right-4 -bottom-4 text-4xl text-slate-200 font-serif">"</span>
-              </p>
-
-              <div className="mt-8 about-content">
-                <h3 className="font-display font-black text-xl text-slate-900">— Divyanshu Singh</h3>
-                <p className="text-blue-600 font-bold uppercase tracking-widest text-sm mt-1">Founder & Developer</p>
-              </div>
-            </div>
-            
-            <div className="about-content pt-8 border-t border-slate-200">
-              <MagneticWrapper strength={40}>
-                <button 
-                  onClick={() => onNavigate("study-material-page")}
-                  className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-2xl font-black text-lg transition-transform hover:-translate-y-1 shadow-xl hover:shadow-2xl"
-                >
-                  Explore Study Material
-                </button>
-              </MagneticWrapper>
             </div>
 
+            <p className="bbc-serif text-[22px] italic leading-snug text-[var(--color-ink)]">
+              "Whatever you decide to do in life, I hope this tool helps you get there. Wish you all the
+              best, mate."
+            </p>
+
+            <div className="pt-2">
+              <p className="bbc-serif text-[19px] text-[var(--color-ink)]">— Divyanshu Singh</p>
+              <p className="bbc-eyebrow mt-1 text-[var(--color-blue-ink)]">Founder &amp; Developer</p>
+            </div>
           </div>
 
+          <div className="about-content mt-12 border-t border-[var(--color-line)] pt-10">
+            <button
+              onClick={() => onNavigate("study-material-page")}
+              className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]"
+            >
+              Explore study material
+            </button>
+          </div>
         </div>
 
         {/* FAQs */}
-        <div className="mt-40 faq-section max-w-3xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black font-display text-slate-900 mb-4">Frequently Asked Questions</h2>
-            <p className="text-lg text-slate-500 font-medium">Everything you need to know about the platform.</p>
+        <div className="faq-section mx-auto mt-32 max-w-3xl">
+          <div className="mb-14 text-center">
+            <p className="bbc-eyebrow">FAQ</p>
+            <h2 className="bbc-serif mt-3 text-[clamp(30px,4vw,46px)] tracking-[-.02em]">
+              Frequently asked questions
+            </h2>
+            <p className="mt-3 text-[16px] text-[var(--color-ink-soft)]">
+              Everything you need to know about the platform.
+            </p>
           </div>
-          
-          <div className="space-y-6">
-            <details className="faq-item group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-slate-200 overflow-hidden [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex items-center justify-between cursor-pointer p-6 sm:p-8 font-black text-xl text-slate-900 select-none">
-                What exactly does BlueBottleCap do?
-                <span className="transition-transform duration-300 group-open:-rotate-180 bg-slate-50 rounded-full p-2 text-slate-400 group-hover:text-slate-900 group-hover:bg-slate-100">
-                  <svg fill="none" height="24" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="24"><path d="M19 9l-7 7-7-7"></path></svg>
-                </span>
-              </summary>
-              <div className="p-6 sm:p-8 pt-0 text-slate-600 leading-relaxed font-medium text-lg border-t border-slate-100 mt-2">
-                BlueBottleCap is an intelligent study platform designed specifically for ambitious students. It aggregates premium, chapter-wise notes and Previous Year Question (PYQ) papers across universities and competitive exams. Beyond just a PDF library, it features an immersive, distraction-free AI mock test environment that instantly grades your answers, generates flashcards, and helps you retain information faster.
-              </div>
-            </details>
 
-            <details className="faq-item group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-slate-200 overflow-hidden [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex items-center justify-between cursor-pointer p-6 sm:p-8 font-black text-xl text-slate-900 select-none">
-                Are the study materials and PYQs updated?
-                <span className="transition-transform duration-300 group-open:-rotate-180 bg-slate-50 rounded-full p-2 text-slate-400 group-hover:text-slate-900 group-hover:bg-slate-100">
-                  <svg fill="none" height="24" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="24"><path d="M19 9l-7 7-7-7"></path></svg>
-                </span>
-              </summary>
-              <div className="p-6 sm:p-8 pt-0 text-slate-600 leading-relaxed font-medium text-lg border-t border-slate-100 mt-2">
-                Yes! As a solo developer and student, I understand how crucial accurate data is. I've built automation systems that continuously source and verify the latest exam patterns, ensuring the database stays relevant to current academic requirements.
-              </div>
-            </details>
-
-            <details className="faq-item group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-slate-200 overflow-hidden [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex items-center justify-between cursor-pointer p-6 sm:p-8 font-black text-xl text-slate-900 select-none">
-                Can I request specific university papers?
-                <span className="transition-transform duration-300 group-open:-rotate-180 bg-slate-50 rounded-full p-2 text-slate-400 group-hover:text-slate-900 group-hover:bg-slate-100">
-                  <svg fill="none" height="24" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="24"><path d="M19 9l-7 7-7-7"></path></svg>
-                </span>
-              </summary>
-              <div className="p-6 sm:p-8 pt-0 text-slate-600 leading-relaxed font-medium text-lg border-t border-slate-100 mt-2">
-                Absolutely. We have a rapidly expanding database, but if your specific university or exam isn't listed yet, you can request it through the dashboard and I prioritize adding those resources within a few days.
-              </div>
-            </details>
+          <div className="space-y-3">
+            {FAQS.map((item) => (
+              <details
+                key={item.q}
+                className="faq-item group overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] [&_summary::-webkit-details-marker]:hidden"
+              >
+                <summary className="flex cursor-pointer select-none items-center justify-between gap-4 p-6 text-[18px] font-semibold text-[var(--color-ink)]">
+                  {item.q}
+                  <span className="rounded-full border border-[var(--color-line)] p-1.5 text-[var(--color-ink-faint)] transition-transform duration-300 group-open:-rotate-180">
+                    <svg fill="none" height="20" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="20">
+                      <path d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </span>
+                </summary>
+                <div className="border-t border-[var(--color-line)] p-6 text-[16px] leading-relaxed text-[var(--color-ink-soft)]">
+                  {item.a}
+                </div>
+              </details>
+            ))}
           </div>
         </div>
-
       </div>
     </div>
   );
 };
-

@@ -29,7 +29,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <div className="flex-grow">
             {children}
           </div>
-          {pathname !== "/virtual-test" && pathname !== "/pdf-editor" && (
+          {/* "/" renders its own footer; the tool surfaces hide it entirely. */}
+          {pathname !== "/" && pathname !== "/virtual-test" && pathname !== "/pdf-editor" && (
             <Footer />
           )}
         </div>

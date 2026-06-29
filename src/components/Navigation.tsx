@@ -30,7 +30,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/85 backdrop-blur-md transition-colors duration-300">
+    <header className="bbc sticky top-0 z-50 w-full border-b border-[var(--color-line)] bg-[rgba(245,244,239,.82)] backdrop-blur-md transition-colors duration-300">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* Left Side: Back Button & Logo Section */}
@@ -50,12 +50,12 @@ export const Navigation: React.FC<NavigationProps> = ({
             onClick={() => setMobileMenuOpen(false)}
             className="flex cursor-pointer items-center gap-2.5 transition-opacity hover:opacity-90"
           >
-            <Logo className="h-10 w-10 text-brand-cobalt" />
+            <Logo className="h-10 w-10 text-[var(--color-blue-ink)]" />
             <div>
-              <span className="font-display text-lg font-bold tracking-tight text-brand-navy transition-colors duration-300">
-                Blue<span className="text-brand-cobalt bg-linear-to-r from-brand-cobalt to-indigo-600 bg-clip-text text-transparent">BottleCap</span>
+              <span className="bbc-serif text-[19px] tracking-[-.01em] text-[var(--color-ink)]">
+                Blue<span className="text-[var(--color-blue-ink)]">BottleCap</span>
               </span>
-              <span className="block text-[10px] uppercase tracking-wider font-mono text-gray-400 font-medium leading-none transition-colors duration-300">
+              <span className="bbc-eyebrow block text-[10px] leading-none">
                 STUDENT AI SUITE
               </span>
             </div>
@@ -74,8 +74,8 @@ export const Navigation: React.FC<NavigationProps> = ({
                 href={link.href}
                 className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-300 ${
                   isActive
-                    ? "bg-brand-cobalt/5 text-brand-cobalt "
-                    : "text-gray-600 hover:bg-gray-50 :bg-slate-900 hover:text-gray-900 :text-white"
+                    ? "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]"
+                    : "text-[var(--color-ink-soft)] hover:bg-[var(--color-paper-card)] hover:text-[var(--color-ink)]"
                 }`}
               >
                 {link.icon}
@@ -132,7 +132,7 @@ export const Navigation: React.FC<NavigationProps> = ({
 
         {/* Mobile Menu Button & Mobile Toggle */}
         <div className="flex items-center md:hidden gap-3 ml-3">
-          <div className="flex items-center gap-1 rounded-full bg-orange-50 px-2.5 py-1 text-[11px] font-bold text-orange-600 ">
+          <div className="flex items-center gap-1 rounded-full bg-[var(--color-blue-wash)] px-2.5 py-1 text-[11px] font-bold text-[var(--color-blue-ink)]">
             🔥 {userStats.streakDays}
           </div>
           
@@ -148,7 +148,7 @@ export const Navigation: React.FC<NavigationProps> = ({
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="border-t border-gray-100 bg-white px-4 py-3 md:hidden fade-in shadow-xl transition-colors duration-300">
+        <div className="border-t border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-3 md:hidden fade-in shadow-xl transition-colors duration-300">
           <div className="space-y-1">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
@@ -230,9 +230,9 @@ export const Navigation: React.FC<NavigationProps> = ({
                   router.push("/pricing");
                   setMobileMenuOpen(false);
                 }}
-                className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-linear-to-r from-brand-cobalt to-indigo-600 py-3 text-sm font-semibold text-white shadow-md cursor-pointer"
+                className="bbc-btn bbc-btn-primary flex w-full items-center justify-center gap-1.5 py-3 text-sm cursor-pointer"
               >
-                <Zap className="h-4 w-4 fill-amber-400 text-amber-400" />
+                <Zap className="h-4 w-4 fill-amber-300 text-amber-300" />
                 Upgrade Subscription Plan
               </button>
             ) : (
