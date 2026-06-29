@@ -19,7 +19,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <ErrorBoundary>
         <div className="min-h-screen bg-transparent font-sans antialiased flex flex-col">
           <GlobalBackground />
-          <Navigation onLoginClick={() => setIsAuthModalOpen(true)} />
+          {/* The landing page ("/") renders its own tailored header with
+              in-page anchor nav, so the global app nav is hidden there to
+              avoid two stacked headers. */}
+          {pathname !== "/" && (
+            <Navigation onLoginClick={() => setIsAuthModalOpen(true)} />
+          )}
           <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
           <div className="flex-grow">
             {children}

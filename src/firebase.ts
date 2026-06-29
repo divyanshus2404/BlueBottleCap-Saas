@@ -11,13 +11,44 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+const isConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId);
+
 let app: FirebaseApp | undefined;
-try {
-  app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-} catch (error) {
-  console.warn("Firebase initialization skipped (expected during SSR/build without env vars).");
+if (isConfigured) {
+  try {
+    app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+  } catch (error) {
+    console.warn("Firebase initialization failed:", error);
+  }
+} else if (typeof window !== "undefined") {
+  console.warn(
+    "Firebase env vars are missing — auth and Firestore features are disabled. " +
+    "Set NEXT_PUBLIC_FIREBASE_* to enable them.",
+  );
 }
 
-export const auth = typeof window !== "undefined" && app ? getAuth(app) : null as unknown as Auth;
+// getAuth/getFirestore throw on an invalid config, which would white-screen the
+// entire app at module load. Guard them so the UI still renders without Firebase.
+function safeAuth(): Auth {
+  if (typeof window === "undefined" || !app) return null as unknown as Auth;
+  try {
+    return getAuth(app);
+  } catch (error) {
+    console.warn("getAuth failed:", error);
+    return null as unknown as Auth;
+  }
+}
+
+function safeDb(): Firestore {
+  if (typeof window === "undefined" || !app) return null as unknown as Firestore;
+  try {
+    return getFirestore(app);
+  } catch (error) {
+    console.warn("getFirestore failed:", error);
+    return null as unknown as Firestore;
+  }
+}
+
+export const auth = safeAuth();
 export const googleProvider = typeof window !== "undefined" ? new GoogleAuthProvider() : null as unknown as GoogleAuthProvider;
-export const db = typeof window !== "undefined" && app ? getFirestore(app) : null as unknown as Firestore;
+export const db = safeDb();
