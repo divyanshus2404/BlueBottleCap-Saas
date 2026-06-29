@@ -62,193 +62,141 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  const inputClass =
+    "w-full rounded-xl border border-[var(--color-line-strong)] bg-white py-3 pl-10.5 pr-4 text-xs font-semibold text-[var(--color-ink)] placeholder-[var(--color-ink-faint)] focus:border-[var(--color-blue-ink)] focus:ring-1 focus:ring-[var(--color-blue-ink)] focus:outline-none transition";
+  const labelClass = "bbc-eyebrow block text-[10px]";
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="bbc fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs" onClick={onClose}></div>
+      <div className="absolute inset-0 bg-[var(--color-ink)]/45 backdrop-blur-sm" onClick={onClose}></div>
 
       {/* Modal Card */}
-      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-gray-150 bg-white/90 p-8 shadow-2xl backdrop-blur-md fade-in">
-        
-        {/* Close Button */}
-        <button 
-          onClick={onClose} 
-          className="absolute top-4 right-4 rounded-xl p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition"
+      <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-8 shadow-2xl fade-in">
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 rounded-xl p-1.5 text-[var(--color-ink-faint)] transition hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)]"
         >
-          <X className="w-5 h-5" />
+          <X className="h-5 w-5" />
         </button>
 
-        {/* Logo & Header */}
         <div className="mb-6 text-center">
-          <Logo className="mx-auto h-12 w-12 text-brand-cobalt" />
-          <h2 className="mt-4 font-display text-2xl font-black text-brand-navy">
-            {mode === "signin" && "Welcome Back"}
-            {mode === "signup" && "Create Account"}
-            {mode === "forgot" && "Reset Password"}
+          <Logo className="mx-auto h-12 w-12 text-[var(--color-blue-ink)]" />
+          <h2 className="bbc-serif mt-4 text-[26px] tracking-[-.01em] text-[var(--color-ink)]">
+            {mode === "signin" && "Welcome back"}
+            {mode === "signup" && "Create account"}
+            {mode === "forgot" && "Reset password"}
           </h2>
-          <p className="mt-1.5 text-xs text-gray-400">
+          <p className="mt-1.5 text-xs text-[var(--color-ink-soft)]">
             {mode === "signin" && "Sign in to access your saved studies and premium plan"}
-            {mode === "signup" && "Unlock high-power AI academic tools in seconds"}
+            {mode === "signup" && "Unlock AI-powered study tools in seconds"}
             {mode === "forgot" && "Enter your email to receive a password reset link"}
           </p>
         </div>
 
-        {/* Error / Success Alerts */}
         {error && (
-          <div className="mb-4 rounded-xl bg-red-50 border border-red-100 p-3 text-xs text-red-600 leading-normal">
-            {error}
-          </div>
+          <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs leading-normal text-red-600">{error}</div>
         )}
         {successMsg && (
-          <div className="mb-4 rounded-xl bg-emerald-50 border border-emerald-100 p-3 text-xs text-emerald-600 leading-normal">
-            {successMsg}
-          </div>
+          <div className="mb-4 rounded-xl border border-[var(--color-line)] bg-[var(--color-blue-wash)] p-3 text-xs leading-normal text-[var(--color-blue-ink)]">{successMsg}</div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4.5">
           {mode === "signup" && (
             <div className="space-y-1">
-              <label className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 font-mono">
-                Full Name
-              </label>
+              <label className={labelClass}>Full name</label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-3.5 flex items-center text-gray-400">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <span className="absolute inset-y-0 left-3.5 flex items-center text-[var(--color-ink-faint)]">
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                   </svg>
                 </span>
-                <input
-                  type="text"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Jane Doe"
-                  className="w-full rounded-xl border border-gray-200 bg-slate-50/50 py-3 pl-10.5 pr-4 text-xs font-semibold text-brand-navy focus:border-brand-cobalt focus:bg-white focus:outline-hidden transition"
-                />
+                <input type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Jane Doe" className={inputClass} />
               </div>
             </div>
           )}
 
-          {/* Email */}
           <div className="space-y-1">
-            <label className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 font-mono">
-              Email Address
-            </label>
+            <label className={labelClass}>Email address</label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-3.5 flex items-center text-gray-400">
-                <Mail className="w-4 h-4" />
+              <span className="absolute inset-y-0 left-3.5 flex items-center text-[var(--color-ink-faint)]">
+                <Mail className="h-4 w-4" />
               </span>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@school.edu"
-                className="w-full rounded-xl border border-gray-200 bg-slate-50/50 py-3 pl-10.5 pr-4 text-xs font-semibold text-brand-navy focus:border-brand-cobalt focus:bg-white focus:outline-hidden transition"
-              />
+              <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@school.edu" className={inputClass} />
             </div>
           </div>
 
-          {/* Password (only for Sign In / Sign Up) */}
           {mode !== "forgot" && (
             <div className="space-y-1">
-              <div className="flex justify-between items-center">
-                <label className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 font-mono">
-                  Password
-                </label>
+              <div className="flex items-center justify-between">
+                <label className={labelClass}>Password</label>
                 {mode === "signin" && (
-                  <button
-                    type="button"
-                    onClick={() => setMode("forgot")}
-                    className="text-[10px] font-extrabold text-brand-cobalt hover:underline font-mono"
-                  >
+                  <button type="button" onClick={() => setMode("forgot")} className="text-[10px] font-bold text-[var(--color-blue-ink)] hover:underline">
                     Forgot?
                   </button>
                 )}
               </div>
               <div className="relative">
-                <span className="absolute inset-y-0 left-3.5 flex items-center text-gray-400">
-                  <Lock className="w-4 h-4" />
+                <span className="absolute inset-y-0 left-3.5 flex items-center text-[var(--color-ink-faint)]">
+                  <Lock className="h-4 w-4" />
                 </span>
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full rounded-xl border border-gray-200 bg-slate-50/50 py-3 pl-10.5 pr-4 text-xs font-semibold text-brand-navy focus:border-brand-cobalt focus:bg-white focus:outline-hidden transition"
-                />
+                <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className={inputClass} />
               </div>
             </div>
           )}
 
-          {/* Submit CTA */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-brand-cobalt to-indigo-600 py-3.5 text-xs font-bold text-white shadow-lg shadow-brand-cobalt/25 hover:opacity-95 transition cursor-pointer disabled:opacity-50"
-          >
+          <button type="submit" disabled={loading} className="bbc-btn bbc-btn-primary w-full justify-center py-3.5 text-xs disabled:opacity-50">
             {loading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               <span>
-                {mode === "signin" && "Sign In"}
-                {mode === "signup" && "Create Account"}
-                {mode === "forgot" && "Send Reset Link"}
+                {mode === "signin" && "Sign in"}
+                {mode === "signup" && "Create account"}
+                {mode === "forgot" && "Send reset link"}
               </span>
             )}
           </button>
         </form>
 
-        {/* Auth Provider Dividers */}
         {mode !== "forgot" && (
           <>
             <div className="relative my-6 text-center">
-              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-150"></div></div>
-              <span className="relative bg-white px-3 text-[10px] font-extrabold uppercase tracking-wider text-gray-400 font-mono">
-                Or Continue With
-              </span>
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[var(--color-line)]"></div></div>
+              <span className="bbc-eyebrow relative bg-[var(--color-paper-card)] px-3 text-[10px]">Or continue with</span>
             </div>
 
-            {/* Google Sign In */}
-            <button
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-              className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-200 bg-white hover:bg-slate-50 py-3 text-xs font-bold text-gray-600 transition cursor-pointer disabled:opacity-50"
-            >
+            <button onClick={handleGoogleSignIn} disabled={loading} className="bbc-btn bbc-btn-ghost w-full justify-center bg-white py-3 text-xs disabled:opacity-50">
               <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24">
                 <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.2-5.136 4.2A5.727 5.727 0 0 1 8.2 12.9a5.727 5.727 0 0 1 5.79-5.7 5.666 5.666 0 0 1 3.93 1.545l3.1-3.1A9.913 9.913 0 0 0 13.99 2.1a10.8 10.8 0 0 0-10.8 10.8 10.8 10.8 0 0 0 10.8 10.8c5.73 0 9.87-3.955 9.87-9.87a9.23 9.23 0 0 0-.21-2.145H12.24Z"/>
               </svg>
-              <span>Google Account</span>
+              <span>Google account</span>
             </button>
           </>
         )}
 
-        {/* Toggle Mode Link */}
         <div className="mt-6 text-center text-xs">
           {mode === "signin" && (
-            <p className="text-gray-400">
+            <p className="text-[var(--color-ink-soft)]">
               New to BlueBottleCap?{" "}
-              <button onClick={() => setMode("signup")} className="font-extrabold text-brand-cobalt hover:underline cursor-pointer">
+              <button onClick={() => setMode("signup")} className="font-bold text-[var(--color-blue-ink)] hover:underline cursor-pointer">
                 Create an account
               </button>
             </p>
           )}
           {mode === "signup" && (
-            <p className="text-gray-400">
+            <p className="text-[var(--color-ink-soft)]">
               Already have an account?{" "}
-              <button onClick={() => setMode("signin")} className="font-extrabold text-brand-cobalt hover:underline cursor-pointer">
+              <button onClick={() => setMode("signin")} className="font-bold text-[var(--color-blue-ink)] hover:underline cursor-pointer">
                 Sign in
               </button>
             </p>
           )}
           {mode === "forgot" && (
-            <button onClick={() => setMode("signin")} className="font-extrabold text-brand-cobalt hover:underline cursor-pointer">
-              Back to Sign In
+            <button onClick={() => setMode("signin")} className="font-bold text-[var(--color-blue-ink)] hover:underline cursor-pointer">
+              Back to sign in
             </button>
           )}
         </div>
-
       </div>
     </div>
   );
