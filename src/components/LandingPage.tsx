@@ -1,491 +1,323 @@
-import React, { useRef, useEffect } from "react";
-import { Sparkles, BookOpen, Brain, Layers, Clock, FileText, Download, Zap, Shield, Target, Smartphone } from "lucide-react";
+"use client";
+import React, { useEffect, useRef } from "react";
 import { ActiveView } from "@/src/types";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MagneticWrapper } from "./MagneticWrapper";
-import { TiltCard } from "./TiltCard";
-import { VelocityMarquee } from "./VelocityMarquee";
-import { HeroBackgroundMarquee } from "./HeroBackgroundMarquee";
-import { SplitTextReveal } from "./SplitTextReveal";
-
-if (typeof window !== "undefined") {
-  (window as any).globalScrollProxy = { velocity: 0 };
-}
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface LandingPageProps {
   onNavigate: (view: ActiveView) => void;
 }
 
+const Check = () => (
+  <svg width="14" height="14" viewBox="0 0 16 16" className="flex-none mt-[5px]" aria-hidden="true">
+    <path d="M3 8.5l3 3 7-8" stroke="var(--color-blue-ink)" strokeWidth="1.7" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const Seal = ({ size = 26 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden="true">
+    <circle cx="16" cy="16" r="15" stroke="var(--color-ink)" strokeWidth="1.3" />
+    <path d="M13.4 7.5h5.2v1.7h-1v2.2l1.5 2.8v8.8c0 .7-.5 1.2-1.2 1.2h-4.8c-.7 0-1.2-.5-1.2-1.2v-8.8l1.5-2.8V9.2h-1V7.5z" stroke="var(--color-blue-ink)" strokeWidth="1.3" strokeLinejoin="round" />
+    <path d="M13.5 7.5h5" stroke="var(--color-blue-ink)" strokeWidth="1.8" strokeLinecap="round" />
+  </svg>
+);
+
+const tools = [
+  { n: "01", t: "AI PDF Copilot", d: "Chat with any textbook or notes PDF. Answers cite the page they came from." },
+  { n: "02", t: "Flashcard Maker", d: "Turn a chapter into a spaced-repetition deck in one click." },
+  { n: "03", t: "Mock Test Mode", d: "Distraction-free, full-length papers timed like the real exam." },
+  { n: "04", t: "Study Planner", d: "A day-by-day plan from your syllabus and exam date." },
+  { n: "05", t: "Smart Summaries", d: "Long chapters condensed to the points that actually get tested." },
+  { n: "06", t: "PDF & File Tools", d: "Compress, merge, and tidy your study files, right in the browser." },
+];
+
+const plans = [
+  {
+    name: "Free", price: "₹0", per: "/ forever", featured: false, cta: "Start free", view: "pdf-editor" as ActiveView,
+    desc: "Everything you need to try a real study session.",
+    items: ["3 AI tool runs a day", "All six core tools", "In-browser PDF & image tools", "Study streaks"],
+  },
+  {
+    name: "Pro", price: "₹149", per: "/ month", featured: true, tag: "Most popular", cta: "Get Pro", view: "pricing" as ActiveView,
+    desc: "For active prep, when three runs a day isn't enough.",
+    items: ["Everything in Free", "Unlimited AI tool runs", "JEE practice card sets", "Day-by-day timetables", "Priority support"],
+  },
+  {
+    name: "Power", price: "₹349", per: "/ month", featured: false, cta: "Get Power", view: "pricing" as ActiveView,
+    desc: "For serious scholars and the full PDF workspace.",
+    items: ["Everything in Pro", "Full PDF Copilot workspace", "Fastest AI generations", "B.Tech semester blueprints", "Early access to new mocks"],
+  },
+];
+
 export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let ctx = gsap.context(() => {
-      // Hero animations removed for instant load
-      
-      // Feature cards stagger animation
-      gsap.fromTo(
-        ".feature-card",
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".features-grid",
-            start: "top 80%",
-          },
-        }
+    const root = rootRef.current;
+    if (!root) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("bbc-in");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+    );
+    root.querySelectorAll<HTMLElement>(".bbc-reveal").forEach((el, i) => {
+      el.style.transitionDelay = `${Math.min(i, 6) * 60}ms`;
+      io.observe(el);
+    });
+
+    const draws = root.querySelectorAll<SVGPathElement>(".bbc-draw");
+    draws.forEach((p) => p.style.setProperty("--len", String(p.getTotalLength())));
+    const diag = root.querySelector(".bbc-diagram");
+    let dio: IntersectionObserver | null = null;
+    if (diag) {
+      dio = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              draws.forEach((p) => p.classList.add("bbc-in"));
+              dio?.disconnect();
+            }
+          });
+        },
+        { threshold: 0.3 }
       );
+      dio.observe(diag);
+    }
 
-      gsap.to(".hero-dashboard", {
-        y: -150,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".hero-section",
-          start: "top top",
-          end: "bottom top",
-          scrub: 0.5,
-        }
-      });
-
-      gsap.to(".hero-content", {
-        y: 100,
-        opacity: 0,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".hero-section",
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        }
-      });
-
-      gsap.fromTo(".feature-card", {
-        y: 60,
-        opacity: 0,
-      }, {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        stagger: 0.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".features-section",
-          start: "top 80%",
-        }
-      });
-
-      gsap.fromTo(".comparison-row", {
-        x: -30,
-        opacity: 0,
-      }, {
-        x: 0,
-        opacity: 1,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".comparison-section",
-          start: "top 75%",
-        }
-      });
-      
-      gsap.fromTo(".testimonial-card", {
-        y: 50,
-        scale: 0.95,
-        opacity: 0,
-      }, {
-        y: 0,
-        scale: 1,
-        opacity: 1,
-        duration: 1,
-        stagger: 0.2,
-        ease: "back.out(1.2)",
-        scrollTrigger: {
-          trigger: ".testimonials-section",
-          start: "top 80%",
-        }
-      });
-
-      gsap.to(".cta-glow", {
-        scale: 1.8,
-        rotation: 90,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".cta-section",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
-        }
-      });
-
-      // Awwwards Premium: Pin the Hero Section
-      ScrollTrigger.create({
-        trigger: ".hero-section",
-        start: "top top",
-        end: "+=800",
-        pin: true,
-        scrub: true,
-      });
-
-      const skewSetter = gsap.quickSetter(".hero-title .word", "skewY", "deg");
-      let proxy = { skew: 0 };
-      
-      ScrollTrigger.create({
-        onUpdate: (self) => {
-          let velocity = self.getVelocity();
-          if (typeof window !== "undefined") {
-            (window as any).globalScrollProxy.velocity = velocity;
-          }
-          
-          let skew = Math.min(Math.max(velocity / -200, -10), 10);
-          if (Math.abs(skew) > Math.abs(proxy.skew)) {
-            proxy.skew = skew;
-            gsap.to(proxy, {
-              skew: 0,
-              duration: 0.8,
-              ease: "power3",
-              overwrite: true,
-              onUpdate: () => skewSetter(proxy.skew)
-            });
-          }
-        }
-      });
-
-    }, containerRef);
-    
-    return () => ctx.revert();
+    return () => { io.disconnect(); dio?.disconnect(); };
   }, []);
 
+  const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+
   return (
-    <div ref={containerRef} className="bg-transparent min-h-screen">
+    <div ref={rootRef} className="bbc min-h-screen" id="top">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            "name": "BlueBottleCap",
-            "applicationCategory": "EducationalApplication",
-            "operatingSystem": "Web",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD"
-            },
-            "description": "Advanced Academic Workspace for College and University Students. Generate flashcards, compress files, and practice in a distraction-free mock test environment.",
-            "url": "https://bluebottlecap.com"
-          })
+            name: "BlueBottleCap",
+            applicationCategory: "EducationalApplication",
+            operatingSystem: "Web",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
+            description: "AI study workspace for Indian engineering students. Upload a PDF, ask in plain language, and turn it into flashcards, summaries, mocks, and a study plan.",
+            url: "https://bluebottlecap.com",
+          }),
         }}
       />
-      
-      {/* ── HERO SECTION ── */}
-      <section className="hero-section relative pt-16 pb-20 md:pt-24 md:pb-28 min-h-screen flex flex-col justify-center perspective-1000 z-10 overflow-hidden">
 
-        <HeroBackgroundMarquee />
-
-        <div className="hero-content mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 text-center w-full mt-10 pointer-events-none">
-          <div className="hero-badge hero-reveal-element inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-4 py-1.5 text-xs font-semibold text-blue-700 mb-6 backdrop-blur-md border border-blue-200 shadow-sm pointer-events-auto">
-            <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-            <span>Early Access — Now open for JEE &amp; B.Tech students</span>
+      {/* ── HEADER ── */}
+      <header className="sticky top-0 z-50 border-b border-[var(--color-line)] bg-[rgba(245,244,239,.82)] backdrop-blur-md">
+        <div className="mx-auto flex h-[68px] max-w-[1180px] items-center justify-between px-7">
+          <button onClick={() => scrollTo("top")} className="flex items-center gap-[11px] text-[16px] font-semibold tracking-[-.01em]" aria-label="BlueBottleCap home">
+            <Seal /> BlueBottleCap
+          </button>
+          <nav className="hidden gap-[30px] md:flex" aria-label="Primary">
+            <button onClick={() => scrollTo("tools")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Tools</button>
+            <button onClick={() => scrollTo("how")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">How it works</button>
+            <button onClick={() => scrollTo("pricing")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Pricing</button>
+          </nav>
+          <div className="flex items-center gap-[18px]">
+            <button onClick={() => onNavigate("signup")} className="hidden text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)] sm:block">Sign in</button>
+            <button onClick={() => onNavigate("pdf-editor")} className="bbc-btn bbc-btn-primary px-5 py-[11px] text-[15px]">Start free</button>
           </div>
-          
-          <h1 className="hero-title hero-reveal-element font-display text-4.5xl font-black tracking-tight text-slate-900 sm:text-6xl md:text-7xl leading-tight max-w-4xl mx-auto drop-shadow-sm pointer-events-auto">
-            <span className="word inline-block">AI exam prep for</span>{" "}
-            <span className="word inline-block bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              JEE, B.Tech &amp; engineering.
-            </span>
-          </h1>
-          
-          <p className="hero-desc hero-reveal-element mt-6 mx-auto max-w-2xl text-base text-slate-600 md:text-xl leading-relaxed font-medium pointer-events-auto">
-            Upload your syllabus PDF, ask questions in plain language, and get instant AI-powered answers — built for Indian engineering entrance exams and B.Tech coursework.
-          </p>
+        </div>
+      </header>
 
-          <div className="hero-reveal-element mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 pointer-events-auto">
-            <button
-              onClick={() => onNavigate("pdf-editor")}
-              className="group relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-linear-to-br from-blue-600 to-indigo-700 px-8 py-4 font-display text-lg font-bold text-white shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_60px_-15px_rgba(37,99,235,0.7)]"
-            >
-              <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-150%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(150%)]">
-                <div className="relative h-full w-8 bg-white/20" />
-              </div>
-              <Sparkles className="w-5 h-5 animate-bounce-subtle" />
-              Start Free Study Session
-            </button>
-            <button
-              onClick={() => {
-                const el = document.querySelector('.features-section');
-                el?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="inline-flex items-center gap-2 rounded-2xl border-2 border-slate-200 bg-white/50 px-8 py-4 font-display text-lg font-bold text-slate-700 backdrop-blur-sm transition-all hover:bg-slate-50 hover:border-blue-200"
-            >
-              How it works
-            </button>
-          </div>
-
-          <div className="hero-reveal-element mt-8 flex flex-col items-center justify-center gap-2 pointer-events-auto">
-            <div className="flex -space-x-3">
-              {[
-                "https://api.dicebear.com/7.x/notionists/svg?seed=Felix",
-                "https://api.dicebear.com/7.x/notionists/svg?seed=Aneka",
-                "https://api.dicebear.com/7.x/notionists/svg?seed=John",
-                "https://api.dicebear.com/7.x/notionists/svg?seed=Sara",
-                "https://api.dicebear.com/7.x/notionists/svg?seed=Mike"
-              ].map((avatar, i) => (
-                <img key={i} src={avatar} alt="User avatar" className="w-10 h-10 rounded-full border-2 border-white bg-slate-100 shadow-sm" />
-              ))}
+      {/* ── HERO ── */}
+      <section className="relative overflow-hidden border-b border-[var(--color-line)]">
+        <div className="bbc-grid" aria-hidden="true" />
+        <div className="relative z-[2] mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-10 px-7 py-[60px] md:grid-cols-[1fr_1.05fr] md:py-[76px]">
+          <div>
+            <p className="bbc-eyebrow bbc-reveal">For JEE · B.Tech · GATE</p>
+            <h1 className="bbc-serif bbc-reveal mt-[18px] text-[clamp(40px,5.6vw,68px)] leading-[1.03] tracking-[-.02em]">
+              Study your own<br />material, <em className="not-italic font-medium italic text-[var(--color-blue-ink)]">understood.</em>
+            </h1>
+            <p className="bbc-reveal mt-6 max-w-[30em] text-[18.5px] text-[var(--color-ink-soft)]">
+              Upload a PDF and ask questions in plain language — answers come straight from your notes, not a generic chatbot. Then turn it into flashcards, a study plan, and full-length mocks.
+            </p>
+            <div className="bbc-reveal mt-[34px] flex flex-wrap items-center gap-4">
+              <button onClick={() => onNavigate("pdf-editor")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">Start a free study session</button>
+              <button onClick={() => scrollTo("how")} className="inline-flex items-center gap-[7px] text-[15px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-blue-ink)]">
+                See how it works
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </button>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="flex gap-1 text-amber-400 mb-1">
-                {[...Array(5)].map((_, i) => <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>)}
+            <div className="bbc-reveal mt-[42px] flex items-center gap-[14px]">
+              <div className="flex" aria-hidden="true">
+                {["AK", "RS", "PM", "NV", "+"].map((s, i) => (
+                  <span key={i} className="grid h-[30px] w-[30px] place-items-center rounded-full border-2 border-[var(--color-paper)] bg-[var(--color-blue-wash)] font-[var(--font-plex)] text-[11px] font-semibold text-[var(--color-blue-deep)]" style={{ marginLeft: i === 0 ? 0 : -9 }}>{s}</span>
+                ))}
               </div>
-              <p className="text-sm font-semibold text-slate-600">Used by early access students across India 🇮🇳</p>
+              <p className="text-[13.5px] text-[var(--color-ink-faint)]">In early access with engineering students across India</p>
             </div>
           </div>
 
-          {/* Quirky floating elements */}
-          <div className="absolute top-10 left-10 w-16 h-16 bg-blue-500/10 rounded-2xl backdrop-blur-xl border border-blue-200/50 flex items-center justify-center animate-float-slow hidden md:flex pointer-events-none -rotate-12">
-            <Brain className="w-8 h-8 text-blue-500" />
-          </div>
-          <div className="absolute top-40 right-10 w-20 h-20 bg-indigo-500/10 rounded-full backdrop-blur-xl border border-indigo-200/50 flex items-center justify-center animate-float-fast hidden md:flex pointer-events-none rotate-12">
-            <Zap className="w-10 h-10 text-indigo-500" />
-          </div>
+          {/* patent-style annotated bottle diagram */}
+          <div className="bbc-diagram bbc-reveal mx-auto max-w-[440px] md:max-w-none" aria-hidden="true">
+            <svg viewBox="0 0 760 560" className="block h-auto w-full overflow-visible">
+              <line className="bbc-center" x1="380" y1="58" x2="380" y2="500" />
+              <path className="bbc-stroke" d="M352 92 h56 l-4 26 a3 3 0 0 1 -3 3 h-42 a3 3 0 0 1 -3 -3 z" />
+              <g className="bbc-stroke-ink">
+                <line x1="360" y1="93" x2="359" y2="120" /><line x1="369" y1="93" x2="368" y2="121" />
+                <line x1="380" y1="93" x2="380" y2="121" /><line x1="391" y1="93" x2="392" y2="121" /><line x1="400" y1="93" x2="401" y2="120" />
+              </g>
+              <path className="bbc-stroke" d="M364 121 v10 h-3 v8 h38 v-8 h-3 v-10" />
+              <path className="bbc-stroke" d="M361 139 C 360 162 332 168 332 206 v250 a18 18 0 0 0 18 18 h60 a18 18 0 0 0 18 -18 v-250 c0 -38 -28 -44 -29 -67" />
+              <rect className="bbc-stroke-ink" x="345" y="300" width="70" height="96" rx="6" />
+              <line className="bbc-stroke-ink" x1="358" y1="324" x2="402" y2="324" /><line className="bbc-stroke-ink" x1="358" y1="340" x2="402" y2="340" /><line className="bbc-stroke-ink" x1="358" y1="356" x2="388" y2="356" />
 
-          {/* MOCK DASHBOARD PREVIEW UI */}
-          <div className="hero-dashboard hero-reveal-element mt-14 max-w-5xl mx-auto relative group transform-gpu pointer-events-auto">
-            <div className="absolute inset-0 bg-linear-to-b from-blue-100 to-transparent blur-3xl opacity-80 rounded-[3rem] -z-10 transition duration-700 group-hover:scale-105" />
-            
-            <div className="relative rounded-2xl md:rounded-[2rem] border border-white/60 bg-white/60 backdrop-blur-2xl p-2 md:p-3 shadow-2xl transition duration-500 hover:shadow-blue-500/10">
-              <div className="absolute inset-x-0 -top-px h-px bg-linear-to-r from-transparent via-blue-200 to-transparent"></div>
-              
-              {/* BROWSER BAR MOCK */}
-              <div className="rounded-xl md:rounded-3xl overflow-hidden bg-white border border-slate-200/50 shadow-inner relative z-10">
-                <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200/50">
-                  <div className="flex space-x-2">
-                    <div className="w-3 h-3 rounded-full bg-red-400 shadow-sm"></div>
-                    <div className="w-3 h-3 rounded-full bg-amber-400 shadow-sm"></div>
-                    <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-sm"></div>
-                  </div>
-                  <div className="flex-1 px-4 flex justify-center">
-                    <div className="bg-white rounded-md px-32 py-1.5 text-[9px] font-mono text-slate-400 flex items-center gap-2 shadow-sm border border-slate-100">
-                      <span>🔒</span> bluebottlecap.com/workspace
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="p-8 pb-16 bg-white flex justify-center relative overflow-hidden">
-                  <div className="max-w-md text-left w-full space-y-6 relative z-10">
-                    <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center font-black text-slate-700 text-2xl shadow-inner border border-slate-200/50">S</div>
-                        <div>
-                          <div className="font-bold text-slate-900 text-lg">Welcome back, Scholar</div>
-                          <div className="text-sm text-slate-500">Your study streak is on fire! 🔥</div>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm">
-                          <div className="text-xs font-black tracking-widest text-slate-400 mb-1">MOCK TESTS</div>
-                          <div className="text-3xl font-black text-slate-900">12<span className="text-sm font-bold text-slate-400 ml-1">completed</span></div>
-                        </div>
-                        <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm">
-                          <div className="text-xs font-black tracking-widest text-slate-400 mb-1">CHAPTERS REVISED</div>
-                          <div className="text-3xl font-black text-slate-900">34<span className="text-sm font-bold text-slate-400 ml-1">/ 90</span></div>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+              <g className="bbc-diag-label">
+                <circle className="bbc-anchor" cx="361" cy="135" r="3" />
+                <path className="bbc-lead bbc-draw" d="M361 135 H188 V124" />
+                <text className="bbc-lbl-num" x="120" y="118">01</text>
+                <text className="bbc-lbl" x="146" y="118">STUDY PLANNER</text>
+              </g>
+              <g className="bbc-diag-label">
+                <circle className="bbc-anchor" cx="332" cy="380" r="3" />
+                <path className="bbc-lead bbc-draw" d="M332 380 H188 V392" />
+                <text className="bbc-lbl-num" x="120" y="398">02</text>
+                <text className="bbc-lbl" x="146" y="398">SMART SUMMARIES</text>
+              </g>
+              <g className="bbc-diag-label">
+                <circle className="bbc-anchor" cx="406" cy="106" r="3" />
+                <path className="bbc-lead bbc-draw" d="M406 106 H572 V94" />
+                <text className="bbc-lbl-num" x="572" y="88">03</text>
+                <text className="bbc-lbl" x="598" y="88">AI PDF COPILOT</text>
+              </g>
+              <g className="bbc-diag-label">
+                <circle className="bbc-anchor" cx="428" cy="420" r="3" />
+                <path className="bbc-lead bbc-draw" d="M428 420 H572 V432" />
+                <text className="bbc-lbl-num" x="572" y="438">04</text>
+                <text className="bbc-lbl" x="598" y="438">MOCK TEST MODE</text>
+              </g>
+
+              <g className="bbc-stroke-ink" opacity=".5">
+                <line x1="300" y1="206" x2="312" y2="206" /><line x1="306" y1="206" x2="306" y2="456" /><line x1="300" y1="456" x2="312" y2="456" />
+              </g>
+            </svg>
           </div>
         </div>
       </section>
 
-      {/* ── EMOTIONAL PAIN POINT SECTION ── */}
-      <section className="py-32 bg-white/60 backdrop-blur-xl border-y border-white/50 text-center relative z-20 shadow-sm overflow-hidden">
-        <div className="mx-auto max-w-4xl px-4">
-          <SplitTextReveal 
-            text="Stop searching for the perfect notes." 
-            className="text-4xl md:text-5xl lg:text-6xl font-black font-display text-slate-900 mb-6 leading-tight" 
-          />
-          <p className="text-xl text-slate-600 leading-relaxed font-medium mt-6 max-w-3xl mx-auto">
-            You spend more time looking for good study material and downloading scattered PDFs than actually studying. Stop wasting your energy. We compiled the absolute best chapter-wise notes, formulas, and mock tests so you can just sit down and study.
+      {/* ── PROBLEM BAND ── */}
+      <section className="border-b border-[var(--color-line)] py-[96px] text-center">
+        <div className="mx-auto max-w-[1180px] px-7">
+          <p className="bbc-eyebrow bbc-reveal">The honest problem</p>
+          <p className="bbc-serif bbc-reveal mx-auto mt-[18px] max-w-[18ch] text-[clamp(26px,3.8vw,42px)] italic leading-[1.22] tracking-[-.01em]">
+            You spend more time hunting for good notes than studying them.
+          </p>
+          <p className="bbc-reveal mx-auto mt-[22px] max-w-[46ch] text-[var(--color-ink-soft)]">
+            Scattered PDFs, half-finished playlists, ten browser tabs. BlueBottleCap keeps one quiet workspace where your material, your questions, and your practice all live together.
           </p>
         </div>
       </section>
 
-      {/* ── INFINITE VELOCITY MARQUEE ── */}
-      <VelocityMarquee text="STUDY SMARTER • RETAIN FASTER • ACE EXAMS • " className="my-0" />
-
-      {/* ── HOW IT WORKS (FEATURES) ── */}
-      <section className="features-section py-40 bg-slate-50/80 backdrop-blur-2xl relative z-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <SplitTextReveal 
-            text="Everything you need to succeed." 
-            className="text-4xl md:text-5xl font-black font-display text-slate-900 mb-24" 
-          />
-          
-          <div className="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
-            <TiltCard className="h-[400px]">
-              <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
-                <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
-                  <img src="/images/physics.webp" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100 object-cover" alt="" />
-                </div>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Premium Notes</h3>
-                <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Access exhaustive, topper-grade notes carefully organized by subject and chapter.</p>
-              </div>
-            </TiltCard>
-            
-            <TiltCard className="h-[400px]">
-              <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
-                <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
-                  <img src="/images/chemistry.webp" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100 object-cover" alt="" />
-                </div>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Virtual Test Mode</h3>
-                <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Practice past papers in an immersive, distraction-free environment with an active timer.</p>
-              </div>
-            </TiltCard>
-            
-            <TiltCard className="h-[400px]">
-              <div className="feature-card h-full flex flex-col items-center group bg-white rounded-[2rem] p-8 lg:p-10 shadow-2xl transition-shadow duration-500 overflow-hidden justify-between border border-slate-100 ring-1 ring-slate-900/5 hover:ring-brand-cobalt/20">
-                <div className="w-full h-48 rounded-[2rem] overflow-hidden mb-6 relative">
-                  <img src="/images/math.webp" className="w-full h-full absolute inset-0 z-0 scale-105 transition-transform duration-700 group-hover:scale-100 object-cover" alt="" />
-                </div>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">AI Powered</h3>
-                <p className="text-slate-500 leading-relaxed text-sm font-medium max-w-sm">Get instant solutions and flashcard generation to retain concepts longer.</p>
-              </div>
-            </TiltCard>
+      {/* ── TOOLS / INDEX ── */}
+      <section id="tools" className="border-b border-[var(--color-line)] py-[88px]">
+        <div className="mx-auto max-w-[1180px] px-7">
+          <div className="bbc-reveal mb-12 max-w-[34em]">
+            <p className="bbc-eyebrow">The suite</p>
+            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">Six tools, one workspace.</h2>
+            <p className="mt-[14px] text-[17px] text-[var(--color-ink-soft)]">Everything is built around your own material — no generic answers, no busywork.</p>
           </div>
-
-          <div className="mt-24 feature-card">
-            <button
-              onClick={() => onNavigate("pdf-editor")}
-              className="inline-flex items-center gap-3 bg-slate-900 hover:bg-slate-800 text-white font-black text-lg px-10 py-5 rounded-2xl transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 cursor-pointer ring-4 ring-transparent hover:ring-slate-900/10"
-            >
-              <span>Try PDF Copilot Free</span>
-              <Sparkles className="w-6 h-6" />
-            </button>
-            <p className="text-sm text-slate-400 font-bold mt-5 uppercase tracking-widest">No credit card needed · Upload any PDF instantly</p>
+          <div className="border-t border-[var(--color-line)]">
+            {tools.map((tool) => (
+              <div key={tool.n} className="bbc-row bbc-reveal grid grid-cols-[44px_1fr_22px] items-baseline gap-6 border-b border-[var(--color-line)] px-1 py-[26px] md:grid-cols-[64px_1fr_1.3fr_24px]">
+                <span className="bbc-mono pt-1 text-[15px] text-[var(--color-blue-ink)]">{tool.n}</span>
+                <span className="bbc-serif text-[22px] tracking-[-.01em]">{tool.t}</span>
+                <span className="hidden text-[16px] text-[var(--color-ink-soft)] md:block">{tool.d}</span>
+                <span className="bbc-arrow justify-self-end text-[var(--color-ink-faint)]">→</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── COACHING COMPARISON ── */}
-      <section className="comparison-section py-32 bg-white/90 backdrop-blur-xl border-y border-slate-100 overflow-hidden relative z-20 shadow-sm">
-        <div className="mx-auto max-w-5xl px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-black font-display text-slate-900 mb-20">
-            Traditional Learning vs <br className="hidden sm:block" />BlueBottleCap
-          </h2>
-          
-          <div className="overflow-hidden border border-slate-200 rounded-[2rem] shadow-xl text-left text-sm md:text-lg bg-white/95 backdrop-blur-xl">
-            <div className="comparison-row grid grid-cols-3 bg-slate-50 border-b border-slate-200 font-black text-slate-900 p-6 sm:p-8">
-              <div className="col-span-1 uppercase tracking-widest text-xs text-slate-400">Feature</div>
-              <div className="col-span-1 text-slate-500">Traditional</div>
-              <div className="col-span-1 text-blue-600 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 hidden sm:block" /> BlueBottleCap
+      {/* ── HOW IT WORKS ── */}
+      <section id="how" className="border-b border-[var(--color-line)] py-[88px]">
+        <div className="mx-auto max-w-[1180px] px-7">
+          <div className="bbc-reveal mb-12 max-w-[34em]">
+            <p className="bbc-eyebrow">How it works</p>
+            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">From a messy PDF to a real study session in under a minute.</h2>
+          </div>
+          <div className="grid grid-cols-1 gap-[30px] md:grid-cols-3">
+            {[
+              { s: "Step 01", h: "Upload", p: "Drop in a textbook chapter, lecture notes, or a past paper. Your file stays yours." },
+              { s: "Step 02", h: "Ask", p: "Ask anything in plain language. Get answers grounded in that exact document." },
+              { s: "Step 03", h: "Practice", p: "Spin up flashcards, a summary, or a timed mock from what you just read." },
+            ].map((step) => (
+              <div key={step.s} className="bbc-reveal border-t-2 border-[var(--color-ink)] pt-[22px]">
+                <span className="bbc-mono text-[12px] uppercase tracking-[.16em] text-[var(--color-ink-faint)]">{step.s}</span>
+                <h3 className="bbc-serif mt-[14px] mb-2 text-[21px] tracking-[-.01em]">{step.h}</h3>
+                <p className="text-[15.5px] text-[var(--color-ink-soft)]">{step.p}</p>
               </div>
-            </div>
-            
-            <div className="comparison-row grid grid-cols-3 border-b border-slate-100 p-6 sm:p-8 hover:bg-slate-50 transition-colors">
-              <div className="col-span-1 font-bold text-slate-700">Cost</div>
-              <div className="col-span-1 text-slate-500 pr-4">₹1,00,000+ per year</div>
-              <div className="col-span-1 font-black text-slate-900">Extremely affordable.</div>
-            </div>
-            
-            <div className="comparison-row grid grid-cols-3 border-b border-slate-100 p-6 sm:p-8 hover:bg-slate-50 transition-colors">
-              <div className="col-span-1 font-bold text-slate-700">Material</div>
-              <div className="col-span-1 text-slate-500 pr-4">Heavy, outdated books.</div>
-              <div className="col-span-1 font-bold text-slate-900">Digital, constantly updated notes.</div>
-            </div>
-
-            <div className="comparison-row grid grid-cols-3 p-6 sm:p-8 hover:bg-slate-50 transition-colors">
-              <div className="col-span-1 font-bold text-slate-700">Tests</div>
-              <div className="col-span-1 text-slate-500 pr-4">Rigid schedule.</div>
-              <div className="col-span-1 font-bold text-slate-900">Take full mock tests instantly.</div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── TESTIMONIALS / TRUST ── */}
-      <section className="testimonials-section py-40 bg-slate-50/90 backdrop-blur-2xl border-b border-slate-200 relative z-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-black font-display text-slate-900 mb-6">Built for serious students.</h2>
-          <p className="text-slate-500 mb-20 font-medium text-xl">Trusted by ambitious learners everywhere.</p>
-          
-          <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto text-left">
-            <div className="testimonial-card bg-white p-12 rounded-[2rem] border border-slate-100 shadow-xl relative transition-transform hover:-translate-y-2">
-              <div className="absolute -top-6 -left-2 text-slate-100 text-9xl font-serif leading-none">"</div>
-              <p className="text-slate-700 leading-relaxed font-medium mb-10 relative z-10 text-lg">I uploaded my GATE reference material and started asking questions in Hindi-English mix. The AI understood everything. This is exactly what I needed before exams.</p>
-              <div className="flex items-center gap-5">
-                <img src="https://api.dicebear.com/7.x/notionists/svg?seed=RahulSharma" alt="Rahul" className="w-14 h-14 rounded-full border-2 border-white bg-slate-100" />
-                <div>
-                  <div className="font-black text-slate-900 text-xl">Rahul S.</div>
-                  <div className="text-sm text-blue-600 font-bold uppercase tracking-wide mt-1">B.Tech CSE, NIT Trichy — Early Access</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="testimonial-card bg-white p-12 rounded-[2rem] border border-slate-100 shadow-xl relative transition-transform hover:-translate-y-2">
-              <div className="absolute -top-6 -left-2 text-slate-100 text-9xl font-serif leading-none">"</div>
-              <p className="text-slate-700 leading-relaxed font-medium mb-10 relative z-10 text-lg">I used it during my JEE Advanced revision. The PDF chat feature is genuinely impressive — it explains derivations step by step, not just definitions. Clean UI too.</p>
-              <div className="flex items-center gap-5">
-                <img src="https://api.dicebear.com/7.x/notionists/svg?seed=AnanyaMehta" alt="Ananya" className="w-14 h-14 rounded-full border-2 border-white bg-slate-100" />
-                <div>
-                  <div className="font-black text-slate-900 text-xl">Ananya M.</div>
-                  <div className="text-sm text-emerald-600 font-bold uppercase tracking-wide mt-1">JEE Aspirant, Delhi — Early Access</div>
-                </div>
-              </div>
-            </div>
+      {/* ── PRICING ── */}
+      <section id="pricing" className="border-b border-[var(--color-line)] py-[88px]">
+        <div className="mx-auto max-w-[1180px] px-7">
+          <div className="bbc-reveal mx-auto mb-12 max-w-[34em] text-center">
+            <p className="bbc-eyebrow">Pricing</p>
+            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">Fair for students. Honest about it.</h2>
+            <p className="mt-[14px] text-[17px] text-[var(--color-ink-soft)]">Start free, forever. Upgrade only when exams get close.</p>
           </div>
+          <div className="grid grid-cols-1 gap-[22px] md:grid-cols-3">
+            {plans.map((plan) => (
+              <div key={plan.name} className={`bbc-reveal flex flex-col rounded-[14px] border p-[30px] ${plan.featured ? "border-[var(--color-blue-ink)] bg-white shadow-[0_0_0_1px_var(--color-blue-ink)_inset]" : "border-[var(--color-line)] bg-[var(--color-paper-card)]"}`}>
+                <div className="flex items-center justify-between">
+                  <span className="bbc-serif text-[20px] font-semibold">{plan.name}</span>
+                  {plan.tag && <span className="bbc-mono rounded-[6px] bg-[var(--color-blue-ink)] px-[9px] py-1 text-[10.5px] uppercase tracking-[.12em] text-white">{plan.tag}</span>}
+                </div>
+                <div className="mt-5 mb-1 flex items-baseline gap-1">
+                  <span className="bbc-serif text-[42px] font-semibold tracking-[-.02em]">{plan.price}</span>
+                  <span className="bbc-mono text-[14px] text-[var(--color-ink-faint)]">{plan.per}</span>
+                </div>
+                <p className="mb-[18px] min-h-[42px] text-[14.5px] text-[var(--color-ink-soft)]">{plan.desc}</p>
+                <ul className="mb-[26px] flex-1 list-none p-0">
+                  {plan.items.map((it) => (
+                    <li key={it} className="flex items-start gap-[10px] py-[7px] text-[14.5px]"><Check />{it}</li>
+                  ))}
+                </ul>
+                <button onClick={() => onNavigate(plan.view)} className={`bbc-btn w-full justify-center py-3 ${plan.featured ? "bbc-btn-primary" : "bbc-btn-ghost"}`}>{plan.cta}</button>
+              </div>
+            ))}
+          </div>
+          <p className="bbc-reveal mt-[26px] text-center text-[13.5px] text-[var(--color-ink-faint)]">Students get 30% off any paid plan with a valid student ID or college email.</p>
         </div>
       </section>
 
-      {/* ── CTA SECTION ── */}
-      <section className="cta-section py-40 text-center relative overflow-hidden bg-linear-to-b from-blue-700 to-indigo-900 text-white z-20">
-        <div className="cta-glow absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400/30 via-indigo-900/50 to-transparent opacity-100 blur-3xl pointer-events-none" />
-        <div className="relative z-10 max-w-4xl mx-auto px-6">
-          <h2 className="text-5xl md:text-7xl font-display font-black mb-8 leading-tight drop-shadow-xl text-white">
-            Ready to upgrade your{" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-300 to-blue-200">academic life?</span>
-          </h2>
-          <p className="text-xl md:text-2xl text-blue-100 mb-6 font-medium max-w-2xl mx-auto drop-shadow-sm">
-            Join early-access engineering students using BlueBottleCap to study smarter before exams.
-          </p>
-          <div className="flex items-center justify-center gap-3 text-sm text-blue-200 mb-12 font-medium">
-            <span className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span> Free to start</span>
-            <span className="text-white/30">•</span>
-            <span className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span> No credit card needed</span>
-            <span className="text-white/30">•</span>
-            <span className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span> 7-day refund guarantee</span>
-          </div>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
-            <button 
-              onClick={() => onNavigate("pdf-editor")}
-              className="rounded-2xl bg-white text-indigo-700 font-display hover:bg-slate-50 px-14 py-7 font-black text-2xl cursor-pointer shadow-[0_0_50px_-10px_rgba(255,255,255,0.5)] transition-all hover:scale-105 hover:shadow-[0_0_80px_-15px_rgba(255,255,255,0.7)] w-full sm:w-auto"
-            >
-              Start Free Study Session
-            </button>
-            <button 
-              onClick={() => onNavigate("signup")}
-              className="rounded-2xl bg-transparent border-2 border-white/30 text-white font-display hover:bg-white/10 px-14 py-7 font-bold text-xl cursor-pointer transition-colors w-full sm:w-auto"
-            >
-              Create Free Account
-            </button>
+      {/* ── CLOSING ── */}
+      <section className="border-b border-[var(--color-line)] py-[108px] text-center">
+        <div className="mx-auto max-w-[1180px] px-7">
+          <p className="bbc-eyebrow bbc-reveal">Ready when you are</p>
+          <h2 className="bbc-serif bbc-reveal mx-auto mt-[14px] max-w-[16ch] text-[clamp(30px,4.4vw,52px)] leading-[1.08] tracking-[-.02em]">Quieter prep. Better marks.</h2>
+          <div className="bbc-reveal mt-[34px]">
+            <button onClick={() => onNavigate("pdf-editor")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">Start a free study session</button>
           </div>
         </div>
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-indigo-800 bg-indigo-950 py-16 relative z-20 text-center">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-xs text-slate-500 space-y-4">
-          <span className="font-display font-black text-slate-400 text-xl tracking-tight">BlueBottleCap</span>
-          <p className="font-mono text-[11px] uppercase tracking-widest mt-2">© 2026 BlueBottleCap Suite. All Rights Reserved.</p>
+      <footer className="py-[46px]">
+        <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-5 px-7">
+          <div className="flex items-center gap-[11px] text-[15px] font-semibold"><Seal size={22} /> BlueBottleCap</div>
+          <nav className="flex flex-wrap gap-6" aria-label="Footer">
+            <button onClick={() => scrollTo("tools")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">Tools</button>
+            <button onClick={() => scrollTo("pricing")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">Pricing</button>
+            <button onClick={() => onNavigate("about")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">About</button>
+            <button onClick={() => onNavigate("terms")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">Terms</button>
+          </nav>
+          <span className="bbc-mono text-[12.5px] text-[var(--color-ink-faint)]">© 2026 · Made in India</span>
         </div>
       </footer>
     </div>
