@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef } from "react";
-import { ActiveView } from "../types";
+import { ActiveView } from "@/src/types";
 
 interface LandingPageProps {
   onNavigate: (view: ActiveView) => void;
