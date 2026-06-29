@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
+import { enforceRateLimit } from '@/src/lib/rateLimit';
 
 function getAIClient() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -10,6 +11,9 @@ function getAIClient() {
 }
 
 export async function POST(req: Request) {
+  const limited = enforceRateLimit(req, { limit: 20, windowMs: 60_000, prefix: "ai-summarize" });
+  if (limited) return limited;
+
   try {
     const { text, focus } = await req.json();
     if (!text || text.trim() === "") {

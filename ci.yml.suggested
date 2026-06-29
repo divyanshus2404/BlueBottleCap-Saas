@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Type check
+        run: npx tsc --noEmit
+      - name: Lint
+        run: npm run lint --if-present
+      - name: Build
+        run: npm run build
+        env:
+          # Provide harmless placeholders so the build doesn't fail on missing
+          # runtime secrets. Real values are injected by the hosting platform.
+          GEMINI_API_KEY: "ci-placeholder"
+          RAZORPAY_KEY_ID: "ci-placeholder"
+          RAZORPAY_KEY_SECRET: "ci-placeholder"

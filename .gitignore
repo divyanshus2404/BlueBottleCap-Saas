@@ -12,3 +12,7 @@ build/
 *.tar.gz
 *.log
 .vercel
+
+# Build artifacts / scratch — should never be committed
+*.tsbuildinfo
+error_screenshot.png

@@ -141,11 +141,10 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
     try {
       onToast("Connecting to payment server...", "info");
       
-      const amountPaise = 120 * 100; // ₹120.00 in paise
       const resp = await fetch("/api/razorpay/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: amountPaise }),
+        body: JSON.stringify({ product: "chapter_test" }),
       });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "Failed to create checkout order");
@@ -1064,28 +1063,61 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
                 const chaptersForSubject = getChaptersBySubject(studySubject);
                 const currentChapterData = getChapterByName(studySubject, studyChapter) ?? chaptersForSubject[0];
 
-                // ₹281 Razorpay unlock handler
-                const handlePayForStudyMaterial = () => {
-                  if (!(window as any).Razorpay) {
-                    onToast("Payment gateway not loaded. Please refresh.", "error");
-                    return;
+                // ₹281 Razorpay unlock handler — goes through server-side order
+                // creation + signature verification (price is set on the server).
+                const handlePayForStudyMaterial = async () => {
+                  try {
+                    onToast("Connecting to payment server...", "info");
+                    const resp = await fetch("/api/razorpay/create-order", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ product: "study_material" }),
+                    });
+                    const data = await resp.json();
+                    if (!resp.ok) throw new Error(data.error || "Failed to create checkout order");
+
+                    const scriptLoaded = await loadRazorpayScript();
+                    if (!scriptLoaded) throw new Error("Failed to load Razorpay checkout script");
+
+                    const options: any = {
+                      key: data.key_id,
+                      amount: data.order.amount,
+                      currency: data.order.currency,
+                      name: "BlueBottleCap",
+                      description: "Full Chapter-wise Study Material — JEE Mains & Advanced",
+                      image: "/logo.png",
+                      order_id: data.order.id,
+                      handler: async function (response: any) {
+                        try {
+                          onToast("Verifying payment...", "info");
+                          const verifyResp = await fetch("/api/razorpay/verify", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(response),
+                          });
+                          const verifyData = await verifyResp.json();
+                          if (verifyResp.ok && verifyData.ok) {
+                            onUnlockStudyMaterial();
+                            onToast("🎉 Study material unlocked! Enjoy all chapters.", "success");
+                          } else {
+                            throw new Error("Payment signature verification failed");
+                          }
+                        } catch (err: any) {
+                          onToast(err.message || "Verification failed", "error");
+                        }
+                      },
+                      prefill: {
+                        name: currentUser?.displayName || "Scholar",
+                        email: currentUser?.email || "student@bluebottlecap.com",
+                      },
+                      theme: { color: "#1e3a5f" },
+                    };
+                    const rzp = new (window as any).Razorpay(options);
+                    rzp.open();
+                  } catch (err: any) {
+                    console.error(err);
+                    onToast(err.message || "Payment initiation failed", "error");
                   }
-                  const options = {
-                    key: "rzp_test_qFQoLyR9fSqFGt",
-                    amount: 28100, // ₹281 in paise
-                    currency: "INR",
-                    name: "BlueBottleCap",
-                    description: "Full Chapter-wise Study Material — JEE Mains & Advanced",
-                    image: "/logo.png",
-                    handler: () => {
-                      onUnlockStudyMaterial();
-                      onToast("🎉 Study material unlocked! Enjoy all chapters.", "success");
-                    },
-                    prefill: { name: "Scholar" },
-                    theme: { color: "#1e3a5f" },
-                  };
-                  const rzp = new (window as any).Razorpay(options);
-                  rzp.open();
                 };
 
                 return (

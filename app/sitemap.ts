@@ -3,16 +3,14 @@ import { MetadataRoute } from 'next';
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://bluebottlecap.com';
 
+  // Only list routes that actually have a page — including non-existent URLs
+  // (which return 404) in the sitemap hurts SEO. Add entries back here as the
+  // corresponding pages ship.
   const routes = [
     '',
     '/about',
-    '/pricing',
-    '/study-material',
-    '/tools',
-    '/btech-study-planner',
-    '/engineering-flashcard-maker',
-    '/jee-question-generator',
-    '/seniors'
+    '/signup',
+    '/terms',
   ];
 
   return routes.map((route) => ({
