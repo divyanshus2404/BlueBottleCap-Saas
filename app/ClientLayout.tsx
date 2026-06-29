@@ -13,24 +13,25 @@ import { usePathname } from "next/navigation";
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const pathname = usePathname();
+  // Routes that render their own full-screen chrome (no global nav/footer).
+  const chromeless = ["/", "/signup", "/onboarding", "/create-profile"].includes(pathname);
 
   return (
     <SmoothScroll>
       <ErrorBoundary>
         <div className="min-h-screen bg-transparent font-sans antialiased flex flex-col">
           <GlobalBackground />
-          {/* The landing page ("/") renders its own tailored header with
-              in-page anchor nav, so the global app nav is hidden there to
-              avoid two stacked headers. */}
-          {pathname !== "/" && (
+          {/* Immersive / full-screen routes own their own chrome: the landing
+              page has its own header+footer, and the auth/onboarding flows are
+              standalone full-screen layouts. Hide the global nav there. */}
+          {!chromeless && (
             <Navigation onLoginClick={() => setIsAuthModalOpen(true)} />
           )}
           <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
           <div className="flex-grow">
             {children}
           </div>
-          {/* "/" renders its own footer; the tool surfaces hide it entirely. */}
-          {pathname !== "/" && pathname !== "/virtual-test" && pathname !== "/pdf-editor" && (
+          {!chromeless && pathname !== "/virtual-test" && pathname !== "/pdf-editor" && (
             <Footer />
           )}
         </div>
