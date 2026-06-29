@@ -149,6 +149,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </button>
             </div>
+            <p className="bbc-reveal mt-[14px] flex items-center gap-1.5 text-[13px] text-[var(--color-ink-faint)]">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-7" stroke="var(--color-blue-ink)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              No signup needed — try it instantly, free.
+            </p>
             <div className="bbc-reveal mt-[42px] flex items-center gap-[14px]">
               <div className="flex" aria-hidden="true">
                 {["AK", "RS", "PM", "NV", "+"].map((s, i) => (

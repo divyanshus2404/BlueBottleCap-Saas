@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navigation } from "@/src/components/Navigation";
 import { GlobalBackground } from "@/src/components/GlobalBackground";
 import { AuthModal } from "@/src/components/AuthModal";
@@ -15,6 +15,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   // Routes that render their own full-screen chrome (no global nav/footer).
   const chromeless = ["/", "/signup", "/onboarding", "/create-profile"].includes(pathname);
+
+  // Capture an inbound referral code (?ref=CODE) once, so it can be attributed
+  // to the referrer at signup. Only stores the first one seen.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const ref = new URLSearchParams(window.location.search).get("ref");
+    if (ref && !localStorage.getItem("bluebottlecap_referred_by")) {
+      localStorage.setItem("bluebottlecap_referred_by", ref.toUpperCase());
+    }
+  }, []);
 
   return (
     <SmoothScroll>

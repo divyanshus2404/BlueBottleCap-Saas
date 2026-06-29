@@ -12,6 +12,21 @@ export default function PdfCopilotPage() {
   const { userStats, incrementAiQueriesUsed, handleAddFlashcard, openedPapers, setOpenedPapers } = useGlobalState();
   const { currentUser } = useAuth();
 
+  // Guests can try the Copilot without signing up. After a few runs, nudge them
+  // to create an account (so we capture the lead once they've felt the value).
+  const GUEST_FREE_RUNS = 3;
+  const handleIncrementQuery = () => {
+    const result = incrementAiQueriesUsed();
+    if (!currentUser && typeof window !== "undefined") {
+      const runs = Number(localStorage.getItem("bluebottlecap_guest_runs") || "0") + 1;
+      localStorage.setItem("bluebottlecap_guest_runs", String(runs));
+      if (runs >= GUEST_FREE_RUNS) {
+        router.push("/signup?from=trial");
+      }
+    }
+    return result;
+  };
+
   const handleOpenPaper = (paperId: string) => {
     if (userStats.activePlan === "Free" && openedPapers.length >= 3 && !openedPapers.includes(paperId)) {
       return false;
@@ -32,7 +47,7 @@ export default function PdfCopilotPage() {
   return (
     <PdfCopilot
       userStats={userStats}
-      onIncrementQuery={incrementAiQueriesUsed}
+      onIncrementQuery={handleIncrementQuery}
       onAddFlashcard={handleAddFlashcard}
       openedPapers={openedPapers}
       onOpenPaper={handleOpenPaper}

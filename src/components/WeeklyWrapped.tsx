@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Download, Share2, Sparkles, Target, Zap, Clock, Trophy } from "lucide-react";
 import { toPng } from "html-to-image";
@@ -13,6 +13,19 @@ export const WeeklyWrapped: React.FC<WeeklyWrappedProps> = ({ onClose, userStats
   const cardRef = useRef<HTMLDivElement>(null);
   const [isCapturing, setIsCapturing] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Stable per-user referral code, persisted locally. Drives word-of-mouth:
+  // the shared image carries this link so friends land with the code attached.
+  const referralCode = useMemo(() => {
+    if (typeof window === "undefined") return "BBC";
+    let code = localStorage.getItem("bluebottlecap_ref_code");
+    if (!code) {
+      code = Math.random().toString(36).slice(2, 8).toUpperCase();
+      localStorage.setItem("bluebottlecap_ref_code", code);
+    }
+    return code;
+  }, []);
+  const referralUrl = `bluebottlecap.com/?ref=${referralCode}`;
 
   // Derive mock fun stats for presentation if real stats are too low
   const displayStreak = Math.max(userStats.streakDays, 7);
@@ -51,7 +64,7 @@ export const WeeklyWrapped: React.FC<WeeklyWrappedProps> = ({ onClose, userStats
           const file = new File([blob], "my-weekly-wrapped.png", { type: blob.type });
           await navigator.share({
             title: "My Study Wrapped",
-            text: `I'm in the top ${topPercentile}%! 🚀`,
+            text: `I'm in the top ${topPercentile}% on BlueBottleCap! 🚀 Study smarter, free: https://${referralUrl}`,
             files: [file],
           });
         } catch (e) {
@@ -197,13 +210,13 @@ export const WeeklyWrapped: React.FC<WeeklyWrappedProps> = ({ onClose, userStats
             </div>
 
             {/* Footer */}
-            <div className="flex flex-col gap-1 items-center justify-center pt-6 border-t border-white/10 mt-6">
+            <div className="flex flex-col gap-1.5 items-center justify-center pt-6 border-t border-white/10 mt-6">
               <p className="text-white/90 text-sm font-bold tracking-wide">
-                2026 Season
+                Join me — study free
               </p>
-              <p className="text-white/40 text-[10px] tracking-widest uppercase">
-                BlueBottleCap.ai
-              </p>
+              <span className="rounded-full bg-white/10 border border-white/15 px-3 py-1 text-white text-[11px] font-bold tracking-wide">
+                {referralUrl}
+              </span>
             </div>
 
           </div>
