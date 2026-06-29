@@ -172,20 +172,17 @@ export const Dashboard: React.FC = () => {
   const levelProgress = ((userStats.hoursSaved % 5) / 5) * 100;
 
   return (
-    <div ref={containerRef} className="mx-auto max-w-[1600px] w-full px-4 py-12 sm:px-8 lg:px-12 min-h-screen pb-32">
-      
+    <div ref={containerRef} className="bbc relative mx-auto min-h-screen w-full max-w-[1600px] px-4 py-12 pb-32 sm:px-8 lg:px-12">
+
       {/* Top Profile Banner */}
-      <div 
-        className="welcome-bg relative overflow-hidden mb-8 flex flex-col md:flex-row items-center justify-between bg-white rounded-3xl p-6 border border-gray-100 shadow-xs"
-      >
-        {/* Floating Background Icons */}
-        <div className="absolute top-2 left-1/4 floating-icon text-3xl pointer-events-none drop-shadow-sm blur-[1px]">📘</div>
-        <div className="absolute bottom-2 left-1/3 floating-icon text-2xl pointer-events-none drop-shadow-sm blur-[0.5px]">🖊️</div>
-        <div className="absolute top-6 right-[30%] floating-icon text-4xl pointer-events-none drop-shadow-sm blur-[1px]">💻</div>
-        
-        <div className="flex items-center gap-6 relative z-10">
-          <div className="h-16 w-16 rounded-full bg-gradient-to-tr from-brand-sky to-indigo-500 p-[2px] shadow-md">
-            <div className="h-full w-full rounded-full bg-white flex items-center justify-center text-xl overflow-hidden">
+      <div className="welcome-bg relative mb-8 flex flex-col items-center justify-between overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-6 md:flex-row">
+        <div className="floating-icon pointer-events-none absolute left-1/4 top-2 text-3xl opacity-50 blur-[1px]">📘</div>
+        <div className="floating-icon pointer-events-none absolute bottom-2 left-1/3 text-2xl opacity-50 blur-[0.5px]">🖊️</div>
+        <div className="floating-icon pointer-events-none absolute right-[30%] top-6 text-4xl opacity-50 blur-[1px]">💻</div>
+
+        <div className="relative z-10 flex items-center gap-6">
+          <div className="h-16 w-16 rounded-full bg-[var(--color-blue-ink)] p-[2px]">
+            <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-white text-xl">
               {userProfile?.photoURL ? (
                 <img src={userProfile.photoURL} alt="Profile" className="h-full w-full object-cover" />
               ) : (
@@ -195,89 +192,80 @@ export const Dashboard: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="welcome-text text-2xl font-black text-slate-900 font-display">
+              <h1 className="welcome-text bbc-serif text-[26px] tracking-[-.01em] text-[var(--color-ink)]">
                 {greetingPrefix}, {userName || userProfile?.displayName || "Scholar"}!
               </h1>
-              <div className="welcome-text flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-100">
-                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wide">Live</span>
+              <div className="welcome-text flex items-center gap-1.5 rounded-full border border-[var(--color-line)] bg-[var(--color-blue-wash)] px-2 py-0.5">
+                <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-blue-ink)]"></div>
+                <span className="text-[10px] font-bold uppercase tracking-wide text-[var(--color-blue-ink)]">Live</span>
               </div>
             </div>
-            <p className="welcome-text text-sm text-text-muted font-medium mt-1">
-              You've saved <span className="font-bold text-accent">{userStats.hoursSaved} study hours</span> using AI Co-pilots.
+            <p className="welcome-text mt-1 text-sm font-medium text-[var(--color-ink-soft)]">
+              You've saved <span className="font-bold text-[var(--color-blue-ink)]">{userStats.hoursSaved} study hours</span> using AI Co-pilots.
             </p>
           </div>
         </div>
-        
-        <div className="flex gap-4 mt-4 md:mt-0 bg-slate-50 p-3 rounded-2xl border border-slate-100">
-          <div className="text-center px-4 border-r border-gray-200">
-            <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Active Streak</p>
-            <p className="text-xl font-black text-orange-500 mt-1 flex items-center justify-center gap-1">
-              <Flame className="w-4 h-4 fill-orange-500" /> {userStats.streakDays}
+
+        <div className="mt-4 flex gap-4 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-3 md:mt-0">
+          <div className="border-r border-[var(--color-line)] px-4 text-center">
+            <p className="bbc-eyebrow text-[10px]">Active streak</p>
+            <p className="mt-1 flex items-center justify-center gap-1 text-xl font-black text-[var(--color-blue-ink)]">
+              <Flame className="h-4 w-4 fill-[var(--color-blue-ink)]" /> {userStats.streakDays}
             </p>
           </div>
-          <div className="text-center px-4">
-            <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Scholar Level {scholarLevel}</p>
-            <div className="mt-2 w-24 h-2.5 bg-slate-200 rounded-full overflow-hidden relative">
-              <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" style={{ width: `${levelProgress}%` }}></div>
+          <div className="px-4 text-center">
+            <p className="bbc-eyebrow text-[10px]">Scholar level {scholarLevel}</p>
+            <div className="relative mt-2 h-2.5 w-24 overflow-hidden rounded-full bg-[var(--color-line)]">
+              <div className="absolute left-0 top-0 h-full rounded-full bg-[var(--color-blue-ink)]" style={{ width: `${levelProgress}%` }}></div>
             </div>
-            <p className="text-[9px] font-bold text-slate-400 mt-1">{5 - (userStats.hoursSaved % 5)} hrs to level up</p>
+            <p className="mt-1 text-[9px] font-bold text-[var(--color-ink-faint)]">{5 - (userStats.hoursSaved % 5)} hrs to level up</p>
           </div>
         </div>
       </div>
 
-      {/* Prominent Weekly Wrapped Banner */}
+      {/* Weekly Wrapped Banner */}
       <button
         onClick={() => setShowWrapped(true)}
-        className="w-full text-left mb-8 relative overflow-hidden bg-gradient-to-r from-fuchsia-600 via-purple-600 to-indigo-600 rounded-3xl p-6 md:p-8 cursor-pointer shadow-lg shadow-fuchsia-500/20 hover:shadow-fuchsia-500/40 transition-all group border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6"
+        className="group relative mb-8 flex w-full flex-col items-center justify-between gap-6 overflow-hidden rounded-2xl border border-white/10 bg-[var(--color-blue-deep)] p-6 text-left transition-all hover:brightness-110 md:flex-row md:p-8"
       >
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 group-hover:opacity-40 transition-opacity"></div>
-        <div className="absolute -top-32 -left-32 w-64 h-64 bg-fuchsia-400 rounded-full mix-blend-screen filter blur-[80px] opacity-30 group-hover:opacity-60 transition-opacity"></div>
-        <div className="absolute top-1/2 -right-32 w-80 h-80 bg-blue-400 rounded-full mix-blend-screen filter blur-[100px] opacity-30 group-hover:opacity-60 transition-opacity"></div>
-        
+        <div className="pointer-events-none absolute -left-32 -top-32 h-64 w-64 rounded-full bg-[var(--color-blue-ink)] opacity-40 blur-[80px] transition-opacity group-hover:opacity-60"></div>
+
         <div className="relative z-10 flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-5 h-5 text-fuchsia-200" />
-            <span className="text-fuchsia-100 font-bold tracking-wider text-xs uppercase">Your 2026 Season</span>
+          <div className="mb-2 flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-white/70" />
+            <span className="text-xs font-bold uppercase tracking-wider text-white/70">Your 2026 season</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-black text-white font-display">
-            Your Weekly Study Wrapped is Ready!
+          <h2 className="bbc-serif text-[28px] tracking-[-.01em] text-white md:text-[34px]">
+            Your Weekly Study Wrapped is ready!
           </h2>
-          <p className="text-fuchsia-100 font-medium mt-2 max-w-xl">
-            See a vibrant, Spotify-style recap of your week's studying. Share your ranking and time saved directly to Instagram or Snapchat to flex your progress!
+          <p className="mt-2 max-w-xl font-medium text-white/70">
+            See a vibrant recap of your week's studying. Share your ranking and time saved to flex your progress.
           </p>
         </div>
-        
+
         <div className="relative z-10 shrink-0">
-          <div className="bg-white text-fuchsia-700 px-6 py-3 rounded-2xl font-black shadow-xl flex items-center gap-2 group-hover:scale-105 transition-transform">
-            <ImageIcon className="w-5 h-5" />
-            View & Share Image
+          <div className="flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-bold text-[var(--color-blue-deep)] transition-transform group-hover:scale-105">
+            <ImageIcon className="h-5 w-5" />
+            View &amp; share image
           </div>
         </div>
       </button>
 
-      {/* Segment Tab Controller - Beautiful Full-Width Buttons */}
-      <div className="mb-8 flex w-full gap-4 bg-white p-2 rounded-[20px] shadow-sm border border-slate-100">
-        <button
-          onClick={() => setActiveTab("workspace")}
-          className={`flex-1 py-3.5 rounded-xl text-[15px] font-bold transition-all flex items-center justify-center gap-2 border-2 ${
-            activeTab === "workspace" 
-              ? "bg-indigo-50 text-indigo-700 border-indigo-200 shadow-sm" 
-              : "bg-transparent border-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-800"
-          }`}
-        >
-          📚 Study Workspace
-        </button>
-        <button
-          onClick={() => setActiveTab("analytics")}
-          className={`flex-1 py-3.5 rounded-xl text-[15px] font-bold transition-all flex items-center justify-center gap-2 border-2 ${
-            activeTab === "analytics" 
-              ? "bg-indigo-50 text-indigo-700 border-indigo-200 shadow-sm" 
-              : "bg-transparent border-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-800"
-          }`}
-        >
-          📊 Stats & Streaks
-        </button>
+      {/* Segment Tabs */}
+      <div className="mb-8 flex w-full gap-3 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-2">
+        {([["workspace", "📚 Study workspace"], ["analytics", "📊 Stats & streaks"]] as const).map(([tab, label]) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3.5 text-[15px] font-bold transition-all ${
+              activeTab === tab
+                ? "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]"
+                : "text-[var(--color-ink-soft)] hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)]"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {activeTab === "workspace" ? (
@@ -289,118 +277,82 @@ export const Dashboard: React.FC = () => {
         >
           {/* Usage Stats Linear Bars */}
           <div className="grid gap-6 md:grid-cols-3">
-            <div className="stat-card rounded-2xl border border-yellow-200 bg-[#fef08a] p-6 shadow-[0_4px_20px_rgba(250,204,21,0.15)] relative overflow-hidden">
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-yellow-400 rounded-full mix-blend-multiply opacity-30 blur-[30px]"></div>
-              <div className="flex justify-between items-center mb-4 relative z-10">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg"><Cpu className="w-4 h-4" /></div>
-                  <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">AI Co-Pilot Credit</h3>
+            {[
+              { icon: <Cpu className="h-4 w-4" />, label: "AI Co-Pilot Credit", value: `${usageStats.aiQueries.current} / ${usageStats.aiQueries.max}`, pct: aiPercent },
+              { icon: <FileText className="h-4 w-4" />, label: "PDF Spots", value: `${usageStats.pdfEdits.current} / ${usageStats.pdfEdits.max}`, pct: pdfPercent },
+              { icon: <HardDrive className="h-4 w-4" />, label: "Cloud Storage", value: `${usageStats.storage.current} MB / ${usageStats.storage.max} MB`, pct: storagePercent },
+            ].map((s) => (
+              <div key={s.label} className="stat-card relative overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-6">
+                <div className="relative z-10 mb-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="rounded-lg bg-[var(--color-blue-wash)] p-1.5 text-[var(--color-blue-ink)]">{s.icon}</div>
+                    <h3 className="bbc-eyebrow text-[11px]">{s.label}</h3>
+                  </div>
+                  <span className="text-sm font-black text-[var(--color-ink)]">{s.value}</span>
                 </div>
-                <span className="text-sm font-black text-slate-900">{usageStats.aiQueries.current} / {usageStats.aiQueries.max}</span>
-              </div>
-              <div className="w-full bg-surface-glass rounded-full h-2 mb-2">
-                <div className="bg-indigo-500 h-2 rounded-full transition-all duration-1000" style={{ width: `${isSyncing ? 0 : aiPercent}%` }}></div>
-              </div>
-              <p className="text-[10px] text-text-secondary font-medium text-right">{aiPercent}% Used</p>
-            </div>
-
-            <div className="stat-card rounded-2xl border border-emerald-200 bg-[#dcfce7] p-6 shadow-[0_4px_20px_rgba(52,211,153,0.15)] relative overflow-hidden">
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-400 rounded-full mix-blend-multiply opacity-30 blur-[30px]"></div>
-              <div className="flex justify-between items-center mb-4 relative z-10">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-sky-50 text-sky-600 rounded-lg"><FileText className="w-4 h-4" /></div>
-                  <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">PDF Spots</h3>
+                <div className="mb-2 h-2 w-full rounded-full bg-[var(--color-line)]">
+                  <div className="h-2 rounded-full bg-[var(--color-blue-ink)] transition-all duration-1000" style={{ width: `${isSyncing ? 0 : s.pct}%` }}></div>
                 </div>
-                <span className="text-sm font-black text-slate-900">{usageStats.pdfEdits.current} / {usageStats.pdfEdits.max}</span>
+                <p className="text-right text-[10px] font-medium text-[var(--color-ink-faint)]">{s.pct}% used</p>
               </div>
-              <div className="w-full bg-surface-glass rounded-full h-2 mb-2">
-                <div className="bg-sky-500 h-2 rounded-full transition-all duration-1000" style={{ width: `${isSyncing ? 0 : pdfPercent}%` }}></div>
-              </div>
-              <p className="text-[10px] text-text-secondary font-medium text-right">{pdfPercent}% Used</p>
-            </div>
-
-            <div className="stat-card rounded-2xl border border-purple-200 bg-[#f3e8ff] p-6 shadow-[0_4px_20px_rgba(168,85,247,0.15)] relative overflow-hidden">
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-400 rounded-full mix-blend-multiply opacity-30 blur-[30px]"></div>
-              <div className="flex justify-between items-center mb-4 relative z-10">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg"><HardDrive className="w-4 h-4" /></div>
-                  <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">Cloud Storage</h3>
-                </div>
-                <span className="text-sm font-black text-slate-900">{usageStats.storage.current} MB / {usageStats.storage.max} MB</span>
-              </div>
-              <div className="w-full bg-surface-glass rounded-full h-2 mb-2">
-                <div className="bg-emerald-500 h-2 rounded-full transition-all duration-1000" style={{ width: `${isSyncing ? 0 : storagePercent}%` }}></div>
-              </div>
-              <p className="text-[10px] text-text-secondary font-medium text-right">{storagePercent}% Used</p>
-            </div>
+            ))}
           </div>
 
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Left 2 column: Activity Log */}
             <div className="lg:col-span-2 space-y-6">
               <div className="flex items-center justify-between">
-                <h2 className="flex items-center gap-2 font-display text-lg font-black text-slate-900">
-                  <History className="w-5 h-5 text-accent" /> Recent Activity Log
+                <h2 className="bbc-serif flex items-center gap-2 text-[20px] tracking-[-.01em] text-[var(--color-ink)]">
+                  <History className="h-5 w-5 text-[var(--color-blue-ink)]" /> Recent activity log
                 </h2>
-                <button className="text-xs font-bold text-accent hover:underline">View All</button>
+                <button className="text-xs font-bold text-[var(--color-blue-ink)] hover:underline">View all</button>
               </div>
 
-              <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+              <div className="overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)]">
                 {recentActivities.length === 0 ? (
-                  <div className="px-6 py-12 text-center flex flex-col items-center justify-center bg-gradient-to-b from-white to-slate-50">
+                  <div className="flex flex-col items-center justify-center px-6 py-12 text-center">
                     <div className="relative mb-6">
-                      <div className="absolute inset-0 bg-blue-200 blur-[30px] rounded-full opacity-50 mix-blend-multiply"></div>
-                      <div className="w-20 h-20 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-3xl shadow-xl flex items-center justify-center transform rotate-3 relative z-10 hover:rotate-6 hover:scale-105 transition-all duration-300">
-                        <Sparkles className="w-10 h-10 text-white" />
-                      </div>
-                      <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full border-4 border-white z-20 flex items-center justify-center shadow-sm">
-                        <Zap className="w-4 h-4 text-yellow-900" />
+                      <div className="relative z-10 flex h-20 w-20 rotate-3 items-center justify-center rounded-3xl bg-[var(--color-blue-ink)] transition-all duration-300 hover:rotate-6 hover:scale-105">
+                        <Sparkles className="h-10 w-10 text-white" />
                       </div>
                     </div>
-                    <h4 className="text-lg font-black text-slate-900 mb-2">Ready to level up?</h4>
-                    <p className="text-sm text-slate-500 max-w-[280px] mx-auto mb-6 leading-relaxed">
-                      Your study journey begins here. Jump into an AI session and watch the hours saved pile up!
+                    <h4 className="bbc-serif mb-2 text-[20px] text-[var(--color-ink)]">Ready to level up?</h4>
+                    <p className="mx-auto mb-6 max-w-[280px] text-sm leading-relaxed text-[var(--color-ink-soft)]">
+                      Your study journey begins here. Jump into an AI session and watch the hours saved pile up.
                     </p>
-                    <button 
-                      onClick={() => onNavigateTo('tools')}
-                      className="px-6 py-3 rounded-xl bg-slate-900 text-white text-sm font-bold shadow-lg hover:bg-indigo-600 hover:shadow-indigo-500/25 transition-all duration-300 flex items-center gap-2 group"
-                    >
-                      Start your first AI Session
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    <button onClick={() => onNavigateTo('tools')} className="bbc-btn bbc-btn-primary px-6 py-3 text-sm">
+                      Start your first AI session
+                      <ArrowRight className="h-4 w-4" />
                     </button>
                   </div>
                 ) : (
                   <div className="min-w-full">
-                    <div className="bg-surface-solid border-b border-gray-100 px-6 py-3 grid grid-cols-12 gap-4">
-                      <div className="col-span-5 text-xs font-bold text-text-muted uppercase tracking-wider">Action</div>
-                      <div className="col-span-3 text-xs font-bold text-text-muted uppercase tracking-wider">Status</div>
-                      <div className="col-span-2 text-xs font-bold text-text-muted uppercase tracking-wider">Cost</div>
-                      <div className="col-span-2 text-right text-xs font-bold text-text-muted uppercase tracking-wider">Time</div>
+                    <div className="grid grid-cols-12 gap-4 border-b border-[var(--color-line)] bg-[var(--color-paper)] px-6 py-3">
+                      <div className="bbc-eyebrow col-span-5 text-[11px]">Action</div>
+                      <div className="bbc-eyebrow col-span-3 text-[11px]">Status</div>
+                      <div className="bbc-eyebrow col-span-2 text-[11px]">Cost</div>
+                      <div className="bbc-eyebrow col-span-2 text-right text-[11px]">Time</div>
                     </div>
-                    <div className="divide-y divide-gray-50">
+                    <div className="divide-y divide-[var(--color-line)]">
                       {recentActivities.map((act, i) => (
-                        <motion.div 
+                        <motion.div
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.1 }}
-                          key={act.id} 
-                          className="px-6 py-4 grid grid-cols-12 gap-4 items-center hover:bg-surface-solid transition-colors cursor-default"
+                          key={act.id}
+                          className="grid cursor-default grid-cols-12 items-center gap-4 px-6 py-4 transition-colors hover:bg-[var(--color-paper)]"
                         >
                           <div className="col-span-5">
-                            <p className="text-sm font-bold text-slate-900 truncate">{act.tool}</p>
-                            <p className="text-xs text-text-muted truncate">{act.target}</p>
+                            <p className="truncate text-sm font-bold text-[var(--color-ink)]">{act.tool}</p>
+                            <p className="truncate text-xs text-[var(--color-ink-faint)]">{act.target}</p>
                           </div>
                           <div className="col-span-3">
-                            <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-100">
-                              <CheckCircle className="w-3 h-3" /> {act.status}
+                            <span className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-line)] bg-[var(--color-blue-wash)] px-2 py-1 text-[10px] font-bold text-[var(--color-blue-ink)]">
+                              <CheckCircle className="h-3 w-3" /> {act.status}
                             </span>
                           </div>
-                          <div className="col-span-2 text-xs font-medium text-slate-600">
-                            {act.cost}
-                          </div>
-                          <div className="col-span-2 text-right text-xs text-text-muted font-medium">
-                            {act.date}
-                          </div>
+                          <div className="col-span-2 text-xs font-medium text-[var(--color-ink-soft)]">{act.cost}</div>
+                          <div className="col-span-2 text-right text-xs font-medium text-[var(--color-ink-faint)]">{act.date}</div>
                         </motion.div>
                       ))}
                     </div>
@@ -412,15 +364,12 @@ export const Dashboard: React.FC = () => {
             {/* Right column: Quick Tools */}
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h2 className="flex items-center gap-2 font-display text-lg font-black text-slate-900">
-                  <Zap className="w-5 h-5 text-amber-500" /> Quick Utilities
+                <h2 className="bbc-serif flex items-center gap-2 text-[20px] tracking-[-.01em] text-[var(--color-ink)]">
+                  <Zap className="h-5 w-5 text-[var(--color-blue-ink)]" /> Quick utilities
                 </h2>
               </div>
               <div className="grid gap-3">
-                {quickTools.map((tool, i) => {
-                  const bgColors = ["bg-[#fce7f3] border-pink-200", "bg-[#e0e7ff] border-indigo-200", "bg-[#ffedd5] border-orange-200", "bg-[#ccfbf1] border-teal-200"];
-                  const iconColors = ["bg-white text-pink-500", "bg-white text-indigo-500", "bg-white text-orange-500", "bg-white text-teal-500"];
-                  return (
+                {quickTools.map((tool, i) => (
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -431,34 +380,32 @@ export const Dashboard: React.FC = () => {
                       }
                       onNavigateTo(tool.view);
                     }}
-                    className={`flex items-center gap-4 rounded-2xl border ${
-                      tool.view === "waitlist" 
-                        ? "bg-slate-50 border-slate-200 opacity-70 grayscale-[0.5]" 
-                        : bgColors[i % bgColors.length]
-                    } p-4 shadow-sm hover:shadow-lg transition-all cursor-pointer group`}
-                  >
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${
+                    className={`group flex cursor-pointer items-center gap-4 rounded-2xl border p-4 transition-all ${
                       tool.view === "waitlist"
-                        ? "bg-slate-200 text-slate-500"
-                        : iconColors[i % iconColors.length]
-                    } text-lg shadow-sm transform group-hover:scale-110 group-hover:-rotate-12 transition-all duration-300`}>
+                        ? "border-[var(--color-line)] bg-[var(--color-paper)] opacity-70"
+                        : "border-[var(--color-line)] bg-[var(--color-paper-card)] hover:border-[var(--color-line-strong)]"
+                    }`}
+                  >
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl text-lg transition-all duration-300 group-hover:scale-110 ${
+                      tool.view === "waitlist" ? "bg-[var(--color-line)] text-[var(--color-ink-faint)]" : "bg-[var(--color-blue-wash)]"
+                    }`}>
                       {tool.icon}
                     </div>
                     <div>
-                      <h3 className={`text-sm font-bold ${
-                        tool.view === "waitlist" ? "text-slate-500" : "text-slate-900 group-hover:text-indigo-600"
-                      } transition-colors duration-300`}>{tool.name}</h3>
-                      <p className="text-[10px] text-slate-500 font-medium">{tool.desc}</p>
+                      <h3 className={`text-sm font-bold transition-colors ${
+                        tool.view === "waitlist" ? "text-[var(--color-ink-faint)]" : "text-[var(--color-ink)] group-hover:text-[var(--color-blue-ink)]"
+                      }`}>{tool.name}</h3>
+                      <p className="text-[10px] font-medium text-[var(--color-ink-soft)]">{tool.desc}</p>
                     </div>
                     {tool.view === "waitlist" ? (
-                      <div className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-slate-200">
+                      <div className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-line)]">
                         <span className="text-xs">🔒</span>
                       </div>
                     ) : (
-                      <ArrowRight className="ml-auto w-4 h-4 text-slate-400 group-hover:text-indigo-500 transform group-hover:translate-x-1 transition-all duration-300" />
+                      <ArrowRight className="ml-auto h-4 w-4 text-[var(--color-ink-faint)] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--color-blue-ink)]" />
                     )}
                   </motion.div>
-                )})}
+                ))}
               </div>
             </div>
           </div>
@@ -474,12 +421,12 @@ export const Dashboard: React.FC = () => {
           <div className="grid gap-8 lg:grid-cols-2">
             
             {/* Contribution Calendar */}
-            <div className="rounded-3xl border border-gray-100 bg-white p-8 shadow-sm">
+            <div className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-8">
               <div className="mb-6 flex items-center justify-between">
-                <h3 className="font-display text-lg font-black text-slate-900 flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-indigo-500" /> Study Contribution Map
+                <h3 className="bbc-serif flex items-center gap-2 text-[20px] tracking-[-.01em] text-[var(--color-ink)]">
+                  <Calendar className="h-5 w-5 text-[var(--color-blue-ink)]" /> Study contribution map
                 </h3>
-                <span className="text-xs font-bold text-text-secondary">Past 16 Weeks</span>
+                <span className="bbc-eyebrow text-[11px]">Past 16 weeks</span>
               </div>
               <div className="flex gap-1 overflow-x-auto pb-2 scrollbar-hide">
                 {Array.from({ length: 16 }).map((_, colIdx) => (
@@ -489,12 +436,12 @@ export const Dashboard: React.FC = () => {
                       .map((day, rowIdx) => {
                         const hasActivity = dailyActivity.find(a => a.date === day.dateStr);
                         const points = hasActivity ? (hasActivity.queriesUsed + hasActivity.cardsCreated * 5) : 0;
-                        let colorClass = "bg-surface-glass border-gray-100";
-                        if (points > 0 && points <= 20) colorClass = "bg-emerald-100 border-emerald-200";
-                        else if (points > 20 && points <= 50) colorClass = "bg-emerald-300 border-emerald-400";
-                        else if (points > 50 && points <= 100) colorClass = "bg-emerald-500 border-emerald-600 shadow-[0_0_8px_rgba(16,185,129,0.4)]";
-                        else if (points > 100) colorClass = "bg-emerald-700 border-emerald-800 shadow-[0_0_12px_rgba(4,120,87,0.6)]";
-                        
+                        let colorClass = "bg-[var(--color-line)] border-[var(--color-line)]";
+                        if (points > 0 && points <= 20) colorClass = "bg-[#BFCBFF] border-[#BFCBFF]";
+                        else if (points > 20 && points <= 50) colorClass = "bg-[#6E84E8] border-[#6E84E8]";
+                        else if (points > 50 && points <= 100) colorClass = "bg-[var(--color-blue-ink)] border-[var(--color-blue-ink)]";
+                        else if (points > 100) colorClass = "bg-[var(--color-blue-deep)] border-[var(--color-blue-deep)]";
+
                         return (
                           <div
                             key={rowIdx}
@@ -509,24 +456,17 @@ export const Dashboard: React.FC = () => {
             </div>
 
             {/* Weekly Hours SVG Chart */}
-            <div className="rounded-3xl border border-gray-100 bg-white p-8 shadow-sm">
+            <div className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-8">
               <div className="mb-6">
-                <h3 className="font-display text-lg font-black text-slate-900 flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-accent" /> Weekly Hours Saved
+                <h3 className="bbc-serif flex items-center gap-2 text-[20px] tracking-[-.01em] text-[var(--color-ink)]">
+                  <Activity className="h-5 w-5 text-[var(--color-blue-ink)]" /> Weekly hours saved
                 </h3>
               </div>
-              <div className="relative h-48 w-full border-b border-l border-border-subtle">
-                <svg viewBox="0 0 600 180" className="h-full w-full overflow-visible drop-shadow-md">
-                  <defs>
-                    <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#38BDF8" />
-                      <stop offset="100%" stopColor="#2563EB" />
-                    </linearGradient>
-                  </defs>
-                  
+              <div className="relative h-48 w-full border-b border-l border-[var(--color-line)]">
+                <svg viewBox="0 0 600 180" className="h-full w-full overflow-visible">
                   <motion.polyline
                     fill="none"
-                    stroke="url(#lineGrad)"
+                    stroke="var(--color-blue-ink)"
                     strokeWidth="4"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -535,12 +475,12 @@ export const Dashboard: React.FC = () => {
                     animate={{ pathLength: 1 }}
                     transition={{ duration: 1.5, ease: "easeInOut" }}
                   />
-                  
+
                   {chartPointsArray.map((pt, i) => (
                     <motion.g key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 + i * 0.1 }}>
-                      <circle cx={pt.x} cy={pt.y} r="5" fill="white" stroke="#2563EB" strokeWidth="3" className="transition-transform hover:scale-150 duration-200" />
-                      <text x={pt.x} y={pt.y - 15} fill="#64748b" fontSize="12" fontWeight="bold" textAnchor="middle">{pt.val}h</text>
-                      <text x={pt.x} y="195" fill="#94a3b8" fontSize="12" fontWeight="600" textAnchor="middle">{chartLabels[i]}</text>
+                      <circle cx={pt.x} cy={pt.y} r="5" fill="white" stroke="var(--color-blue-ink)" strokeWidth="3" className="transition-transform duration-200 hover:scale-150" />
+                      <text x={pt.x} y={pt.y - 15} fill="#5B5F69" fontSize="12" fontWeight="bold" textAnchor="middle">{pt.val}h</text>
+                      <text x={pt.x} y="195" fill="#8A8D95" fontSize="12" fontWeight="600" textAnchor="middle">{chartLabels[i]}</text>
                     </motion.g>
                   ))}
                 </svg>
