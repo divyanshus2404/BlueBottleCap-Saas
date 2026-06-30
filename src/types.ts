@@ -1,4 +1,4 @@
-export type ActiveView = 'landing' | 'onboarding' | 'dashboard' | 'pdf-editor' | 'tools' | 'pricing' | 'signup' | 'create-profile' | 'virtual-test' | 'study-material-page' | 'seniors-opinion' | 'flashcards' | 'about' | 'roadmaps' | 'terms' | 'waitlist';
+export type ActiveView = 'landing' | 'onboarding' | 'dashboard' | 'pdf-editor' | 'tools' | 'pricing' | 'signup' | 'create-profile' | 'virtual-test' | 'study-material-page' | 'seniors-opinion' | 'flashcards' | 'about' | 'roadmaps' | 'terms' | 'waitlist' | 'diagnostic' | 'scan-notes';
 
 export interface UsageMetric {
   current: number;

@@ -2,21 +2,32 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://bluebottlecap.com';
+  const now = new Date();
 
-  // Only list routes that actually have a page — including non-existent URLs
-  // (which return 404) in the sitemap hurts SEO. Add entries back here as the
-  // corresponding pages ship.
-  const routes = [
-    '',
-    '/about',
-    '/signup',
-    '/terms',
+  // Public, indexable routes only. /dashboard, /create-profile, and
+  // /onboarding are intentionally omitted — they require auth, so Google
+  // would just see the empty client shell. Tool routes ARE included even
+  // though most users won't see them logged-out, because the free-trial
+  // flow lives on them and they're our best long-tail SEO bait
+  // ("AI handwritten notes scanner India", "JEE diagnostic test", etc.).
+  const routes: Array<{
+    path: string;
+    priority: number;
+    changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'];
+  }> = [
+    { path: '', priority: 1.0, changeFrequency: 'weekly' },
+    { path: '/diagnostic', priority: 0.9, changeFrequency: 'monthly' },
+    { path: '/scan-notes', priority: 0.9, changeFrequency: 'monthly' },
+    { path: '/pdf-editor', priority: 0.85, changeFrequency: 'monthly' },
+    { path: '/about', priority: 0.6, changeFrequency: 'monthly' },
+    { path: '/signup', priority: 0.5, changeFrequency: 'monthly' },
+    { path: '/terms', priority: 0.3, changeFrequency: 'yearly' },
   ];
 
-  return routes.map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: route === '' ? 1 : 0.8,
+  return routes.map(({ path, priority, changeFrequency }) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: now,
+    changeFrequency,
+    priority,
   }));
 }
