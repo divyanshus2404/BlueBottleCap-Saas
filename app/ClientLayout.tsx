@@ -8,6 +8,7 @@ import { ToastContainer } from "@/src/components/ToastContainer";
 import { ErrorBoundary } from "@/src/components/ErrorBoundary";
 import { SmoothScroll } from "@/src/components/SmoothScroll";
 import { Footer } from "@/src/components/Footer";
+import { FeedbackWidget } from "@/src/components/FeedbackWidget";
 import { usePathname } from "next/navigation";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
@@ -15,6 +16,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   // Routes that render their own full-screen chrome (no global nav/footer).
   const chromeless = ["/", "/signup", "/onboarding", "/create-profile"].includes(pathname);
+  // Hide the feedback widget on auth/onboarding flows where it would distract
+  // mid-conversion. Keep it on the landing page — that's where most strangers see us.
+  const hideFeedback = ["/signup", "/onboarding", "/create-profile"].includes(pathname);
 
   // Capture an inbound referral code (?ref=CODE) once, so it can be attributed
   // to the referrer at signup. Only stores the first one seen.
@@ -44,6 +48,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {!chromeless && pathname !== "/virtual-test" && pathname !== "/pdf-editor" && (
             <Footer />
           )}
+          {!hideFeedback && <FeedbackWidget />}
         </div>
       </ErrorBoundary>
     </SmoothScroll>

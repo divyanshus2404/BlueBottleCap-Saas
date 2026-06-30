@@ -14,6 +14,7 @@ gsap.registerPlugin(useGSAP);
 import { useGlobalState } from "../context/GlobalStateContext";
 import { useRouter } from "next/navigation";
 import { WeeklyWrapped } from "./WeeklyWrapped";
+import { ReadinessCard } from "./ReadinessCard";
 
 export const Dashboard: React.FC = () => {
   const {
@@ -269,12 +270,15 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {activeTab === "workspace" ? (
-        <motion.div 
+        <motion.div
           key="workspace"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="space-y-8"
         >
+          {/* Readiness + Today's Plan — the reason to come back tomorrow */}
+          <ReadinessCard />
+
           {/* Usage Stats Linear Bars */}
           <div className="grid gap-6 md:grid-cols-3">
             {[

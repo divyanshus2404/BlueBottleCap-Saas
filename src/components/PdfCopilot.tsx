@@ -202,7 +202,11 @@ export const PdfCopilot: React.FC<PdfCopilotProps> = ({
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const input = e.target;
+    const file = input.files?.[0];
+    // Reset so picking the same filename again still fires onChange
+    // (lets the user retry a failed upload or re-import an updated file).
+    input.value = "";
     if (!file) return;
 
     const paperId = `custom-${file.name}`;
@@ -651,12 +655,12 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
   };
 
   return (
-    <div className="w-full px-4 py-8 sm:px-6 lg:px-8 fade-in min-h-[calc(100vh-73px)]">
+    <div className="bbc w-full px-4 py-8 sm:px-6 lg:px-8 fade-in min-h-[calc(100vh-73px)]">
       
       {onGoBack && (
         <button 
           onClick={onGoBack}
-          className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-indigo-600 transition-colors mb-4 group cursor-pointer"
+          className="flex items-center gap-1.5 text-xs font-bold text-[var(--color-ink-soft)] hover:text-[var(--color-blue-ink)] transition-colors mb-4 group cursor-pointer"
         >
           <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           Back to Dashboard
@@ -683,145 +687,143 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
       <div className="grid gap-6 lg:grid-cols-12 min-h-[640px]">
         
         {/* PANEL 1: Left Index Panel (2 cols) */}
-        <div className="lg:col-span-2 rounded-2xl border border-gray-100 bg-slate-50/50 p-4 space-y-6">
+        <div className="lg:col-span-2 rounded-2xl border border-gray-100 bg-slate-50/50 p-4 space-y-5">
+          {/* Always: Upload is hero */}
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400">Select PDF Paper</span>
-            <div className="mt-2 flex flex-col gap-2">
-              <select
-                value={activePaperId}
-                onChange={(e) => handlePaperChange(e.target.value)}
-                disabled={allPapers.length === 0}
-                className="w-full rounded-xl border border-gray-250 bg-white p-2 text-xs font-semibold text-brand-navy focus:outline-hidden cursor-pointer disabled:bg-slate-100 disabled:cursor-not-allowed"
-              >
-                {allPapers.length === 0 ? (
-                  <option value="">No documents loaded</option>
-                ) : (
-                  allPapers.map((paper) => (
+            <button
+              onClick={handleSimulateUpload}
+              disabled={uploadingFile}
+              className="w-full text-center rounded-xl bg-[var(--color-blue-ink)] hover:bg-[var(--color-blue-deep)] text-white py-2.5 text-xs font-bold transition shadow-sm cursor-pointer disabled:bg-slate-300 disabled:cursor-not-allowed"
+            >
+              {uploadingFile ? "Uploading..." : "+ Upload Document"}
+            </button>
+            <input
+              type="file"
+              id="pdf-copilot-file-input"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+              accept=".pdf,.txt,.md,.png,.jpg,.jpeg,.webp"
+            />
+            {uploadingFile && (
+              <div className="mt-2 p-2.5 rounded-xl border border-[var(--color-line)] bg-[var(--color-blue-wash)]/60 text-[9px] font-mono text-[var(--color-blue-deep)] space-y-1">
+                <div className="flex items-center justify-between font-bold">
+                  <span className="truncate max-w-[100px]">{uploadFilename}</span>
+                  <span>{uploadProgress}%</span>
+                </div>
+                <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
+                  <div className="bg-brand-cobalt h-full transition-all duration-150" style={{ width: `${uploadProgress}%` }}></div>
+                </div>
+                <span className="text-[7.5px] text-brand-cobalt animate-pulse block">{uploadStatus}</span>
+              </div>
+            )}
+
+            {/* Recent doc picker only when there are docs */}
+            {allPapers.length > 0 && (
+              <div className="mt-3">
+                <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400">Recent</span>
+                <select
+                  value={activePaper?.id ?? ""}
+                  onChange={(e) => handlePaperChange(e.target.value)}
+                  className="mt-1.5 w-full rounded-xl border border-gray-300 bg-white p-2 text-xs font-semibold text-brand-navy focus:outline-hidden cursor-pointer"
+                >
+                  {allPapers.map((paper) => (
                     <option key={paper.id} value={paper.id}>
                       {paper.title.length > 25 ? `${paper.title.substring(0, 22)}...` : paper.title}
                     </option>
-                  ))
-                )}
-              </select>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+
+          {/* Only when a paper is loaded: pages, export, advanced */}
+          {activePaper && (
+            <>
+              <div>
+                <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400">Pages</span>
+                <div className="mt-3 space-y-1.5 max-h-[320px] overflow-y-auto pr-1">
+                  {activePaper.pages.map((p: any) => {
+                    const active = currentPage === p.pageIndex;
+                    return (
+                      <button
+                        key={p.pageIndex}
+                        onClick={() => {
+                          setCurrentPage(p.pageIndex);
+                          setSelectedText("");
+                          setTooltipPos(null);
+                        }}
+                        className={`w-full text-left rounded-lg p-2.5 transition-all text-xs border ${
+                          active
+                            ? "bg-white border-brand-cobalt text-brand-cobalt shadow-xs font-bold"
+                            : "bg-transparent border-transparent text-gray-500 hover:bg-slate-100 hover:text-gray-800"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-[10px] ${
+                            active ? "bg-brand-cobalt text-white" : "bg-slate-200 text-gray-600"
+                          }`}>
+                            {p.pageIndex}
+                          </span>
+                          <span className="truncate leading-tight uppercase font-display select-none">
+                            Page {p.pageIndex}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               <button
-                onClick={handleSimulateUpload}
-                disabled={uploadingFile}
-                className="w-full text-center rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 py-1.5 text-[10px] font-extrabold transition cursor-pointer disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
+                onClick={handleExportHighlights}
+                className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-brand-navy hover:bg-brand-cobalt text-white py-2 text-[11px] font-bold transition shadow-sm cursor-pointer select-none"
+                title="Export Highlighted references to JSON"
               >
-                {uploadingFile ? "Uploading..." : "📁 Upload Custom File"}
+                <Download className="w-3.5 h-3.5" />
+                <span>Export Highlights</span>
               </button>
-              <input 
-                type="file" 
-                id="pdf-copilot-file-input" 
-                style={{ display: "none" }} 
-                onChange={handleFileChange} 
-                accept=".pdf,.txt,.md,.png,.jpg,.jpeg,.webp" 
-              />
-              {uploadingFile && (
-                <div className="mt-2 p-2.5 rounded-xl border border-indigo-100 bg-indigo-50/30 text-[9px] font-mono text-indigo-900 space-y-1">
-                  <div className="flex items-center justify-between font-bold">
-                    <span className="truncate max-w-[100px]">{uploadFilename}</span>
-                    <span>{uploadProgress}%</span>
-                  </div>
-                  <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
-                    <div className="bg-brand-cobalt h-full transition-all duration-150" style={{ width: `${uploadProgress}%` }}></div>
-                  </div>
-                  <span className="text-[7.5px] text-brand-cobalt animate-pulse block">{uploadStatus}</span>
-                </div>
-              )}
-            </div>
-          </div>
 
-          <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400">Section Nodes</span>
-            <div className="mt-3 space-y-2">
-              {activePaper ? (
-                activePaper.pages.map((p: any) => {
-                  const active = currentPage === p.pageIndex;
-                  return (
+              <details className="group">
+                <summary className="cursor-pointer text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400 hover:text-gray-600 list-none flex items-center justify-between">
+                  <span>Quick Highlights</span>
+                  <span className="text-gray-300 group-open:rotate-90 transition-transform">›</span>
+                </summary>
+                <div className="mt-3 space-y-2">
+                  {simulationPhrases.map(phraseItem => (
                     <button
-                      key={p.pageIndex}
-                      onClick={() => {
-                        setCurrentPage(p.pageIndex);
-                        setSelectedText("");
-                        setTooltipPos(null);
-                      }}
-                      className={`w-full text-left rounded-xl p-3.5 transition-all text-xs border ${
-                        active
-                          ? "bg-white border-brand-cobalt text-brand-cobalt shadow-xs font-bold"
-                          : "bg-transparent border-transparent text-gray-500 hover:bg-slate-100 hover:text-gray-800"
-                      }`}
+                      key={phraseItem.phrase}
+                      onClick={() => applyCustomHighlight(phraseItem.phrase, phraseItem.color)}
+                      className="flex items-center gap-1.5 w-full text-left rounded-lg bg-white border border-gray-200 p-2 hover:bg-slate-50 text-[11px] transition"
                     >
-                      <div className="flex items-center gap-2">
-                        <span className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-[10px] ${
-                          active ? "bg-brand-cobalt text-white" : "bg-slate-200 text-gray-600"
-                        }`}>
-                          {p.pageIndex}
-                        </span>
-                        <span className="truncate leading-tight uppercase font-display select-none">
-                          Page {p.pageIndex}
-                        </span>
-                      </div>
+                      <Sparkle className="w-3.5 h-3.5 text-brand-sky" />
+                      <span className="truncate font-semibold capitalize text-gray-600">{phraseItem.phrase}</span>
                     </button>
-                  );
-                })
-              ) : (
-                <div className="text-[10px] text-gray-400 font-sans italic p-3 bg-slate-100/50 rounded-xl text-center border border-dashed border-slate-200">
-                  Nodes will appear after upload.
+                  ))}
                 </div>
-              )}
-            </div>
-          </div>
-
-          <div className="mt-5 border-t border-gray-200 pt-5">
-            <button
-              onClick={handleExportHighlights}
-              className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-brand-navy hover:bg-brand-cobalt text-white py-2.5 text-xs font-bold transition shadow-3xs cursor-pointer select-none"
-              title="Export Highlighted references to JSON"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Export Highlights</span>
-            </button>
-          </div>
-
-          <div className="mt-8 border-t border-gray-200 pt-6 animate-pulse-slow">
-            <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400">Simulation Clicks</span>
-            <p className="mt-1 text-[11px] text-gray-400 leading-normal">
-              Click to highlighting difficult terms inside the document text body:
-            </p>
-            <div className="mt-3.5 space-y-2">
-              {simulationPhrases.map(phraseItem => (
-                <button
-                  key={phraseItem.phrase}
-                  onClick={() => applyCustomHighlight(phraseItem.phrase, phraseItem.color)}
-                  className="flex items-center gap-1.5 w-full text-left rounded-lg bg-white border border-gray-150 p-2 hover:bg-slate-50 text-[11px] transition"
-                >
-                  <Sparkle className="w-3.5 h-3.5 text-brand-sky" />
-                  <span className="truncate font-semibold capitalize text-gray-600">{phraseItem.phrase}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+              </details>
+            </>
+          )}
         </div>
 
         {/* PANEL 2: Center Document Body Panel (6 cols) */}
         <div className="lg:col-span-6 flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
           {!activePaper ? (
             <div className="flex flex-col items-center justify-center grow py-12 text-center space-y-4">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-8 ring-indigo-50/50">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)] ring-8 ring-[var(--color-blue-wash)]/60">
                 <BookOpen className="h-8 w-8 animate-pulse" />
               </div>
               <div>
                 <h3 className="font-display text-lg font-bold text-brand-navy">No Documents Uploaded</h3>
                 <p className="mt-1 text-xs text-gray-500 max-w-sm font-sans">
-                  Upload your research paper, text file, notes, or diagrams using the "+ Upload Custom File" button on the left sidebar to start.
+                  Drop a PDF, notes file, or image to start. Ask questions on the right — answers cite the page they came from.
                 </p>
               </div>
               <button
                 onClick={handleSimulateUpload}
-                className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 text-xs transition shadow-sm cursor-pointer"
+                disabled={uploadingFile}
+                className="rounded-xl bg-[var(--color-blue-ink)] hover:bg-[var(--color-blue-deep)] text-white font-bold py-2.5 px-4 text-xs transition shadow-sm cursor-pointer disabled:bg-slate-300 disabled:cursor-not-allowed"
               >
-                Upload Document
+                {uploadingFile ? "Uploading..." : "Upload Document"}
               </button>
             </div>
           ) : (
@@ -881,7 +883,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                             paragraphElements.push(
                               <mark 
                                 key={hl.id} 
-                                className={`font-semibold bg-indigo-100 px-1 text-indigo-900 border-b-2 border-indigo-500 cursor-pointer rounded-xs`}
+                                className={`font-semibold bg-[var(--color-blue-wash)] px-1 text-[var(--color-blue-deep)] border-b-2 border-[var(--color-blue-ink)] cursor-pointer rounded-xs`}
                                 onClick={() => {
                                   setSelectedText(hlText);
                                   setTooltipPos({ x: 200, y: 150 });
@@ -1016,6 +1018,12 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
           <div className="grow overflow-y-auto max-h-[350px] min-h-[190px] pr-1 space-y-3 pb-3">
             {chatMessages.map((msg) => {
               const isAi = msg.role === "assistant";
+              const shareToWhatsApp = () => {
+                if (typeof window === "undefined") return;
+                const trimmed = msg.content.length > 800 ? msg.content.slice(0, 800) + "…" : msg.content;
+                const text = `${trimmed}\n\n— answered by BlueBottleCap · https://bluebottlecap.com`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+              };
               return (
                 <div
                   key={msg.id}
@@ -1026,9 +1034,24 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                   }`}
                 >
                   <div className="font-sans whitespace-pre-wrap">{msg.content}</div>
-                  <span className={`mt-1.5 block text-[8px] uppercase select-none text-right ${isAi ? "text-gray-400" : "text-white/50"}`}>
-                    {msg.timestamp}
-                  </span>
+                  <div className={`mt-1.5 flex items-center justify-between gap-2 ${isAi ? "" : "flex-row-reverse"}`}>
+                    <span className={`text-[8px] uppercase select-none ${isAi ? "text-gray-400" : "text-white/50"}`}>
+                      {msg.timestamp}
+                    </span>
+                    {isAi && (
+                      <button
+                        type="button"
+                        onClick={shareToWhatsApp}
+                        title="Share this answer on WhatsApp"
+                        className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-emerald-700 transition hover:bg-emerald-100"
+                      >
+                        <svg width="9" height="9" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                          <path d="M8 0a8 8 0 0 0-6.9 12l-1.1 4 4.1-1A8 8 0 1 0 8 0zm4.6 11.3c-.2.5-1.1 1-1.5 1-.4 0-.9.1-1.5-.1-1.6-.6-2.7-1.7-3.3-2.4-.6-.7-1.4-1.8-1.4-2.7s.5-1.4.7-1.6c.2-.2.4-.2.6-.2h.4c.1 0 .3 0 .5.4l.7 1.7c.1.2.1.4 0 .5l-.3.4-.2.3c-.1.1-.2.2 0 .4.2.3.7 1 1.3 1.5.7.5 1.3.7 1.5.8.2.1.4.1.5-.1l.6-.7c.1-.2.3-.2.5-.1.2.1 1.4.7 1.6.8.2.1.3.2.4.3.1.2.1.7 0 1z"/>
+                        </svg>
+                        Share
+                      </button>
+                    )}
+                  </div>
                 </div>
               );
             })}
@@ -1069,7 +1092,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-xs fade-in">
           <div className="max-w-md w-full bg-white rounded-3xl p-6.5 shadow-2xl relative border border-slate-100 text-center space-y-4">
             
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-4 ring-indigo-500/5 animate-bounce-slow">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)] ring-4 ring-[var(--color-blue-ink)]/5 animate-bounce-slow">
               <BookOpen className="h-6 w-6" />
             </div>
 
@@ -1078,7 +1101,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                 Unlock Unlimited PDFs
               </h3>
               <p className="mt-2 text-xs text-gray-500 leading-normal max-w-xs mx-auto font-sans">
-                Free scholar accounts are limited to opening and analyzing **3 PDF documents**. Upgrade to Pro to unlock unlimited PDF uploads, annotations, and co-pilot chat history.
+                Free accounts are limited to <strong>1 PDF</strong> and <strong>5 chat messages per session</strong>. Upgrade to Pro for unlimited PDFs, chat, mocks, and flashcards.
               </p>
             </div>
 
@@ -1114,7 +1137,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                   setShowPdfPaywallModal(false);
                   onUpgradeClick();
                 }}
-                className="w-1/2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 text-xs transition shadow-sm select-none cursor-pointer"
+                className="w-1/2 rounded-xl bg-[var(--color-blue-ink)] hover:bg-[var(--color-blue-deep)] text-white font-bold py-3 text-xs transition shadow-sm select-none cursor-pointer"
               >
                 Upgrade Now
               </button>

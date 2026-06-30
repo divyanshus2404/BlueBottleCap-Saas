@@ -20,30 +20,72 @@ const Seal = ({ size = 26 }: { size?: number }) => (
   </svg>
 );
 
+type ToolIconProps = { className?: string };
+const ToolIcon = {
+  pdf: ({ className }: ToolIconProps) => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path d="M6 3h8l4 4v14H6z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+      <path d="M14 3v4h4" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+      <path d="M9 13h6M9 16h4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+    </svg>
+  ),
+  cards: ({ className }: ToolIconProps) => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <rect x="5" y="7" width="12" height="14" rx="1.2" stroke="currentColor" strokeWidth="1.3"/>
+      <rect x="8" y="4" width="12" height="14" rx="1.2" stroke="currentColor" strokeWidth="1.3"/>
+    </svg>
+  ),
+  timer: ({ className }: ToolIconProps) => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <circle cx="12" cy="13" r="7.5" stroke="currentColor" strokeWidth="1.3"/>
+      <path d="M12 9v4l2.5 2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+      <path d="M9.5 3.5h5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+    </svg>
+  ),
+  calendar: ({ className }: ToolIconProps) => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <rect x="4" y="5.5" width="16" height="15" rx="1.3" stroke="currentColor" strokeWidth="1.3"/>
+      <path d="M4 10h16" stroke="currentColor" strokeWidth="1.3"/>
+      <path d="M8 3.5v4M16 3.5v4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+    </svg>
+  ),
+  summary: ({ className }: ToolIconProps) => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path d="M5 5h14M5 9h14M5 13h9M5 17h11" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+    </svg>
+  ),
+  tools: ({ className }: ToolIconProps) => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path d="M14.5 4.5l5 5-9 9-5-5 9-9z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+      <path d="M10 9l5 5" stroke="currentColor" strokeWidth="1.3"/>
+    </svg>
+  ),
+};
+
 const tools = [
-  { n: "01", t: "AI PDF Copilot", d: "Chat with any textbook or notes PDF. Answers cite the page they came from." },
-  { n: "02", t: "Flashcard Maker", d: "Turn a chapter into a spaced-repetition deck in one click." },
-  { n: "03", t: "Mock Test Mode", d: "Distraction-free, full-length papers timed like the real exam." },
-  { n: "04", t: "Study Planner", d: "A day-by-day plan from your syllabus and exam date." },
-  { n: "05", t: "Smart Summaries", d: "Long chapters condensed to the points that actually get tested." },
-  { n: "06", t: "PDF & File Tools", d: "Compress, merge, and tidy your study files, right in the browser." },
+  { n: "01", t: "AI PDF Copilot", d: "Chat with any textbook or notes PDF. Answers cite the page they came from.", Icon: ToolIcon.pdf },
+  { n: "02", t: "Flashcard Maker", d: "Turn a chapter into a spaced-repetition deck in one click.", Icon: ToolIcon.cards },
+  { n: "03", t: "Mock Test Mode", d: "Distraction-free, full-length papers timed like the real exam.", Icon: ToolIcon.timer },
+  { n: "04", t: "Study Planner", d: "A day-by-day plan from your syllabus and exam date.", Icon: ToolIcon.calendar },
+  { n: "05", t: "Smart Summaries", d: "Long chapters condensed to the points that actually get tested.", Icon: ToolIcon.summary },
+  { n: "06", t: "PDF & File Tools", d: "Compress, merge, and tidy your study files, right in the browser.", Icon: ToolIcon.tools },
 ];
 
 const plans = [
   {
-    name: "Free", price: "₹0", per: "/ forever", featured: false, cta: "Start free", view: "pdf-editor" as ActiveView,
-    desc: "Everything you need to try a real study session.",
-    items: ["3 AI tool runs a day", "All six core tools", "In-browser PDF & image tools", "Study streaks"],
+    name: "Free", price: "₹0", per: "/ forever", featured: false, cta: "Try it free", view: "pdf-editor" as ActiveView,
+    desc: "Enough to feel the difference. Not enough to live on.",
+    items: ["1 PDF upload", "5 chat messages per session", "Watermarked exports", "Study streak tracking"],
   },
   {
-    name: "Pro", price: "₹149", per: "/ month", featured: true, tag: "Most popular", cta: "Get Pro", view: "pricing" as ActiveView,
-    desc: "For active prep, when three runs a day isn't enough.",
-    items: ["Everything in Free", "Unlimited AI tool runs", "JEE practice card sets", "Day-by-day timetables", "Priority support"],
+    name: "Pro", price: "₹199", per: "/ month", featured: true, tag: "Most popular", cta: "Get Pro", view: "pricing" as ActiveView,
+    desc: "The plan that actually gets you through exams.",
+    items: ["Unlimited PDFs and chat", "Flashcards, summaries, mocks", "Day-by-day study plan", "No watermarks", "Priority support"],
   },
   {
-    name: "Power", price: "₹349", per: "/ month", featured: false, cta: "Get Power", view: "pricing" as ActiveView,
-    desc: "For serious scholars and the full PDF workspace.",
-    items: ["Everything in Pro", "Full PDF Copilot workspace", "Fastest AI generations", "B.Tech semester blueprints", "Early access to new mocks"],
+    name: "Pro · Annual", price: "₹1,499", per: "/ year", featured: false, tag: "Save 37%", cta: "Get yearly", view: "pricing" as ActiveView,
+    desc: "₹125/mo when paid yearly. Lock it in before exam crunch.",
+    items: ["Everything in Pro", "2 months free vs monthly", "Renewal-locked at this price", "Cancel anytime"],
   },
 ];
 
@@ -153,13 +195,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-7" stroke="var(--color-blue-ink)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
               No signup needed — try it instantly, free.
             </p>
-            <div className="bbc-reveal mt-[42px] flex items-center gap-[14px]">
-              <div className="flex" aria-hidden="true">
-                {["AK", "RS", "PM", "NV", "+"].map((s, i) => (
-                  <span key={i} className="grid h-[30px] w-[30px] place-items-center rounded-full border-2 border-[var(--color-paper)] bg-[var(--color-blue-wash)] font-[var(--font-plex)] text-[11px] font-semibold text-[var(--color-blue-deep)]" style={{ marginLeft: i === 0 ? 0 : -9 }}>{s}</span>
-                ))}
+            <div className="bbc-reveal mt-[42px] flex flex-wrap items-center gap-x-[22px] gap-y-2 border-t border-[var(--color-line)] pt-[20px]">
+              <div className="flex items-center gap-[8px] text-[13px] text-[var(--color-ink-faint)]">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.25" stroke="var(--color-blue-ink)" strokeWidth="1.4"/><path d="M5.5 8.5l1.7 1.7L10.7 6.4" stroke="var(--color-blue-ink)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
+                Free during early access
               </div>
-              <p className="text-[13.5px] text-[var(--color-ink-faint)]">In early access with engineering students across India</p>
+              <div className="flex items-center gap-[8px] text-[13px] text-[var(--color-ink-faint)]">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.25" y="4.25" width="11.5" height="8.5" rx="1.5" stroke="var(--color-blue-ink)" strokeWidth="1.3"/><path d="M2.5 7h11" stroke="var(--color-blue-ink)" strokeWidth="1.3"/><path d="M4 4.25V3" stroke="var(--color-blue-ink)" strokeWidth="1.3" strokeLinecap="round"/><path d="M12 4.25V3" stroke="var(--color-blue-ink)" strokeWidth="1.3" strokeLinecap="round"/></svg>
+                No card needed
+              </div>
+              <div className="flex items-center gap-[8px] text-[13px] text-[var(--color-ink-faint)]">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5l2 4.3 4.5.5-3.4 3.1.9 4.6L8 11.6l-4 2.4.9-4.6L1.5 6.3l4.5-.5L8 1.5z" stroke="var(--color-blue-ink)" strokeWidth="1.3" strokeLinejoin="round" fill="none"/></svg>
+                Built for Indian engineering students
+              </div>
             </div>
           </div>
 
@@ -210,6 +258,71 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
+      {/* ── PRODUCT PREVIEW ── */}
+      <section className="border-b border-[var(--color-line)] bg-[var(--color-paper-card)] py-[88px]">
+        <div className="mx-auto max-w-[1180px] px-7">
+          <div className="bbc-reveal mx-auto mb-12 max-w-[40em] text-center">
+            <p className="bbc-eyebrow">A real session</p>
+            <h2 className="bbc-serif mt-3 text-[clamp(26px,3.2vw,38px)] leading-[1.12] tracking-[-.02em]">
+              Ask a question. Get an answer that <em className="not-italic italic font-medium text-[var(--color-blue-ink)]">cites the page</em>.
+            </h2>
+          </div>
+
+          <div className="bbc-reveal mx-auto max-w-[1080px] overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-white shadow-[0_30px_60px_-30px_rgba(20,30,55,.18)]">
+            {/* browser chrome */}
+            <div className="flex items-center gap-[10px] border-b border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-[10px]">
+              <span className="h-[10px] w-[10px] rounded-full bg-[var(--color-line)]" />
+              <span className="h-[10px] w-[10px] rounded-full bg-[var(--color-line)]" />
+              <span className="h-[10px] w-[10px] rounded-full bg-[var(--color-line)]" />
+              <span className="bbc-mono ml-3 text-[11px] tracking-[.08em] text-[var(--color-ink-faint)]">bluebottlecap.com / pdf-copilot</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-[1.05fr_1fr]">
+              {/* left: PDF page */}
+              <div className="relative border-b border-[var(--color-line)] bg-[var(--color-paper)] p-7 md:border-b-0 md:border-r">
+                <div className="flex items-center justify-between text-[11px] text-[var(--color-ink-faint)]">
+                  <span className="bbc-mono uppercase tracking-[.12em]">thermodynamics_ch4.pdf</span>
+                  <span className="bbc-mono">page 47 / 92</span>
+                </div>
+                <div className="mt-5 rounded-[8px] border border-[var(--color-line)] bg-white p-6">
+                  <p className="bbc-serif text-[15px] font-semibold tracking-[-.005em]">4.3 Entropy of an Ideal Gas</p>
+                  <div className="mt-3 space-y-2 text-[12.5px] leading-[1.55] text-[var(--color-ink-soft)]">
+                    <p>For a reversible process, the change in entropy can be derived from the first law combined with the ideal gas equation of state.</p>
+                    <p className="rounded-[4px] bg-[var(--color-blue-wash)] px-2 py-1 text-[var(--color-ink)]">
+                      <span className="bbc-mono mr-2 text-[10px] uppercase tracking-[.1em] text-[var(--color-blue-deep)]">cited</span>
+                      ΔS = nCv ln(T₂/T₁) + nR ln(V₂/V₁), valid for any quasi-static path between the two states.
+                    </p>
+                    <p>The expression depends only on the initial and final states, confirming entropy as a state function.</p>
+                    <p>Integrating between two temperatures at constant volume yields ΔS = nCv ln(T₂/T₁).</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* right: chat */}
+              <div className="flex flex-col gap-4 p-7">
+                <div className="self-end max-w-[88%] rounded-[10px] rounded-tr-[2px] bg-[var(--color-blue-ink)] px-4 py-3 text-[13.5px] text-white">
+                  Explain the entropy change formula for an ideal gas in simple terms.
+                </div>
+                <div className="self-start max-w-[92%] rounded-[10px] rounded-tl-[2px] border border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-3 text-[13.5px] text-[var(--color-ink)]">
+                  <p className="mb-2">The formula tells you how much disorder an ideal gas gains when its temperature and volume change:</p>
+                  <p className="bbc-mono text-[12px] text-[var(--color-blue-deep)]">ΔS = nCv·ln(T₂/T₁) + nR·ln(V₂/V₁)</p>
+                  <p className="mt-2 text-[var(--color-ink-soft)]">First term: entropy from heating. Second term: entropy from expansion. Both are positive when the gas warms and expands.</p>
+                  <div className="mt-3 flex items-center gap-2 border-t border-[var(--color-line)] pt-2">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 2.5h7l3 3v8a.5.5 0 0 1-.5.5h-9.5z" stroke="var(--color-blue-ink)" strokeWidth="1.3" fill="none"/></svg>
+                    <span className="bbc-mono text-[10.5px] uppercase tracking-[.1em] text-[var(--color-ink-faint)]">cited from page 47</span>
+                  </div>
+                </div>
+                <div className="mt-auto flex flex-wrap gap-2 border-t border-[var(--color-line)] pt-4">
+                  <span className="rounded-[6px] border border-[var(--color-line)] bg-[var(--color-paper)] px-2.5 py-1 text-[11.5px] text-[var(--color-ink-soft)]">+ Make flashcards</span>
+                  <span className="rounded-[6px] border border-[var(--color-line)] bg-[var(--color-paper)] px-2.5 py-1 text-[11.5px] text-[var(--color-ink-soft)]">+ Summarize chapter</span>
+                  <span className="rounded-[6px] border border-[var(--color-line)] bg-[var(--color-paper)] px-2.5 py-1 text-[11.5px] text-[var(--color-ink-soft)]">+ Generate mock</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── PROBLEM BAND ── */}
       <section className="border-b border-[var(--color-line)] py-[96px] text-center">
         <div className="mx-auto max-w-[1180px] px-7">
@@ -233,8 +346,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           </div>
           <div className="border-t border-[var(--color-line)]">
             {tools.map((tool) => (
-              <div key={tool.n} className="bbc-row bbc-reveal grid grid-cols-[44px_1fr_22px] items-baseline gap-6 border-b border-[var(--color-line)] px-1 py-[26px] md:grid-cols-[64px_1fr_1.3fr_24px]">
-                <span className="bbc-mono pt-1 text-[15px] text-[var(--color-blue-ink)]">{tool.n}</span>
+              <div key={tool.n} className="bbc-row bbc-reveal grid grid-cols-[36px_28px_1fr_22px] items-center gap-5 border-b border-[var(--color-line)] px-1 py-[26px] md:grid-cols-[56px_30px_1fr_1.3fr_24px] md:gap-6">
+                <span className="bbc-mono text-[15px] text-[var(--color-blue-ink)]">{tool.n}</span>
+                <tool.Icon className="text-[var(--color-blue-ink)]" />
                 <span className="bbc-serif text-[22px] tracking-[-.01em]">{tool.t}</span>
                 <span className="hidden text-[16px] text-[var(--color-ink-soft)] md:block">{tool.d}</span>
                 <span className="bbc-arrow justify-self-end text-[var(--color-ink-faint)]">→</span>
@@ -253,11 +367,41 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           </div>
           <div className="grid grid-cols-1 gap-[30px] md:grid-cols-3">
             {[
-              { s: "Step 01", h: "Upload", p: "Drop in a textbook chapter, lecture notes, or a past paper. Your file stays yours." },
-              { s: "Step 02", h: "Ask", p: "Ask anything in plain language. Get answers grounded in that exact document." },
-              { s: "Step 03", h: "Practice", p: "Spin up flashcards, a summary, or a timed mock from what you just read." },
+              {
+                s: "Step 01", h: "Upload", p: "Drop in a textbook chapter, lecture notes, or a past paper. Your file stays yours.",
+                art: (
+                  <svg viewBox="0 0 200 100" className="h-[88px] w-full" aria-hidden="true">
+                    <rect x="60" y="14" width="80" height="72" rx="3" stroke="var(--color-ink)" strokeWidth="1.3" fill="none"/>
+                    <path d="M100 30v32M86 46l14-14 14 14" stroke="var(--color-blue-ink)" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M76 72h48" stroke="var(--color-ink-faint)" strokeWidth="1.3" strokeLinecap="round" strokeDasharray="2 3"/>
+                  </svg>
+                ),
+              },
+              {
+                s: "Step 02", h: "Ask", p: "Ask anything in plain language. Get answers grounded in that exact document.",
+                art: (
+                  <svg viewBox="0 0 200 100" className="h-[88px] w-full" aria-hidden="true">
+                    <rect x="36" y="18" width="84" height="34" rx="6" stroke="var(--color-ink)" strokeWidth="1.3" fill="none"/>
+                    <path d="M50 30h56M50 40h40" stroke="var(--color-ink-faint)" strokeWidth="1.3" strokeLinecap="round"/>
+                    <rect x="80" y="50" width="84" height="34" rx="6" stroke="var(--color-blue-ink)" strokeWidth="1.4" fill="var(--color-blue-wash)"/>
+                    <path d="M94 64h56M94 74h36" stroke="var(--color-blue-deep)" strokeWidth="1.3" strokeLinecap="round"/>
+                  </svg>
+                ),
+              },
+              {
+                s: "Step 03", h: "Practice", p: "Spin up flashcards, a summary, or a timed mock from what you just read.",
+                art: (
+                  <svg viewBox="0 0 200 100" className="h-[88px] w-full" aria-hidden="true">
+                    <rect x="40" y="22" width="58" height="40" rx="4" stroke="var(--color-ink)" strokeWidth="1.3" fill="none"/>
+                    <rect x="56" y="34" width="58" height="40" rx="4" stroke="var(--color-blue-ink)" strokeWidth="1.4" fill="var(--color-blue-wash)"/>
+                    <rect x="72" y="46" width="58" height="40" rx="4" stroke="var(--color-ink)" strokeWidth="1.3" fill="var(--color-paper-card)"/>
+                    <path d="M88 66h26" stroke="var(--color-blue-deep)" strokeWidth="1.4" strokeLinecap="round"/>
+                  </svg>
+                ),
+              },
             ].map((step) => (
               <div key={step.s} className="bbc-reveal border-t-2 border-[var(--color-ink)] pt-[22px]">
+                <div className="-mx-1 mb-[18px] flex items-center justify-center rounded-[8px] bg-[var(--color-paper-card)] py-3">{step.art}</div>
                 <span className="bbc-mono text-[12px] uppercase tracking-[.16em] text-[var(--color-ink-faint)]">{step.s}</span>
                 <h3 className="bbc-serif mt-[14px] mb-2 text-[21px] tracking-[-.01em]">{step.h}</h3>
                 <p className="text-[15.5px] text-[var(--color-ink-soft)]">{step.p}</p>
