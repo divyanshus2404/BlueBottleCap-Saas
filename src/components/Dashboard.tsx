@@ -7,6 +7,8 @@ import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { db } from "../firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 gsap.registerPlugin(useGSAP);
 
@@ -28,27 +30,41 @@ export const Dashboard: React.FC = () => {
     recentActivities,
   } = useGlobalState();
   const router = useRouter();
+  const { currentUser } = useAuth();
   const [showWrapped, setShowWrapped] = useState(false);
+  const [joinedWaitlist, setJoinedWaitlist] = useState<Record<string, boolean>>({});
 
-  const onNavigateTo = (view: ActiveView | string) => {
-    if (view === "waitlist") {
-      onShowToast && onShowToast("Added to waitlist! We'll notify you.", "success");
-      return;
+  const joinWaitlist = async (feature: string) => {
+    if (joinedWaitlist[feature]) return;
+    setJoinedWaitlist((prev) => ({ ...prev, [feature]: true }));
+    if (currentUser && db) {
+      try {
+        await addDoc(collection(db, "waitlist"), {
+          feature,
+          uid: currentUser.uid,
+          email: currentUser.email || null,
+          createdAt: serverTimestamp(),
+        });
+      } catch (err) {
+        console.error("waitlist write failed:", err);
+      }
     }
+    onShowToast && onShowToast(`✓ You're on the ${feature} waitlist. We'll email you.`, "success");
+  };
+
+  const onNavigateTo = (view: string) => {
     const paths: Record<string, string> = {
       landing: '/',
       dashboard: '/dashboard',
       about: '/about',
-      'study-material-page': '/study-material',
-      'virtual-test': '/virtual-test',
-      tools: '/tools',
       pricing: '/pricing',
-      flashcards: '/flashcards',
-      'seniors-opinion': '/seniors',
       'create-profile': '/create-profile',
-      'pdf-editor': '/pdf-editor'
+      'pdf-editor': '/pdf-editor',
+      diagnostic: '/diagnostic',
+      'scan-notes': '/scan-notes',
+      tools: '/tools',
     };
-    router.push(paths[view as string] || `/${view}`);
+    router.push(paths[view] || `/${view}`);
   };
 
   const { userProfile } = useAuth();
@@ -104,10 +120,13 @@ export const Dashboard: React.FC = () => {
   // recentActivities is now passed as a prop from Firestore
   // If no activities exist, we will show an empty state.
 
-  const quickTools = [
-    { name: "AI PDF Copilot", desc: "Interact with journals and papers", icon: "📖", view: "pdf-editor" as ActiveView },
-    { name: "B.Tech Study Planner", desc: "Coming soon! Join waitlist", icon: "📅", view: "waitlist" as ActiveView },
-    { name: "JEE Question Generator", desc: "Coming soon! Join waitlist", icon: "📝", view: "waitlist" as ActiveView },
+  const quickTools: Array<{ name: string; desc: string; icon: string; view: string; waitlistKey?: string }> = [
+    { name: "AI PDF Copilot", desc: "Interact with journals and papers", icon: "📖", view: "pdf-editor" },
+    { name: "File Tools", desc: "PNG↔JPG, PDF merge/split, compress", icon: "🛠️", view: "tools" },
+    { name: "JEE Diagnostic", desc: "2-min readiness check + weak topics", icon: "🎯", view: "diagnostic" },
+    { name: "Scan Notes", desc: "Snap handwritten notes → searchable", icon: "📷", view: "scan-notes" },
+    { name: "B.Tech Study Planner", desc: "Coming soon — join waitlist", icon: "📅", view: "waitlist", waitlistKey: "study-planner" },
+    { name: "JEE Question Generator", desc: "Coming soon — join waitlist", icon: "📝", view: "waitlist", waitlistKey: "jee-generator" },
   ];
 
   const calculatePercentage = (current: number, max: number) => {
@@ -324,7 +343,7 @@ export const Dashboard: React.FC = () => {
                     <p className="mx-auto mb-6 max-w-[280px] text-sm leading-relaxed text-[var(--color-ink-soft)]">
                       Your study journey begins here. Jump into an AI session and watch the hours saved pile up.
                     </p>
-                    <button onClick={() => onNavigateTo('tools')} className="bbc-btn bbc-btn-primary px-6 py-3 text-sm">
+                    <button onClick={() => onNavigateTo('pdf-editor')} className="bbc-btn bbc-btn-primary px-6 py-3 text-sm">
                       Start your first AI session
                       <ArrowRight className="h-4 w-4" />
                     </button>
@@ -373,43 +392,50 @@ export const Dashboard: React.FC = () => {
                 </h2>
               </div>
               <div className="grid gap-3">
-                {quickTools.map((tool, i) => (
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    key={i}
-                    onClick={() => {
-                      if ('toolId' in tool && tool.toolId) {
-                        localStorage.setItem("bluebottlecap_active_tool", tool.toolId as string);
-                      }
-                      onNavigateTo(tool.view);
-                    }}
-                    className={`group flex cursor-pointer items-center gap-4 rounded-2xl border p-4 transition-all ${
-                      tool.view === "waitlist"
-                        ? "border-[var(--color-line)] bg-[var(--color-paper)] opacity-70"
-                        : "border-[var(--color-line)] bg-[var(--color-paper-card)] hover:border-[var(--color-line-strong)]"
-                    }`}
-                  >
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl text-lg transition-all duration-300 group-hover:scale-110 ${
-                      tool.view === "waitlist" ? "bg-[var(--color-line)] text-[var(--color-ink-faint)]" : "bg-[var(--color-blue-wash)]"
-                    }`}>
-                      {tool.icon}
-                    </div>
-                    <div>
-                      <h3 className={`text-sm font-bold transition-colors ${
-                        tool.view === "waitlist" ? "text-[var(--color-ink-faint)]" : "text-[var(--color-ink)] group-hover:text-[var(--color-blue-ink)]"
-                      }`}>{tool.name}</h3>
-                      <p className="text-[10px] font-medium text-[var(--color-ink-soft)]">{tool.desc}</p>
-                    </div>
-                    {tool.view === "waitlist" ? (
-                      <div className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-line)]">
-                        <span className="text-xs">🔒</span>
+                {quickTools.map((tool, i) => {
+                  const isWaitlist = tool.view === "waitlist";
+                  const isJoined = !!(tool.waitlistKey && joinedWaitlist[tool.waitlistKey]);
+                  return (
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      key={i}
+                      onClick={() => {
+                        if (isWaitlist && tool.waitlistKey) {
+                          joinWaitlist(tool.waitlistKey);
+                        } else {
+                          onNavigateTo(tool.view);
+                        }
+                      }}
+                      className={`group flex cursor-pointer items-center gap-4 rounded-2xl border p-4 transition-all ${
+                        isWaitlist
+                          ? "border-[var(--color-line)] bg-[var(--color-paper)] opacity-80"
+                          : "border-[var(--color-line)] bg-[var(--color-paper-card)] hover:border-[var(--color-line-strong)]"
+                      }`}
+                    >
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl text-lg transition-all duration-300 group-hover:scale-110 ${
+                        isWaitlist ? "bg-[var(--color-line)] text-[var(--color-ink-faint)]" : "bg-[var(--color-blue-wash)]"
+                      }`}>
+                        {tool.icon}
                       </div>
-                    ) : (
-                      <ArrowRight className="ml-auto h-4 w-4 text-[var(--color-ink-faint)] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--color-blue-ink)]" />
-                    )}
-                  </motion.div>
-                ))}
+                      <div>
+                        <h3 className={`text-sm font-bold transition-colors ${
+                          isWaitlist ? "text-[var(--color-ink-faint)]" : "text-[var(--color-ink)] group-hover:text-[var(--color-blue-ink)]"
+                        }`}>{tool.name}</h3>
+                        <p className="text-[10px] font-medium text-[var(--color-ink-soft)]">
+                          {isJoined ? "✓ On the waitlist — we'll email you" : tool.desc}
+                        </p>
+                      </div>
+                      {isWaitlist ? (
+                        <div className="ml-auto flex h-6 items-center justify-center rounded-full bg-[var(--color-line)] px-2 text-[10px] font-bold text-[var(--color-ink-soft)]">
+                          {isJoined ? "✓" : "+ Join"}
+                        </div>
+                      ) : (
+                        <ArrowRight className="ml-auto h-4 w-4 text-[var(--color-ink-faint)] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--color-blue-ink)]" />
+                      )}
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
           </div>

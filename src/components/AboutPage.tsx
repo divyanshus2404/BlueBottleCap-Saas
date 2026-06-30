@@ -119,10 +119,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
 
           <div className="about-content mt-12 border-t border-[var(--color-line)] pt-10">
             <button
-              onClick={() => onNavigate("study-material-page")}
+              onClick={() => onNavigate("pricing")}
               className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]"
             >
-              Explore study material
+              See plans &amp; upgrade
             </button>
           </div>
         </div>

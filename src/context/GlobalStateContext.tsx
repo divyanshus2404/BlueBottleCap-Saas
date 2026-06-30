@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
-import { UserStats, UsageStats, Flashcard, DailyActivity, RecentActivityItem } from "../types";
+import { UserStats, UsageStats, Flashcard, DailyActivity, RecentActivityItem, ActivePlan } from "../types";
 import { useAuth } from "./AuthContext";
 import { db } from "../firebase";
 import { doc, getDoc, setDoc, updateDoc, collection, getDocs, addDoc, onSnapshot, query, where } from "firebase/firestore";
@@ -37,7 +37,7 @@ interface GlobalState {
   handleUpdateFlashcard: (id: string, updates: Partial<Flashcard>) => Promise<void>;
   handleAddFlashcard: (newFc: Flashcard) => Promise<void>;
   incrementAiQueriesUsed: () => boolean;
-  handleUpgradeAccount: (plan: 'Free' | 'Basic' | 'Pro' | 'Elite') => Promise<void>;
+  handleUpgradeAccount: (plan: ActivePlan) => Promise<void>;
   handlePurchaseTest: (testId: string) => Promise<void>;
   handleUnlockStudyMaterial: () => void;
   setOpenedPapers: React.Dispatch<React.SetStateAction<string[]>>;
@@ -138,18 +138,12 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   // Single source of truth for plan limits. Every read of aiQueries.max /
   // pdfEdits.max / storage.max must go through this so the dashboard bars
   // and the upgrade-time setters can never drift apart again.
-  type PlanName = "Free" | "Basic" | "Pro" | "Elite";
   const planLimits = (plan: string) => {
-    const p = (plan || "Free") as PlanName;
+    const p = (plan || "Free") as ActivePlan;
     switch (p) {
-      case "Free":
-        return { aiQueries: 5, pdfEdits: 1, storage: 50 };
-      case "Basic":
-        return { aiQueries: 100, pdfEdits: 20, storage: 2000 };
       case "Pro":
         return { aiQueries: 99999, pdfEdits: 99999, storage: 10000 };
-      case "Elite":
-        return { aiQueries: 99999, pdfEdits: 99999, storage: 50000 };
+      case "Free":
       default:
         return { aiQueries: 5, pdfEdits: 1, storage: 50 };
     }
@@ -157,7 +151,9 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
 
   const [userStats, setUserStats] = useState<UserStats>(() => {
     if (typeof window !== "undefined") {
-      const savedPlan = (localStorage.getItem("bluebottlecap_active_plan") || "Free") as 'Free' | 'Basic' | 'Pro' | 'Elite';
+      const rawPlan = localStorage.getItem("bluebottlecap_active_plan") || "Free";
+      // Coerce legacy Basic/Elite values from older builds back into the live tiers.
+      const savedPlan: ActivePlan = rawPlan === "Pro" ? "Pro" : "Free";
       const savedStreak = localStorage.getItem("bluebottlecap_streak_days");
       const streakDays = savedStreak ? parseInt(savedStreak, 10) : 0;
       const savedHours = localStorage.getItem("bluebottlecap_hours_saved");
@@ -373,7 +369,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const handleUseToolCredit = (): boolean => {
-    if (userStats.activePlan === "Pro" || userStats.activePlan === "Elite") return true;
+    if (userStats.activePlan === "Pro") return true;
     if (toolCreditsLeft > 0) {
       const nextCount = toolCreditsLeft - 1;
       setToolCreditsLeft(nextCount);
@@ -424,7 +420,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const incrementAiQueriesUsed = (): boolean => {
-    if (userStats.activePlan === "Pro" || userStats.activePlan === "Elite") {
+    if (userStats.activePlan === "Pro") {
       recordActivity("query");
       showToast("⚡ AI query used — unlimited plan active", "info");
       return true;
@@ -455,7 +451,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     return false;
   };
 
-  const handleUpgradeAccount = async (plan: 'Free' | 'Basic' | 'Pro' | 'Elite') => {
+  const handleUpgradeAccount = async (plan: ActivePlan) => {
     showToast(`🎉 Upgraded to ${plan} plan! All features unlocked.`, "success");
     if (typeof window !== "undefined") {
       localStorage.setItem("bluebottlecap_active_plan", plan);
