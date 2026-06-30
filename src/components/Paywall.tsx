@@ -1,11 +1,77 @@
 "use client";
 
-import React from "react";
-import { Lock, Sparkles, Zap, Shield, ArrowRight, Layers, BookOpen } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Lock, Sparkles, Zap, Shield, ArrowRight, Layers, BookOpen, CalendarDays } from "lucide-react";
 
 interface PaywallProps {
   featureName: string;
   onUpgradeClick: () => void;
+}
+
+const EXAM_DATE_KEY = "bluebottlecap_exam_date";
+
+function daysUntil(iso: string): number | null {
+  const target = new Date(iso + "T00:00:00");
+  if (Number.isNaN(target.getTime())) return null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return Math.ceil((target.getTime() - today.getTime()) / 86_400_000);
+}
+
+function ExamCountdown() {
+  const [examDate, setExamDate] = useState<string | null>(null);
+  const [draft, setDraft] = useState("");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const saved = localStorage.getItem(EXAM_DATE_KEY);
+    if (saved) setExamDate(saved);
+  }, []);
+
+  const days = examDate ? daysUntil(examDate) : null;
+
+  const save = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!draft) return;
+    localStorage.setItem(EXAM_DATE_KEY, draft);
+    setExamDate(draft);
+  };
+
+  if (examDate && days !== null && days >= 0) {
+    const formatted = new Date(examDate + "T00:00:00").toLocaleDateString("en-IN", {
+      day: "numeric", month: "short", year: "numeric",
+    });
+    return (
+      <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-1.5 text-[13px] font-semibold text-orange-800">
+        <CalendarDays className="h-3.5 w-3.5" />
+        Your exam is on {formatted} —
+        <span className="rounded-md bg-orange-200/60 px-1.5 py-0.5 text-orange-900">
+          {days} {days === 1 ? "day" : "days"} away
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={save} className="mb-5 inline-flex flex-wrap items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-1.5 text-[13px] text-orange-800">
+      <CalendarDays className="h-3.5 w-3.5 text-orange-700" />
+      <span className="font-semibold">When's your exam?</span>
+      <input
+        type="date"
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        className="rounded-md border border-orange-200 bg-white px-2 py-0.5 text-[12.5px] text-orange-900 focus:outline-none"
+        min={new Date().toISOString().slice(0, 10)}
+      />
+      <button
+        type="submit"
+        className="rounded-md bg-orange-800 px-2.5 py-0.5 text-[12px] font-bold text-white hover:bg-orange-900 disabled:opacity-50"
+        disabled={!draft}
+      >
+        Save
+      </button>
+    </form>
+  );
 }
 
 export const Paywall: React.FC<PaywallProps> = ({ featureName, onUpgradeClick }) => {
@@ -76,14 +142,13 @@ export const Paywall: React.FC<PaywallProps> = ({ featureName, onUpgradeClick })
           </div>
 
           <div>
-            <span className="rounded-full bg-orange-50 border border-orange-100 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-orange-700">
-              🔒 Premium Workspace Feature
-            </span>
-            <h1 className="mt-4 font-display text-3xl font-black text-brand-navy md:text-4xl tracking-tight leading-tight">
-              Unlock the {featureName}
+            <ExamCountdown />
+            <h1 className="mt-1 font-display text-3xl font-black text-brand-navy md:text-4xl tracking-tight leading-tight">
+              You've hit the free limit.
             </h1>
-            <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-              This powerful tool is only available to subscribed students. Upgrade your plan to get full, unlimited access and accelerate your learning workflow.
+            <p className="mt-3 text-sm text-gray-500 leading-relaxed max-w-xl">
+              Free tier is 1 PDF and 5 chat messages — enough to feel what the product does, not enough to live on.
+              Get unlimited PDFs, mocks, flashcards, and a personalized study plan for <strong className="text-brand-navy">₹199/mo</strong> — or lock a full year at <strong className="text-brand-navy">₹1,499</strong> (≈₹125/mo) before exam crunch.
             </p>
           </div>
 
@@ -112,7 +177,7 @@ export const Paywall: React.FC<PaywallProps> = ({ featureName, onUpgradeClick })
               onClick={onUpgradeClick}
               className="group flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-brand-cobalt to-indigo-600 px-8 py-3.5 font-bold text-white shadow-lg shadow-brand-cobalt/25 hover:opacity-95 hover:shadow-xl transition cursor-pointer text-sm w-full sm:w-auto"
             >
-              <span>View Subscription Plans</span>
+              <span>Upgrade to Pro — ₹199/mo</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
             <button

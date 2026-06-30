@@ -7,10 +7,9 @@ export const PRODUCTS = {
   chapter_test: { amount: 12000, label: "Chapter Mock Test" }, // ₹120.00
   study_material: { amount: 28100, label: "Full Chapter-wise Study Material" }, // ₹281.00
   // Subscription plans (price in paise). Keep in sync with the Pricing page.
-  pro_monthly: { amount: 14900, label: "Pro plan — monthly" }, // ₹149
-  pro_annual: { amount: 11900, label: "Pro plan — annual (per month)" }, // ₹119
-  elite_monthly: { amount: 34900, label: "Power plan — monthly" }, // ₹349
-  elite_annual: { amount: 27900, label: "Power plan — annual (per month)" }, // ₹279
+  // pro_annual is billed as a single ₹1,499 upfront charge (~₹125/mo equivalent).
+  pro_monthly: { amount: 19900, label: "Pro plan — monthly" }, // ₹199
+  pro_annual: { amount: 149900, label: "Pro plan — annual (₹1,499 / year)" }, // ₹1,499
 } as const;
 
 export type ProductId = keyof typeof PRODUCTS;

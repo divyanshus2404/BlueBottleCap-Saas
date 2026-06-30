@@ -22,54 +22,35 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
     {
       id: "Free" as const,
       name: "Free",
-      desc: "Ideal for trying out the exam workspace",
+      desc: "Enough to feel the difference. Not enough to live on.",
       priceMonthly: 0,
       priceAnnual: 0,
       buttonText: "Start free",
       icon: "⚡",
       product: { monthly: null, annual: null },
       features: [
-        "3 daily AI tool runs",
-        "Access to 6 flagship exam tools",
-        "Client-side PDF optimization",
-        "Client-side image compression",
-        "Active student study streaks",
+        "1 PDF upload",
+        "5 chat messages per session",
+        "Watermarked exports",
+        "Study streak tracking",
       ],
     },
     {
       id: "Pro" as const,
       name: "Pro",
-      desc: "Perfect for active exam preparation",
-      priceMonthly: 149,
-      priceAnnual: 119,
+      desc: "The plan that actually gets you through exams.",
+      priceMonthly: 199,
+      priceAnnual: 125,
       buttonText: "Get Pro",
       isPopular: true,
       icon: "👑",
       product: { monthly: "pro_monthly", annual: "pro_annual" },
       features: [
-        "Everything in Free",
-        "Unlimited AI exam tool runs",
-        "JEE MCQ card practice sets",
-        "Day-by-day exam timetables",
-        "Notes to study flashcards",
-        "24/7 priority support",
-      ],
-    },
-    {
-      id: "Elite" as const,
-      name: "Power",
-      desc: "For serious scholars & power users",
-      priceMonthly: 349,
-      priceAnnual: 279,
-      buttonText: "Get Power",
-      icon: "🚀",
-      product: { monthly: "elite_monthly", annual: "elite_annual" },
-      features: [
-        "Everything in Pro",
-        "Full AI PDF Co-Pilot workspace",
-        "Highest-speed AI generations",
-        "B.Tech semester study blueprints",
-        "Early access to exam mocks",
+        "Unlimited PDFs and chat",
+        "Flashcards, summaries, mocks",
+        "Day-by-day study plan",
+        "No watermarks on exports",
+        "Priority support",
       ],
     },
   ];
@@ -198,7 +179,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
         </div>
 
         {/* Plans */}
-        <div className="grid items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto grid max-w-[760px] items-stretch gap-6 md:grid-cols-2">
           {plans.map((p) => {
             const isActive = userStats.activePlan === p.id;
             const priceToShow = getPlanPrice(p);
@@ -232,6 +213,11 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
                       {p.id === "Free" ? "/ forever free" : "/month"}
                     </span>
                   </div>
+                  {p.id !== "Free" && billingCycle === "annual" && (
+                    <p className="mt-1 text-[11.5px] text-[var(--color-ink-faint)]">
+                      ₹1,499 charged once, then ₹1,499/year. Cancel anytime.
+                    </p>
+                  )}
 
                   <ul className="mt-6 space-y-3 border-t border-[var(--color-line)] pt-5 text-left">
                     {p.features.map((f) => (

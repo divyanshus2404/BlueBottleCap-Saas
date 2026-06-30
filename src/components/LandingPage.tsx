@@ -73,19 +73,19 @@ const tools = [
 
 const plans = [
   {
-    name: "Free", price: "₹0", per: "/ forever", featured: false, cta: "Start free", view: "pdf-editor" as ActiveView,
-    desc: "Everything you need to try a real study session.",
-    items: ["3 AI tool runs a day", "All six core tools", "In-browser PDF & image tools", "Study streaks"],
+    name: "Free", price: "₹0", per: "/ forever", featured: false, cta: "Try it free", view: "pdf-editor" as ActiveView,
+    desc: "Enough to feel the difference. Not enough to live on.",
+    items: ["1 PDF upload", "5 chat messages per session", "Watermarked exports", "Study streak tracking"],
   },
   {
-    name: "Pro", price: "₹149", per: "/ month", featured: true, tag: "Most popular", cta: "Get Pro", view: "pricing" as ActiveView,
-    desc: "For active prep, when three runs a day isn't enough.",
-    items: ["Everything in Free", "Unlimited AI tool runs", "JEE practice card sets", "Day-by-day timetables", "Priority support"],
+    name: "Pro", price: "₹199", per: "/ month", featured: true, tag: "Most popular", cta: "Get Pro", view: "pricing" as ActiveView,
+    desc: "The plan that actually gets you through exams.",
+    items: ["Unlimited PDFs and chat", "Flashcards, summaries, mocks", "Day-by-day study plan", "No watermarks", "Priority support"],
   },
   {
-    name: "Power", price: "₹349", per: "/ month", featured: false, cta: "Get Power", view: "pricing" as ActiveView,
-    desc: "For serious scholars and the full PDF workspace.",
-    items: ["Everything in Pro", "Full PDF Copilot workspace", "Fastest AI generations", "B.Tech semester blueprints", "Early access to new mocks"],
+    name: "Pro · Annual", price: "₹1,499", per: "/ year", featured: false, tag: "Save 37%", cta: "Get yearly", view: "pricing" as ActiveView,
+    desc: "₹125/mo when paid yearly. Lock it in before exam crunch.",
+    items: ["Everything in Pro", "2 months free vs monthly", "Renewal-locked at this price", "Cancel anytime"],
   },
 ];
 

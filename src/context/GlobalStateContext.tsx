@@ -143,21 +143,21 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
       const savedHours = localStorage.getItem("bluebottlecap_hours_saved");
       const hoursSaved = savedHours ? parseFloat(savedHours) : 0.0;
       const savedCredits = localStorage.getItem("bluebottlecap_credits_left");
-      const creditsLeft = savedCredits ? parseInt(savedCredits, 10) : (savedPlan === "Free" ? 25 : 99999);
+      const creditsLeft = savedCredits ? parseInt(savedCredits, 10) : (savedPlan === "Free" ? 5 : 99999);
       const savedPurchases = localStorage.getItem("bluebottlecap_purchased_tests");
       const purchasedTests = savedPurchases ? JSON.parse(savedPurchases) : [];
       const studyMaterialUnlocked = localStorage.getItem("bluebottlecap_study_material_unlocked") === "true";
-      
+
       return { hoursSaved, streakDays, creditsLeft, activePlan: savedPlan, purchasedTests, studyMaterialUnlocked };
     }
-    return { hoursSaved: 0, streakDays: 0, creditsLeft: 25, activePlan: "Free", purchasedTests: [], studyMaterialUnlocked: false };
+    return { hoursSaved: 0, streakDays: 0, creditsLeft: 5, activePlan: "Free", purchasedTests: [], studyMaterialUnlocked: false };
   });
 
   const [usageStats, setUsageStats] = useState<UsageStats>(() => {
     if (typeof window !== "undefined") {
       const savedPlan = localStorage.getItem("bluebottlecap_active_plan") || "Free";
       const savedCredits = localStorage.getItem("bluebottlecap_credits_left");
-      const creditsLeft = savedCredits ? parseInt(savedCredits, 10) : (savedPlan === "Free" ? 25 : 99999);
+      const creditsLeft = savedCredits ? parseInt(savedCredits, 10) : (savedPlan === "Free" ? 5 : 99999);
       const savedPapers = localStorage.getItem("bluebottlecap_opened_papers");
       let papersCount = 1;
       if (savedPapers) {
@@ -167,12 +167,12 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
         } catch (e) {}
       }
       return {
-        aiQueries: { current: creditsLeft, max: savedPlan === "Free" ? 25 : savedPlan === "Basic" ? 100 : 99999, unit: "credits" },
-        pdfEdits: { current: papersCount, max: savedPlan === "Free" ? 3 : 99999, unit: "spots" },
-        storage: { current: 120, max: savedPlan === "Free" ? 500 : savedPlan === "Basic" ? 2000 : savedPlan === "Pro" ? 10000 : 50000, unit: "MB" },
+        aiQueries: { current: creditsLeft, max: savedPlan === "Free" ? 5 : savedPlan === "Basic" ? 100 : 99999, unit: "messages" },
+        pdfEdits: { current: papersCount, max: savedPlan === "Free" ? 1 : 99999, unit: "PDFs" },
+        storage: { current: 120, max: savedPlan === "Free" ? 50 : savedPlan === "Basic" ? 2000 : savedPlan === "Pro" ? 10000 : 50000, unit: "MB" },
       };
     }
-    return { aiQueries: { current: 25, max: 25, unit: "credits" }, pdfEdits: { current: 1, max: 3, unit: "spots" }, storage: { current: 120, max: 500, unit: "MB" } };
+    return { aiQueries: { current: 5, max: 5, unit: "messages" }, pdfEdits: { current: 0, max: 1, unit: "PDFs" }, storage: { current: 0, max: 50, unit: "MB" } };
   });
 
   useEffect(() => {
@@ -180,9 +180,9 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
       const activePlan = userStats.activePlan;
       return {
         ...prev,
-        aiQueries: { ...prev.aiQueries, max: activePlan === "Free" ? 25 : activePlan === "Basic" ? 100 : 99999 },
-        pdfEdits: { current: activePlan === "Free" ? openedPapers.length : 4, max: activePlan === "Free" ? 3 : 99999, unit: "spots" },
-        storage: { current: 120, max: activePlan === "Free" ? 500 : activePlan === "Basic" ? 2000 : activePlan === "Pro" ? 10000 : 50000, unit: "MB" }
+        aiQueries: { ...prev.aiQueries, max: activePlan === "Free" ? 5 : activePlan === "Basic" ? 100 : 99999 },
+        pdfEdits: { current: activePlan === "Free" ? openedPapers.length : 4, max: activePlan === "Free" ? 1 : 99999, unit: "PDFs" },
+        storage: { current: 120, max: activePlan === "Free" ? 50 : activePlan === "Basic" ? 2000 : activePlan === "Pro" ? 10000 : 50000, unit: "MB" }
       };
     });
   }, [openedPapers, userStats.activePlan]);
@@ -213,7 +213,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
           const planVal = data.plan || data.activePlan || "Free";
-          const creditsVal = typeof data.creditsRemaining === "number" ? data.creditsRemaining : (typeof data.creditsLeft === "number" ? data.creditsLeft : (planVal.toLowerCase().includes("free") ? 25 : 99999));
+          const creditsVal = typeof data.creditsRemaining === "number" ? data.creditsRemaining : (typeof data.creditsLeft === "number" ? data.creditsLeft : (planVal.toLowerCase().includes("free") ? 5 : 99999));
           const streakVal = typeof data.streak === "number" ? data.streak : (typeof data.streakDays === "number" ? data.streakDays : 0);
           const hoursVal = typeof data.hoursSaved === "number" ? data.hoursSaved : 0.0;
           const cleanPlan = planVal.replace(/\s*plan$/i, '');
@@ -435,19 +435,19 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     showToast(`🎉 Upgraded to ${plan} plan! All features unlocked.`, "success");
     if (typeof window !== "undefined") {
       localStorage.setItem("bluebottlecap_active_plan", plan);
-      localStorage.setItem("bluebottlecap_credits_left", plan === "Free" ? "25" : "99999");
+      localStorage.setItem("bluebottlecap_credits_left", plan === "Free" ? "5" : "99999");
     }
-    setUserStats((prev) => ({ ...prev, activePlan: plan, creditsLeft: plan === "Free" ? 25 : 99999 }));
+    setUserStats((prev) => ({ ...prev, activePlan: plan, creditsLeft: plan === "Free" ? 5 : 99999 }));
     setUsageStats((prev) => ({
-      aiQueries: { current: plan === "Free" ? 25 : plan === "Basic" ? 100 : 99999, max: plan === "Free" ? 25 : plan === "Basic" ? 100 : 99999, unit: "credits" },
-      pdfEdits: { current: prev.pdfEdits.current, max: plan === "Free" ? 5 : plan === "Basic" ? 20 : 99999, unit: "spots" },
-      storage: { current: prev.storage.current, max: plan === "Free" ? 500 : plan === "Basic" ? 2000 : plan === "Pro" ? 10000 : 50000, unit: "MB" },
+      aiQueries: { current: plan === "Free" ? 5 : plan === "Basic" ? 100 : 99999, max: plan === "Free" ? 5 : plan === "Basic" ? 100 : 99999, unit: "messages" },
+      pdfEdits: { current: prev.pdfEdits.current, max: plan === "Free" ? 1 : plan === "Basic" ? 20 : 99999, unit: "PDFs" },
+      storage: { current: prev.storage.current, max: plan === "Free" ? 50 : plan === "Basic" ? 2000 : plan === "Pro" ? 10000 : 50000, unit: "MB" },
     }));
 
     if (currentUser) {
       try {
         const userDocRef = doc(db, "users", currentUser.uid);
-        await updateDoc(userDocRef, { activePlan: plan, creditsLeft: plan === "Free" ? 25 : 99999, updatedAt: new Date().toISOString() });
+        await updateDoc(userDocRef, { activePlan: plan, creditsLeft: plan === "Free" ? 5 : 99999, updatedAt: new Date().toISOString() });
       } catch (err) {
         console.error("Failed to update user plan in Firestore:", err);
       }
