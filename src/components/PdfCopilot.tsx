@@ -202,7 +202,11 @@ export const PdfCopilot: React.FC<PdfCopilotProps> = ({
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const input = e.target;
+    const file = input.files?.[0];
+    // Reset so picking the same filename again still fires onChange
+    // (lets the user retry a failed upload or re-import an updated file).
+    input.value = "";
     if (!file) return;
 
     const paperId = `custom-${file.name}`;
@@ -720,7 +724,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                 <select
                   value={activePaperId}
                   onChange={(e) => handlePaperChange(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-gray-250 bg-white p-2 text-xs font-semibold text-brand-navy focus:outline-hidden cursor-pointer"
+                  className="mt-1.5 w-full rounded-xl border border-gray-300 bg-white p-2 text-xs font-semibold text-brand-navy focus:outline-hidden cursor-pointer"
                 >
                   {allPapers.map((paper) => (
                     <option key={paper.id} value={paper.id}>
@@ -772,7 +776,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
 
               <button
                 onClick={handleExportHighlights}
-                className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-brand-navy hover:bg-brand-cobalt text-white py-2 text-[11px] font-bold transition shadow-3xs cursor-pointer select-none"
+                className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-brand-navy hover:bg-brand-cobalt text-white py-2 text-[11px] font-bold transition shadow-sm cursor-pointer select-none"
                 title="Export Highlighted references to JSON"
               >
                 <Download className="w-3.5 h-3.5" />
@@ -789,7 +793,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                     <button
                       key={phraseItem.phrase}
                       onClick={() => applyCustomHighlight(phraseItem.phrase, phraseItem.color)}
-                      className="flex items-center gap-1.5 w-full text-left rounded-lg bg-white border border-gray-150 p-2 hover:bg-slate-50 text-[11px] transition"
+                      className="flex items-center gap-1.5 w-full text-left rounded-lg bg-white border border-gray-200 p-2 hover:bg-slate-50 text-[11px] transition"
                     >
                       <Sparkle className="w-3.5 h-3.5 text-brand-sky" />
                       <span className="truncate font-semibold capitalize text-gray-600">{phraseItem.phrase}</span>

@@ -21,6 +21,15 @@ function escapeHtml(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
+// RFC-light email check — lenient enough to accept common addresses,
+// strict enough to keep junk strings out of the SMTP envelope.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function validEmail(s: string | null | undefined): string | null {
+  if (!s) return null;
+  const trimmed = s.trim();
+  return trimmed && EMAIL_RE.test(trimmed) && trimmed.length <= 200 ? trimmed : null;
+}
+
 function buildTransport() {
   const host = process.env.SMTP_HOST;
   const port = Number(process.env.SMTP_PORT || 0);
@@ -32,6 +41,10 @@ function buildTransport() {
     port,
     secure: port === 465,
     auth: { user, pass },
+    // Surface SMTP failures fast instead of holding the request open for minutes.
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 20_000,
   });
 }
 
@@ -51,7 +64,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Message must be 3–4000 characters." }, { status: 400 });
   }
 
-  const email = (body.email || "").trim().slice(0, 200) || null;
+  const email = validEmail(body.email);
   const userId = (body.userId || null) as string | null;
   const path = (body.path || "").slice(0, 200);
   const userAgent = (body.userAgent || req.headers.get("user-agent") || "").slice(0, 300);
@@ -60,10 +73,22 @@ export async function POST(req: Request) {
   const to = process.env.FEEDBACK_TO || process.env.SMTP_USER;
 
   if (!transport || !to) {
-    // Email isn't configured. Log the feedback so it isn't lost while the
-    // operator finishes wiring SMTP, and still return success to the client.
+    // Email isn't configured. Record enough to recover the feedback after
+    // SMTP is wired, but redact PII (email + userId). Set FEEDBACK_DEBUG=1
+    // temporarily if you need the full payload for diagnostics.
+    const debug = process.env.FEEDBACK_DEBUG === "1";
     console.warn("[feedback] SMTP not configured — logging only.");
-    console.log("[feedback]", JSON.stringify({ message, email, userId, path, userAgent }));
+    if (debug) {
+      console.log("[feedback:debug]", JSON.stringify({ message, email, userId, path, userAgent }));
+    } else {
+      console.log("[feedback]", JSON.stringify({
+        message,
+        hasEmail: Boolean(email),
+        hasUserId: Boolean(userId),
+        path,
+        userAgent,
+      }));
+    }
     return NextResponse.json({ ok: true, delivery: "logged" });
   }
 
