@@ -24,8 +24,8 @@ function escapeHtml(s: string): string {
 // RFC-light email check — lenient enough to accept common addresses,
 // strict enough to keep junk strings out of the SMTP envelope.
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-function validEmail(s: string | null | undefined): string | null {
-  if (!s) return null;
+function validEmail(s: unknown): string | null {
+  if (typeof s !== "string") return null;
   const trimmed = s.trim();
   return trimmed && EMAIL_RE.test(trimmed) && trimmed.length <= 200 ? trimmed : null;
 }
@@ -81,12 +81,15 @@ export async function POST(req: Request) {
     if (debug) {
       console.log("[feedback:debug]", JSON.stringify({ message, email, userId, path, userAgent }));
     } else {
+      // Default log keeps presence flags + sizes only. The raw fields may
+      // contain PII (email in the message, route paths with ids, tokenised
+      // UAs); they're reserved for FEEDBACK_DEBUG=1.
       console.log("[feedback]", JSON.stringify({
-        message,
+        messageLength: message.length,
         hasEmail: Boolean(email),
         hasUserId: Boolean(userId),
-        path,
-        userAgent,
+        hasPath: Boolean(path),
+        hasUserAgent: Boolean(userAgent),
       }));
     }
     return NextResponse.json({ ok: true, delivery: "logged" });

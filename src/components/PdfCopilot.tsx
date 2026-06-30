@@ -722,7 +722,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
               <div className="mt-3">
                 <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400">Recent</span>
                 <select
-                  value={activePaperId}
+                  value={activePaper?.id ?? ""}
                   onChange={(e) => handlePaperChange(e.target.value)}
                   className="mt-1.5 w-full rounded-xl border border-gray-300 bg-white p-2 text-xs font-semibold text-brand-navy focus:outline-hidden cursor-pointer"
                 >
@@ -820,9 +820,10 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
               </div>
               <button
                 onClick={handleSimulateUpload}
-                className="rounded-xl bg-[var(--color-blue-ink)] hover:bg-[var(--color-blue-deep)] text-white font-bold py-2.5 px-4 text-xs transition shadow-sm cursor-pointer"
+                disabled={uploadingFile}
+                className="rounded-xl bg-[var(--color-blue-ink)] hover:bg-[var(--color-blue-deep)] text-white font-bold py-2.5 px-4 text-xs transition shadow-sm cursor-pointer disabled:bg-slate-300 disabled:cursor-not-allowed"
               >
-                Upload Document
+                {uploadingFile ? "Uploading..." : "Upload Document"}
               </button>
             </div>
           ) : (
@@ -1100,7 +1101,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                 Unlock Unlimited PDFs
               </h3>
               <p className="mt-2 text-xs text-gray-500 leading-normal max-w-xs mx-auto font-sans">
-                Free scholar accounts are limited to opening and analyzing **3 PDF documents**. Upgrade to Pro to unlock unlimited PDF uploads, annotations, and co-pilot chat history.
+                Free accounts are limited to <strong>1 PDF</strong> and <strong>5 chat messages per session</strong>. Upgrade to Pro for unlimited PDFs, chat, mocks, and flashcards.
               </p>
             </div>
 

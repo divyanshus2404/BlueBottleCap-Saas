@@ -28,7 +28,9 @@ export const DiagnosticTest: React.FC = () => {
     setAnswers(nextAnswers);
     if (idx + 1 < QUESTION_BANK.length) {
       setIdx(idx + 1);
-      setPicked(null);
+      // Restore the user's prior pick for that question if they're returning
+      // to it via Next after a Back — same behavior as the Back handler.
+      setPicked(nextAnswers[QUESTION_BANK[idx + 1].id] ?? null);
     } else {
       const r = scoreDiagnostic(nextAnswers);
       saveDiagnosticResult(r);
@@ -132,7 +134,7 @@ export const DiagnosticTest: React.FC = () => {
         <div>
           <p className="bbc-eyebrow">Your starting line</p>
           <h2 className="bbc-serif mt-3 text-[clamp(28px,4vw,40px)] leading-[1.1] tracking-[-.02em]">
-            You're <em className="not-italic italic font-medium text-[var(--color-blue-ink)]">{result.readiness}% ready</em> today.
+            You're <em className="italic font-medium text-[var(--color-blue-ink)]">{result.readiness}% ready</em> today.
           </h2>
           <p className="mt-4 text-[15px] text-[var(--color-ink-soft)]">
             Day-one number. It moves up as you study — and we'll show you exactly which

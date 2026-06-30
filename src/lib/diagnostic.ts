@@ -142,7 +142,9 @@ export function scoreDiagnostic(
   return {
     readiness,
     topicScores,
-    weakTopics: weakTopics.length ? weakTopics : sorted.slice(0, 1).map((t) => t.topic),
+    // Empty when every topic is ≥ 0.6 accuracy — the UI handles the
+    // "all-strong" case rather than inventing a weak topic to drill.
+    weakTopics,
     strongTopics,
     takenAt: new Date().toISOString(),
   };
@@ -163,5 +165,11 @@ export function loadDiagnosticResult(): DiagnosticResult | null {
 
 export function saveDiagnosticResult(r: DiagnosticResult): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(RESULT_KEY, JSON.stringify(r));
+  // Mirror loadDiagnosticResult's defensiveness — Safari private mode and
+  // quota-exceeded both throw on setItem and would crash the result transition.
+  try {
+    localStorage.setItem(RESULT_KEY, JSON.stringify(r));
+  } catch {
+    /* best-effort: storage unavailable or full */
+  }
 }

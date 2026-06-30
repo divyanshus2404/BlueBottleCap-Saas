@@ -61,7 +61,7 @@ function ExamCountdown() {
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
         className="rounded-md border border-orange-200 bg-white px-2 py-0.5 text-[12.5px] text-orange-900 focus:outline-none"
-        min={new Date().toISOString().slice(0, 10)}
+        min={new Date(Date.now() - new Date().getTimezoneOffset() * 60_000).toISOString().slice(0, 10)}
       />
       <button
         type="submit"

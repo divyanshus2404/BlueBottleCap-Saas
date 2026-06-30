@@ -40,7 +40,10 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       name: "Pro",
       desc: "The plan that actually gets you through exams.",
       priceMonthly: 199,
+      // Annual: display ~₹125/mo, but the ACTUAL one-shot charge is ₹1,499.
+      // Receipt + Razorpay use priceAnnualTotal; the per-month figure is UI only.
       priceAnnual: 125,
+      priceAnnualTotal: 1499,
       buttonText: "Get Pro",
       isPopular: true,
       icon: "👑",
@@ -173,7 +176,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
               ))}
             </div>
             <span className="rounded-full border border-[var(--color-line)] bg-[var(--color-blue-wash)] px-3 py-1 text-[11px] font-semibold text-[var(--color-blue-ink)]">
-              Save 20% with annual billing
+              Save 37% with annual billing
             </span>
           </div>
         </div>
@@ -213,9 +216,9 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
                       {p.id === "Free" ? "/ forever free" : "/month"}
                     </span>
                   </div>
-                  {p.id !== "Free" && billingCycle === "annual" && (
+                  {p.id !== "Free" && billingCycle === "annual" && "priceAnnualTotal" in p && (
                     <p className="mt-1 text-[11.5px] text-[var(--color-ink-faint)]">
-                      ₹1,499 charged once, then ₹1,499/year. Cancel anytime.
+                      ₹{p.priceAnnualTotal.toLocaleString("en-IN")} charged once, then ₹{p.priceAnnualTotal.toLocaleString("en-IN")}/year. Cancel anytime.
                     </p>
                   )}
 
@@ -323,15 +326,21 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
                   </div>
                   <div className="flex justify-between text-[var(--color-ink-soft)]">
                     <span>Duration</span>
-                    <span className="text-[var(--color-ink)]">1 month (renewable)</span>
+                    <span className="text-[var(--color-ink)]">
+                      {billingCycle === "monthly" ? "1 month (renewable)" : "12 months (renewable)"}
+                    </span>
                   </div>
                   <div className="mt-2 flex justify-between border-t border-dashed border-[var(--color-line)] pt-2 text-[14px] font-bold text-[var(--color-ink)]">
                     <span>Total charged</span>
                     <span>
                       ₹
-                      {billingCycle === "monthly"
-                        ? plans.find((pl) => pl.id === selectedPlan)?.priceMonthly
-                        : plans.find((pl) => pl.id === selectedPlan)?.priceAnnual}{" "}
+                      {(() => {
+                        const plan = plans.find((pl) => pl.id === selectedPlan);
+                        if (!plan) return 0;
+                        return billingCycle === "monthly"
+                          ? plan.priceMonthly
+                          : ("priceAnnualTotal" in plan ? plan.priceAnnualTotal : plan.priceAnnual);
+                      })()}{" "}
                       INR
                     </span>
                   </div>
