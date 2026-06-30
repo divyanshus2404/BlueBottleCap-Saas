@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "@/src/firebase";
 import { useAuth } from "@/src/context/AuthContext";
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -45,15 +43,21 @@ export const FeedbackWidget: React.FC = () => {
     setStatus("sending");
     setErrMsg(null);
     try {
-      if (!db) throw new Error("Feedback storage isn't available right now.");
-      await addDoc(collection(db, "feedback"), {
-        message: text.slice(0, 4000),
-        email: (email.trim() || currentUser?.email || "").slice(0, 200) || null,
-        userId: currentUser?.uid || null,
-        path: pathname,
-        userAgent: typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 300) : null,
-        createdAt: serverTimestamp(),
+      const res = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: text.slice(0, 4000),
+          email: (email.trim() || currentUser?.email || "").slice(0, 200) || null,
+          userId: currentUser?.uid || null,
+          path: pathname,
+          userAgent: typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 300) : null,
+        }),
       });
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(data.error || `Request failed (${res.status}).`);
+      }
       setStatus("sent");
       setMessage("");
       setEmail("");
