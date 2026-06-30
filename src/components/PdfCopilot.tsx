@@ -1017,6 +1017,12 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
           <div className="grow overflow-y-auto max-h-[350px] min-h-[190px] pr-1 space-y-3 pb-3">
             {chatMessages.map((msg) => {
               const isAi = msg.role === "assistant";
+              const shareToWhatsApp = () => {
+                if (typeof window === "undefined") return;
+                const trimmed = msg.content.length > 800 ? msg.content.slice(0, 800) + "…" : msg.content;
+                const text = `${trimmed}\n\n— answered by BlueBottleCap · https://bluebottlecap.com`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+              };
               return (
                 <div
                   key={msg.id}
@@ -1027,9 +1033,24 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                   }`}
                 >
                   <div className="font-sans whitespace-pre-wrap">{msg.content}</div>
-                  <span className={`mt-1.5 block text-[8px] uppercase select-none text-right ${isAi ? "text-gray-400" : "text-white/50"}`}>
-                    {msg.timestamp}
-                  </span>
+                  <div className={`mt-1.5 flex items-center justify-between gap-2 ${isAi ? "" : "flex-row-reverse"}`}>
+                    <span className={`text-[8px] uppercase select-none ${isAi ? "text-gray-400" : "text-white/50"}`}>
+                      {msg.timestamp}
+                    </span>
+                    {isAi && (
+                      <button
+                        type="button"
+                        onClick={shareToWhatsApp}
+                        title="Share this answer on WhatsApp"
+                        className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-emerald-700 transition hover:bg-emerald-100"
+                      >
+                        <svg width="9" height="9" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                          <path d="M8 0a8 8 0 0 0-6.9 12l-1.1 4 4.1-1A8 8 0 1 0 8 0zm4.6 11.3c-.2.5-1.1 1-1.5 1-.4 0-.9.1-1.5-.1-1.6-.6-2.7-1.7-3.3-2.4-.6-.7-1.4-1.8-1.4-2.7s.5-1.4.7-1.6c.2-.2.4-.2.6-.2h.4c.1 0 .3 0 .5.4l.7 1.7c.1.2.1.4 0 .5l-.3.4-.2.3c-.1.1-.2.2 0 .4.2.3.7 1 1.3 1.5.7.5 1.3.7 1.5.8.2.1.4.1.5-.1l.6-.7c.1-.2.3-.2.5-.1.2.1 1.4.7 1.6.8.2.1.3.2.4.3.1.2.1.7 0 1z"/>
+                        </svg>
+                        Share
+                      </button>
+                    )}
+                  </div>
                 </div>
               );
             })}
