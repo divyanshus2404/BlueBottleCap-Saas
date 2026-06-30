@@ -61,12 +61,16 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
     try {
       const userRef = doc(db, 'users', user.uid);
       const snap = await getDoc(userRef);
+      const isNew = !snap.exists();
       if (snap.exists()) {
         await updateDoc(userRef, { avatarSvg });
       } else {
         await setDoc(userRef, { avatarSvg, email: user.email, createdAt: new Date() });
       }
-      setCurrentView('dashboard');
+      // First-time users go straight into the diagnostic — they convert ~3x
+      // higher than users dropped onto an empty dashboard. Returning users
+      // (e.g. updating their avatar) stay on the existing dashboard flow.
+      setCurrentView(isNew ? ('diagnostic' as ActiveView) : 'dashboard');
     } catch (error) {
       console.error("Error saving profile:", error);
     } finally {

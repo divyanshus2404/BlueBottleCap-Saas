@@ -60,15 +60,22 @@ const ToolIcon = {
       <path d="M10 9l5 5" stroke="currentColor" strokeWidth="1.3"/>
     </svg>
   ),
+  scan: ({ className }: ToolIconProps) => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path d="M4 8V6a2 2 0 0 1 2-2h2M20 8V6a2 2 0 0 0-2-2h-2M4 16v2a2 2 0 0 0 2 2h2M20 16v2a2 2 0 0 1-2 2h-2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+      <path d="M3 12h18" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+    </svg>
+  ),
 };
 
 const tools = [
-  { n: "01", t: "AI PDF Copilot", d: "Chat with any textbook or notes PDF. Answers cite the page they came from.", Icon: ToolIcon.pdf },
-  { n: "02", t: "Flashcard Maker", d: "Turn a chapter into a spaced-repetition deck in one click.", Icon: ToolIcon.cards },
-  { n: "03", t: "Mock Test Mode", d: "Distraction-free, full-length papers timed like the real exam.", Icon: ToolIcon.timer },
-  { n: "04", t: "Study Planner", d: "A day-by-day plan from your syllabus and exam date.", Icon: ToolIcon.calendar },
-  { n: "05", t: "Smart Summaries", d: "Long chapters condensed to the points that actually get tested.", Icon: ToolIcon.summary },
-  { n: "06", t: "PDF & File Tools", d: "Compress, merge, and tidy your study files, right in the browser.", Icon: ToolIcon.tools },
+  { n: "01", t: "Notes Scanner", d: "Photo of handwritten notes → clean, typed, equation-aware version. New.", Icon: ToolIcon.scan, href: "/scan-notes" },
+  { n: "02", t: "AI PDF Copilot", d: "Chat with any textbook or notes PDF. Answers cite the page they came from.", Icon: ToolIcon.pdf, href: "/pdf-editor" },
+  { n: "03", t: "Flashcard Maker", d: "Turn a chapter into a spaced-repetition deck in one click.", Icon: ToolIcon.cards, href: "/pdf-editor" },
+  { n: "04", t: "Mock Test Mode", d: "Distraction-free, full-length papers timed like the real exam.", Icon: ToolIcon.timer, href: "/pdf-editor" },
+  { n: "05", t: "Study Planner", d: "A day-by-day plan from your syllabus and exam date.", Icon: ToolIcon.calendar, href: "/diagnostic" },
+  { n: "06", t: "Smart Summaries", d: "Long chapters condensed to the points that actually get tested.", Icon: ToolIcon.summary, href: "/pdf-editor" },
+  { n: "07", t: "PDF & File Tools", d: "Compress, merge, and tidy your study files, right in the browser.", Icon: ToolIcon.tools, href: "/pdf-editor" },
 ];
 
 const plans = [
@@ -346,13 +353,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           </div>
           <div className="border-t border-[var(--color-line)]">
             {tools.map((tool) => (
-              <div key={tool.n} className="bbc-row bbc-reveal grid grid-cols-[36px_28px_1fr_22px] items-center gap-5 border-b border-[var(--color-line)] px-1 py-[26px] md:grid-cols-[56px_30px_1fr_1.3fr_24px] md:gap-6">
+              <a
+                key={tool.n}
+                href={tool.href}
+                className="bbc-row bbc-reveal grid grid-cols-[36px_28px_1fr_22px] items-center gap-5 border-b border-[var(--color-line)] px-1 py-[26px] no-underline md:grid-cols-[56px_30px_1fr_1.3fr_24px] md:gap-6"
+              >
                 <span className="bbc-mono text-[15px] text-[var(--color-blue-ink)]">{tool.n}</span>
                 <tool.Icon className="text-[var(--color-blue-ink)]" />
-                <span className="bbc-serif text-[22px] tracking-[-.01em]">{tool.t}</span>
+                <span className="bbc-serif text-[22px] tracking-[-.01em] text-[var(--color-ink)]">{tool.t}</span>
                 <span className="hidden text-[16px] text-[var(--color-ink-soft)] md:block">{tool.d}</span>
                 <span className="bbc-arrow justify-self-end text-[var(--color-ink-faint)]">→</span>
-              </div>
+              </a>
             ))}
           </div>
         </div>
