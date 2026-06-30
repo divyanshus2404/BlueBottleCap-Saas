@@ -13,10 +13,12 @@
   --font-grotesk: "Hanken Grotesk", system-ui, sans-serif;
   --font-plex: "IBM Plex Mono", monospace;
 
-  --color-brand-navy: #0F172A;
-  --color-brand-sky: #0EA5E9;
-  --color-brand-cobalt: #2563EB;
-
+  /* Landing palette is the source of truth — the legacy "brand-*"
+     tokens used across older pages (Dashboard, PdfCopilot, etc.) are
+     remapped onto it so the whole site reads as one design system
+     instead of three. Do NOT add new uses of brand-* — they're kept
+     only for backwards compatibility with components we haven't
+     migrated yet. New components use the bbc tokens directly. */
   --color-paper: #F5F4EF;
   --color-paper-card: #FBFAF6;
   --color-ink: #181A1F;
@@ -27,6 +29,20 @@
   --color-blue-ink: #1B3FCB;
   --color-blue-deep: #122A8A;
   --color-blue-wash: #EDEFFB;
+
+  /* Legacy aliases — point at the landing palette so existing
+     brand-navy / brand-cobalt / brand-sky classes inherit it. */
+  --color-brand-navy: #181A1F;    /* = ink */
+  --color-brand-sky: #1B3FCB;     /* = blue-ink */
+  --color-brand-cobalt: #1B3FCB;  /* = blue-ink */
+}
+
+/* App-wide defaults: page background and base typography now match
+   the landing without requiring every page to manually apply .bbc. */
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-grotesk), system-ui, sans-serif;
 }
 
 .fade-in {

@@ -81,7 +81,7 @@ export const Paywall: React.FC<PaywallProps> = ({ featureName, onUpgradeClick })
         return <Layers className="w-8 h-8 text-brand-cobalt" />;
       case "ai pdf reader":
       case "pdf-editor":
-        return <BookOpen className="w-8 h-8 text-indigo-650" />;
+        return <BookOpen className="w-8 h-8 text-[var(--color-blue-ink)]" />;
       case "tools suite":
       case "tools":
         return <Sparkles className="w-8 h-8 text-purple-650" />;
@@ -122,12 +122,12 @@ export const Paywall: React.FC<PaywallProps> = ({ featureName, onUpgradeClick })
   };
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-16 md:py-24 fade-in">
+    <div className="bbc mx-auto max-w-4xl px-4 py-16 md:py-24 fade-in">
       <div className="relative overflow-hidden rounded-3xl border border-gray-150 bg-white p-8 md:p-12 shadow-xl">
         
         {/* Glow background effects */}
-        <div className="absolute -top-24 -left-24 -z-10 h-72 w-72 rounded-full bg-brand-cobalt/5 blur-3xl"></div>
-        <div className="absolute -bottom-24 -right-24 -z-10 h-72 w-72 rounded-full bg-indigo-500/5 blur-3xl"></div>
+        <div className="absolute -top-24 -left-24 -z-10 h-72 w-72 rounded-full bg-[var(--color-blue-ink)]/5 blur-3xl"></div>
+        <div className="absolute -bottom-24 -right-24 -z-10 h-72 w-72 rounded-full bg-[var(--color-blue-deep)]/5 blur-3xl"></div>
 
         <div className="flex flex-col items-center text-center max-w-2xl mx-auto space-y-6">
           
@@ -136,7 +136,7 @@ export const Paywall: React.FC<PaywallProps> = ({ featureName, onUpgradeClick })
             <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-slate-50 border border-gray-100 shadow-inner">
               {getFeatureIcon()}
             </div>
-            <div className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-tr from-brand-navy to-slate-800 text-white shadow-lg ring-4 ring-white">
+            <div className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--color-ink)] text-white shadow-lg ring-4 ring-white">
               <Lock className="w-4 h-4" />
             </div>
           </div>
@@ -175,7 +175,7 @@ export const Paywall: React.FC<PaywallProps> = ({ featureName, onUpgradeClick })
           <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
             <button
               onClick={onUpgradeClick}
-              className="group flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-brand-cobalt to-indigo-600 px-8 py-3.5 font-bold text-white shadow-lg shadow-brand-cobalt/25 hover:opacity-95 hover:shadow-xl transition cursor-pointer text-sm w-full sm:w-auto"
+              className="bbc-btn bbc-btn-primary group justify-center gap-2 px-8 py-3.5 text-sm w-full sm:w-auto shadow-lg shadow-[var(--color-blue-ink)]/20"
             >
               <span>Upgrade to Pro — ₹199/mo</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

@@ -48,7 +48,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete, userStats })
   ];
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 md:py-16 fade-in">
+    <div className="bbc mx-auto max-w-3xl px-4 py-12 md:py-16 fade-in">
       {/* Onboarding progress tracking */}
       <div className="mb-8 flex items-center justify-between">
         <span className="text-xs font-bold uppercase tracking-widest text-brand-cobalt">
@@ -140,13 +140,13 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete, userStats })
 
           <div className="space-y-4">
             <div className="flex items-start gap-4 rounded-xl border border-gray-100 bg-slate-50/50 p-4">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]">
                 <Sparkles className="w-5 h-5" />
               </div>
               <div className="grow">
                 <div className="flex items-center justify-between">
                   <h3 className="font-semibold text-brand-navy">25 Monthly AI Co-Pilot Queries</h3>
-                  <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-[11px] font-bold text-indigo-700">
+                  <span className="rounded-full bg-[var(--color-blue-wash)] px-2 py-0.5 text-[11px] font-bold text-[var(--color-blue-deep)]">
                     25 / month
                   </span>
                 </div>
@@ -257,7 +257,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete, userStats })
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <button
               onClick={onComplete}
-              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-linear-to-r from-brand-cobalt to-indigo-600 px-8 py-3.5 font-semibold text-white shadow-md shadow-brand-cobalt/20 hover:opacity-90 hover:shadow-lg transition duration-200 cursor-pointer text-sm"
+              className="bbc-btn bbc-btn-primary w-full sm:w-auto justify-center gap-2 px-8 py-3.5 text-sm"
             >
               <Logo className="w-4.5 h-4.5" transparent={true} />
               <span>Launch My Workspace Dashboard</span>

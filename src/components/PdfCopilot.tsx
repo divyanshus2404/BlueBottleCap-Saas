@@ -655,12 +655,12 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
   };
 
   return (
-    <div className="w-full px-4 py-8 sm:px-6 lg:px-8 fade-in min-h-[calc(100vh-73px)]">
+    <div className="bbc w-full px-4 py-8 sm:px-6 lg:px-8 fade-in min-h-[calc(100vh-73px)]">
       
       {onGoBack && (
         <button 
           onClick={onGoBack}
-          className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-indigo-600 transition-colors mb-4 group cursor-pointer"
+          className="flex items-center gap-1.5 text-xs font-bold text-[var(--color-ink-soft)] hover:text-[var(--color-blue-ink)] transition-colors mb-4 group cursor-pointer"
         >
           <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           Back to Dashboard
@@ -693,7 +693,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
             <button
               onClick={handleSimulateUpload}
               disabled={uploadingFile}
-              className="w-full text-center rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 text-xs font-bold transition shadow-sm cursor-pointer disabled:bg-slate-300 disabled:cursor-not-allowed"
+              className="w-full text-center rounded-xl bg-[var(--color-blue-ink)] hover:bg-[var(--color-blue-deep)] text-white py-2.5 text-xs font-bold transition shadow-sm cursor-pointer disabled:bg-slate-300 disabled:cursor-not-allowed"
             >
               {uploadingFile ? "Uploading..." : "+ Upload Document"}
             </button>
@@ -705,7 +705,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
               accept=".pdf,.txt,.md,.png,.jpg,.jpeg,.webp"
             />
             {uploadingFile && (
-              <div className="mt-2 p-2.5 rounded-xl border border-indigo-100 bg-indigo-50/30 text-[9px] font-mono text-indigo-900 space-y-1">
+              <div className="mt-2 p-2.5 rounded-xl border border-[var(--color-line)] bg-[var(--color-blue-wash)]/60 text-[9px] font-mono text-[var(--color-blue-deep)] space-y-1">
                 <div className="flex items-center justify-between font-bold">
                   <span className="truncate max-w-[100px]">{uploadFilename}</span>
                   <span>{uploadProgress}%</span>
@@ -809,7 +809,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
         <div className="lg:col-span-6 flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
           {!activePaper ? (
             <div className="flex flex-col items-center justify-center grow py-12 text-center space-y-4">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-8 ring-indigo-50/50">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)] ring-8 ring-[var(--color-blue-wash)]/60">
                 <BookOpen className="h-8 w-8 animate-pulse" />
               </div>
               <div>
@@ -820,7 +820,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
               </div>
               <button
                 onClick={handleSimulateUpload}
-                className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 text-xs transition shadow-sm cursor-pointer"
+                className="rounded-xl bg-[var(--color-blue-ink)] hover:bg-[var(--color-blue-deep)] text-white font-bold py-2.5 px-4 text-xs transition shadow-sm cursor-pointer"
               >
                 Upload Document
               </button>
@@ -882,7 +882,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                             paragraphElements.push(
                               <mark 
                                 key={hl.id} 
-                                className={`font-semibold bg-indigo-100 px-1 text-indigo-900 border-b-2 border-indigo-500 cursor-pointer rounded-xs`}
+                                className={`font-semibold bg-[var(--color-blue-wash)] px-1 text-[var(--color-blue-deep)] border-b-2 border-[var(--color-blue-ink)] cursor-pointer rounded-xs`}
                                 onClick={() => {
                                   setSelectedText(hlText);
                                   setTooltipPos({ x: 200, y: 150 });
@@ -1091,7 +1091,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-xs fade-in">
           <div className="max-w-md w-full bg-white rounded-3xl p-6.5 shadow-2xl relative border border-slate-100 text-center space-y-4">
             
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-4 ring-indigo-500/5 animate-bounce-slow">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)] ring-4 ring-[var(--color-blue-ink)]/5 animate-bounce-slow">
               <BookOpen className="h-6 w-6" />
             </div>
 
@@ -1136,7 +1136,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                   setShowPdfPaywallModal(false);
                   onUpgradeClick();
                 }}
-                className="w-1/2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 text-xs transition shadow-sm select-none cursor-pointer"
+                className="w-1/2 rounded-xl bg-[var(--color-blue-ink)] hover:bg-[var(--color-blue-deep)] text-white font-bold py-3 text-xs transition shadow-sm select-none cursor-pointer"
               >
                 Upgrade Now
               </button>
