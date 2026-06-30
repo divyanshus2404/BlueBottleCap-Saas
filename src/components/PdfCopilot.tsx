@@ -683,125 +683,122 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
       <div className="grid gap-6 lg:grid-cols-12 min-h-[640px]">
         
         {/* PANEL 1: Left Index Panel (2 cols) */}
-        <div className="lg:col-span-2 rounded-2xl border border-gray-100 bg-slate-50/50 p-4 space-y-6">
+        <div className="lg:col-span-2 rounded-2xl border border-gray-100 bg-slate-50/50 p-4 space-y-5">
+          {/* Always: Upload is hero */}
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400">Select PDF Paper</span>
-            <div className="mt-2 flex flex-col gap-2">
-              <select
-                value={activePaperId}
-                onChange={(e) => handlePaperChange(e.target.value)}
-                disabled={allPapers.length === 0}
-                className="w-full rounded-xl border border-gray-250 bg-white p-2 text-xs font-semibold text-brand-navy focus:outline-hidden cursor-pointer disabled:bg-slate-100 disabled:cursor-not-allowed"
-              >
-                {allPapers.length === 0 ? (
-                  <option value="">No documents loaded</option>
-                ) : (
-                  allPapers.map((paper) => (
+            <button
+              onClick={handleSimulateUpload}
+              disabled={uploadingFile}
+              className="w-full text-center rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 text-xs font-bold transition shadow-sm cursor-pointer disabled:bg-slate-300 disabled:cursor-not-allowed"
+            >
+              {uploadingFile ? "Uploading..." : "+ Upload Document"}
+            </button>
+            <input
+              type="file"
+              id="pdf-copilot-file-input"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+              accept=".pdf,.txt,.md,.png,.jpg,.jpeg,.webp"
+            />
+            {uploadingFile && (
+              <div className="mt-2 p-2.5 rounded-xl border border-indigo-100 bg-indigo-50/30 text-[9px] font-mono text-indigo-900 space-y-1">
+                <div className="flex items-center justify-between font-bold">
+                  <span className="truncate max-w-[100px]">{uploadFilename}</span>
+                  <span>{uploadProgress}%</span>
+                </div>
+                <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
+                  <div className="bg-brand-cobalt h-full transition-all duration-150" style={{ width: `${uploadProgress}%` }}></div>
+                </div>
+                <span className="text-[7.5px] text-brand-cobalt animate-pulse block">{uploadStatus}</span>
+              </div>
+            )}
+
+            {/* Recent doc picker only when there are docs */}
+            {allPapers.length > 0 && (
+              <div className="mt-3">
+                <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400">Recent</span>
+                <select
+                  value={activePaperId}
+                  onChange={(e) => handlePaperChange(e.target.value)}
+                  className="mt-1.5 w-full rounded-xl border border-gray-250 bg-white p-2 text-xs font-semibold text-brand-navy focus:outline-hidden cursor-pointer"
+                >
+                  {allPapers.map((paper) => (
                     <option key={paper.id} value={paper.id}>
                       {paper.title.length > 25 ? `${paper.title.substring(0, 22)}...` : paper.title}
                     </option>
-                  ))
-                )}
-              </select>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+
+          {/* Only when a paper is loaded: pages, export, advanced */}
+          {activePaper && (
+            <>
+              <div>
+                <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400">Pages</span>
+                <div className="mt-3 space-y-1.5 max-h-[320px] overflow-y-auto pr-1">
+                  {activePaper.pages.map((p: any) => {
+                    const active = currentPage === p.pageIndex;
+                    return (
+                      <button
+                        key={p.pageIndex}
+                        onClick={() => {
+                          setCurrentPage(p.pageIndex);
+                          setSelectedText("");
+                          setTooltipPos(null);
+                        }}
+                        className={`w-full text-left rounded-lg p-2.5 transition-all text-xs border ${
+                          active
+                            ? "bg-white border-brand-cobalt text-brand-cobalt shadow-xs font-bold"
+                            : "bg-transparent border-transparent text-gray-500 hover:bg-slate-100 hover:text-gray-800"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-[10px] ${
+                            active ? "bg-brand-cobalt text-white" : "bg-slate-200 text-gray-600"
+                          }`}>
+                            {p.pageIndex}
+                          </span>
+                          <span className="truncate leading-tight uppercase font-display select-none">
+                            Page {p.pageIndex}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               <button
-                onClick={handleSimulateUpload}
-                disabled={uploadingFile}
-                className="w-full text-center rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 py-1.5 text-[10px] font-extrabold transition cursor-pointer disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
+                onClick={handleExportHighlights}
+                className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-brand-navy hover:bg-brand-cobalt text-white py-2 text-[11px] font-bold transition shadow-3xs cursor-pointer select-none"
+                title="Export Highlighted references to JSON"
               >
-                {uploadingFile ? "Uploading..." : "📁 Upload Custom File"}
+                <Download className="w-3.5 h-3.5" />
+                <span>Export Highlights</span>
               </button>
-              <input 
-                type="file" 
-                id="pdf-copilot-file-input" 
-                style={{ display: "none" }} 
-                onChange={handleFileChange} 
-                accept=".pdf,.txt,.md,.png,.jpg,.jpeg,.webp" 
-              />
-              {uploadingFile && (
-                <div className="mt-2 p-2.5 rounded-xl border border-indigo-100 bg-indigo-50/30 text-[9px] font-mono text-indigo-900 space-y-1">
-                  <div className="flex items-center justify-between font-bold">
-                    <span className="truncate max-w-[100px]">{uploadFilename}</span>
-                    <span>{uploadProgress}%</span>
-                  </div>
-                  <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
-                    <div className="bg-brand-cobalt h-full transition-all duration-150" style={{ width: `${uploadProgress}%` }}></div>
-                  </div>
-                  <span className="text-[7.5px] text-brand-cobalt animate-pulse block">{uploadStatus}</span>
-                </div>
-              )}
-            </div>
-          </div>
 
-          <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400">Section Nodes</span>
-            <div className="mt-3 space-y-2">
-              {activePaper ? (
-                activePaper.pages.map((p: any) => {
-                  const active = currentPage === p.pageIndex;
-                  return (
+              <details className="group">
+                <summary className="cursor-pointer text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400 hover:text-gray-600 list-none flex items-center justify-between">
+                  <span>Quick Highlights</span>
+                  <span className="text-gray-300 group-open:rotate-90 transition-transform">›</span>
+                </summary>
+                <div className="mt-3 space-y-2">
+                  {simulationPhrases.map(phraseItem => (
                     <button
-                      key={p.pageIndex}
-                      onClick={() => {
-                        setCurrentPage(p.pageIndex);
-                        setSelectedText("");
-                        setTooltipPos(null);
-                      }}
-                      className={`w-full text-left rounded-xl p-3.5 transition-all text-xs border ${
-                        active
-                          ? "bg-white border-brand-cobalt text-brand-cobalt shadow-xs font-bold"
-                          : "bg-transparent border-transparent text-gray-500 hover:bg-slate-100 hover:text-gray-800"
-                      }`}
+                      key={phraseItem.phrase}
+                      onClick={() => applyCustomHighlight(phraseItem.phrase, phraseItem.color)}
+                      className="flex items-center gap-1.5 w-full text-left rounded-lg bg-white border border-gray-150 p-2 hover:bg-slate-50 text-[11px] transition"
                     >
-                      <div className="flex items-center gap-2">
-                        <span className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-[10px] ${
-                          active ? "bg-brand-cobalt text-white" : "bg-slate-200 text-gray-600"
-                        }`}>
-                          {p.pageIndex}
-                        </span>
-                        <span className="truncate leading-tight uppercase font-display select-none">
-                          Page {p.pageIndex}
-                        </span>
-                      </div>
+                      <Sparkle className="w-3.5 h-3.5 text-brand-sky" />
+                      <span className="truncate font-semibold capitalize text-gray-600">{phraseItem.phrase}</span>
                     </button>
-                  );
-                })
-              ) : (
-                <div className="text-[10px] text-gray-400 font-sans italic p-3 bg-slate-100/50 rounded-xl text-center border border-dashed border-slate-200">
-                  Nodes will appear after upload.
+                  ))}
                 </div>
-              )}
-            </div>
-          </div>
-
-          <div className="mt-5 border-t border-gray-200 pt-5">
-            <button
-              onClick={handleExportHighlights}
-              className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-brand-navy hover:bg-brand-cobalt text-white py-2.5 text-xs font-bold transition shadow-3xs cursor-pointer select-none"
-              title="Export Highlighted references to JSON"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Export Highlights</span>
-            </button>
-          </div>
-
-          <div className="mt-8 border-t border-gray-200 pt-6 animate-pulse-slow">
-            <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-gray-400">Simulation Clicks</span>
-            <p className="mt-1 text-[11px] text-gray-400 leading-normal">
-              Click to highlighting difficult terms inside the document text body:
-            </p>
-            <div className="mt-3.5 space-y-2">
-              {simulationPhrases.map(phraseItem => (
-                <button
-                  key={phraseItem.phrase}
-                  onClick={() => applyCustomHighlight(phraseItem.phrase, phraseItem.color)}
-                  className="flex items-center gap-1.5 w-full text-left rounded-lg bg-white border border-gray-150 p-2 hover:bg-slate-50 text-[11px] transition"
-                >
-                  <Sparkle className="w-3.5 h-3.5 text-brand-sky" />
-                  <span className="truncate font-semibold capitalize text-gray-600">{phraseItem.phrase}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+              </details>
+            </>
+          )}
         </div>
 
         {/* PANEL 2: Center Document Body Panel (6 cols) */}
@@ -814,7 +811,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
               <div>
                 <h3 className="font-display text-lg font-bold text-brand-navy">No Documents Uploaded</h3>
                 <p className="mt-1 text-xs text-gray-500 max-w-sm font-sans">
-                  Upload your research paper, text file, notes, or diagrams using the "+ Upload Custom File" button on the left sidebar to start.
+                  Drop a PDF, notes file, or image to start. Ask questions on the right — answers cite the page they came from.
                 </p>
               </div>
               <button

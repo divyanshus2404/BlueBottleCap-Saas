@@ -6,8 +6,15 @@ import { usePathname, useRouter } from "next/navigation";
 import { Zap, Sparkles, BookOpen, Layers, Menu, X, Check, Award, Lock, Timer, Sun, Moon, CreditCard, Info, Map, Home, ChevronLeft } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useGlobalState } from "../context/GlobalStateContext";
-import { Logo } from "./Logo";
 import { MagneticWrapper } from "./MagneticWrapper";
+
+const Seal = ({ size = 26 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden="true">
+    <circle cx="16" cy="16" r="15" stroke="var(--color-ink)" strokeWidth="1.3" />
+    <path d="M13.4 7.5h5.2v1.7h-1v2.2l1.5 2.8v8.8c0 .7-.5 1.2-1.2 1.2h-4.8c-.7 0-1.2-.5-1.2-1.2v-8.8l1.5-2.8V9.2h-1V7.5z" stroke="var(--color-blue-ink)" strokeWidth="1.3" strokeLinejoin="round" />
+    <path d="M13.5 7.5h5" stroke="var(--color-blue-ink)" strokeWidth="1.8" strokeLinecap="round" />
+  </svg>
+);
 
 interface NavigationProps {
   onLoginClick: () => void;
@@ -45,20 +52,16 @@ export const Navigation: React.FC<NavigationProps> = ({
             </button>
           )}
           <MagneticWrapper strength={30}>
-          <Link 
+          <Link
             href="/"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex cursor-pointer items-center gap-2.5 transition-opacity hover:opacity-90"
+            className="flex cursor-pointer items-center gap-[11px] transition-opacity hover:opacity-90"
+            aria-label="BlueBottleCap home"
           >
-            <Logo className="h-10 w-10 text-[var(--color-blue-ink)]" />
-            <div>
-              <span className="bbc-serif text-[19px] tracking-[-.01em] text-[var(--color-ink)]">
-                Blue<span className="text-[var(--color-blue-ink)]">BottleCap</span>
-              </span>
-              <span className="bbc-eyebrow block text-[10px] leading-none">
-                STUDENT AI SUITE
-              </span>
-            </div>
+            <Seal size={28} />
+            <span className="text-[17px] font-semibold tracking-[-.01em] text-[var(--color-ink)]">
+              BlueBottleCap
+            </span>
           </Link>
         </MagneticWrapper>
         </div>
