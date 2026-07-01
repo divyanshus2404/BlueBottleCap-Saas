@@ -183,19 +183,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         <div className="bbc-grid" aria-hidden="true" />
         <div className="relative z-[2] mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-10 px-7 py-[60px] md:grid-cols-[1fr_1.05fr] md:py-[76px]">
           <div>
-            <p className="bbc-eyebrow bbc-reveal">For JEE · B.Tech · GATE</p>
+            <p className="bbc-eyebrow bbc-reveal">For JEE · B.Tech · GATE · Coaching institutes</p>
             <h1 className="bbc-serif bbc-reveal mt-[18px] text-[clamp(40px,5.6vw,68px)] leading-[1.03] tracking-[-.02em]">
-              Study your own<br />material, <em className="not-italic font-medium italic text-[var(--color-blue-ink)]">understood.</em>
+              One AI toolkit.<br />Two ways to <em className="not-italic font-medium italic text-[var(--color-blue-ink)]">use it.</em>
             </h1>
-            <p className="bbc-reveal mt-6 max-w-[30em] text-[18.5px] text-[var(--color-ink-soft)]">
-              Upload a PDF and ask questions in plain language — answers come straight from your notes, not a generic chatbot. Then turn it into flashcards, a study plan, and full-length mocks.
+            <p className="bbc-reveal mt-6 max-w-[32em] text-[18.5px] text-[var(--color-ink-soft)]">
+              Whether you're a student prepping for JEE or a coaching center running a test series — same AI, different lane. Chat with your PDFs, build mocks in your branding, map weak topics before exams find them.
             </p>
             <div className="bbc-reveal mt-[34px] flex flex-wrap items-center gap-4">
               <button onClick={() => onNavigate("pdf-editor")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">Start a free study session</button>
-              <button onClick={() => scrollTo("how")} className="inline-flex items-center gap-[7px] text-[15px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-blue-ink)]">
-                See how it works
+              <a href="/for-institutes" className="inline-flex items-center gap-[7px] text-[15px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-blue-ink)]">
+                For coaching institutes
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              </button>
+              </a>
             </div>
             <p className="bbc-reveal mt-[14px] flex items-center gap-1.5 text-[13px] text-[var(--color-ink-faint)]">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-7" stroke="var(--color-blue-ink)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -308,6 +308,100 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <line x1="300" y1="456" x2="312" y2="456" />
               </g>
             </svg>
+          </div>
+        </div>
+      </section>
+
+      {/* ── TWO LANES ──
+          Two audience-specific cards right after the hero. Student card on
+          the left, institute card on the right (highlighted with the primary
+          border since it's the higher-value lane). Anyone landing on the
+          page decides in one glance which one they are and clicks through. */}
+      <section className="border-b border-[var(--color-line)] py-[80px]">
+        <div className="mx-auto max-w-[1180px] px-7">
+          <div className="bbc-reveal mx-auto mb-12 max-w-[42em] text-center">
+            <p className="bbc-eyebrow">Which are you?</p>
+            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">
+              Same AI. Different lane.
+            </h2>
+            <p className="mt-3 text-[16px] text-[var(--color-ink-soft)]">
+              Built to serve both sides of the coaching-classroom equation — students who study, institutes who teach.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* For students */}
+            <div className="bbc-reveal flex flex-col rounded-[16px] border border-[var(--color-line)] bg-[var(--color-paper-card)] p-8">
+              <div className="mb-4 flex items-center justify-between">
+                <p className="bbc-eyebrow text-[var(--color-ink)]">For students</p>
+                <span className="text-[22px]">🎓</span>
+              </div>
+              <h3 className="bbc-serif text-[24px] tracking-[-.01em] text-[var(--color-ink)]">
+                Study smarter, quieter.
+              </h3>
+              <p className="mt-2 text-[14px] text-[var(--color-ink-soft)]">
+                Everything you need to prep for JEE, B.Tech, or GATE — chat with your PDFs, convert files, map your weak topics.
+              </p>
+              <ul className="mt-5 space-y-2.5 border-t border-[var(--color-line)] pt-5 text-left">
+                {[
+                  "PDF Copilot — chat with any textbook or notes",
+                  "File Tools — PNG↔JPG, PDF merge, split, compress",
+                  "JEE Diagnostic — 2-min weak-topic map, no signup",
+                  "Notes Scanner — photo of handwritten → typed",
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-[13.5px] text-[var(--color-ink-soft)]"><Check />{f}</li>
+                ))}
+              </ul>
+              <div className="mt-6 flex items-baseline gap-2 border-t border-[var(--color-line)] pt-5">
+                <span className="bbc-serif text-[24px] tracking-[-.01em]">₹0</span>
+                <span className="text-[12.5px] text-[var(--color-ink-faint)]">forever · </span>
+                <span className="bbc-serif text-[24px] tracking-[-.01em]">₹199</span>
+                <span className="text-[12.5px] text-[var(--color-ink-faint)]">/mo Pro</span>
+              </div>
+              <button
+                onClick={() => onNavigate("pdf-editor")}
+                className="bbc-btn bbc-btn-ghost mt-5 w-full justify-center py-3 text-[14px]"
+              >
+                Start a free study session →
+              </button>
+            </div>
+
+            {/* For coaching institutes */}
+            <div className="bbc-reveal relative flex flex-col rounded-[16px] border border-[var(--color-blue-ink)] bg-white p-8 shadow-[0_0_0_1px_var(--color-blue-ink)_inset]">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[var(--color-blue-ink)] px-4 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
+                Higher-value lane
+              </div>
+              <div className="mb-4 flex items-center justify-between">
+                <p className="bbc-eyebrow text-[var(--color-blue-ink)]">For coaching institutes</p>
+                <span className="text-[22px]">🏫</span>
+              </div>
+              <h3 className="bbc-serif text-[24px] tracking-[-.01em] text-[var(--color-ink)]">
+                AI mock tests, your branding.
+              </h3>
+              <p className="mt-2 text-[14px] text-[var(--color-ink-soft)]">
+                For coaching centers running JEE / NEET / CUET prep — the AI does the test-generation grind so your faculty can teach.
+              </p>
+              <ul className="mt-5 space-y-2.5 border-t border-[var(--color-line)] pt-5 text-left">
+                {[
+                  "White-label mocks — your logo on every export",
+                  "Weak-topic maps per student + aggregate for the batch",
+                  "Owner + faculty dashboards, exportable to CSV",
+                  "Bulk CSV student onboarding via SMS / WhatsApp",
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-[13.5px] text-[var(--color-ink-soft)]"><Check />{f}</li>
+                ))}
+              </ul>
+              <div className="mt-6 flex items-baseline gap-2 border-t border-[var(--color-line)] pt-5">
+                <span className="bbc-serif text-[24px] tracking-[-.01em]">₹49–99</span>
+                <span className="text-[12.5px] text-[var(--color-ink-faint)]">per seat / month · min 50 seats</span>
+              </div>
+              <a
+                href="/for-institutes"
+                className="bbc-btn bbc-btn-primary mt-5 w-full justify-center py-3 text-[14px]"
+              >
+                Book a 15-min demo →
+              </a>
+            </div>
           </div>
         </div>
       </section>
