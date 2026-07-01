@@ -194,26 +194,25 @@ export const Dashboard: React.FC = () => {
   return (
     <div ref={containerRef} className="bbc relative mx-auto min-h-screen w-full max-w-[1600px] px-4 py-12 pb-32 sm:px-8 lg:px-12">
 
-      {/* Top Profile Banner */}
+      {/* Top Profile Banner — kept intentionally understated. The floating
+          emoji were pulled because they read as decorative noise on a
+          workspace that's meant to feel serious. Avatar falls back to the
+          user's initial in the brand colour instead of a graduation cap. */}
       <div className="welcome-bg relative mb-8 flex flex-col items-center justify-between overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-6 md:flex-row">
-        <div className="floating-icon pointer-events-none absolute left-1/4 top-2 text-3xl opacity-50 blur-[1px]">📘</div>
-        <div className="floating-icon pointer-events-none absolute bottom-2 left-1/3 text-2xl opacity-50 blur-[0.5px]">🖊️</div>
-        <div className="floating-icon pointer-events-none absolute right-[30%] top-6 text-4xl opacity-50 blur-[1px]">💻</div>
-
         <div className="relative z-10 flex items-center gap-6">
           <div className="h-16 w-16 rounded-full bg-[var(--color-blue-ink)] p-[2px]">
-            <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-white text-xl">
+            <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-white text-[22px] font-semibold text-[var(--color-blue-ink)]">
               {userProfile?.photoURL ? (
                 <img src={userProfile.photoURL} alt="Profile" className="h-full w-full object-cover" />
               ) : (
-                "🎓"
+                (userName || userProfile?.displayName || "S").trim().charAt(0).toUpperCase()
               )}
             </div>
           </div>
           <div>
             <div className="flex items-center gap-2">
               <h1 className="welcome-text bbc-serif text-[26px] tracking-[-.01em] text-[var(--color-ink)]">
-                {greetingPrefix}, {userName || userProfile?.displayName || "Scholar"}!
+                {greetingPrefix}, {userName || userProfile?.displayName || "Scholar"}
               </h1>
               <div className="welcome-text flex items-center gap-1.5 rounded-full border border-[var(--color-line)] bg-[var(--color-blue-wash)] px-2 py-0.5">
                 <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-blue-ink)]"></div>
@@ -221,7 +220,7 @@ export const Dashboard: React.FC = () => {
               </div>
             </div>
             <p className="welcome-text mt-1 text-sm font-medium text-[var(--color-ink-soft)]">
-              You've saved <span className="font-bold text-[var(--color-blue-ink)]">{userStats.hoursSaved} study hours</span> using AI Co-pilots.
+              You've saved <span className="font-bold text-[var(--color-blue-ink)]">{userStats.hoursSaved} study hours</span> so far.
             </p>
           </div>
         </div>

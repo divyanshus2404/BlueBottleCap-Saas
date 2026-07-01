@@ -80,7 +80,7 @@ export const FeedbackWidget: React.FC = () => {
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path d="M2 4.5C2 3.7 2.7 3 3.5 3h9c.8 0 1.5.7 1.5 1.5v5c0 .8-.7 1.5-1.5 1.5H7l-3 2.5V11H3.5C2.7 11 2 10.3 2 9.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" fill="none"/>
         </svg>
-        <span>Tell us what sucks</span>
+        <span>Send feedback</span>
       </button>
 
       {/* Modal */}
@@ -97,7 +97,7 @@ export const FeedbackWidget: React.FC = () => {
               <div>
                 <p className="text-[10px] uppercase tracking-[.14em] text-[var(--color-ink-faint,#9b988b)] font-mono">Feedback</p>
                 <h3 className="bbc-serif mt-1 text-[22px] tracking-[-.01em] text-[var(--color-ink,#1a1814)]">
-                  Tell us what sucks.
+                  Send us feedback.
                 </h3>
                 <p className="mt-1 text-[13px] text-[var(--color-ink-soft,#5a5749)]">
                   Honest is better than nice. We read every one.

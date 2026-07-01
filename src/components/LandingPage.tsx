@@ -173,7 +173,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           </nav>
           <div className="flex items-center gap-[18px]">
             <button onClick={() => onNavigate("signup")} className="hidden text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)] sm:block">Sign in</button>
-            <button onClick={() => onNavigate("pdf-editor")} className="bbc-btn bbc-btn-primary px-5 py-[11px] text-[15px]">Start free</button>
+            <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary px-5 py-[11px] text-[15px]">Start free</button>
           </div>
         </div>
       </header>
@@ -191,7 +191,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               Whether you're a student prepping for JEE or a coaching center running a test series — same AI, different lane. Chat with your PDFs, build mocks in your branding, map weak topics before exams find them.
             </p>
             <div className="bbc-reveal mt-[34px] flex flex-wrap items-center gap-4">
-              <button onClick={() => onNavigate("pdf-editor")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">Start a free study session</button>
+              <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">Open the toolkit</button>
               <a href="/for-institutes" className="inline-flex items-center gap-[7px] text-[15px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-blue-ink)]">
                 For coaching institutes
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -332,9 +332,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           <div className="grid gap-6 md:grid-cols-2">
             {/* For students */}
             <div className="bbc-reveal flex flex-col rounded-[16px] border border-[var(--color-line)] bg-[var(--color-paper-card)] p-8">
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4">
                 <p className="bbc-eyebrow text-[var(--color-ink)]">For students</p>
-                <span className="text-[22px]">🎓</span>
               </div>
               <h3 className="bbc-serif text-[24px] tracking-[-.01em] text-[var(--color-ink)]">
                 Study smarter, quieter.
@@ -359,10 +358,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <span className="text-[12.5px] text-[var(--color-ink-faint)]">/mo Pro</span>
               </div>
               <button
-                onClick={() => onNavigate("pdf-editor")}
+                onClick={() => onNavigate("tools")}
                 className="bbc-btn bbc-btn-ghost mt-5 w-full justify-center py-3 text-[14px]"
               >
-                Start a free study session →
+                Open the toolkit →
               </button>
             </div>
 
@@ -371,9 +370,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[var(--color-blue-ink)] px-4 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
                 Higher-value lane
               </div>
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4">
                 <p className="bbc-eyebrow text-[var(--color-blue-ink)]">For coaching institutes</p>
-                <span className="text-[22px]">🏫</span>
               </div>
               <h3 className="bbc-serif text-[24px] tracking-[-.01em] text-[var(--color-ink)]">
                 AI mock tests, your branding.
@@ -602,7 +600,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           <p className="bbc-eyebrow bbc-reveal">Ready when you are</p>
           <h2 className="bbc-serif bbc-reveal mx-auto mt-[14px] max-w-[16ch] text-[clamp(30px,4.4vw,52px)] leading-[1.08] tracking-[-.02em]">Quieter prep. Better marks.</h2>
           <div className="bbc-reveal mt-[34px]">
-            <button onClick={() => onNavigate("pdf-editor")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">Start a free study session</button>
+            <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">Open the toolkit</button>
           </div>
         </div>
       </section>
