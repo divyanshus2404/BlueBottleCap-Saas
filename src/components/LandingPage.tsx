@@ -71,11 +71,10 @@ const ToolIcon = {
 const tools = [
   { n: "01", t: "Notes Scanner", d: "Photo of handwritten notes → clean, typed, equation-aware version. New.", Icon: ToolIcon.scan, href: "/scan-notes" },
   { n: "02", t: "AI PDF Copilot", d: "Chat with any textbook or notes PDF. Answers cite the page they came from.", Icon: ToolIcon.pdf, href: "/pdf-editor" },
-  { n: "03", t: "Flashcard Maker", d: "Turn a chapter into a spaced-repetition deck in one click.", Icon: ToolIcon.cards, href: "/pdf-editor" },
-  { n: "04", t: "Mock Test Mode", d: "Distraction-free, full-length papers timed like the real exam.", Icon: ToolIcon.timer, href: "/pdf-editor" },
-  { n: "05", t: "Study Planner", d: "A day-by-day plan from your syllabus and exam date.", Icon: ToolIcon.calendar, href: "/diagnostic" },
+  { n: "03", t: "PDF & File Tools", d: "PNG↔JPG↔WebP, PDF merge & split, compressor, resizer — all in your browser.", Icon: ToolIcon.tools, href: "/tools" },
+  { n: "04", t: "JEE Diagnostic", d: "2-minute readiness check that maps your weak topics. No signup.", Icon: ToolIcon.timer, href: "/diagnostic" },
+  { n: "05", t: "Flashcard Maker", d: "Turn a chapter into a spaced-repetition deck in one click.", Icon: ToolIcon.cards, href: "/pdf-editor" },
   { n: "06", t: "Smart Summaries", d: "Long chapters condensed to the points that actually get tested.", Icon: ToolIcon.summary, href: "/pdf-editor" },
-  { n: "07", t: "PDF & File Tools", d: "Compress, merge, and tidy your study files, right in the browser.", Icon: ToolIcon.tools, href: "/pdf-editor" },
 ];
 
 const plans = [
@@ -218,47 +217,95 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             </div>
           </div>
 
-          {/* patent-style annotated bottle diagram */}
+          {/* Patent-style annotated bottle diagram, now with subtle animation:
+              a pulsing halo behind, a clipped liquid wave inside that gently
+              rises and travels, the bottle floats by a few pixels, and the
+              four annotation callouts reveal one-by-one (delay set via --i)
+              so the reader's eye is guided around the diagram. */}
           <div className="bbc-diagram bbc-reveal mx-auto max-w-[440px] md:max-w-none" aria-hidden="true">
             <svg viewBox="0 0 760 560" className="block h-auto w-full overflow-visible">
-              <line className="bbc-center" x1="380" y1="58" x2="380" y2="500" />
-              <path className="bbc-stroke" d="M352 92 h56 l-4 26 a3 3 0 0 1 -3 3 h-42 a3 3 0 0 1 -3 -3 z" />
-              <g className="bbc-stroke-ink">
-                <line x1="360" y1="93" x2="359" y2="120" /><line x1="369" y1="93" x2="368" y2="121" />
-                <line x1="380" y1="93" x2="380" y2="121" /><line x1="391" y1="93" x2="392" y2="121" /><line x1="400" y1="93" x2="401" y2="120" />
-              </g>
-              <path className="bbc-stroke" d="M364 121 v10 h-3 v8 h38 v-8 h-3 v-10" />
-              <path className="bbc-stroke" d="M361 139 C 360 162 332 168 332 206 v250 a18 18 0 0 0 18 18 h60 a18 18 0 0 0 18 -18 v-250 c0 -38 -28 -44 -29 -67" />
-              <rect className="bbc-stroke-ink" x="345" y="300" width="70" height="96" rx="6" />
-              <line className="bbc-stroke-ink" x1="358" y1="324" x2="402" y2="324" /><line className="bbc-stroke-ink" x1="358" y1="340" x2="402" y2="340" /><line className="bbc-stroke-ink" x1="358" y1="356" x2="388" y2="356" />
+              <defs>
+                {/* Bottle interior silhouette — used to clip the moving liquid. */}
+                <clipPath id="bbc-bottle-inside">
+                  <path d="M361 139 C 360 162 332 168 332 206 v250 a18 18 0 0 0 18 18 h60 a18 18 0 0 0 18 -18 v-250 c0 -38 -28 -44 -29 -67 z" />
+                </clipPath>
+                <radialGradient id="bbc-halo-grad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="var(--color-blue-ink)" stopOpacity=".22" />
+                  <stop offset="60%" stopColor="var(--color-blue-ink)" stopOpacity=".05" />
+                  <stop offset="100%" stopColor="var(--color-blue-ink)" stopOpacity="0" />
+                </radialGradient>
+              </defs>
 
-              <g className="bbc-diag-label">
+              {/* Soft focusing halo behind the bottle */}
+              <circle className="bbc-halo-pulse" cx="380" cy="320" r="160" fill="url(#bbc-halo-grad)" />
+
+              <line className="bbc-center" x1="380" y1="58" x2="380" y2="500" />
+
+              <g className="bbc-bottle-float">
+                {/* Cap + neck */}
+                <path className="bbc-stroke" d="M352 92 h56 l-4 26 a3 3 0 0 1 -3 3 h-42 a3 3 0 0 1 -3 -3 z" />
+                <g className="bbc-stroke-ink">
+                  <line x1="360" y1="93" x2="359" y2="120" /><line x1="369" y1="93" x2="368" y2="121" />
+                  <line x1="380" y1="93" x2="380" y2="121" /><line x1="391" y1="93" x2="392" y2="121" /><line x1="400" y1="93" x2="401" y2="120" />
+                </g>
+                <path className="bbc-stroke" d="M364 121 v10 h-3 v8 h38 v-8 h-3 v-10" />
+
+                {/* Bottle body outline */}
+                <path className="bbc-stroke" d="M361 139 C 360 162 332 168 332 206 v250 a18 18 0 0 0 18 18 h60 a18 18 0 0 0 18 -18 v-250 c0 -38 -28 -44 -29 -67" />
+
+                {/* Animated liquid inside — clipped to the bottle silhouette so
+                    the wave only shows through the body and never escapes. */}
+                <g clipPath="url(#bbc-bottle-inside)">
+                  <g className="bbc-liquid-rise">
+                    <rect className="bbc-liquid" x="320" y="330" width="120" height="160" />
+                    <g className="bbc-liquid-wave">
+                      {/* Two repeats so the translated wave never reveals an
+                          empty edge — second copy slides in as first slides out. */}
+                      <path className="bbc-liquid-line" d="M260 332 q15 -10 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0" />
+                      <path className="bbc-liquid-line" d="M260 348 q15 -6 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0" opacity=".5" />
+                    </g>
+                  </g>
+
+                </g>
+
+                {/* Label panel inside the bottle (kept for the patent look) */}
+                <rect className="bbc-stroke-ink" x="345" y="300" width="70" height="96" rx="6" />
+                <line className="bbc-stroke-ink" x1="358" y1="324" x2="402" y2="324" />
+                <line className="bbc-stroke-ink" x1="358" y1="340" x2="402" y2="340" />
+                <line className="bbc-stroke-ink" x1="358" y1="356" x2="388" y2="356" />
+              </g>
+
+              {/* Annotation callouts. Each group sets --i for stagger order. */}
+              <g className="bbc-diag-label" style={{ ["--i" as any]: 0 }}>
                 <circle className="bbc-anchor" cx="361" cy="135" r="3" />
                 <path className="bbc-lead bbc-draw" d="M361 135 H188 V124" />
-                <text className="bbc-lbl-num" x="120" y="118">01</text>
+                <text className="bbc-lbl-num" x="116" y="118">01</text>
                 <text className="bbc-lbl" x="146" y="118">STUDY PLANNER</text>
               </g>
-              <g className="bbc-diag-label">
-                <circle className="bbc-anchor" cx="332" cy="380" r="3" />
-                <path className="bbc-lead bbc-draw" d="M332 380 H188 V392" />
-                <text className="bbc-lbl-num" x="120" y="398">02</text>
-                <text className="bbc-lbl" x="146" y="398">SMART SUMMARIES</text>
-              </g>
-              <g className="bbc-diag-label">
+              <g className="bbc-diag-label" style={{ ["--i" as any]: 1 }}>
                 <circle className="bbc-anchor" cx="406" cy="106" r="3" />
                 <path className="bbc-lead bbc-draw" d="M406 106 H572 V94" />
-                <text className="bbc-lbl-num" x="572" y="88">03</text>
-                <text className="bbc-lbl" x="598" y="88">AI PDF COPILOT</text>
+                <text className="bbc-lbl-num" x="572" y="88">02</text>
+                <text className="bbc-lbl" x="602" y="88">AI PDF COPILOT</text>
               </g>
-              <g className="bbc-diag-label">
+              <g className="bbc-diag-label" style={{ ["--i" as any]: 2 }}>
+                <circle className="bbc-anchor" cx="332" cy="380" r="3" />
+                <path className="bbc-lead bbc-draw" d="M332 380 H188 V392" />
+                <text className="bbc-lbl-num" x="116" y="398">03</text>
+                <text className="bbc-lbl" x="146" y="398">SMART SUMMARIES</text>
+              </g>
+              <g className="bbc-diag-label" style={{ ["--i" as any]: 3 }}>
                 <circle className="bbc-anchor" cx="428" cy="420" r="3" />
                 <path className="bbc-lead bbc-draw" d="M428 420 H572 V432" />
                 <text className="bbc-lbl-num" x="572" y="438">04</text>
-                <text className="bbc-lbl" x="598" y="438">MOCK TEST MODE</text>
+                <text className="bbc-lbl" x="602" y="438">MOCK TEST MODE</text>
               </g>
 
+              {/* Tick marks indicating bottle interior height */}
               <g className="bbc-stroke-ink" opacity=".5">
-                <line x1="300" y1="206" x2="312" y2="206" /><line x1="306" y1="206" x2="306" y2="456" /><line x1="300" y1="456" x2="312" y2="456" />
+                <line x1="300" y1="206" x2="312" y2="206" />
+                <line x1="306" y1="206" x2="306" y2="456" />
+                <line x1="300" y1="456" x2="312" y2="456" />
               </g>
             </svg>
           </div>

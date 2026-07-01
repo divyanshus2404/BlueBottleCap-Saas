@@ -1,4 +1,18 @@
-export type ActiveView = 'landing' | 'onboarding' | 'dashboard' | 'pdf-editor' | 'tools' | 'pricing' | 'signup' | 'create-profile' | 'virtual-test' | 'study-material-page' | 'seniors-opinion' | 'flashcards' | 'about' | 'roadmaps' | 'terms' | 'waitlist' | 'diagnostic' | 'scan-notes';
+export type ActivePlan = 'Free' | 'Pro';
+
+export type ActiveView =
+  | 'landing'
+  | 'onboarding'
+  | 'dashboard'
+  | 'pdf-editor'
+  | 'pricing'
+  | 'signup'
+  | 'create-profile'
+  | 'about'
+  | 'terms'
+  | 'diagnostic'
+  | 'scan-notes'
+  | 'tools';
 
 export interface UsageMetric {
   current: number;
@@ -10,7 +24,7 @@ export interface UserStats {
   hoursSaved: number;
   streakDays: number;
   creditsLeft: number;
-  activePlan: 'Free' | 'Basic' | 'Pro' | 'Elite';
+  activePlan: ActivePlan;
   purchasedTests?: string[];
   studyMaterialUnlocked?: boolean;
 }
@@ -100,26 +114,3 @@ export interface RecentActivityItem {
   timestamp?: number;
 }
 
-export interface RoadmapNode {
-  id: string;
-  title: string;
-  description: string;
-  status: "completed" | "current" | "locked";
-  duration: string;
-}
-
-export interface PeerGroup {
-  id: string;
-  name: string;
-  avatar: string;
-  members: number;
-  currentNodeId: string;
-}
-
-export interface Roadmap {
-  id: string;
-  title: string;
-  prompt: string;
-  nodes: RoadmapNode[];
-  coincidingGroups: PeerGroup[];
-}

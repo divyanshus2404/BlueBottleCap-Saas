@@ -6,11 +6,11 @@ import { Check, Zap, ShieldCheck, Printer, ArrowRight, Loader2 } from "lucide-re
 
 interface PricingProps {
   userStats: UserStats;
-  onUpgradeApproved: (plan: "Free" | "Basic" | "Pro" | "Elite") => void;
+  onUpgradeApproved: (plan: "Free" | "Pro") => void;
   onNavigateTo: (view: any) => void;
 }
 
-type PlanId = "Free" | "Basic" | "Pro" | "Elite";
+type PlanId = "Free" | "Pro";
 
 export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, onNavigateTo }) => {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
@@ -108,13 +108,16 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
           const verifyResp = await fetch("/api/razorpay/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(response),
+            body: JSON.stringify({ ...response, product }),
           });
           const verifyData = await verifyResp.json();
           if (verifyResp.ok && verifyData.ok) {
+            // Use the server-returned plan, not the client's local guess, so
+            // a tampered client cannot claim Pro from a non-Pro signature.
+            const grantedPlan: PlanId = verifyData.plan === "Pro" ? "Pro" : "Free";
             setLoadingStep(4);
             setShowReceipt(true);
-            onUpgradeApproved(plan);
+            onUpgradeApproved(grantedPlan);
           } else {
             alert("Payment verification failed");
             setLoadingStep(-1);

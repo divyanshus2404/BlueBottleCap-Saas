@@ -18,6 +18,22 @@ export function isProductId(value: unknown): value is ProductId {
   return typeof value === "string" && value in PRODUCTS;
 }
 
+/**
+ * Map a product id to the subscription plan it unlocks, or null for one-shot
+ * purchases (chapter_test, study_material). The verify endpoint returns this
+ * to the client so the client cannot inflate its own plan after payment.
+ */
+export function productToPlan(product: ProductId): "Pro" | null {
+  switch (product) {
+    case "pro_monthly":
+    case "pro_annual":
+      return "Pro";
+    case "chapter_test":
+    case "study_material":
+      return null;
+  }
+}
+
 export function getRazorpayKeys() {
   const keyId = process.env.RAZORPAY_KEY_ID;
   const keySecret = process.env.RAZORPAY_KEY_SECRET;

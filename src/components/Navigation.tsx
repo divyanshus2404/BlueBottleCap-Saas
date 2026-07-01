@@ -31,8 +31,9 @@ export const Navigation: React.FC<NavigationProps> = ({
 
   const navLinks = [
     { href: "/", label: "Home", icon: <Home className="w-4 h-4" /> },
+    { href: "/tools", label: "Tools", icon: <Layers className="w-4 h-4" /> },
     { href: "/pdf-editor", label: "PDF Copilot", icon: <Sparkles className="w-4 h-4" /> },
-    { href: "/dashboard", label: "Dashboard", icon: <Layers className="w-4 h-4" /> },
+    { href: "/dashboard", label: "Dashboard", icon: <Map className="w-4 h-4" /> },
     { href: "/about", label: "About", icon: <Info className="w-4 h-4" /> },
   ];
 
@@ -181,10 +182,8 @@ export const Navigation: React.FC<NavigationProps> = ({
             <div className="flex items-center justify-between px-4">
               <span className="text-xs text-gray-500">Plan Status</span>
               <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
-                userStats.activePlan === "Pro" || userStats.activePlan === "Elite"
+                userStats.activePlan === "Pro"
                   ? "bg-purple-100 text-purple-700"
-                  : userStats.activePlan === "Basic"
-                  ? "bg-blue-100 text-blue-700"
                   : "bg-slate-100 text-slate-700"
               }`}>
                 {userStats.activePlan} Scholar
@@ -227,7 +226,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               </button>
             )}
 
-            {userStats.activePlan === "Free" || userStats.activePlan === "Basic" ? (
+            {userStats.activePlan === "Free" ? (
               <button
                 onClick={() => {
                   router.push("/pricing");
