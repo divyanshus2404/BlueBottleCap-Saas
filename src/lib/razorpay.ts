@@ -10,6 +10,12 @@ export const PRODUCTS = {
   // pro_annual is billed as a single ₹1,499 upfront charge (~₹125/mo equivalent).
   pro_monthly: { amount: 19900, label: "Pro plan — monthly" }, // ₹199
   pro_annual: { amount: 149900, label: "Pro plan — annual (₹1,499 / year)" }, // ₹1,499
+  // One-shot exam pack. Priced as an impulse buy — cheap enough to grab
+  // during exam-prep panic, valuable enough that 100 sales = ₹14,900. Ships
+  // 10 AI-generated chapter-wise mocks + weak-topic analysis to the buyer's
+  // email within 24h. Delivery is manual for the first ~50 buyers
+  // (do-things-that-don't-scale), then automated once the funnel proves out.
+  jee_bundle_2026: { amount: 14900, label: "JEE 2026 Bundle — 10 mock tests" }, // ₹149
 } as const;
 
 export type ProductId = keyof typeof PRODUCTS;
@@ -30,6 +36,7 @@ export function productToPlan(product: ProductId): "Pro" | null {
       return "Pro";
     case "chapter_test":
     case "study_material":
+    case "jee_bundle_2026":
       return null;
   }
 }

@@ -22,6 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/pdf-editor', priority: 0.85, changeFrequency: 'monthly' },
     { path: '/pricing', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/for-institutes', priority: 0.8, changeFrequency: 'monthly' },
+    { path: '/bundles/jee-2026', priority: 0.85, changeFrequency: 'weekly' },
     { path: '/about', priority: 0.6, changeFrequency: 'monthly' },
     { path: '/signup', priority: 0.5, changeFrequency: 'monthly' },
     { path: '/terms', priority: 0.3, changeFrequency: 'yearly' },
