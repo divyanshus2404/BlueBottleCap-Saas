@@ -41,6 +41,14 @@ interface GlobalState {
   handlePurchaseTest: (testId: string) => Promise<void>;
   handleUnlockStudyMaterial: () => void;
   setOpenedPapers: React.Dispatch<React.SetStateAction<string[]>>;
+
+  // Referral state — refresh-count is what the ReferralCard just observed
+  // from Firestore, claim-reward atomically credits any unclaimed tiers to
+  // the user's AI-query balance and syncs it back to Firestore.
+  referralCount: number;
+  referralRewardsClaimed: number;
+  refreshReferralCount: (n: number) => void;
+  claimReferralReward: (tiersEarned: number) => Promise<void>;
 }
 
 const GlobalStateContext = createContext<GlobalState | undefined>(undefined);
@@ -207,6 +215,12 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     });
   }, [openedPapers, userStats.activePlan]);
 
+  // Referral counters — synced from the user's Firestore doc. The count is
+  // the number of successful sign-ups with our code; claimed is the number
+  // of reward tiers we've already credited so we don't double-pay.
+  const [referralCount, setReferralCount] = useState<number>(0);
+  const [referralRewardsClaimed, setReferralRewardsClaimed] = useState<number>(0);
+
   const [flashcards, setFlashcards] = useState<Flashcard[]>([
     {
       id: "pre-1",
@@ -263,6 +277,12 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
           const cloudReviews = typeof data.todayReviewsCount === "number" ? data.todayReviewsCount : 0;
           const cloudPapers = Array.isArray(data.openedPapers) ? data.openedPapers : [];
           const cloudToolCredits = typeof data.toolCreditsLeft === "number" ? data.toolCreditsLeft : 5;
+
+          // Referral snapshot — the ReferralCard re-queries the live count
+          // itself, but seeding from the doc keeps the progress bar from
+          // flashing empty on first paint.
+          setReferralCount(typeof data.referralCount === "number" ? data.referralCount : 0);
+          setReferralRewardsClaimed(typeof data.referralRewardsClaimed === "number" ? data.referralRewardsClaimed : 0);
 
           if (cloudActivity.length > 0) {
             setDailyActivity(cloudActivity);
@@ -491,6 +511,48 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const refreshReferralCount = useCallback((n: number) => {
+    setReferralCount(n);
+    // Persist the freshest number to Firestore so other surfaces (future
+    // emails, admin dashboard) can read a stable count without re-querying.
+    if (currentUser) {
+      const userDocRef = doc(db, "users", currentUser.uid);
+      updateDoc(userDocRef, { referralCount: n }).catch(err => console.error(err));
+    }
+  }, [currentUser]);
+
+  const claimReferralReward = async (tiersEarned: number) => {
+    const unclaimed = Math.max(0, tiersEarned - referralRewardsClaimed);
+    if (unclaimed <= 0) return;
+
+    // Bonus credits equal +30 per tier, matching the copy on the ReferralCard.
+    // If we ever change the number, keep it in sync with REFERRAL_BONUS_PER_TIER.
+    const bonus = unclaimed * 30;
+    const nextClaimed = tiersEarned;
+    const nextCredits = userStats.creditsLeft + bonus;
+
+    setReferralRewardsClaimed(nextClaimed);
+    setUserStats((prev) => ({ ...prev, creditsLeft: nextCredits }));
+    setUsageStats((prev) => ({ ...prev, aiQueries: { ...prev.aiQueries, current: nextCredits } }));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("bluebottlecap_credits_left", String(nextCredits));
+    }
+    showToast(`+${bonus} AI queries added — thanks for the referrals.`, "success");
+
+    if (currentUser) {
+      const userDocRef = doc(db, "users", currentUser.uid);
+      try {
+        await updateDoc(userDocRef, {
+          referralRewardsClaimed: nextClaimed,
+          creditsLeft: nextCredits,
+          updatedAt: new Date().toISOString(),
+        });
+      } catch (err) {
+        console.error("Failed to persist referral reward:", err);
+      }
+    }
+  };
+
   const handleUnlockStudyMaterial = () => {
     if (typeof window !== "undefined") localStorage.setItem("bluebottlecap_study_material_unlocked", "true");
     setUserStats(prev => ({ ...prev, studyMaterialUnlocked: true }));
@@ -526,7 +588,11 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     handleUpgradeAccount,
     handlePurchaseTest,
     handleUnlockStudyMaterial,
-    setOpenedPapers
+    setOpenedPapers,
+    referralCount,
+    referralRewardsClaimed,
+    refreshReferralCount,
+    claimReferralReward,
   };
 
   return <GlobalStateContext.Provider value={value}>{children}</GlobalStateContext.Provider>;

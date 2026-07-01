@@ -65,7 +65,22 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
       if (snap.exists()) {
         await updateDoc(userRef, { avatarSvg });
       } else {
-        await setDoc(userRef, { avatarSvg, email: user.email, createdAt: new Date() });
+        // Capture the referrer if the visitor arrived via ?ref=CODE. The
+        // capture happens in ClientLayout on first paint; we read it here at
+        // the moment the user actually creates their profile so a referral
+        // only "counts" once there's a real, active account behind it.
+        let referredBy: string | null = null;
+        try {
+          referredBy = localStorage.getItem("bluebottlecap_referred_by");
+        } catch { /* private mode / storage disabled */ }
+        await setDoc(userRef, {
+          avatarSvg,
+          email: user.email,
+          createdAt: new Date(),
+          referredBy: referredBy || null,
+          referralCount: 0,
+          referralRewardsClaimed: 0,
+        });
       }
       // First-time users go straight into the diagnostic — they convert ~3x
       // higher than users dropped onto an empty dashboard. Returning users

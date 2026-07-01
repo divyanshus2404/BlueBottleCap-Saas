@@ -17,6 +17,7 @@ import { useGlobalState } from "../context/GlobalStateContext";
 import { useRouter } from "next/navigation";
 import { WeeklyWrapped } from "./WeeklyWrapped";
 import { ReadinessCard } from "./ReadinessCard";
+import { ReferralCard } from "./ReferralCard";
 
 export const Dashboard: React.FC = () => {
   const {
@@ -28,6 +29,10 @@ export const Dashboard: React.FC = () => {
     showToast: onShowToast,
     loginCount,
     recentActivities,
+    referralCount,
+    referralRewardsClaimed,
+    refreshReferralCount,
+    claimReferralReward,
   } = useGlobalState();
   const router = useRouter();
   const { currentUser } = useAuth();
@@ -383,8 +388,17 @@ export const Dashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Right column: Quick Tools */}
+            {/* Right column: Referral + Quick Tools. The referral card sits
+                on top because it turns the dashboard into a growth surface
+                — every load is a chance for the user to share their link. */}
             <div className="space-y-6">
+              <ReferralCard
+                totalReferrals={referralCount}
+                onCountRefreshed={refreshReferralCount}
+                onClaim={claimReferralReward}
+                rewardsClaimed={referralRewardsClaimed}
+              />
+
               <div className="flex items-center justify-between">
                 <h2 className="bbc-serif flex items-center gap-2 text-[20px] tracking-[-.01em] text-[var(--color-ink)]">
                   <Zap className="h-5 w-5 text-[var(--color-blue-ink)]" /> Quick utilities
