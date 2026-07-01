@@ -487,10 +487,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       {/* ── TOOLS / INDEX ── */}
       <section id="tools" className="border-b border-[var(--color-line)] py-[88px]">
         <div className="mx-auto max-w-[1180px] px-7">
-          <div className="bbc-reveal mb-12 max-w-[34em]">
+          <div className="bbc-reveal mb-12 max-w-[36em]">
             <p className="bbc-eyebrow">The suite</p>
-            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">Six tools, one workspace.</h2>
-            <p className="mt-[14px] text-[17px] text-[var(--color-ink-soft)]">Everything is built around your own material — no generic answers, no busywork.</p>
+            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">Every tool your syllabus actually needs.</h2>
+            <p className="mt-[14px] text-[17px] text-[var(--color-ink-soft)]">Built around your material — for students studying it, and institutes teaching from it.</p>
           </div>
           <div className="border-t border-[var(--color-line)]">
             {tools.map((tool) => (
@@ -566,10 +566,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       {/* ── PRICING ── */}
       <section id="pricing" className="border-b border-[var(--color-line)] py-[88px]">
         <div className="mx-auto max-w-[1180px] px-7">
-          <div className="bbc-reveal mx-auto mb-12 max-w-[34em] text-center">
+          <div className="bbc-reveal mx-auto mb-12 max-w-[36em] text-center">
             <p className="bbc-eyebrow">Pricing</p>
-            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">Fair for students. Honest about it.</h2>
-            <p className="mt-[14px] text-[17px] text-[var(--color-ink-soft)]">Start free, forever. Upgrade only when exams get close.</p>
+            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">Fair pricing. Honest about it.</h2>
+            <p className="mt-[14px] text-[17px] text-[var(--color-ink-soft)]">Students start free forever. Institutes pay per seat. Full comparison on the <a href="/pricing" className="font-semibold text-[var(--color-blue-ink)] underline decoration-[var(--color-blue-wash)] underline-offset-4 hover:decoration-[var(--color-blue-ink)]">pricing page</a>.</p>
           </div>
           <div className="grid grid-cols-1 gap-[22px] md:grid-cols-3">
             {plans.map((plan) => (
@@ -592,25 +592,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               </div>
             ))}
           </div>
-          <p className="bbc-reveal mt-[26px] text-center text-[13.5px] text-[var(--color-ink-faint)]">Students get 30% off any paid plan with a valid student ID or college email.</p>
-
-          {/* Discovery strip for coaching-center owners who scan the pricing
-              section. Per-seat plans live at /for-institutes — the student
-              pricing above is intentionally personal, not per-seat. */}
-          <div className="bbc-reveal mt-[36px] rounded-[12px] border border-[var(--color-line)] bg-[var(--color-paper-card)] px-6 py-4 md:mx-auto md:max-w-[880px] md:flex md:items-center md:justify-between md:gap-4">
-            <div className="text-left">
-              <p className="bbc-eyebrow text-[10px]">For coaching institutes</p>
-              <p className="mt-1.5 text-[14.5px] font-semibold text-[var(--color-ink)]">
-                Running a coaching center with 50+ students?
-              </p>
-              <p className="mt-1 text-[13px] text-[var(--color-ink-soft)]">
-                Per-seat pricing starts at ₹49/seat/mo. White-label mocks, your branding, faculty dashboard.
-              </p>
-            </div>
-            <a href="/for-institutes" className="bbc-btn bbc-btn-ghost mt-3 justify-center whitespace-nowrap px-4 py-2.5 text-[13px] md:mt-0">
-              See institute plans →
-            </a>
-          </div>
+          <p className="bbc-reveal mt-[26px] text-center text-[13.5px] text-[var(--color-ink-faint)]">Students get 30% off any paid plan with a valid student ID or college email. Institute per-seat plans are on the <a href="/for-institutes" className="font-semibold text-[var(--color-blue-ink)] hover:underline">institute page</a>.</p>
         </div>
       </section>
 
