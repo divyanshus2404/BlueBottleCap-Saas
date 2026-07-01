@@ -217,97 +217,68 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             </div>
           </div>
 
-          {/* Patent-style annotated bottle diagram, now with subtle animation:
-              a pulsing halo behind, a clipped liquid wave inside that gently
-              rises and travels, the bottle floats by a few pixels, and the
-              four annotation callouts reveal one-by-one (delay set via --i)
-              so the reader's eye is guided around the diagram. */}
-          <div className="bbc-diagram bbc-reveal mx-auto max-w-[440px] md:max-w-none" aria-hidden="true">
-            <svg viewBox="0 0 760 560" className="block h-auto w-full overflow-visible">
-              <defs>
-                {/* Bottle interior silhouette — used to clip the moving liquid. */}
-                <clipPath id="bbc-bottle-inside">
-                  <path d="M361 139 C 360 162 332 168 332 206 v250 a18 18 0 0 0 18 18 h60 a18 18 0 0 0 18 -18 v-250 c0 -38 -28 -44 -29 -67 z" />
-                </clipPath>
-                <radialGradient id="bbc-halo-grad" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="var(--color-blue-ink)" stopOpacity=".22" />
-                  <stop offset="60%" stopColor="var(--color-blue-ink)" stopOpacity=".05" />
-                  <stop offset="100%" stopColor="var(--color-blue-ink)" stopOpacity="0" />
-                </radialGradient>
-              </defs>
+          {/* Hero-side product mockup — a peek at the Tools Hub. Chosen over
+              the previous patent-diagram bottle because it (a) shows real
+              product surface, matching the "Open the toolkit" primary CTA;
+              (b) reads professional to institute owners scanning the page;
+              (c) mirrors the browser-chrome mockup style already used in
+              the "A real session" section further down for consistency. */}
+          <div className="bbc-reveal mx-auto w-full max-w-[520px] md:max-w-none" aria-hidden="true">
+            <div className="overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-white shadow-[0_30px_60px_-30px_rgba(20,30,55,.18)]">
+              {/* Browser chrome */}
+              <div className="flex items-center gap-[10px] border-b border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-[10px]">
+                <span className="h-[10px] w-[10px] rounded-full bg-[var(--color-line)]" />
+                <span className="h-[10px] w-[10px] rounded-full bg-[var(--color-line)]" />
+                <span className="h-[10px] w-[10px] rounded-full bg-[var(--color-line)]" />
+                <span className="bbc-mono ml-3 text-[11px] tracking-[.08em] text-[var(--color-ink-faint)]">bluebottlecap.com / tools</span>
+              </div>
 
-              {/* Soft focusing halo behind the bottle */}
-              <circle className="bbc-halo-pulse" cx="380" cy="320" r="160" fill="url(#bbc-halo-grad)" />
+              <div className="px-5 py-5">
+                <p className="bbc-eyebrow text-[10px]">Tools</p>
+                <h4 className="bbc-serif mt-1.5 text-[19px] tracking-[-.01em] text-[var(--color-ink)]">Every file tool, in one place.</h4>
 
-              <line className="bbc-center" x1="380" y1="58" x2="380" y2="500" />
+                {/* Faux AI search bar — matches the real one in ToolsHub */}
+                <div className="mt-4 flex items-center gap-2 rounded-xl border border-[var(--color-line)] bg-white px-3 py-2.5">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4L12 3z" stroke="var(--color-blue-ink)" strokeWidth="1.4" strokeLinejoin="round"/>
+                  </svg>
+                  <span className="text-[12.5px] italic text-[var(--color-ink-faint)]">Ask AI: I need to make my PDF smaller…</span>
+                  <span className="ml-auto rounded-md bg-[var(--color-blue-ink)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">Ask</span>
+                </div>
 
-              <g className="bbc-bottle-float">
-                {/* Cap + neck */}
-                <path className="bbc-stroke" d="M352 92 h56 l-4 26 a3 3 0 0 1 -3 3 h-42 a3 3 0 0 1 -3 -3 z" />
-                <g className="bbc-stroke-ink">
-                  <line x1="360" y1="93" x2="359" y2="120" /><line x1="369" y1="93" x2="368" y2="121" />
-                  <line x1="380" y1="93" x2="380" y2="121" /><line x1="391" y1="93" x2="392" y2="121" /><line x1="400" y1="93" x2="401" y2="120" />
-                </g>
-                <path className="bbc-stroke" d="M364 121 v10 h-3 v8 h38 v-8 h-3 v-10" />
+                {/* Category chips */}
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  <span className="rounded-full bg-[var(--color-blue-ink)] px-2.5 py-0.5 text-[10.5px] font-semibold text-white">All tools</span>
+                  <span className="rounded-full border border-[var(--color-line)] bg-white px-2.5 py-0.5 text-[10.5px] font-semibold text-[var(--color-ink-soft)]">Image</span>
+                  <span className="rounded-full border border-[var(--color-line)] bg-white px-2.5 py-0.5 text-[10.5px] font-semibold text-[var(--color-ink-soft)]">PDF</span>
+                </div>
 
-                {/* Bottle body outline */}
-                <path className="bbc-stroke" d="M361 139 C 360 162 332 168 332 206 v250 a18 18 0 0 0 18 18 h60 a18 18 0 0 0 18 -18 v-250 c0 -38 -28 -44 -29 -67" />
+                {/* Tool grid — a 2x2 preview */}
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  {[
+                    { emoji: "🖼️", name: "PNG → JPG", desc: "Convert PNG to JPG" },
+                    { emoji: "🗜️", name: "Image Compressor", desc: "Shrink file size" },
+                    { emoji: "📚", name: "PDF Merger", desc: "Combine multiple PDFs" },
+                    { emoji: "✂️", name: "PDF Splitter", desc: "Extract pages" },
+                  ].map((t) => (
+                    <div key={t.name} className="rounded-[10px] border border-[var(--color-line)] bg-[var(--color-paper-card)] p-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[16px]">{t.emoji}</span>
+                        <span className="rounded-full bg-[var(--color-blue-wash)] px-1.5 py-0.5 text-[8.5px] font-bold text-[var(--color-blue-ink)]">3 / day</span>
+                      </div>
+                      <p className="mt-1.5 text-[11.5px] font-bold text-[var(--color-ink)]">{t.name}</p>
+                      <p className="mt-0.5 text-[10px] text-[var(--color-ink-faint)]">{t.desc}</p>
+                    </div>
+                  ))}
+                </div>
 
-                {/* Animated liquid inside — clipped to the bottle silhouette so
-                    the wave only shows through the body and never escapes. */}
-                <g clipPath="url(#bbc-bottle-inside)">
-                  <g className="bbc-liquid-rise">
-                    <rect className="bbc-liquid" x="320" y="330" width="120" height="160" />
-                    <g className="bbc-liquid-wave">
-                      {/* Two repeats so the translated wave never reveals an
-                          empty edge — second copy slides in as first slides out. */}
-                      <path className="bbc-liquid-line" d="M260 332 q15 -10 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0" />
-                      <path className="bbc-liquid-line" d="M260 348 q15 -6 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0" opacity=".5" />
-                    </g>
-                  </g>
-
-                </g>
-
-                {/* Label panel inside the bottle (kept for the patent look) */}
-                <rect className="bbc-stroke-ink" x="345" y="300" width="70" height="96" rx="6" />
-                <line className="bbc-stroke-ink" x1="358" y1="324" x2="402" y2="324" />
-                <line className="bbc-stroke-ink" x1="358" y1="340" x2="402" y2="340" />
-                <line className="bbc-stroke-ink" x1="358" y1="356" x2="388" y2="356" />
-              </g>
-
-              {/* Annotation callouts. Each group sets --i for stagger order. */}
-              <g className="bbc-diag-label" style={{ ["--i" as any]: 0 }}>
-                <circle className="bbc-anchor" cx="361" cy="135" r="3" />
-                <path className="bbc-lead bbc-draw" d="M361 135 H188 V124" />
-                <text className="bbc-lbl-num" x="116" y="118">01</text>
-                <text className="bbc-lbl" x="146" y="118">STUDY PLANNER</text>
-              </g>
-              <g className="bbc-diag-label" style={{ ["--i" as any]: 1 }}>
-                <circle className="bbc-anchor" cx="406" cy="106" r="3" />
-                <path className="bbc-lead bbc-draw" d="M406 106 H572 V94" />
-                <text className="bbc-lbl-num" x="572" y="88">02</text>
-                <text className="bbc-lbl" x="602" y="88">AI PDF COPILOT</text>
-              </g>
-              <g className="bbc-diag-label" style={{ ["--i" as any]: 2 }}>
-                <circle className="bbc-anchor" cx="332" cy="380" r="3" />
-                <path className="bbc-lead bbc-draw" d="M332 380 H188 V392" />
-                <text className="bbc-lbl-num" x="116" y="398">03</text>
-                <text className="bbc-lbl" x="146" y="398">SMART SUMMARIES</text>
-              </g>
-              <g className="bbc-diag-label" style={{ ["--i" as any]: 3 }}>
-                <circle className="bbc-anchor" cx="428" cy="420" r="3" />
-                <path className="bbc-lead bbc-draw" d="M428 420 H572 V432" />
-                <text className="bbc-lbl-num" x="572" y="438">04</text>
-                <text className="bbc-lbl" x="602" y="438">MOCK TEST MODE</text>
-              </g>
-
-              {/* Tick marks indicating bottle interior height */}
-              <g className="bbc-stroke-ink" opacity=".5">
-                <line x1="300" y1="206" x2="312" y2="206" />
-                <line x1="306" y1="206" x2="306" y2="456" />
-                <line x1="300" y1="456" x2="312" y2="456" />
-              </g>
-            </svg>
+                {/* Overflow hint — "+ 4 more" */}
+                <div className="mt-3 flex items-center justify-between rounded-[10px] border border-dashed border-[var(--color-line)] bg-[var(--color-paper)] px-3 py-2 text-[11px] text-[var(--color-ink-faint)]">
+                  <span className="bbc-mono">+ 4 more tools</span>
+                  <span className="font-semibold text-[var(--color-blue-ink)]">See all →</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
