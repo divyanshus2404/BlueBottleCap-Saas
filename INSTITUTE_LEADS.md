@@ -5,6 +5,9 @@ excluded on purpose** — ALLEN, FIITJEE, Aakash, Resonance, PW, Vedantu, Sri
 Chaitanya are competitors, not customers. Target owner-run brands with 50–500
 students where the founder makes the buying call.
 
+**📧 Send from:** `support@bluebottlecap.com`
+**Signature line to reuse:** `— Divyanshu · BlueBottleCap · support@bluebottlecap.com · https://bluebottlecap.com/for-institutes`
+
 ## Target list — contact info verified
 
 Fetched from each institute's public contact page 2026-07-01. Owner names are

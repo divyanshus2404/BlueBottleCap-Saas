@@ -499,6 +499,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             ))}
           </div>
           <p className="bbc-reveal mt-[26px] text-center text-[13.5px] text-[var(--color-ink-faint)]">Students get 30% off any paid plan with a valid student ID or college email.</p>
+
+          {/* Discovery strip for coaching-center owners who scan the pricing
+              section. Per-seat plans live at /for-institutes — the student
+              pricing above is intentionally personal, not per-seat. */}
+          <div className="bbc-reveal mt-[36px] rounded-[12px] border border-[var(--color-line)] bg-[var(--color-paper-card)] px-6 py-4 md:mx-auto md:max-w-[880px] md:flex md:items-center md:justify-between md:gap-4">
+            <div className="text-left">
+              <p className="bbc-eyebrow text-[10px]">For coaching institutes</p>
+              <p className="mt-1.5 text-[14.5px] font-semibold text-[var(--color-ink)]">
+                Running a coaching center with 50+ students?
+              </p>
+              <p className="mt-1 text-[13px] text-[var(--color-ink-soft)]">
+                Per-seat pricing starts at ₹49/seat/mo. White-label mocks, your branding, faculty dashboard.
+              </p>
+            </div>
+            <a href="/for-institutes" className="bbc-btn bbc-btn-ghost mt-3 justify-center whitespace-nowrap px-4 py-2.5 text-[13px] md:mt-0">
+              See institute plans →
+            </a>
+          </div>
         </div>
       </section>
 
@@ -520,6 +538,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           <nav className="flex flex-wrap gap-6" aria-label="Footer">
             <button onClick={() => scrollTo("tools")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">Tools</button>
             <button onClick={() => scrollTo("pricing")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">Pricing</button>
+            <a href="/for-institutes" className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">For institutes</a>
             <button onClick={() => onNavigate("about")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">About</button>
             <button onClick={() => onNavigate("terms")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">Terms</button>
           </nav>

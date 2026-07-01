@@ -20,8 +20,10 @@ export function Footer() {
               </span>
             </div>
             <p className="text-[14px] leading-relaxed text-[var(--color-ink-soft)]">
-              The AI-powered exam prep workspace built specifically for JEE, B.Tech, and engineering
-              students across India. Upload your notes, chat with an AI co-pilot, and study smarter.
+              AI-powered exam prep for JEE, B.Tech, and engineering — for
+              Indian students and the coaching institutes that teach them.
+              Upload notes, chat with an AI co-pilot, or run branded mock
+              tests at your institute.
             </p>
             <div className="flex items-center gap-2 pt-2 text-[12px] text-[var(--color-ink-faint)]">
               <Shield className="h-3.5 w-3.5 text-[var(--color-blue-ink)]" />
@@ -37,6 +39,12 @@ export function Footer() {
                 <Link href="/pdf-editor" className="inline-flex items-center gap-1.5 text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">
                   <Sparkles className="h-3 w-3 text-[var(--color-blue-ink)]" /> PDF Copilot
                 </Link>
+              </li>
+              <li>
+                <Link href="/tools" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">File Tools</Link>
+              </li>
+              <li>
+                <Link href="/for-institutes" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">For institutes →</Link>
               </li>
               <li>
                 <Link href="/dashboard" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Dashboard</Link>

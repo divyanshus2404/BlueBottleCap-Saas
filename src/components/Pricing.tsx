@@ -257,6 +257,25 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
           })}
         </div>
 
+        {/* Discovery strip for coaching-center owners. The student plans
+            above are per-user; per-seat institute pricing (₹49-99/seat)
+            lives at /for-institutes. Owners comparing prices otherwise
+            bounce, thinking ₹199/student × 200 students = too expensive. */}
+        <div className="mx-auto mt-12 max-w-[760px] rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-6 md:flex md:items-center md:justify-between md:gap-6">
+          <div className="text-left">
+            <p className="bbc-eyebrow text-[10px]">For coaching institutes</p>
+            <p className="mt-1.5 text-[14.5px] font-semibold text-[var(--color-ink)]">
+              Pricing for 50+ students?
+            </p>
+            <p className="mt-1 text-[13px] text-[var(--color-ink-soft)]">
+              Institute plans start at ₹49/seat/mo — with your branding, faculty dashboard, and bulk onboarding.
+            </p>
+          </div>
+          <a href="/for-institutes" className="bbc-btn bbc-btn-ghost mt-4 justify-center whitespace-nowrap px-4 py-2.5 text-[13px] md:mt-0">
+            See institute plans →
+          </a>
+        </div>
+
         {/* FAQ */}
         <div className="mt-20 border-t border-[var(--color-line)] pt-16">
           <h2 className="bbc-serif mb-8 text-center text-[clamp(26px,3.4vw,38px)] tracking-[-.02em]">
