@@ -5,22 +5,27 @@ excluded on purpose** — ALLEN, FIITJEE, Aakash, Resonance, PW, Vedantu, Sri
 Chaitanya are competitors, not customers. Target owner-run brands with 50–500
 students where the founder makes the buying call.
 
-## Target list (send emails to these first)
+## Target list — contact info verified
 
-| # | Institute | City | Why they're a fit | Contact route |
-|---|---|---|---|---|
-| 1 | **Mitesh Rathi Classes** | Bhopal (MP Nagar) | Owner name in brand → owner-run. Well-reviewed local player. | [miteshrathiclasses.com](https://www.miteshrathiclasses.com/) — contact page → owner email |
-| 2 | **Aurous Academy** | Bhopal (MP Nagar) | Foundation + JEE + NEET. Right side of MP Nagar competition — needs tech to stand out. | [aurousacademy.com](https://aurousacademy.com/) |
-| 3 | **Takshila Institute** | Nagpur | "Run by academicians, not businessmen" — will respond well to a *helping teachers* pitch, not a *replacing them* one. | [takshilainstitute.in/branch/nagpur](https://takshilainstitute.in/branch/nagpur/) |
-| 4 | **Ajinkya Tutorials** | Nagpur | Small batches, "teachers know students' weak points" — perfect fit for AI weak-topic maps. | Search LinkedIn: "Ajinkya Tutorials Nagpur founder" |
-| 5 | **Vision IIT** | Nagpur | Small groups, personalized mentoring focus | LinkedIn / Google Maps listing |
-| 6 | **Rahate's IIT & Medical Home** | Nagpur | Owner name in brand ("Rahate") → founder-run. Mentorship positioning. | LinkedIn / Justdial |
-| 7 | **Bansal Classes Nagpur** | Nagpur | Local Nagpur brand (NOT Kota Bansal) — [bansalclassesngp.com](https://www.bansalclassesngp.com) has a public blog, they publish → they engage. | Contact page |
-| 8 | **MGCI (Maths GuruDev)** | Indore | Small batch, Hindi + English medium — Tier-2/3 student base | [mgci.co.in](https://mgci.co.in/) |
-| 9 | **CatalyseR** | Indore | Innovation angle already ("Raw Brain Analysis") — receptive to AI narrative | [catalyser.in](https://www.catalyser.in/) |
-| 10 | **Kalpvriksha Institute** | Indore | 15 years running, 22% JEE selection — established but not massive | [kalpavrikshainstitute.com](https://kalpavrikshainstitute.com/iit-jee-advanced) |
+Fetched from each institute's public contact page 2026-07-01. Owner names are
+what's publicly known; use "sir/ma'am" where a specific name isn't listed.
 
-**Your action per institute:** Google `"[institute name] founder LinkedIn"` OR check the site's About/Contact page. Owner email or WhatsApp is usually 2 clicks away.
+| # | Institute | City | Owner / Director | Email | Phone / WhatsApp |
+|---|---|---|---|---|---|
+| 1 | **Mitesh Rathi Classes** | Bhopal | Mitesh Rathi (implied by brand) | miteshrathiclasses@gmail.com | +91-9755096044 · +91-8827221343 · 0755-4269261 |
+| 2 | **Aurous Academy** | Bhopal | Not public | support@aurousacademy.com | +91-95225-12624 |
+| 3 | **Takshila Institute (Nagpur)** | Nagpur | Not public | nagpur@takshilainstitute.in | 8600008057 · 8600008067 |
+| 4 | **MGCI (Maths GuruDev)** | Indore | **Mukesh Jat (Director)** | mginstituteindore@gmail.com | +91-9329911449 · +91-9826312401 |
+| 5 | **CatalyseR** | Indore | Not public (see Vipin Joshi / Sumit Upmanyu / Sumeet Garg on faculty page) | info@catalyser.in | 9109120115 · 0731-4008500 |
+| 6 | **Kalpvriksha Institute** | Indore | Not public | contact@kalpavrikshainstitute.com | +91-9893244227 · 0731-4096363 |
+| 7 | **Ajinkya Tutorials** | Nagpur | Ajinkya (implied) | Search LinkedIn — "Ajinkya Tutorials Nagpur founder" | Justdial listing |
+| 8 | **Vision IIT** | Nagpur | Not public | LinkedIn / Google Maps | Google Maps listing |
+| 9 | **Rahate's IIT & Medical Home** | Nagpur | Rahate (implied by brand) | LinkedIn / Justdial | Justdial listing |
+| 10 | **Bansal Classes Nagpur** | Nagpur | Not public | [bansalclassesngp.com](https://www.bansalclassesngp.com) contact page | Contact page |
+
+**Zero-friction targets** (rows 1–6): email + phone are ready. **Copy-paste and send.**
+
+**5-min lookup targets** (rows 7–10): use LinkedIn or Justdial to grab founder details, then send.
 
 ---
 
@@ -28,7 +33,8 @@ students where the founder makes the buying call.
 
 ### Draft #1 — Mitesh Rathi Classes, Bhopal
 
-**To:** Owner email (grab from contact page)
+**To:** miteshrathiclasses@gmail.com
+**Cc / WhatsApp fallback:** +91-9755096044
 **Subject:** `Quick question about Mitesh Rathi Classes' test series`
 
 ```
@@ -66,7 +72,8 @@ BlueBottleCap · https://bluebottlecap.com/for-institutes
 
 ### Draft #2 — Takshila Institute, Nagpur
 
-**To:** Owner email (site says "run by academicians" — likely a professor-founder; LinkedIn will show)
+**To:** nagpur@takshilainstitute.in
+**WhatsApp fallback:** 8600008057
 **Subject:** `AI for your test series — not to replace your teachers`
 
 ```
@@ -101,27 +108,36 @@ BlueBottleCap · https://bluebottlecap.com/for-institutes
 
 ---
 
-### Draft #3 — Ajinkya Tutorials, Nagpur
+### Draft #3 — MGCI (Maths GuruDev Coaching Institute), Indore
 
-**Subject:** `Small batches + AI weak-topic maps — a fit?`
+**To:** mginstituteindore@gmail.com
+**WhatsApp fallback:** +91-9329911449
+**Director's name:** Mukesh Jat — use this in the greeting.
+**Subject:** `Quick question about MGCI's chapter-wise mocks`
 
 ```
-Hi sir,
+Hi Mukesh sir,
 
-Read that Ajinkya Tutorials is one of the few Nagpur JEE coachings
-where teachers actually know each student's weak points. That's
-rare and it's what students switch to you *for*.
+I saw MGCI on Manorama Ganj — one of the few Indore institutes that
+teaches in both Hindi and English mediums. That's a real edge for
+Tier-2/3 students who lose confidence when everything is in English.
 
-The tool I built (BlueBottleCap) does exactly that scaled up: after
-every mock, every student gets a personal weak-topic map, and *you*
-get an aggregate map for the batch — plan next week's class around
-what most students got wrong.
+Quick question: how much of your faculty's weekend goes into
+building chapter-wise mock tests?
 
-Per-seat pricing (₹49–99/seat/month), your branding, unlimited
-mocks. Piloting with 3–4 Tier-2 institutes this quarter.
+I built BlueBottleCap — an AI that generates JEE mocks in your
+institute's branding in about 40 seconds per test. Weak-topic maps
+per student in both Hindi and English, PDFs with your logo, and
+per-seat pricing (₹49–99/seat/month, no setup fee).
 
-15-minute demo on WhatsApp video? I'll generate a Physics mock live
-on any chapter you pick — no pitch, no slides.
+We're piloting with 3–4 Tier-2 institutes this quarter. If you're
+open to a 15-minute WhatsApp video demo this week, I'll show you
+the AI generating a Physics mock live on any chapter you pick —
+no slides, no pitch.
+
+Worst case, you get 15 minutes of new ideas for your test series.
+
+Reply "yes" and I'll send times.
 
 — Divyanshu
 BlueBottleCap · https://bluebottlecap.com/for-institutes
