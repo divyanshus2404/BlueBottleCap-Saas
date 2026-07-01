@@ -126,6 +126,33 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
         prefill: { name: "", email: "" },
         theme: { color: "#1B3FCB" },
         modal: { ondismiss: () => setLoadingStep(-1) },
+        // Surface UPI at the top of the payment methods list. Students in
+        // India overwhelmingly reach for UPI (Google Pay, PhonePe, Paytm,
+        // BHIM) — burying it under cards costs conversion. Enabling both
+        // `collect` and `intent` flows means mobile users can deep-link
+        // straight into their UPI app while desktop users can still enter
+        // a VPA and get a collect request. `show_default_blocks` keeps
+        // cards/netbanking/wallets available below UPI for anyone who
+        // needs them, so we don't lose users who prefer other methods.
+        config: {
+          display: {
+            blocks: {
+              upi_first: {
+                name: "Pay using UPI",
+                instruments: [
+                  {
+                    method: "upi",
+                    flows: ["collect", "intent"],
+                  },
+                ],
+              },
+            },
+            sequence: ["block.upi_first"],
+            preferences: {
+              show_default_blocks: true,
+            },
+          },
+        },
       };
 
       const rzp = new (window as any).Razorpay(options);
