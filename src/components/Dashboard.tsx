@@ -18,6 +18,8 @@ import { useRouter } from "next/navigation";
 import { WeeklyWrapped } from "./WeeklyWrapped";
 import { ReadinessCard } from "./ReadinessCard";
 import { ReferralCard } from "./ReferralCard";
+import { StreakSaveBanner } from "./StreakSaveBanner";
+import { evaluateStreak, isFreeSaveAvailable } from "../lib/streak";
 
 export const Dashboard: React.FC = () => {
   const {
@@ -33,6 +35,9 @@ export const Dashboard: React.FC = () => {
     referralRewardsClaimed,
     refreshReferralCount,
     claimReferralReward,
+    lastLoggedDate,
+    saveStreakToday,
+    freeStreakSaveMonth,
   } = useGlobalState();
   const router = useRouter();
   const { currentUser } = useAuth();
@@ -246,6 +251,21 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Streak-save banner — only when a real streak is one missed day
+          away from breaking (evaluateStreak keeps it honest: never shown
+          for streaks that are safe today or already broken). */}
+      {evaluateStreak(userStats.streakDays, lastLoggedDate).saveable && (
+        <div className="mb-8">
+          <StreakSaveBanner
+            streakDays={userStats.streakDays}
+            onSaved={saveStreakToday}
+            freeSaveAvailable={isFreeSaveAvailable(freeStreakSaveMonth)}
+            onFreeSave={() => saveStreakToday({ free: true })}
+            showToast={onShowToast}
+          />
+        </div>
+      )}
 
       {/* Weekly Wrapped Banner */}
       <button

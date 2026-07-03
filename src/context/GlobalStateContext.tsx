@@ -49,6 +49,14 @@ interface GlobalState {
   referralRewardsClaimed: number;
   refreshReferralCount: (n: number) => void;
   claimReferralReward: (tiersEarned: number) => Promise<void>;
+
+  // Streak-save mechanic — mark today as logged so the streak survives
+  // even if the user did nothing else all day. Called from the banner
+  // after Razorpay verify returns ok, or with { free: true } when the
+  // user spends their one free save of the month.
+  saveStreakToday: (opts?: { free?: boolean }) => Promise<void>;
+  // YYYY-MM the free save was last used ("" = never).
+  freeStreakSaveMonth: string;
 }
 
 const GlobalStateContext = createContext<GlobalState | undefined>(undefined);
@@ -84,7 +92,18 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   const [pdfCount, setPdfCount] = useState<number>(0);
   const [activeJob, setActiveJob] = useState<any | null>(null);
   const [dashboardLoading, setDashboardLoading] = useState<boolean>(false);
-  const [lastLoggedDate, setLastLoggedDate] = useState<string>("");
+  const [lastLoggedDate, setLastLoggedDate] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("bluebottlecap_last_logged_date") || "";
+    }
+    return "";
+  });
+  const [freeStreakSaveMonth, setFreeStreakSaveMonth] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("bluebottlecap_free_streak_save_month") || "";
+    }
+    return "";
+  });
   const [loginCount, setLoginCount] = useState<number>(0);
   const [recentActivities, setRecentActivities] = useState<RecentActivityItem[]>([]);
 
@@ -265,6 +284,12 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
 
           setLoginCount(typeof data.loginCount === "number" ? data.loginCount : 1);
           setLastLoggedDate(data.lastLoggedDate || data.lastActiveDate || "");
+          if (typeof data.freeStreakSaveMonth === "string") {
+            setFreeStreakSaveMonth(data.freeStreakSaveMonth);
+            if (typeof window !== "undefined") {
+              localStorage.setItem("bluebottlecap_free_streak_save_month", data.freeStreakSaveMonth);
+            }
+          }
 
           if (typeof window !== "undefined") {
             localStorage.setItem("bluebottlecap_active_plan", cleanPlan);
@@ -553,6 +578,32 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const saveStreakToday = async (opts?: { free?: boolean }) => {
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    const month = today.slice(0, 7);
+    setLastLoggedDate(today);
+    if (opts?.free) setFreeStreakSaveMonth(month);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("bluebottlecap_last_logged_date", today);
+      if (opts?.free) localStorage.setItem("bluebottlecap_free_streak_save_month", month);
+    }
+    if (currentUser) {
+      const userDocRef = doc(db, "users", currentUser.uid);
+      try {
+        await updateDoc(userDocRef, {
+          lastLoggedDate: today,
+          lastActiveDate: today,
+          streakSavedAt: today,
+          ...(opts?.free ? { freeStreakSaveMonth: month } : {}),
+          updatedAt: new Date().toISOString(),
+        });
+      } catch (err) {
+        console.error("Failed to persist streak save:", err);
+      }
+    }
+  };
+
   const handleUnlockStudyMaterial = () => {
     if (typeof window !== "undefined") localStorage.setItem("bluebottlecap_study_material_unlocked", "true");
     setUserStats(prev => ({ ...prev, studyMaterialUnlocked: true }));
@@ -593,6 +644,8 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     referralRewardsClaimed,
     refreshReferralCount,
     claimReferralReward,
+    saveStreakToday,
+    freeStreakSaveMonth,
   };
 
   return <GlobalStateContext.Provider value={value}>{children}</GlobalStateContext.Provider>;

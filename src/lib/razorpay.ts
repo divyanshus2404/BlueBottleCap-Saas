@@ -16,6 +16,10 @@ export const PRODUCTS = {
   // email within 24h. Delivery is manual for the first ~50 buyers
   // (do-things-that-don't-scale), then automated once the funnel proves out.
   jee_bundle_2026: { amount: 14900, label: "JEE 2026 Bundle — 10 mock tests" }, // ₹149
+  // Streak protection micropayment. Priced deliberately below the mental
+  // threshold where a student thinks twice about tapping "Pay". Duolingo
+  // proved the mechanic works — panic + tiny price + one tap = pure margin.
+  streak_save: { amount: 1900, label: "Save your study streak" }, // ₹19
 } as const;
 
 export type ProductId = keyof typeof PRODUCTS;
@@ -37,6 +41,7 @@ export function productToPlan(product: ProductId): "Pro" | null {
     case "chapter_test":
     case "study_material":
     case "jee_bundle_2026":
+    case "streak_save":
       return null;
   }
 }
