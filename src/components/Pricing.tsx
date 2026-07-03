@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { UserStats } from "../types";
 import { Check, Zap, ShieldCheck, Printer, ArrowRight, Loader2 } from "lucide-react";
 import { trackEvent } from "../lib/analytics";
+import { auth } from "../firebase";
 
 interface PricingProps {
   userStats: UserStats;
@@ -107,10 +108,11 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
         description: `${plan} plan purchase`,
         order_id: data.order.id,
         handler: async function (response: any) {
+          const idToken = await auth?.currentUser?.getIdToken().catch(() => undefined);
           const verifyResp = await fetch("/api/razorpay/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...response, product }),
+            body: JSON.stringify({ ...response, product, idToken }),
           });
           const verifyData = await verifyResp.json();
           if (verifyResp.ok && verifyData.ok) {

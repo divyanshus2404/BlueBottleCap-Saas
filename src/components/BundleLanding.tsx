@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { trackEvent } from "../lib/analytics";
+import { auth } from "../firebase";
 
 // One-shot exam-pack landing. Positioned as a panic-buy for JEE 2026 students
 // — small enough (₹149) to feel like a snack, valuable enough that 100 sales
@@ -95,10 +96,11 @@ export const BundleLanding: React.FC<BundleLandingProps> = ({
         },
         handler: async function (response: any) {
           try {
+            const idToken = await auth?.currentUser?.getIdToken().catch(() => undefined);
             const verifyResp = await fetch("/api/razorpay/verify", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ ...response, product }),
+              body: JSON.stringify({ ...response, product, idToken, buyerEmail }),
             });
             const verifyData = await verifyResp.json();
             if (verifyResp.ok && verifyData.ok) {

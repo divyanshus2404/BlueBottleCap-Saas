@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Flame, Shield } from "lucide-react";
 import { STREAK_SAVE_PRICE } from "../lib/streak";
 import { trackEvent } from "../lib/analytics";
+import { auth } from "../firebase";
 
 // Dashboard banner that appears only when the user has a real streak in
 // danger. Uses the shared Razorpay checkout pattern from Pricing/Bundle
@@ -92,10 +93,11 @@ export const StreakSaveBanner: React.FC<StreakSaveBannerProps> = ({ streakDays, 
         },
         handler: async function (response: any) {
           try {
+            const idToken = await auth?.currentUser?.getIdToken().catch(() => undefined);
             const verifyResp = await fetch("/api/razorpay/verify", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ ...response, product: "streak_save" }),
+              body: JSON.stringify({ ...response, product: "streak_save", idToken }),
             });
             const verifyData = await verifyResp.json();
             if (verifyResp.ok && verifyData.ok) {
