@@ -224,7 +224,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               (c) mirrors the browser-chrome mockup style already used in
               the "A real session" section further down for consistency. */}
           <div className="bbc-reveal mx-auto w-full max-w-[520px] md:max-w-none" aria-hidden="true">
-            <div className="overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-white shadow-[0_30px_60px_-30px_rgba(20,30,55,.18)]">
+            <div className="bbc-hero-float overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-white shadow-[0_30px_60px_-30px_rgba(20,30,55,.18)]">
               {/* Browser chrome */}
               <div className="flex items-center gap-[10px] border-b border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-[10px]">
                 <span className="h-[10px] w-[10px] rounded-full bg-[var(--color-line)]" />
@@ -242,7 +242,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <path d="M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4L12 3z" stroke="var(--color-blue-ink)" strokeWidth="1.4" strokeLinejoin="round"/>
                   </svg>
-                  <span className="text-[12.5px] italic text-[var(--color-ink-faint)]">Ask AI: I need to make my PDF smaller…</span>
+                  <span className="text-[12.5px] italic text-[var(--color-ink-faint)]">Ask AI: I need to make my PDF smaller…<span className="bbc-caret" /></span>
                   <span className="ml-auto rounded-md bg-[var(--color-blue-ink)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">Ask</span>
                 </div>
 
@@ -253,17 +253,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                   <span className="rounded-full border border-[var(--color-line)] bg-white px-2.5 py-0.5 text-[10.5px] font-semibold text-[var(--color-ink-soft)]">PDF</span>
                 </div>
 
-                {/* Tool grid — a 2x2 preview */}
-                <div className="mt-3 grid grid-cols-2 gap-2">
+                {/* Tool grid — a 2x2 preview. Monochrome line icons instead of
+                    emoji: emoji render differently per OS and read as clutter
+                    against the editorial palette. */}
+                <div className="bbc-cascade mt-3 grid grid-cols-2 gap-2">
                   {[
-                    { emoji: "🖼️", name: "PNG → JPG", desc: "Convert PNG to JPG" },
-                    { emoji: "🗜️", name: "Image Compressor", desc: "Shrink file size" },
-                    { emoji: "📚", name: "PDF Merger", desc: "Combine multiple PDFs" },
-                    { emoji: "✂️", name: "PDF Splitter", desc: "Extract pages" },
+                    { icon: <><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5-9 9"/></>, name: "PNG → JPG", desc: "Convert PNG to JPG" },
+                    { icon: <><path d="M12 3v10"/><path d="M8.5 9.5L12 13l3.5-3.5"/><rect x="4" y="16" width="16" height="5" rx="1.5"/></>, name: "Image Compressor", desc: "Shrink file size" },
+                    { icon: <><rect x="3" y="3" width="10" height="13" rx="1.5"/><rect x="11" y="8" width="10" height="13" rx="1.5"/></>, name: "PDF Merger", desc: "Combine multiple PDFs" },
+                    { icon: <><rect x="3" y="4" width="8" height="16" rx="1.5"/><rect x="15" y="4" width="6" height="16" rx="1.5"/><path d="M12.5 8v2M12.5 12v2M12.5 16v2"/></>, name: "PDF Splitter", desc: "Extract pages" },
                   ].map((t) => (
-                    <div key={t.name} className="rounded-[10px] border border-[var(--color-line)] bg-[var(--color-paper-card)] p-3">
+                    <div key={t.name} className="bbc-lift rounded-[10px] border border-[var(--color-line)] bg-[var(--color-paper-card)] p-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-[16px]">{t.emoji}</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-blue-ink)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{t.icon}</svg>
                         <span className="rounded-full bg-[var(--color-blue-wash)] px-1.5 py-0.5 text-[8.5px] font-bold text-[var(--color-blue-ink)]">3 / day</span>
                       </div>
                       <p className="mt-1.5 text-[11.5px] font-bold text-[var(--color-ink)]">{t.name}</p>
@@ -302,7 +304,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
           <div className="grid gap-6 md:grid-cols-2">
             {/* For students */}
-            <div className="bbc-reveal flex flex-col rounded-[16px] border border-[var(--color-line)] bg-[var(--color-paper-card)] p-8">
+            <div className="bbc-reveal bbc-lift flex flex-col rounded-[16px] border border-[var(--color-line)] bg-[var(--color-paper-card)] p-8">
               <div className="mb-4">
                 <p className="bbc-eyebrow text-[var(--color-ink)]">For students</p>
               </div>
@@ -337,7 +339,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             </div>
 
             {/* For coaching institutes */}
-            <div className="bbc-reveal relative flex flex-col rounded-[16px] border border-[var(--color-blue-ink)] bg-white p-8 shadow-[0_0_0_1px_var(--color-blue-ink)_inset]">
+            <div className="bbc-reveal bbc-lift relative flex flex-col rounded-[16px] border border-[var(--color-blue-ink)] bg-white p-8 shadow-[0_0_0_1px_var(--color-blue-ink)_inset]">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[var(--color-blue-ink)] px-4 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
                 Higher-value lane
               </div>
@@ -415,8 +417,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 </div>
               </div>
 
-              {/* right: chat */}
-              <div className="flex flex-col gap-4 p-7">
+              {/* right: chat — messages cascade in so the exchange reads as a
+                  conversation happening, not a screenshot. */}
+              <div className="bbc-cascade flex flex-col gap-4 p-7">
                 <div className="self-end max-w-[88%] rounded-[10px] rounded-tr-[2px] bg-[var(--color-blue-ink)] px-4 py-3 text-[13.5px] text-white">
                   Explain the entropy change formula for an ideal gas in simple terms.
                 </div>
@@ -542,7 +545,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           </div>
           <div className="grid grid-cols-1 gap-[22px] md:grid-cols-3">
             {plans.map((plan) => (
-              <div key={plan.name} className={`bbc-reveal flex flex-col rounded-[14px] border p-[30px] ${plan.featured ? "border-[var(--color-blue-ink)] bg-white shadow-[0_0_0_1px_var(--color-blue-ink)_inset]" : "border-[var(--color-line)] bg-[var(--color-paper-card)]"}`}>
+              <div key={plan.name} className={`bbc-reveal bbc-lift flex flex-col rounded-[14px] border p-[30px] ${plan.featured ? "border-[var(--color-blue-ink)] bg-white shadow-[0_0_0_1px_var(--color-blue-ink)_inset]" : "border-[var(--color-line)] bg-[var(--color-paper-card)]"}`}>
                 <div className="flex items-center justify-between">
                   <span className="bbc-serif text-[20px] font-semibold">{plan.name}</span>
                   {plan.tag && <span className="bbc-mono rounded-[6px] bg-[var(--color-blue-ink)] px-[9px] py-1 text-[10.5px] uppercase tracking-[.12em] text-white">{plan.tag}</span>}
@@ -573,6 +576,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           <div className="bbc-reveal mt-[34px]">
             <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">Open the toolkit</button>
           </div>
+          <p className="bbc-reveal mt-[18px] text-[13px] text-[var(--color-ink-faint)]">Free forever plan · UPI accepted · No card needed</p>
         </div>
       </section>
 

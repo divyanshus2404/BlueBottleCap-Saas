@@ -297,7 +297,7 @@ export const Dashboard: React.FC = () => {
 
       {/* Segment Tabs */}
       <div className="mb-8 flex w-full gap-3 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-2">
-        {([["workspace", "📚 Study workspace"], ["analytics", "📊 Stats & streaks"]] as const).map(([tab, label]) => (
+        {([["workspace", "Study workspace"], ["analytics", "Stats & streaks"]] as const).map(([tab, label]) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
