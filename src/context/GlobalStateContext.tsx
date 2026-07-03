@@ -1,10 +1,11 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from "react";
 import { UserStats, UsageStats, Flashcard, DailyActivity, RecentActivityItem, ActivePlan } from "../types";
 import { useAuth } from "./AuthContext";
 import { db } from "../firebase";
 import { doc, getDoc, setDoc, updateDoc, collection, getDocs, addDoc, onSnapshot, query, where } from "firebase/firestore";
+import { todayStr, evaluateStreak } from "../lib/streak";
 
 interface Toast {
   id: number;
@@ -57,6 +58,9 @@ interface GlobalState {
   saveStreakToday: (opts?: { free?: boolean }) => Promise<void>;
   // YYYY-MM the free save was last used ("" = never).
   freeStreakSaveMonth: string;
+  // Mark today as a real study day — extends/starts the streak. Called
+  // automatically by the activity handlers; no-op if already logged today.
+  logStudyActivity: () => void;
 }
 
 const GlobalStateContext = createContext<GlobalState | undefined>(undefined);
@@ -355,8 +359,53 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [currentUser]);
 
+  // Keep a ref of the last logged date so rapid successive activity calls
+  // in the same render can't double-increment the streak.
+  const lastLoggedRef = useRef(lastLoggedDate);
+  useEffect(() => {
+    lastLoggedRef.current = lastLoggedDate;
+  }, [lastLoggedDate]);
+
+  const logStudyActivity = () => {
+    const now = new Date();
+    const today = todayStr(now);
+    const prevDate = lastLoggedRef.current;
+    if (prevDate === today) return;
+    lastLoggedRef.current = today;
+    setLastLoggedDate(today);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("bluebottlecap_last_logged_date", today);
+    }
+    setUserStats((prev) => {
+      const snap = evaluateStreak(prev.streakDays, prevDate, now);
+      // at-risk = yesterday was the last log, so today extends the run.
+      // broken/no-streak = start fresh at 1. active-today only happens when
+      // there was no stored date at all — count today as day 1 of a real run
+      // unless a positive streak already exists.
+      const nextStreak =
+        snap.status === "at-risk" ? prev.streakDays + 1 :
+        snap.status === "active-today" ? Math.max(prev.streakDays, 1) :
+        1;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("bluebottlecap_streak_days", String(nextStreak));
+      }
+      if (currentUser) {
+        const userDocRef = doc(db, "users", currentUser.uid);
+        updateDoc(userDocRef, {
+          streak: nextStreak,
+          streakDays: nextStreak,
+          lastLoggedDate: today,
+          lastActiveDate: today,
+          updatedAt: new Date().toISOString(),
+        }).catch((err) => console.error("Failed to persist streak:", err));
+      }
+      return { ...prev, streakDays: nextStreak };
+    });
+  };
+
   // Actions
   const recordActivity = (actionType: "query" | "card") => {
+    logStudyActivity();
     const todayStr = new Date().toISOString().split("T")[0];
     setDailyActivity((prev) => {
       let found = false;
@@ -402,6 +451,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const handleIncrementReview = () => {
+    logStudyActivity();
     setTodayReviewsCount((prev) => {
       const nextCount = prev + 1;
       if (typeof window !== "undefined") localStorage.setItem("bluebottlecap_today_reviews", String(nextCount));
@@ -414,8 +464,12 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const handleUseToolCredit = (): boolean => {
-    if (userStats.activePlan === "Pro") return true;
+    if (userStats.activePlan === "Pro") {
+      logStudyActivity();
+      return true;
+    }
     if (toolCreditsLeft > 0) {
+      logStudyActivity();
       const nextCount = toolCreditsLeft - 1;
       setToolCreditsLeft(nextCount);
       if (typeof window !== "undefined") localStorage.setItem("bluebottlecap_tool_credits", String(nextCount));
@@ -582,6 +636,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     const now = new Date();
     const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
     const month = today.slice(0, 7);
+    lastLoggedRef.current = today;
     setLastLoggedDate(today);
     if (opts?.free) setFreeStreakSaveMonth(month);
     if (typeof window !== "undefined") {
@@ -646,6 +701,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     claimReferralReward,
     saveStreakToday,
     freeStreakSaveMonth,
+    logStudyActivity,
   };
 
   return <GlobalStateContext.Provider value={value}>{children}</GlobalStateContext.Provider>;
