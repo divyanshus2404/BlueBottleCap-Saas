@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { UserStats } from "../types";
 import { Check, Zap, ShieldCheck, Printer, ArrowRight, Loader2 } from "lucide-react";
+import { trackEvent } from "../lib/analytics";
 
 interface PricingProps {
   userStats: UserStats;
@@ -84,6 +85,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
 
     setSelectedPlan(plan);
     setLoadingStep(0);
+    trackEvent("checkout_opened", { product });
 
     try {
       const resp = await fetch("/api/razorpay/create-order", {
@@ -115,17 +117,19 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
             // Use the server-returned plan, not the client's local guess, so
             // a tampered client cannot claim Pro from a non-Pro signature.
             const grantedPlan: PlanId = verifyData.plan === "Pro" ? "Pro" : "Free";
+            trackEvent("payment_success", { product });
             setLoadingStep(4);
             setShowReceipt(true);
             onUpgradeApproved(grantedPlan);
           } else {
+            trackEvent("payment_failed", { product, reason: "verify" });
             alert("Payment verification failed");
             setLoadingStep(-1);
           }
         },
         prefill: { name: "", email: "" },
         theme: { color: "#1B3FCB" },
-        modal: { ondismiss: () => setLoadingStep(-1) },
+        modal: { ondismiss: () => { trackEvent("checkout_dismissed", { product }); setLoadingStep(-1); } },
         // Surface UPI at the top of the payment methods list. Students in
         // India overwhelmingly reach for UPI (Google Pay, PhonePe, Paytm,
         // BHIM) — burying it under cards costs conversion. Enabling both
@@ -159,6 +163,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       rzp.open();
     } catch (err: any) {
       console.error(err);
+      trackEvent("payment_failed", { product, reason: "checkout_init" });
       alert(err.message || "Payment failed to start");
       setLoadingStep(-1);
     }

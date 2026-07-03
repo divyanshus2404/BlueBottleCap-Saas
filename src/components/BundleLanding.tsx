@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { trackEvent } from "../lib/analytics";
 
 // One-shot exam-pack landing. Positioned as a panic-buy for JEE 2026 students
 // — small enough (₹149) to feel like a snack, valuable enough that 100 sales
@@ -55,6 +56,7 @@ export const BundleLanding: React.FC<BundleLandingProps> = ({
       return;
     }
     setBusy(true);
+    trackEvent("checkout_opened", { product });
     try {
       const resp = await fetch("/api/razorpay/create-order", {
         method: "POST",
@@ -76,7 +78,7 @@ export const BundleLanding: React.FC<BundleLandingProps> = ({
         order_id: data.order.id,
         prefill: { name: buyerName, email: buyerEmail, contact: buyerPhone },
         theme: { color: "#1B3FCB" },
-        modal: { ondismiss: () => setBusy(false) },
+        modal: { ondismiss: () => { trackEvent("checkout_dismissed", { product }); setBusy(false); } },
         // Same UPI-first config as the Pro checkout — Indian buyers reach
         // for UPI, cards are the fallback.
         config: {
@@ -100,6 +102,7 @@ export const BundleLanding: React.FC<BundleLandingProps> = ({
             });
             const verifyData = await verifyResp.json();
             if (verifyResp.ok && verifyData.ok) {
+              trackEvent("payment_success", { product });
               // Fire-and-forget: notify the founder so manual delivery can
               // start. Failure here shouldn't block the buyer seeing success.
               fetch("/api/bundle-purchase", {
@@ -116,6 +119,7 @@ export const BundleLanding: React.FC<BundleLandingProps> = ({
               }).catch(() => {});
               setPurchased({ email: buyerEmail });
             } else {
+              trackEvent("payment_failed", { product, reason: "verify" });
               setError("Payment verification failed. Refund will be issued if we can't verify.");
             }
           } catch (e: any) {
@@ -130,6 +134,7 @@ export const BundleLanding: React.FC<BundleLandingProps> = ({
       rzp.open();
     } catch (err: any) {
       console.error(err);
+      trackEvent("payment_failed", { product, reason: "checkout_init" });
       setError(err?.message || "Payment failed to start.");
       setBusy(false);
     }

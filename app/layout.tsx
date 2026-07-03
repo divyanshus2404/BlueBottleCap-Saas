@@ -3,6 +3,7 @@ import "./globals.css";
 import React from "react";
 import { Providers } from "./providers";
 import ClientLayout from "./ClientLayout";
+import { Analytics } from "@vercel/analytics/react";
 
 export const viewport: Viewport = {
   // Matches --color-ink so mobile status bars align with the editorial palette.
@@ -69,6 +70,8 @@ export default function RootLayout({
             {children}
           </ClientLayout>
         </Providers>
+        {/* No-ops outside Vercel deployments, so safe in dev. */}
+        <Analytics />
       </body>
     </html>
   );

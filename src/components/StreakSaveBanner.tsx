@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Flame, Shield } from "lucide-react";
 import { STREAK_SAVE_PRICE } from "../lib/streak";
+import { trackEvent } from "../lib/analytics";
 
 // Dashboard banner that appears only when the user has a real streak in
 // danger. Uses the shared Razorpay checkout pattern from Pricing/Bundle
@@ -22,10 +23,17 @@ interface StreakSaveBannerProps {
 export const StreakSaveBanner: React.FC<StreakSaveBannerProps> = ({ streakDays, onSaved, freeSaveAvailable, onFreeSave, showToast }) => {
   const [busy, setBusy] = useState(false);
 
+  useEffect(() => {
+    trackEvent("streak_banner_shown", { streakDays, free: freeSaveAvailable ? 1 : 0 });
+    // Impression only on mount — the banner unmounts once the streak is safe.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const useFreeSave = async () => {
     setBusy(true);
     try {
       await onFreeSave?.();
+      trackEvent("free_streak_save_used", { streakDays });
       showToast?.("Streak protected with your free monthly save. See you tomorrow.", "success");
     } catch (e: any) {
       showToast?.(e?.message || "Could not save your streak.", "error");
@@ -48,6 +56,7 @@ export const StreakSaveBanner: React.FC<StreakSaveBannerProps> = ({ streakDays, 
 
   const save = async () => {
     setBusy(true);
+    trackEvent("checkout_opened", { product: "streak_save", streakDays });
     try {
       const resp = await fetch("/api/razorpay/create-order", {
         method: "POST",
@@ -68,7 +77,7 @@ export const StreakSaveBanner: React.FC<StreakSaveBannerProps> = ({ streakDays, 
         description: `Save your ${streakDays}-day streak`,
         order_id: data.order.id,
         theme: { color: "#1B3FCB" },
-        modal: { ondismiss: () => setBusy(false) },
+        modal: { ondismiss: () => { trackEvent("checkout_dismissed", { product: "streak_save" }); setBusy(false); } },
         config: {
           display: {
             blocks: {
@@ -90,9 +99,11 @@ export const StreakSaveBanner: React.FC<StreakSaveBannerProps> = ({ streakDays, 
             });
             const verifyData = await verifyResp.json();
             if (verifyResp.ok && verifyData.ok) {
+              trackEvent("payment_success", { product: "streak_save" });
               await onSaved();
               showToast?.(`Streak protected. See you tomorrow.`, "success");
             } else {
+              trackEvent("payment_failed", { product: "streak_save", reason: "verify" });
               showToast?.("Payment verification failed. Contact support.", "error");
             }
           } catch (e: any) {
@@ -107,6 +118,7 @@ export const StreakSaveBanner: React.FC<StreakSaveBannerProps> = ({ streakDays, 
       rzp.open();
     } catch (err: any) {
       console.error(err);
+      trackEvent("payment_failed", { product: "streak_save", reason: "checkout_init" });
       showToast?.(err?.message || "Could not start payment.", "error");
       setBusy(false);
     }
