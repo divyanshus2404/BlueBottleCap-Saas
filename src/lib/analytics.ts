@@ -14,7 +14,10 @@ export type FunnelEvent =
   | "payment_success"
   | "payment_failed"
   | "free_streak_save_used"
-  | "streak_banner_shown";
+  | "streak_banner_shown"
+  | "mock_generate_started"
+  | "mock_generate_success"
+  | "mock_generate_failed";
 
 export function trackEvent(name: FunnelEvent, props: Record<string, string | number | null> = {}): void {
   try {
