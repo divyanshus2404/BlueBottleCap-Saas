@@ -356,8 +356,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 {[
                   "White-label mocks — your logo on every export",
                   "Weak-topic maps per student + aggregate for the batch",
-                  "Owner + faculty dashboards, exportable to CSV",
-                  "Bulk CSV student onboarding via SMS / WhatsApp",
+                  "Batch weak-topic report — see where your class struggles",
+                  "One-link onboarding — students join in 2 minutes, no setup",
                 ].map((f) => (
                   <li key={f} className="flex items-start gap-2 text-[13.5px] text-[var(--color-ink-soft)]"><Check />{f}</li>
                 ))}
@@ -453,6 +453,113 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           <p className="bbc-reveal mx-auto mt-[22px] max-w-[46ch] text-[var(--color-ink-soft)]">
             Scattered PDFs, half-finished playlists, ten browser tabs. BlueBottleCap keeps one quiet workspace where your material, your questions, and your practice all live together.
           </p>
+        </div>
+      </section>
+
+      {/* ── ANATOMY / SYSTEM DIAGRAM ──
+          The patent-drawing bottle from earlier iterations, restored as a
+          brand-signature moment rather than the hero. Uses the animation
+          scaffolding already in globals.css: bbc-bottle-float, bbc-halo-pulse,
+          bbc-liquid-rise, bbc-liquid-wave, and staggered .bbc-diag-label
+          reveals keyed off --i. */}
+      <section className="border-b border-[var(--color-line)] py-[96px]">
+        <div className="mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-10 px-7 md:grid-cols-[.9fr_1.1fr]">
+          <div className="bbc-reveal">
+            <p className="bbc-eyebrow">The system, in one drawing</p>
+            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.6vw,40px)] leading-[1.08] tracking-[-.02em]">
+              Four moving parts. One quiet workspace.
+            </h2>
+            <p className="mt-5 max-w-[42ch] text-[16px] leading-[1.6] text-[var(--color-ink-soft)]">
+              A study planner that reads your syllabus, summaries that pull the tested points, a PDF
+              copilot that cites its sources, and a mock-test mode that runs like the real exam.
+              Everything sealed in one bottle.
+            </p>
+          </div>
+
+          <div className="bbc-diagram bbc-reveal mx-auto w-full max-w-[520px] md:max-w-none" aria-hidden="true">
+            <svg viewBox="0 0 760 560" className="bbc-bottle-float block h-auto w-full overflow-visible">
+              <defs>
+                <clipPath id="bbc-bottle-interior">
+                  <path d="M361 139 C 360 162 332 168 332 206 v250 a18 18 0 0 0 18 18 h60 a18 18 0 0 0 18 -18 v-250 c0 -38 -28 -44 -29 -67 Z" />
+                </clipPath>
+              </defs>
+
+              {/* Halo behind the bottle */}
+              <circle className="bbc-halo bbc-halo-pulse" cx="380" cy="380" r="220" />
+
+              {/* Center of symmetry */}
+              <line className="bbc-center" x1="380" y1="58" x2="380" y2="500" />
+
+              {/* Cap */}
+              <path className="bbc-stroke" d="M352 92 h56 l-4 26 a3 3 0 0 1 -3 3 h-42 a3 3 0 0 1 -3 -3 z" />
+              <g className="bbc-stroke-ink">
+                <line x1="360" y1="93" x2="359" y2="120" />
+                <line x1="369" y1="93" x2="368" y2="121" />
+                <line x1="380" y1="93" x2="380" y2="121" />
+                <line x1="391" y1="93" x2="392" y2="121" />
+                <line x1="400" y1="93" x2="401" y2="120" />
+              </g>
+              <path className="bbc-stroke" d="M364 121 v10 h-3 v8 h38 v-8 h-3 v-10" />
+
+              {/* Body */}
+              <path className="bbc-stroke" d="M361 139 C 360 162 332 168 332 206 v250 a18 18 0 0 0 18 18 h60 a18 18 0 0 0 18 -18 v-250 c0 -38 -28 -44 -29 -67" />
+
+              {/* Animated liquid inside the body, clipped to bottle silhouette */}
+              <g clipPath="url(#bbc-bottle-interior)">
+                <g className="bbc-liquid-rise">
+                  <rect className="bbc-liquid" x="320" y="320" width="120" height="160" />
+                  <path
+                    className="bbc-liquid bbc-liquid-wave"
+                    d="M280 322 Q320 310 360 322 T440 322 T520 322 L520 340 L280 340 Z"
+                  />
+                  <path
+                    className="bbc-liquid-line bbc-liquid-wave"
+                    style={{ animationDuration: "5.5s", animationDirection: "reverse" }}
+                    d="M280 328 Q320 316 360 328 T440 328 T520 328"
+                  />
+                </g>
+              </g>
+
+              {/* Document card inside the bottle */}
+              <rect className="bbc-stroke-ink" x="345" y="300" width="70" height="96" rx="6" fill="var(--color-paper-card)" />
+              <line className="bbc-stroke-ink" x1="358" y1="324" x2="402" y2="324" />
+              <line className="bbc-stroke-ink" x1="358" y1="340" x2="402" y2="340" />
+              <line className="bbc-stroke-ink" x1="358" y1="356" x2="388" y2="356" />
+
+              {/* Height indicator */}
+              <g className="bbc-stroke-ink" opacity=".5">
+                <line x1="300" y1="206" x2="312" y2="206" />
+                <line x1="306" y1="206" x2="306" y2="456" />
+                <line x1="300" y1="456" x2="312" y2="456" />
+              </g>
+
+              {/* Annotated labels — CSS var --i drives the stagger */}
+              <g className="bbc-diag-label" style={{ ["--i" as never]: 0 }}>
+                <circle className="bbc-anchor" cx="361" cy="135" r="3" />
+                <path className="bbc-lead bbc-draw" d="M361 135 H188 V124" />
+                <text className="bbc-lbl-num" x="120" y="118">01</text>
+                <text className="bbc-lbl" x="146" y="118">STUDY PLANNER</text>
+              </g>
+              <g className="bbc-diag-label" style={{ ["--i" as never]: 1 }}>
+                <circle className="bbc-anchor" cx="332" cy="380" r="3" />
+                <path className="bbc-lead bbc-draw" d="M332 380 H188 V392" />
+                <text className="bbc-lbl-num" x="120" y="398">02</text>
+                <text className="bbc-lbl" x="146" y="398">SMART SUMMARIES</text>
+              </g>
+              <g className="bbc-diag-label" style={{ ["--i" as never]: 2 }}>
+                <circle className="bbc-anchor" cx="406" cy="106" r="3" />
+                <path className="bbc-lead bbc-draw" d="M406 106 H572 V94" />
+                <text className="bbc-lbl-num" x="572" y="88">03</text>
+                <text className="bbc-lbl" x="598" y="88">AI PDF COPILOT</text>
+              </g>
+              <g className="bbc-diag-label" style={{ ["--i" as never]: 3 }}>
+                <circle className="bbc-anchor" cx="428" cy="420" r="3" />
+                <path className="bbc-lead bbc-draw" d="M428 420 H572 V432" />
+                <text className="bbc-lbl-num" x="572" y="438">04</text>
+                <text className="bbc-lbl" x="598" y="438">MOCK TEST MODE</text>
+              </g>
+            </svg>
+          </div>
         </div>
       </section>
 
