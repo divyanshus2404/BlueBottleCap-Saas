@@ -84,6 +84,13 @@ export const InstituteLanding: React.FC = () => {
             Book a 15-min demo
           </button>
         </div>
+        <p className="mt-4 text-[13.5px] text-[var(--color-ink-soft)]">
+          Or{" "}
+          <button onClick={() => router.push("/for-institutes/batch-report")} className="font-semibold text-[var(--color-blue-ink)] hover:underline">
+            see your batch's weakest topics
+          </button>{" "}
+          — share one link, get a ranked weak-topic map.
+        </p>
 
         <div className="mx-auto mt-10 grid max-w-[820px] grid-cols-2 gap-4 md:grid-cols-4">
           {[

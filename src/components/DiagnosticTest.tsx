@@ -34,9 +34,28 @@ export const DiagnosticTest: React.FC = () => {
     } else {
       const r = scoreDiagnostic(nextAnswers);
       saveDiagnosticResult(r);
+      submitToInstitute(r);
       setResult(r);
       setPhase("result");
     }
+  };
+
+  // If the student arrived via an institute-coded link (/diagnostic?inst=xyz),
+  // send their per-topic scores so the institute's batch report can aggregate
+  // them. Fire-and-forget and fully anonymous — never blocks the result screen.
+  const submitToInstitute = (r: DiagnosticResult) => {
+    if (typeof window === "undefined") return;
+    const inst = new URLSearchParams(window.location.search).get("inst");
+    if (!inst) return;
+    fetch("/api/institute/diagnostic-result", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        inst,
+        readiness: r.readiness,
+        topics: r.topicScores.map((t) => ({ topic: t.topic, subject: t.subject, correct: t.correct, total: t.total })),
+      }),
+    }).catch(() => {});
   };
 
   return (
