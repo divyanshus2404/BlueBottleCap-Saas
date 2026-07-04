@@ -12,6 +12,11 @@ export const maxDuration = 60;
 // Reads the funnel `events` collection (checkout_opened vs payment_success),
 // dedupes against `abandoned_sent`, and resolves emails via admin auth.
 // Uses single-field equality queries only, so no composite index is needed.
+//
+// Runs daily (Vercel Hobby caps cron frequency at once/day). The 24h scan
+// window + permanent dedupe mean one daily pass catches every abandoned
+// checkout exactly once. Bump to hourly ("0 * * * *") on a Pro plan for
+// faster recovery.
 
 const HOUR = 3_600_000;
 
