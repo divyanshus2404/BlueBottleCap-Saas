@@ -150,9 +150,9 @@ export const InstituteLanding: React.FC = () => {
               { t: "Unlimited AI-generated mock tests", d: "Chapter-wise or full-length, JEE / NEET / CUET pattern. Your logo on every question paper and answer key PDF." },
               { t: "Personalised weak-topic map per student", d: "After every mock, each student sees the exact chapters to revise. You see the aggregate — plan a class around what the batch actually fails at." },
               { t: "AI PDF Copilot on your textbooks", d: "Upload your institute's own material once. Students ask questions and get answers cited from your notes — not a generic chatbot." },
-              { t: "Owner + faculty dashboard", d: "See daily active students, mocks taken, average score by batch. Export CSV for parent-teacher meetings." },
+              { t: "Batch weak-topic intel", d: "See exactly which chapters your entire batch struggles with, ranked by percentage. One link to share, live results as students take the diagnostic." },
               { t: "White-label branding", d: "Your logo, your colours, your domain (via CNAME on Pro+). Parents see your institute name, not ours." },
-              { t: "Bulk student onboarding", d: "Upload a CSV of student names and phone numbers. They get an SMS/WhatsApp login link — no email required." },
+              { t: "Instant student onboarding", d: "One diagnostic link. Students log in without email, answer 12 questions in 2 minutes, see their personal weak-topic map. No CSV, no WhatsApp blasts." },
             ].map((f) => (
               <div key={f.t} className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6">
                 <h3 className="text-[15px] font-bold text-[var(--color-ink)]">{f.t}</h3>
