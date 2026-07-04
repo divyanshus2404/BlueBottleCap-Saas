@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { ActiveView, UsageStats, UserStats, DailyActivity, StudyAchievement } from "../types";
-import { Sparkles, ArrowRight, Zap, FileText, ImageIcon, HardDrive, Cpu, History, AlertTriangle, BookOpen, Layers, Award, Calendar, Trophy, CheckCircle, Clock, Flame, Activity } from "lucide-react";
+import { Sparkles, ArrowRight, Zap, FileText, ImageIcon, HardDrive, Cpu, History, AlertTriangle, BookOpen, Layers, Award, Calendar, Trophy, CheckCircle, Clock, Flame, Activity, Target, Camera } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import gsap from "gsap";
@@ -18,6 +18,8 @@ import { useRouter } from "next/navigation";
 import { WeeklyWrapped } from "./WeeklyWrapped";
 import { ReadinessCard } from "./ReadinessCard";
 import { ReferralCard } from "./ReferralCard";
+import { StreakSaveBanner } from "./StreakSaveBanner";
+import { evaluateStreak, isFreeSaveAvailable } from "../lib/streak";
 
 export const Dashboard: React.FC = () => {
   const {
@@ -33,6 +35,9 @@ export const Dashboard: React.FC = () => {
     referralRewardsClaimed,
     refreshReferralCount,
     claimReferralReward,
+    lastLoggedDate,
+    saveStreakToday,
+    freeStreakSaveMonth,
   } = useGlobalState();
   const router = useRouter();
   const { currentUser } = useAuth();
@@ -114,10 +119,17 @@ export const Dashboard: React.FC = () => {
         "-=0.4"
       );
 
-      tl.fromTo(".floating-icon", 
+      tl.fromTo(".floating-icon",
         { y: 80, opacity: 0 },
         { y: 0, opacity: 0.5, duration: 1, stagger: 0.2, ease: "elastic.out(1, 0.6)" },
         "-=0.8"
+      );
+
+      // Banners + tab bar fade in alongside the header, not after the whole
+      // timeline — appended at the end they left a visible hole for ~2s.
+      gsap.fromTo(".dash-fade",
+        { y: 24, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.12, ease: "power2.out", delay: 0.35 }
       );
     }
   }, { scope: containerRef, dependencies: [activeTab] });
@@ -125,13 +137,13 @@ export const Dashboard: React.FC = () => {
   // recentActivities is now passed as a prop from Firestore
   // If no activities exist, we will show an empty state.
 
-  const quickTools: Array<{ name: string; desc: string; icon: string; view: string; waitlistKey?: string }> = [
-    { name: "AI PDF Copilot", desc: "Interact with journals and papers", icon: "📖", view: "pdf-editor" },
-    { name: "File Tools", desc: "PNG↔JPG, PDF merge/split, compress", icon: "🛠️", view: "tools" },
-    { name: "JEE Diagnostic", desc: "2-min readiness check + weak topics", icon: "🎯", view: "diagnostic" },
-    { name: "Scan Notes", desc: "Snap handwritten notes → searchable", icon: "📷", view: "scan-notes" },
-    { name: "B.Tech Study Planner", desc: "Coming soon — join waitlist", icon: "📅", view: "waitlist", waitlistKey: "study-planner" },
-    { name: "JEE Question Generator", desc: "Coming soon — join waitlist", icon: "📝", view: "waitlist", waitlistKey: "jee-generator" },
+  const quickTools: Array<{ name: string; desc: string; icon: React.ReactNode; view: string; waitlistKey?: string }> = [
+    { name: "AI PDF Copilot", desc: "Interact with journals and papers", icon: <BookOpen className="h-5 w-5" strokeWidth={1.7} />, view: "pdf-editor" },
+    { name: "File Tools", desc: "PNG↔JPG, PDF merge/split, compress", icon: <Layers className="h-5 w-5" strokeWidth={1.7} />, view: "tools" },
+    { name: "JEE Diagnostic", desc: "2-min readiness check + weak topics", icon: <Target className="h-5 w-5" strokeWidth={1.7} />, view: "diagnostic" },
+    { name: "Scan Notes", desc: "Snap handwritten notes → searchable", icon: <Camera className="h-5 w-5" strokeWidth={1.7} />, view: "scan-notes" },
+    { name: "B.Tech Study Planner", desc: "Coming soon — join waitlist", icon: <Calendar className="h-5 w-5" strokeWidth={1.7} />, view: "waitlist", waitlistKey: "study-planner" },
+    { name: "JEE Question Generator", desc: "Coming soon — join waitlist", icon: <FileText className="h-5 w-5" strokeWidth={1.7} />, view: "waitlist", waitlistKey: "jee-generator" },
   ];
 
   const calculatePercentage = (current: number, max: number) => {
@@ -247,10 +259,25 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
+      {/* Streak-save banner — only when a real streak is one missed day
+          away from breaking (evaluateStreak keeps it honest: never shown
+          for streaks that are safe today or already broken). */}
+      {evaluateStreak(userStats.streakDays, lastLoggedDate).saveable && (
+        <div className="dash-fade mb-8">
+          <StreakSaveBanner
+            streakDays={userStats.streakDays}
+            onSaved={saveStreakToday}
+            freeSaveAvailable={isFreeSaveAvailable(freeStreakSaveMonth)}
+            onFreeSave={() => saveStreakToday({ free: true })}
+            showToast={onShowToast}
+          />
+        </div>
+      )}
+
       {/* Weekly Wrapped Banner */}
       <button
         onClick={() => setShowWrapped(true)}
-        className="group relative mb-8 flex w-full flex-col items-center justify-between gap-6 overflow-hidden rounded-2xl border border-white/10 bg-[var(--color-blue-deep)] p-6 text-left transition-all hover:brightness-110 md:flex-row md:p-8"
+        className="dash-fade group relative mb-8 flex w-full flex-col items-center justify-between gap-6 overflow-hidden rounded-2xl border border-white/10 bg-[var(--color-blue-deep)] p-6 text-left transition-all hover:brightness-110 md:flex-row md:p-8"
       >
         <div className="pointer-events-none absolute -left-32 -top-32 h-64 w-64 rounded-full bg-[var(--color-blue-ink)] opacity-40 blur-[80px] transition-opacity group-hover:opacity-60"></div>
 
@@ -276,8 +303,8 @@ export const Dashboard: React.FC = () => {
       </button>
 
       {/* Segment Tabs */}
-      <div className="mb-8 flex w-full gap-3 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-2">
-        {([["workspace", "📚 Study workspace"], ["analytics", "📊 Stats & streaks"]] as const).map(([tab, label]) => (
+      <div className="dash-fade mb-8 flex w-full gap-3 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-2">
+        {([["workspace", "Study workspace"], ["analytics", "Stats & streaks"]] as const).map(([tab, label]) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -427,7 +454,7 @@ export const Dashboard: React.FC = () => {
                       }`}
                     >
                       <div className={`flex h-10 w-10 items-center justify-center rounded-xl text-lg transition-all duration-300 group-hover:scale-110 ${
-                        isWaitlist ? "bg-[var(--color-line)] text-[var(--color-ink-faint)]" : "bg-[var(--color-blue-wash)]"
+                        isWaitlist ? "bg-[var(--color-line)] text-[var(--color-ink-faint)]" : "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]"
                       }`}>
                         {tool.icon}
                       </div>

@@ -137,7 +137,8 @@ export const Navigation: React.FC<NavigationProps> = ({
         {/* Mobile Menu Button & Mobile Toggle */}
         <div className="flex items-center md:hidden gap-3 ml-3">
           <div className="flex items-center gap-1 rounded-full bg-[var(--color-blue-wash)] px-2.5 py-1 text-[11px] font-bold text-[var(--color-blue-ink)]">
-            🔥 {userStats.streakDays}
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c.8 3.2-.6 5-2 6.5C8.6 10 7 11.6 7 14a5 5 0 0 0 10 0c0-1.1-.3-2.1-.8-3-.5 1-1.3 1.6-2.2 1.8.6-2.6.2-5.5-2-8.3A11 11 0 0 0 12 2z"/></svg>
+            {userStats.streakDays}
           </div>
           
           <button

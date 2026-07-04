@@ -49,6 +49,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (name && userCredential.user) {
       await updateProfile(userCredential.user, { displayName: name });
     }
+    // Fire-and-forget welcome email. Never let a mail hiccup fail signup.
+    fetch("/api/email/welcome", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, name }),
+    }).catch(() => {});
     return userCredential;
   };
 

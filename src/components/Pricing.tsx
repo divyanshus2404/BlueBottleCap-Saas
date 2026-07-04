@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { UserStats } from "../types";
 import { Check, Zap, ShieldCheck, Printer, ArrowRight, Loader2 } from "lucide-react";
+import { trackEvent } from "../lib/analytics";
+import { auth } from "../firebase";
 
 interface PricingProps {
   userStats: UserStats;
@@ -84,6 +86,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
 
     setSelectedPlan(plan);
     setLoadingStep(0);
+    trackEvent("checkout_opened", { product });
 
     try {
       const resp = await fetch("/api/razorpay/create-order", {
@@ -105,27 +108,38 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
         description: `${plan} plan purchase`,
         order_id: data.order.id,
         handler: async function (response: any) {
-          const verifyResp = await fetch("/api/razorpay/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...response, product }),
-          });
-          const verifyData = await verifyResp.json();
-          if (verifyResp.ok && verifyData.ok) {
-            // Use the server-returned plan, not the client's local guess, so
-            // a tampered client cannot claim Pro from a non-Pro signature.
-            const grantedPlan: PlanId = verifyData.plan === "Pro" ? "Pro" : "Free";
-            setLoadingStep(4);
-            setShowReceipt(true);
-            onUpgradeApproved(grantedPlan);
-          } else {
+          try {
+            const idToken = await auth?.currentUser?.getIdToken().catch(() => undefined);
+            const verifyResp = await fetch("/api/razorpay/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ...response, product, idToken }),
+            });
+            const verifyData = await verifyResp.json();
+            if (verifyResp.ok && verifyData.ok) {
+              // Use the server-returned plan, not the client's local guess, so
+              // a tampered client cannot claim Pro from a non-Pro signature.
+              const grantedPlan: PlanId = verifyData.plan === "Pro" ? "Pro" : "Free";
+              trackEvent("payment_success", { product });
+              setLoadingStep(4);
+              setShowReceipt(true);
+              onUpgradeApproved(grantedPlan);
+            } else {
+              trackEvent("payment_failed", { product, reason: "verify" });
+              alert("Payment verification failed");
+              setLoadingStep(-1);
+            }
+          } catch (e: any) {
+            // Network drop / non-JSON body after the buyer already paid —
+            // never leave the "securing payment" overlay hanging.
+            trackEvent("payment_failed", { product, reason: "verify_error" });
             alert("Payment verification failed");
             setLoadingStep(-1);
           }
         },
         prefill: { name: "", email: "" },
         theme: { color: "#1B3FCB" },
-        modal: { ondismiss: () => setLoadingStep(-1) },
+        modal: { ondismiss: () => { trackEvent("checkout_dismissed", { product }); setLoadingStep(-1); } },
         // Surface UPI at the top of the payment methods list. Students in
         // India overwhelmingly reach for UPI (Google Pay, PhonePe, Paytm,
         // BHIM) — burying it under cards costs conversion. Enabling both
@@ -159,6 +173,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       rzp.open();
     } catch (err: any) {
       console.error(err);
+      trackEvent("payment_failed", { product, reason: "checkout_init" });
       alert(err.message || "Payment failed to start");
       setLoadingStep(-1);
     }

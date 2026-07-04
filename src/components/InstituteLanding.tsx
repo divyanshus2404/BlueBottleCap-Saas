@@ -77,13 +77,20 @@ export const InstituteLanding: React.FC = () => {
           Give every student in your institute unlimited AI-generated mock tests, chapter-wise diagnostics, and a personalised weak-topic map — with your logo on every export. Per-seat pricing that fits Tier-2 economics.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-          <button onClick={scrollToDemo} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">
+          <button onClick={() => router.push("/for-institutes/mock-generator")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">
+            Generate a branded paper — free
+          </button>
+          <button onClick={scrollToDemo} className="bbc-btn bbc-btn-ghost px-[26px] py-[14px] text-[15px]">
             Book a 15-min demo
           </button>
-          <button onClick={() => router.push("/diagnostic")} className="bbc-btn bbc-btn-ghost px-[26px] py-[14px] text-[15px]">
-            Try the student diagnostic first
-          </button>
         </div>
+        <p className="mt-4 text-[13.5px] text-[var(--color-ink-soft)]">
+          Or{" "}
+          <button onClick={() => router.push("/for-institutes/batch-report")} className="font-semibold text-[var(--color-blue-ink)] hover:underline">
+            see your batch's weakest topics
+          </button>{" "}
+          — share one link, get a ranked weak-topic map.
+        </p>
 
         <div className="mx-auto mt-10 grid max-w-[820px] grid-cols-2 gap-4 md:grid-cols-4">
           {[

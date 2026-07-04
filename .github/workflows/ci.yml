@@ -17,13 +17,14 @@ jobs:
       - run: npm ci
       - name: Type check
         run: npx tsc --noEmit
-      - name: Lint
-        run: npm run lint --if-present
+      # Lint step intentionally omitted: `next lint` isn't configured yet and
+      # drops into an interactive setup prompt that would hang CI. Add it back
+      # once ESLint is configured (npx @next/codemod next-lint-to-eslint-cli .).
       - name: Build
         run: npm run build
         env:
-          # Provide harmless placeholders so the build doesn't fail on missing
-          # runtime secrets. Real values are injected by the hosting platform.
+          # Harmless placeholders so the build doesn't fail on missing runtime
+          # secrets. Real values are injected by the hosting platform.
           GEMINI_API_KEY: "ci-placeholder"
           RAZORPAY_KEY_ID: "ci-placeholder"
           RAZORPAY_KEY_SECRET: "ci-placeholder"

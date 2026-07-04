@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { Sparkles, Search, X, Lock } from "lucide-react";
+import { Sparkles, Search, X, Lock, Image as ImageIcon, Images, Feather, Archive, Scaling, Layers, Scissors, Printer, type LucideIcon } from "lucide-react";
+import { useReveal } from "@/src/lib/useReveal";
 import { TOOLS, ToolDef, ToolCategory, FREE_DAILY_RUNS, PRO_MAX_BYTES } from "@/src/lib/tools";
 import { useGlobalState } from "@/src/context/GlobalStateContext";
 import { useRouter } from "next/navigation";
@@ -15,8 +16,27 @@ const CATEGORY_LABELS: Record<ToolCategory, string> = {
   text: "Text tools",
 };
 
+// Line icons per tool — replaces the emoji from tools.ts, which render
+// inconsistently across OSes and clash with the editorial palette.
+const TOOL_ICONS: Record<string, LucideIcon> = {
+  "png-to-jpg": ImageIcon,
+  "jpg-to-png": Images,
+  "image-to-webp": Feather,
+  "image-compress": Archive,
+  "image-resize": Scaling,
+  "pdf-merge": Layers,
+  "pdf-split": Scissors,
+  "pdf-to-images": Printer,
+};
+
+const ToolIcon: React.FC<{ id: string; className?: string }> = ({ id, className }) => {
+  const Icon = TOOL_ICONS[id] ?? Sparkles;
+  return <Icon className={className} strokeWidth={1.6} />;
+};
+
 export const ToolsHub: React.FC = () => {
   const router = useRouter();
+  const rootRef = useReveal<HTMLDivElement>();
   const { userStats, showToast } = useGlobalState();
   const isPro = userStats.activePlan === "Pro";
 
@@ -96,10 +116,10 @@ export const ToolsHub: React.FC = () => {
   };
 
   return (
-    <div className="bbc relative min-h-screen overflow-hidden">
+    <div ref={rootRef} className="bbc relative min-h-screen overflow-hidden">
       <div className="bbc-grid" aria-hidden="true" />
       <div className="relative z-[2] mx-auto max-w-[1180px] px-7 py-16">
-        <div className="mb-10 text-center">
+        <div className="bbc-reveal mb-10 text-center">
           <p className="bbc-eyebrow">Tools</p>
           <h1 className="bbc-serif mx-auto mt-3 max-w-[20ch] text-[clamp(32px,4.4vw,52px)] leading-[1.06] tracking-[-.02em]">
             Every file tool, in one place.
@@ -110,7 +130,7 @@ export const ToolsHub: React.FC = () => {
         </div>
 
         {/* AI search + filters */}
-        <div className="mb-6 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-4">
+        <div className="bbc-reveal mb-6 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-4">
           <div className="flex items-center gap-2 rounded-xl border border-[var(--color-line)] bg-white px-3 py-2">
             <Sparkles className="h-4 w-4 text-[var(--color-blue-ink)]" />
             <input
@@ -157,7 +177,10 @@ export const ToolsHub: React.FC = () => {
           </div>
         </div>
 
-        {/* Tool grid */}
+        {/* Tool grid — reveal lives on this always-mounted wrapper, not the
+            cards: filtered-in cards mount after the observer ran and would
+            otherwise stay invisible. */}
+        <div className="bbc-reveal">
         {visible.length === 0 ? (
           <div className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-12 text-center text-[var(--color-ink-soft)]">
             No tools match that. Try a broader description.
@@ -180,7 +203,9 @@ export const ToolsHub: React.FC = () => {
                   }`}
                 >
                   <div className="flex w-full items-start justify-between">
-                    <span className="text-2xl">{tool.emoji}</span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]">
+                      <ToolIcon id={tool.id} className="h-[18px] w-[18px]" />
+                    </span>
                     {proGated ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-blue-ink)] px-2 py-0.5 text-[10px] font-bold text-white">
                         <Lock className="h-3 w-3" /> Pro
@@ -206,6 +231,7 @@ export const ToolsHub: React.FC = () => {
             })}
           </div>
         )}
+        </div>
 
         {/* Free tier callout */}
         {!isPro && (
@@ -226,7 +252,9 @@ export const ToolsHub: React.FC = () => {
           <div className="relative w-full max-w-2xl rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] shadow-2xl">
             <div className="flex items-center justify-between border-b border-[var(--color-line)] px-6 py-4">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">{openTool.emoji}</span>
+                <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]">
+                  <ToolIcon id={openTool.id} className="h-[18px] w-[18px]" />
+                </span>
                 <div>
                   <h2 className="bbc-serif text-[20px] tracking-[-.01em] text-[var(--color-ink)]">{openTool.name}</h2>
                   <p className="text-[12px] text-[var(--color-ink-faint)]">{openTool.desc}</p>
