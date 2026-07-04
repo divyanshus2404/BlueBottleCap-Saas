@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { isProductId, productToPlan, verifyPaymentSignature, PRODUCTS, type ProductId } from "@/src/lib/razorpay";
 import { enforceRateLimit } from "@/src/lib/rateLimit";
 import { getAdmin } from "@/src/lib/firebaseAdmin";
+import { sendEmail } from "@/src/lib/email";
+import { receiptEmail } from "@/src/lib/emailTemplates";
 
 // Persist the purchase and grant the entitlement server-side so it survives
 // a localStorage wipe and can't be forged. Never throws — a persistence
@@ -13,14 +15,17 @@ async function persistPurchase(args: {
   orderId?: string;
   idToken?: string;
   buyerEmail?: string;
-}) {
+}): Promise<{ email: string | null }> {
   const admin = getAdmin();
-  if (!admin) return; // env not configured — legacy client-side behaviour
+  if (!admin) return { email: args.buyerEmail || null }; // env not configured — legacy client-side behaviour
 
   let uid: string | null = null;
+  let email: string | null = args.buyerEmail || null;
   if (args.idToken) {
     try {
-      uid = (await admin.auth.verifyIdToken(args.idToken)).uid;
+      const decoded = await admin.auth.verifyIdToken(args.idToken);
+      uid = decoded.uid;
+      if (!email && decoded.email) email = decoded.email;
     } catch (err) {
       console.error("verify: bad idToken, recording purchase without uid:", err);
     }
@@ -52,6 +57,7 @@ async function persistPurchase(args: {
   } catch (err) {
     console.error("verify: failed to persist purchase:", err);
   }
+  return { email };
 }
 
 export async function POST(req: Request) {
@@ -86,13 +92,23 @@ export async function POST(req: Request) {
 
     const plan = productToPlan(product);
 
-    await persistPurchase({
+    const { email } = await persistPurchase({
       product,
       paymentId: razorpay_payment_id,
       orderId: razorpay_order_id,
       idToken,
       buyerEmail,
     });
+
+    // Receipt email — best-effort, never blocks the success response.
+    if (email) {
+      const { subject, html, text } = receiptEmail({
+        productLabel: PRODUCTS[product].label,
+        amountPaise: PRODUCTS[product].amount,
+        paymentId: razorpay_payment_id,
+      });
+      sendEmail({ to: email, subject, html, text }).catch((e) => console.error("verify: receipt email failed:", e));
+    }
 
     return NextResponse.json({ ok: true, product, plan });
   } catch (err: any) {
