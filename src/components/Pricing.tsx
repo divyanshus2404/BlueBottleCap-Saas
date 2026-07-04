@@ -108,23 +108,31 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
         description: `${plan} plan purchase`,
         order_id: data.order.id,
         handler: async function (response: any) {
-          const idToken = await auth?.currentUser?.getIdToken().catch(() => undefined);
-          const verifyResp = await fetch("/api/razorpay/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...response, product, idToken }),
-          });
-          const verifyData = await verifyResp.json();
-          if (verifyResp.ok && verifyData.ok) {
-            // Use the server-returned plan, not the client's local guess, so
-            // a tampered client cannot claim Pro from a non-Pro signature.
-            const grantedPlan: PlanId = verifyData.plan === "Pro" ? "Pro" : "Free";
-            trackEvent("payment_success", { product });
-            setLoadingStep(4);
-            setShowReceipt(true);
-            onUpgradeApproved(grantedPlan);
-          } else {
-            trackEvent("payment_failed", { product, reason: "verify" });
+          try {
+            const idToken = await auth?.currentUser?.getIdToken().catch(() => undefined);
+            const verifyResp = await fetch("/api/razorpay/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ...response, product, idToken }),
+            });
+            const verifyData = await verifyResp.json();
+            if (verifyResp.ok && verifyData.ok) {
+              // Use the server-returned plan, not the client's local guess, so
+              // a tampered client cannot claim Pro from a non-Pro signature.
+              const grantedPlan: PlanId = verifyData.plan === "Pro" ? "Pro" : "Free";
+              trackEvent("payment_success", { product });
+              setLoadingStep(4);
+              setShowReceipt(true);
+              onUpgradeApproved(grantedPlan);
+            } else {
+              trackEvent("payment_failed", { product, reason: "verify" });
+              alert("Payment verification failed");
+              setLoadingStep(-1);
+            }
+          } catch (e: any) {
+            // Network drop / non-JSON body after the buyer already paid —
+            // never leave the "securing payment" overlay hanging.
+            trackEvent("payment_failed", { product, reason: "verify_error" });
             alert("Payment verification failed");
             setLoadingStep(-1);
           }

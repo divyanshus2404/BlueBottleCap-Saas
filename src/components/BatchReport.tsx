@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Loader2, Copy, Check, Users, Gauge, BarChart3 } from "lucide-react";
-import type { BatchReport as BatchReportData } from "../lib/batchReport";
+import { normalizeInstCode, MIN_INST_CODE_LEN, type BatchReport as BatchReportData } from "../lib/batchReport";
 
 // Institute-facing batch weak-topic report. Enter your code, share the
 // diagnostic link with your batch, and watch the aggregate weak-topic map
@@ -21,8 +21,8 @@ export const BatchReport: React.FC = () => {
     : "";
 
   const load = async (raw: string) => {
-    const c = raw.trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
-    if (c.length < 2) { setError("Enter a code with at least 2 letters/numbers."); return; }
+    const c = normalizeInstCode(raw);
+    if (!c) { setError(`Enter a code with at least ${MIN_INST_CODE_LEN} letters/numbers.`); return; }
     setBusy(true); setError(null); setData(null); setActive(c);
     try {
       const resp = await fetch(`/api/institute/batch-report?inst=${encodeURIComponent(c)}`);

@@ -5,7 +5,7 @@ import { UserStats, UsageStats, Flashcard, DailyActivity, RecentActivityItem, Ac
 import { useAuth } from "./AuthContext";
 import { db } from "../firebase";
 import { doc, getDoc, setDoc, updateDoc, collection, getDocs, addDoc, onSnapshot, query, where } from "firebase/firestore";
-import { todayStr, evaluateStreak } from "../lib/streak";
+import { todayStr, monthStr, evaluateStreak } from "../lib/streak";
 
 interface Toast {
   id: number;
@@ -634,8 +634,8 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
 
   const saveStreakToday = async (opts?: { free?: boolean }) => {
     const now = new Date();
-    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-    const month = today.slice(0, 7);
+    const today = todayStr(now);
+    const month = monthStr(now);
     lastLoggedRef.current = today;
     setLastLoggedDate(today);
     if (opts?.free) setFreeStreakSaveMonth(month);

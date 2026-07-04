@@ -125,6 +125,7 @@ export const BundleLanding: React.FC<BundleLandingProps> = ({
               setError("Payment verification failed. Refund will be issued if we can't verify.");
             }
           } catch (e: any) {
+            trackEvent("payment_failed", { product, reason: "verify_error" });
             setError(e?.message || "Post-payment verification failed.");
           } finally {
             setBusy(false);

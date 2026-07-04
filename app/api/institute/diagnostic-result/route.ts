@@ -27,12 +27,19 @@ export async function POST(req: Request) {
     ? body.topics
         .filter((t: any) => t && typeof t.topic === "string" && Number(t.total) > 0)
         .slice(0, 30)
-        .map((t: any) => ({
-          topic: String(t.topic).slice(0, 60),
-          subject: typeof t.subject === "string" ? t.subject.slice(0, 40) : undefined,
-          correct: Math.max(0, Math.min(Number(t.total), Number(t.correct) || 0)),
-          total: Math.min(50, Number(t.total)),
-        }))
+        .map((t: any) => {
+          // Cap total first, then clamp correct against the *capped* total —
+          // otherwise a total > 50 could persist correct > total and push
+          // aggregate accuracy above 100%.
+          const total = Math.min(50, Number(t.total) || 0);
+          const correct = Math.max(0, Math.min(total, Number(t.correct) || 0));
+          return {
+            topic: String(t.topic).slice(0, 60),
+            subject: typeof t.subject === "string" ? t.subject.slice(0, 40) : undefined,
+            correct,
+            total,
+          };
+        })
     : [];
 
   if (topics.length === 0) return NextResponse.json({ error: "No topic scores provided." }, { status: 400 });

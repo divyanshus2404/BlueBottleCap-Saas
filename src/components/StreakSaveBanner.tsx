@@ -137,7 +137,7 @@ export const StreakSaveBanner: React.FC<StreakSaveBannerProps> = ({ streakDays, 
           <div>
             <p className="text-[10.5px] font-bold uppercase tracking-[.15em] text-white/60">Your streak is at risk</p>
             <h3 className="bbc-serif mt-1 text-[22px] leading-tight tracking-[-.01em] text-white">
-              Save your <span className="text-orange-300">{streakDays}-day</span> streak for ₹{STREAK_SAVE_PRICE}.
+              Save your <span className="text-orange-300">{streakDays}-day</span> streak{freeSaveAvailable ? "" : ` for ₹${STREAK_SAVE_PRICE}`}.
             </h3>
             <p className="mt-1.5 max-w-md text-[13px] text-white/70">
               {freeSaveAvailable

@@ -74,9 +74,14 @@ export function aggregateBatch(subs: DiagnosticSubmission[]): BatchReport {
   return { count, avgReadiness, topics };
 }
 
+/** Minimum institute-code length. The report is unauthenticated, so a longer
+ *  minimum makes the endpoint materially harder to enumerate. (A real fix is
+ *  binding reports to an authenticated institute account — tracked for later.) */
+export const MIN_INST_CODE_LEN = 6;
+
 /** Institute codes are short slugs students never type — keep them URL-safe. */
 export function normalizeInstCode(raw: unknown): string | null {
   if (typeof raw !== "string") return null;
   const code = raw.trim().toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 40);
-  return code.length >= 2 ? code : null;
+  return code.length >= MIN_INST_CODE_LEN ? code : null;
 }

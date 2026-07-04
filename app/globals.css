@@ -176,9 +176,12 @@ body {
 }
 
 /* Hover lift for cards (pricing, lanes, tool tiles). Transform-only, so it
-   stays cheap; shadow deepens a touch to sell the lift. */
-.bbc-lift { transition: transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease, border-color .25s ease; }
-.bbc-lift:hover { transform: translateY(-3px); box-shadow: 0 22px 44px -24px rgba(20,30,55,.28); }
+   stays cheap; shadow deepens a touch to sell the lift. Gated on
+   reduced-motion like the other motion classes. */
+@media (prefers-reduced-motion: no-preference) {
+  .bbc-lift { transition: transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease, border-color .25s ease; }
+  .bbc-lift:hover { transform: translateY(-3px); box-shadow: 0 22px 44px -24px rgba(20,30,55,.28); }
+}
 
 @keyframes bbc-caret-blink {
   0%, 55% { opacity: 1; }

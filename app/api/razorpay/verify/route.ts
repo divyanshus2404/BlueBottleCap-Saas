@@ -20,27 +20,35 @@ async function persistPurchase(args: {
   if (!admin) return { email: args.buyerEmail || null }; // env not configured — legacy client-side behaviour
 
   let uid: string | null = null;
-  let email: string | null = args.buyerEmail || null;
+  let verifiedEmail: string | null = null;
   if (args.idToken) {
     try {
       const decoded = await admin.auth.verifyIdToken(args.idToken);
       uid = decoded.uid;
-      if (!email && decoded.email) email = decoded.email;
+      verifiedEmail = decoded.email ?? null;
     } catch (err) {
       console.error("verify: bad idToken, recording purchase without uid:", err);
     }
   }
+  // Prefer the token-verified email over the client-supplied buyerEmail.
+  const email: string | null = verifiedEmail || args.buyerEmail || null;
 
   try {
-    await admin.db.collection("purchases").add({
+    const record = {
       product: args.product,
       amount: PRODUCTS[args.product].amount,
       paymentId: args.paymentId || null,
       orderId: args.orderId || null,
       uid,
-      email: args.buyerEmail || null,
+      email,
       createdAt: new Date().toISOString(),
-    });
+    };
+    // Idempotent: key by the unique Razorpay payment id so a retried verify
+    // updates the same doc instead of creating a duplicate. Fall back to an
+    // auto-id only when (unexpectedly) no payment id is present.
+    const purchases = admin.db.collection("purchases");
+    if (args.paymentId) await purchases.doc(args.paymentId).set(record, { merge: true });
+    else await purchases.add(record);
 
     if (uid) {
       const userRef = admin.db.collection("users").doc(uid);

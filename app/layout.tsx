@@ -3,7 +3,7 @@ import "./globals.css";
 import React from "react";
 import { Providers } from "./providers";
 import ClientLayout from "./ClientLayout";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 
 export const viewport: Viewport = {
   // Matches --color-ink so mobile status bars align with the editorial palette.

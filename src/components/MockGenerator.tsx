@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FileText, Loader2, Upload, Download, CheckCircle2, Sparkles } from "lucide-react";
 import { trackEvent } from "../lib/analytics";
 
@@ -8,7 +8,7 @@ import { trackEvent } from "../lib/analytics";
 // exam + chapters + branding, generate a branded PDF paper with answer key.
 // Runs against /api/institute/generate-mock, which returns the PDF bytes.
 
-const EXAMS = ["JEE Main 2026", "JEE Advanced 2026", "NEET 2026", "CUET 2026", "MHT-CET 2026"];
+const EXAMS = ["JEE Main 2027", "JEE Advanced 2027", "NEET 2027", "CUET 2027", "MHT-CET 2027"];
 const SUBJECTS = ["Physics", "Chemistry", "Mathematics", "Biology"];
 const DIFFICULTIES = ["easy", "medium", "hard", "mixed"] as const;
 
@@ -25,6 +25,9 @@ export const MockGenerator: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<{ url: string; name: string; questions: string | null } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  // Track the live blob URL so we can revoke it when the component unmounts.
+  const doneUrlRef = useRef<string | null>(null);
+  useEffect(() => () => { if (doneUrlRef.current) URL.revokeObjectURL(doneUrlRef.current); }, []);
 
   const onLogo = (file?: File) => {
     if (!file) return;
@@ -53,7 +56,11 @@ export const MockGenerator: React.FC = () => {
         throw new Error(data.error || "Could not generate the paper.");
       }
       const blob = await resp.blob();
+      // Revoke the previous blob URL before replacing it — repeated
+      // generations would otherwise leak object URLs for the session.
+      setDone((prev) => { if (prev?.url) URL.revokeObjectURL(prev.url); return prev; });
       const url = URL.createObjectURL(blob);
+      doneUrlRef.current = url;
       const name = `${instituteName}-${subject}-mock.pdf`.replace(/[^a-z0-9.\-]+/gi, "-").toLowerCase();
       setDone({ url, name, questions: resp.headers.get("X-Question-Count") });
       trackEvent("mock_generate_success", { exam, subject, count });
