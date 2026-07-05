@@ -137,6 +137,14 @@ body {
 .bbc-icn-bg    { fill: var(--color-blue-wash); stroke: var(--color-blue-ink); stroke-width:1.3; }
 .bbc-bubble    { fill: var(--color-blue-ink); opacity:0; }
 
+/* Orbital "system" diagram — your material at the core, features in orbit */
+.bbc-orbit-ring { fill:none; stroke: var(--color-blue-ink); stroke-width:1; opacity:.16; stroke-dasharray:2 8; stroke-linecap:round; }
+.bbc-core       { fill: var(--color-paper); stroke: var(--color-blue-ink); stroke-width:1.8; }
+.bbc-core-halo  { fill: var(--color-blue-ink); opacity:.08; }
+.bbc-spoke      { fill:none; stroke: var(--color-blue-ink); stroke-width:1.2; opacity:.4; }
+.bbc-orbit-dot  { fill: var(--color-blue-ink); }
+.bbc-core-lbl   { font-family: var(--font-plex); font-size:9.5px; font-weight:700; letter-spacing:.2em; fill: var(--color-blue-ink); }
+
 .bbc-row { transition: background .18s ease; }
 .bbc-row:hover { background: var(--color-paper-card); }
 .bbc-row:hover .bbc-arrow { transform: translateX(4px); color: var(--color-blue-ink); }
@@ -169,6 +177,14 @@ body {
   /* Carbonation — bubbles drift up through the liquid once the diagram reveals.
      Per-bubble --d staggers the loop so they don't rise in lockstep. */
   .bbc-diagram.bbc-in .bbc-bubble { animation: bbc-bubble 4.2s ease-in infinite; animation-delay: calc(var(--d, 0) * 1s + 900ms); }
+
+  /* Orbital system: rings and data-pulses revolve around the core, which
+     breathes. Different speeds/directions keep the motion organic. */
+  .bbc-diagram.bbc-in .bbc-spin-a { animation: bbc-spin 55s linear infinite; transform-origin: 380px 285px; }
+  .bbc-diagram.bbc-in .bbc-spin-b { animation: bbc-spin 80s linear infinite reverse; transform-origin: 380px 285px; }
+  .bbc-diagram.bbc-in .bbc-orbit-travel-a { animation: bbc-spin 20s linear infinite; transform-origin: 380px 285px; }
+  .bbc-diagram.bbc-in .bbc-orbit-travel-b { animation: bbc-spin 32s linear infinite reverse; transform-origin: 380px 285px; }
+  .bbc-diagram.bbc-in .bbc-core-pulse { animation: bbc-corepulse 4.5s ease-in-out infinite; transform-origin: 380px 285px; }
 
   /* Cascade — children of a revealed .bbc-cascade stagger in one after
      another. Used inside hero mock grids and the chat demo so the content
@@ -229,4 +245,10 @@ body {
   20%  { opacity: .3; }
   85%  { opacity: .22; }
   100% { transform: translateY(-96px) scale(1); opacity: 0; }
+}
+
+@keyframes bbc-spin { to { transform: rotate(360deg); } }
+@keyframes bbc-corepulse {
+  0%, 100% { transform: scale(1);    opacity: .08; }
+  50%      { transform: scale(1.14); opacity: .13; }
 }

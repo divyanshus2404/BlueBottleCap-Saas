@@ -479,143 +479,88 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             </h2>
             <p className="mt-5 max-w-[42ch] text-[16px] leading-[1.6] text-[var(--color-ink-soft)]">
               A study planner that reads your syllabus, summaries that pull the tested points, a PDF
-              copilot that cites its sources, and a mock-test mode that runs like the real exam.
-              Everything sealed in one bottle.
+              copilot that cites its sources, and a mock-test mode that runs like the real exam —
+              all orbiting one thing: your own material.
             </p>
           </div>
 
           <div className="bbc-diagram bbc-reveal mx-auto w-full max-w-[520px] md:max-w-none" aria-hidden="true">
-            <svg viewBox="0 0 760 560" className="bbc-bottle-float block h-auto w-full overflow-visible">
-              <defs>
-                <clipPath id="bbc-bottle-interior">
-                  <path d="M361 139 C 360 162 332 168 332 206 v250 a18 18 0 0 0 18 18 h60 a18 18 0 0 0 18 -18 v-250 c0 -38 -28 -44 -29 -67 Z" />
-                </clipPath>
-                <linearGradient id="bbc-liquid-grad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--color-blue-ink)" stopOpacity="0.10" />
-                  <stop offset="100%" stopColor="var(--color-blue-ink)" stopOpacity="0.26" />
-                </linearGradient>
-              </defs>
+            <svg viewBox="0 0 760 560" className="block h-auto w-full overflow-visible">
+              {/* Orbit rings — slowly revolving, different speeds/directions */}
+              <circle className="bbc-orbit-ring bbc-spin-a" cx="380" cy="285" r="104" />
+              <circle className="bbc-orbit-ring bbc-spin-b" cx="380" cy="285" r="150" />
+              <circle className="bbc-orbit-ring bbc-spin-a" cx="380" cy="285" r="210" />
 
-              {/* Halo behind the bottle */}
-              <circle className="bbc-halo bbc-halo-pulse" cx="380" cy="380" r="220" />
+              {/* Data pulses travelling the orbit */}
+              <g className="bbc-orbit-travel-a"><circle className="bbc-orbit-dot" cx="380" cy="135" r="4" /></g>
+              <g className="bbc-orbit-travel-b"><circle className="bbc-orbit-dot" cx="380" cy="75" r="3" /></g>
 
-              {/* Center of symmetry */}
-              <line className="bbc-center" x1="380" y1="58" x2="380" y2="500" />
-
-              {/* Cap */}
-              <path className="bbc-stroke" d="M352 92 h56 l-4 26 a3 3 0 0 1 -3 3 h-42 a3 3 0 0 1 -3 -3 z" />
-              <g className="bbc-stroke-ink">
-                <line x1="360" y1="93" x2="359" y2="120" />
-                <line x1="369" y1="93" x2="368" y2="121" />
-                <line x1="380" y1="93" x2="380" y2="121" />
-                <line x1="391" y1="93" x2="392" y2="121" />
-                <line x1="400" y1="93" x2="401" y2="120" />
-              </g>
-              <path className="bbc-stroke" d="M364 121 v10 h-3 v8 h38 v-8 h-3 v-10" />
-
-              {/* Body */}
-              <path className="bbc-stroke" d="M361 139 C 360 162 332 168 332 206 v250 a18 18 0 0 0 18 18 h60 a18 18 0 0 0 18 -18 v-250 c0 -38 -28 -44 -29 -67" />
-
-              {/* Animated liquid inside the body, clipped to bottle silhouette */}
-              <g clipPath="url(#bbc-bottle-interior)">
-                <g className="bbc-liquid-rise">
-                  <rect x="320" y="320" width="120" height="160" fill="url(#bbc-liquid-grad)" />
-                  <path
-                    className="bbc-liquid bbc-liquid-wave"
-                    d="M280 322 Q320 310 360 322 T440 322 T520 322 L520 340 L280 340 Z"
-                  />
-                  <path
-                    className="bbc-liquid-line bbc-liquid-wave"
-                    style={{ animationDuration: "5.5s", animationDirection: "reverse" }}
-                    d="M280 328 Q320 316 360 328 T440 328 T520 328"
-                  />
-                </g>
-                {/* Carbonation — bubbles rising through the liquid */}
-                <circle className="bbc-bubble" cx="352" cy="452" r="3" style={{ ["--d" as never]: 0, transformOrigin: "352px 452px" }} />
-                <circle className="bbc-bubble" cx="372" cy="464" r="2.2" style={{ ["--d" as never]: 1.3, transformOrigin: "372px 464px" }} />
-                <circle className="bbc-bubble" cx="392" cy="448" r="2.6" style={{ ["--d" as never]: 2.1, transformOrigin: "392px 448px" }} />
-                <circle className="bbc-bubble" cx="408" cy="460" r="1.8" style={{ ["--d" as never]: 0.7, transformOrigin: "408px 460px" }} />
-                <circle className="bbc-bubble" cx="364" cy="456" r="1.6" style={{ ["--d" as never]: 3, transformOrigin: "364px 456px" }} />
-              </g>
-
-              {/* Document card inside the bottle */}
-              <rect className="bbc-stroke-ink" x="345" y="300" width="70" height="96" rx="6" fill="var(--color-paper-card)" />
-              <line className="bbc-stroke-ink" x1="358" y1="324" x2="402" y2="324" />
-              <line className="bbc-stroke-ink" x1="358" y1="340" x2="402" y2="340" />
-              <line className="bbc-stroke-ink" x1="358" y1="356" x2="388" y2="356" />
-
-              {/* Graduated progress scale — "full syllabus" at the neck down to
-                  "exam-ready" at the base, like markings on a measuring flask. */}
+              {/* Spokes: everything connects back to your material */}
               <g>
-                <line className="bbc-tick" x1="300" y1="206" x2="312" y2="206" />
-                <line className="bbc-tick" x1="306" y1="206" x2="306" y2="456" />
-                <line className="bbc-tick" x1="300" y1="456" x2="312" y2="456" />
-                {/* intermediate graduations */}
-                <line className="bbc-tick" x1="302" y1="268" x2="310" y2="268" />
-                <line className="bbc-tick" x1="302" y1="331" x2="310" y2="331" />
-                <line className="bbc-tick" x1="302" y1="393" x2="310" y2="393" />
-                <text className="bbc-tick-lbl" x="296" y="203" textAnchor="end">SYLLABUS</text>
-                <text className="bbc-tick-lbl" x="296" y="459" textAnchor="end">EXAM-READY</text>
+                <path className="bbc-spoke bbc-draw" d="M353 258 L286 191" />
+                <path className="bbc-spoke bbc-draw" d="M407 258 L474 191" />
+                <path className="bbc-spoke bbc-draw" d="M353 312 L286 379" />
+                <path className="bbc-spoke bbc-draw" d="M407 312 L474 379" />
               </g>
 
-              {/* Annotated callouts — each has an icon glyph + micro-description.
-                  CSS var --i drives the staggered reveal. */}
+              {/* Core — your material, gently breathing */}
+              <circle className="bbc-core-halo bbc-core-pulse" cx="380" cy="285" r="64" />
+              <circle className="bbc-core" cx="380" cy="285" r="38" />
+              {/* stacked-document glyph = your material */}
+              <path className="bbc-icn" d="M371 271 h13 l6 6 v22 a2 2 0 0 1 -2 2 h-17 a2 2 0 0 1 -2 -2 v-26 a2 2 0 0 1 2 -2 z" />
+              <path className="bbc-icn" d="M384 271 v6 h6" />
+              <path className="bbc-icn" d="M375 288 h11 M375 294 h8" />
+              <text className="bbc-core-lbl" x="380" y="344" textAnchor="middle">YOUR MATERIAL</text>
+
+              {/* Four feature nodes in orbit, each with icon chip + callout */}
               <g className="bbc-diag-label" style={{ ["--i" as never]: 0 }}>
-                <circle className="bbc-anchor" cx="361" cy="135" r="3" />
-                <path className="bbc-lead bbc-draw" d="M361 135 H188 V124" />
-                {/* calendar icon */}
-                <circle className="bbc-icn-bg" cx="100" cy="113" r="11" />
-                <rect className="bbc-icn" x="94" y="109" width="12" height="10" rx="2" />
-                <path className="bbc-icn" d="M94 112.5 h12" />
-                <path className="bbc-icn" d="M97 106.5 v3 M103 106.5 v3" />
-                <text className="bbc-lbl-num" x="120" y="112">01</text>
-                <text className="bbc-lbl" x="146" y="112">STUDY PLANNER</text>
-                <text className="bbc-lbl-desc" x="146" y="128">Plans your study weeks</text>
+                <path className="bbc-lead bbc-draw" d="M274 179 L212 150" />
+                <circle className="bbc-icn-bg" cx="274" cy="179" r="17" />
+                <rect className="bbc-icn" x="268" y="175" width="12" height="10" rx="2" />
+                <path className="bbc-icn" d="M268 178.5 h12" />
+                <path className="bbc-icn" d="M271 172.5 v3 M277 172.5 v3" />
+                <text className="bbc-lbl-num" x="64" y="150">01</text>
+                <text className="bbc-lbl" x="90" y="150">STUDY PLANNER</text>
+                <text className="bbc-lbl-desc" x="90" y="166">Plans your study weeks</text>
               </g>
               <g className="bbc-diag-label" style={{ ["--i" as never]: 1 }}>
-                <circle className="bbc-anchor" cx="332" cy="380" r="3" />
-                <path className="bbc-lead bbc-draw" d="M332 380 H188 V392" />
-                {/* summary doc icon */}
-                <circle className="bbc-icn-bg" cx="100" cy="391" r="11" />
-                <rect className="bbc-icn" x="95" y="385" width="10" height="12" rx="1.5" />
-                <path className="bbc-icn" d="M97.5 388.5 h5 M97.5 391 h5 M97.5 393.5 h3" />
-                <text className="bbc-lbl-num" x="120" y="390">02</text>
-                <text className="bbc-lbl" x="146" y="390">SMART SUMMARIES</text>
-                <text className="bbc-lbl-desc" x="146" y="406">Only the tested points</text>
+                <path className="bbc-lead bbc-draw" d="M274 391 L212 424" />
+                <circle className="bbc-icn-bg" cx="274" cy="391" r="17" />
+                <rect className="bbc-icn" x="269" y="385" width="10" height="12" rx="1.5" />
+                <path className="bbc-icn" d="M271.5 388.5 h5 M271.5 391 h5 M271.5 393.5 h3" />
+                <text className="bbc-lbl-num" x="64" y="424">02</text>
+                <text className="bbc-lbl" x="90" y="424">SMART SUMMARIES</text>
+                <text className="bbc-lbl-desc" x="90" y="440">Only the tested points</text>
               </g>
               <g className="bbc-diag-label" style={{ ["--i" as never]: 2 }}>
-                <circle className="bbc-anchor" cx="406" cy="106" r="3" />
-                <path className="bbc-lead bbc-draw" d="M406 106 H548 V94" />
-                {/* chat bubble icon */}
-                <circle className="bbc-icn-bg" cx="530" cy="83" r="11" />
-                <rect className="bbc-icn" x="524" y="78" width="12" height="9" rx="3" />
-                <path className="bbc-icn" d="M527 87 l-2 3 v-3" />
-                <path className="bbc-icn" d="M527 82.5 h.01 M530 82.5 h.01 M533 82.5 h.01" strokeWidth="1.8" />
-                <text className="bbc-lbl-num" x="548" y="82">03</text>
-                <text className="bbc-lbl" x="574" y="82">AI PDF COPILOT</text>
-                <text className="bbc-lbl-desc" x="574" y="98">Answers that cite the page</text>
+                <path className="bbc-lead bbc-draw" d="M486 179 L548 150" />
+                <circle className="bbc-icn-bg" cx="486" cy="179" r="17" />
+                <rect className="bbc-icn" x="480" y="174" width="12" height="9" rx="3" />
+                <path className="bbc-icn" d="M483 183 l-2 3 v-3" />
+                <path className="bbc-icn" d="M483 178.5 h.01 M486 178.5 h.01 M489 178.5 h.01" strokeWidth="1.8" />
+                <text className="bbc-lbl-num" x="556" y="150">03</text>
+                <text className="bbc-lbl" x="582" y="150">AI PDF COPILOT</text>
+                <text className="bbc-lbl-desc" x="582" y="166">Answers that cite the page</text>
               </g>
               <g className="bbc-diag-label" style={{ ["--i" as never]: 3 }}>
-                <circle className="bbc-anchor" cx="428" cy="420" r="3" />
-                <path className="bbc-lead bbc-draw" d="M428 420 H548 V432" />
-                {/* timer icon */}
-                <circle className="bbc-icn-bg" cx="530" cy="433" r="11" />
-                <circle className="bbc-icn" cx="530" cy="434" r="6" />
-                <path className="bbc-icn" d="M530 434 v-3.5 M530 434 l3 2" />
-                <path className="bbc-icn" d="M527.5 426.5 h5" />
-                <text className="bbc-lbl-num" x="548" y="432">04</text>
-                <text className="bbc-lbl" x="574" y="432">MOCK TEST MODE</text>
-                <text className="bbc-lbl-desc" x="574" y="448">Runs like the real exam</text>
+                <path className="bbc-lead bbc-draw" d="M486 391 L548 424" />
+                <circle className="bbc-icn-bg" cx="486" cy="391" r="17" />
+                <circle className="bbc-icn" cx="486" cy="392" r="6" />
+                <path className="bbc-icn" d="M486 392 v-3.5 M486 392 l3 2" />
+                <path className="bbc-icn" d="M483.5 384.5 h5" />
+                <text className="bbc-lbl-num" x="556" y="424">04</text>
+                <text className="bbc-lbl" x="582" y="424">MOCK TEST MODE</text>
+                <text className="bbc-lbl-desc" x="582" y="440">Runs like the real exam</text>
               </g>
 
-              {/* Patent-drawing flourishes: registration crosshairs + figure caption */}
+              {/* Blueprint flourishes: registration crosshairs + figure caption */}
               <g className="bbc-reg">
                 <path d="M18 26 v-14 h14" />
                 <path d="M742 26 v-14 h-14" />
                 <path d="M18 534 v14 h14" />
                 <path d="M742 534 v14 h-14" />
               </g>
-              <text className="bbc-fig" x="380" y="548" textAnchor="middle">FIG. 01 — THE BLUEBOTTLE STUDY SYSTEM</text>
+              <text className="bbc-fig" x="380" y="548" textAnchor="middle">FIG. 01 — THE BLUEBOTTLECAP SYSTEM</text>
             </svg>
           </div>
         </div>
