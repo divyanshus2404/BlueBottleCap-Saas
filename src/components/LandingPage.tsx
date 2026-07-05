@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import { ActiveView } from "@/src/types";
+import { useI18n } from "@/src/lib/i18n";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 interface LandingPageProps {
   onNavigate: (view: ActiveView) => void;
@@ -97,6 +99,7 @@ const plans = [
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   const rootRef = useRef<HTMLDivElement>(null);
+  const { t, lang } = useI18n();
 
   useEffect(() => {
     const root = rootRef.current;
@@ -167,13 +170,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             <Seal /> BlueBottleCap
           </button>
           <nav className="hidden gap-[30px] md:flex" aria-label="Primary">
-            <button onClick={() => scrollTo("tools")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Tools</button>
-            <button onClick={() => scrollTo("how")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">How it works</button>
-            <button onClick={() => scrollTo("pricing")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Pricing</button>
+            <button onClick={() => scrollTo("tools")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">{t("nav.tools")}</button>
+            <button onClick={() => scrollTo("how")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">{t("nav.how")}</button>
+            <button onClick={() => scrollTo("pricing")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">{t("nav.pricing")}</button>
           </nav>
-          <div className="flex items-center gap-[18px]">
-            <button onClick={() => onNavigate("signup")} className="hidden text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)] sm:block">Sign in</button>
-            <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary px-5 py-[11px] text-[15px]">Start free</button>
+          <div className="flex items-center gap-[14px]">
+            <LanguageSwitcher />
+            <button onClick={() => onNavigate("signup")} className="hidden text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)] sm:block">{t("nav.signin")}</button>
+            <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary px-5 py-[11px] text-[15px]">{t("nav.startFree")}</button>
           </div>
         </div>
       </header>
@@ -183,17 +187,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         <div className="bbc-grid" aria-hidden="true" />
         <div className="relative z-[2] mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-10 px-7 py-[60px] md:grid-cols-[1fr_1.05fr] md:py-[76px]">
           <div>
-            <p className="bbc-eyebrow bbc-reveal">For JEE · B.Tech · GATE · Coaching institutes</p>
+            <p className="bbc-eyebrow bbc-reveal">{t("hero.eyebrow")}</p>
             <h1 className="bbc-serif bbc-reveal mt-[18px] text-[clamp(40px,5.6vw,68px)] leading-[1.03] tracking-[-.02em]">
-              One AI toolkit.<br />Two ways to <em className="not-italic font-medium italic text-[var(--color-blue-ink)]">use it.</em>
+              {lang === "en" ? (
+                <>One AI toolkit.<br />Two ways to <em className="not-italic font-medium italic text-[var(--color-blue-ink)]">use it.</em></>
+              ) : (
+                t("hero.title")
+              )}
             </h1>
             <p className="bbc-reveal mt-6 max-w-[32em] text-[18.5px] text-[var(--color-ink-soft)]">
-              Whether you're a student prepping for JEE or a coaching center running a test series — same AI, different lane. Chat with your PDFs, build mocks in your branding, map weak topics before exams find them.
+              {t("hero.subhead")}
             </p>
             <div className="bbc-reveal mt-[34px] flex flex-wrap items-center gap-4">
-              <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">Open the toolkit</button>
+              <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">{t("hero.cta")}</button>
               <a href="/for-institutes" className="inline-flex items-center gap-[7px] text-[15px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-blue-ink)]">
-                For coaching institutes
+                {t("hero.forInstitutes")}
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </a>
             </div>
