@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Loader2, Copy, Check, Users, Gauge, BarChart3 } from "lucide-react";
 import { normalizeInstCode, MIN_INST_CODE_LEN, type BatchReport as BatchReportData } from "../lib/batchReport";
+import { WhatsAppShare } from "./WhatsAppShare";
 
 // Institute-facing batch weak-topic report. Enter your code, share the
 // diagnostic link with your batch, and watch the aggregate weak-topic map
@@ -93,6 +94,11 @@ export const BatchReport: React.FC = () => {
                 <button onClick={copy} className="bbc-btn bbc-btn-ghost shrink-0 px-4 text-[13px]">
                   {copied ? <><Check className="h-4 w-4 text-[var(--color-blue-ink)]" /> Copied</> : <><Copy className="h-4 w-4" /> Copy</>}
                 </button>
+                <WhatsAppShare
+                  text={`📊 Take our quick 2-minute JEE readiness check — see exactly where you stand:\n${shareUrl}`}
+                  label="WhatsApp"
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#25D366] px-3.5 text-[13px] font-bold text-white transition hover:brightness-105"
+                />
               </div>
             </div>
           )}

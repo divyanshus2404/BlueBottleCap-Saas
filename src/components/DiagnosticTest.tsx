@@ -8,6 +8,7 @@ import {
   saveDiagnosticResult,
   type DiagnosticResult,
 } from "@/src/lib/diagnostic";
+import { WhatsAppShare } from "./WhatsAppShare";
 
 type Phase = "intro" | "question" | "result";
 
@@ -18,6 +19,8 @@ export const DiagnosticTest: React.FC = () => {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [picked, setPicked] = useState<number | null>(null);
   const [result, setResult] = useState<DiagnosticResult | null>(null);
+  // Link to share alongside the result — always points at the public diagnostic.
+  const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/diagnostic` : "https://bluebottlecap.com/diagnostic";
 
   const q = QUESTION_BANK[idx];
   const progress = ((idx + (picked === null ? 0 : 1)) / QUESTION_BANK.length) * 100;
@@ -203,13 +206,19 @@ export const DiagnosticTest: React.FC = () => {
             >
               Go to my plan
             </button>
-            <button
-              onClick={() => router.push("/pdf-editor")}
-              className="bbc-btn bbc-btn-ghost justify-center px-6 py-3 text-[15px]"
-            >
-              Open PDF Copilot
-            </button>
+            <WhatsAppShare
+              text={
+                `I'm ${result.readiness}% JEE-ready 🎯` +
+                (result.weakTopics.length ? ` — weakest in ${result.weakTopics.slice(0, 2).join(" & ")}.` : ".") +
+                `\n\nCheck your free 2-min JEE readiness score 👇\n${shareUrl}`
+              }
+              label="Challenge a friend"
+              className="bbc-btn justify-center bg-[#25D366] px-6 py-3 text-[15px] font-bold text-white transition hover:brightness-105"
+            />
           </div>
+          <p className="mt-3 text-[12.5px] text-[var(--color-ink-faint)]">
+            Share your score — see who's more JEE-ready.
+          </p>
         </div>
       )}
     </div>

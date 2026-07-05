@@ -9,6 +9,7 @@ import { ErrorBoundary } from "@/src/components/ErrorBoundary";
 import { SmoothScroll } from "@/src/components/SmoothScroll";
 import { Footer } from "@/src/components/Footer";
 import { FeedbackWidget } from "@/src/components/FeedbackWidget";
+import { WhatsAppButton } from "@/src/components/WhatsAppButton";
 import { usePathname } from "next/navigation";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
@@ -49,6 +50,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <Footer />
           )}
           {!hideFeedback && <FeedbackWidget />}
+          <WhatsAppButton />
         </div>
       </ErrorBoundary>
     </SmoothScroll>

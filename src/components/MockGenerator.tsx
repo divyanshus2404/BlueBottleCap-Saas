@@ -3,6 +3,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FileText, Loader2, Upload, Download, CheckCircle2, Sparkles } from "lucide-react";
 import { trackEvent } from "../lib/analytics";
+import { WhatsAppShare } from "./WhatsAppShare";
+
+const shareOrigin = typeof window !== "undefined" ? window.location.origin : "https://bluebottlecap.com";
 
 // White-label mock generator — the self-serve demo for institutes. Fill in
 // exam + chapters + branding, generate a branded PDF paper with answer key.
@@ -165,9 +168,16 @@ export const MockGenerator: React.FC = () => {
                 {done.questions ? `${done.questions} questions` : "Question paper"} + answer key, branded for {instituteName}.
               </p>
             </div>
-            <a href={done.url} download={done.name} className="bbc-btn bbc-btn-primary px-6 py-3 text-[14px]">
-              <Download className="h-4 w-4" /> Download PDF
-            </a>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <a href={done.url} download={done.name} className="bbc-btn bbc-btn-primary px-6 py-3 text-[14px]">
+                <Download className="h-4 w-4" /> Download PDF
+              </a>
+              <WhatsAppShare
+                text={`Made a fresh ${exam} ${subject} mock paper for ${instituteName} in 30 seconds with BlueBottleCap. Try it free 👉 ${shareOrigin}/for-institutes/mock-generator`}
+                label="Tell another teacher"
+              />
+            </div>
+            <p className="text-[12px] text-[var(--color-ink-faint)]">Downloaded first? Attach the PDF in WhatsApp to send it to your batch.</p>
           </div>
         )}
 

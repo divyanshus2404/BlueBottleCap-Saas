@@ -24,6 +24,7 @@ export interface MockPaperMeta {
   brandHex?: string;      // "#1B3FCB" — defaults to BBC blue
   logoPng?: Uint8Array;   // optional PNG bytes
   logoJpg?: Uint8Array;   // optional JPG bytes (use one or the other)
+  hideBranding?: boolean; // paid plans: drop the "Made with BlueBottleCap" footer
 }
 
 const A4: [number, number] = [595.28, 841.89];
@@ -138,7 +139,12 @@ export async function renderMockPaper(rawQuestions: MockQuestion[], rawMeta: Moc
   };
 
   const footer = (p: PDFPage, n: number) => {
-    p.drawText("Generated with BlueBottleCap", { x: MARGIN, y: 26, size: 8, font, color: rgb(0.6, 0.62, 0.66) });
+    // Free-tier gets a discreet attribution line — every paper a teacher hands
+    // out becomes a business card seen by other teachers and owners. Paid plans
+    // pass hideBranding to remove it (fully white-label).
+    if (!meta.hideBranding) {
+      p.drawText("Made with BlueBottleCap  ·  bluebottlecap.com", { x: MARGIN, y: 26, size: 8, font, color: rgb(0.6, 0.62, 0.66) });
+    }
     const pageLabel = `Page ${n}`;
     p.drawText(pageLabel, { x: A4[0] - MARGIN - font.widthOfTextAtSize(pageLabel, 8), y: 26, size: 8, font, color: rgb(0.6, 0.62, 0.66) });
   };
