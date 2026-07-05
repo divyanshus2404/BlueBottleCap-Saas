@@ -81,6 +81,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   const [dashboardLoading, setDashboardLoading] = useState<boolean>(true);
   const [lastLoggedDate, setLastLoggedDate] = useState<string>("");
   const [loginCount, setLoginCount] = useState<number>(0);
+  const [freeStreakSaveMonth, setFreeStreakSaveMonth] = useState<string>("");
   const [recentActivities, setRecentActivities] = useState<RecentActivityItem[]>([]);
 
   const [toasts, setToasts] = useState<Toast[]>([]);

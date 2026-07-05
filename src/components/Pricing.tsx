@@ -6,13 +6,13 @@ import { Check, Zap, ShieldCheck, Printer, ArrowRight, Loader2 } from "lucide-re
 import { trackEvent } from "../lib/analytics";
 import { auth } from "../firebase";
 
+type PlanId = "Free" | "Basic" | "Pro";
+
 interface PricingProps {
   userStats: UserStats;
-  onUpgradeApproved: (plan: "Free" | "Pro") => void;
+  onUpgradeApproved: (plan: PlanId) => void;
   onNavigateTo: (view: any) => void;
 }
-
-type PlanId = "Free" | "Pro";
 
 export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, onNavigateTo }) => {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
@@ -100,7 +100,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
 
     const planObj = plans.find((pl) => pl.id === plan);
     if (!planObj) return;
-    const product = billingCycle === "monthly" ? planObj.product.monthly : planObj.product.annual;
+    const product = billingCycle === "monthly" ? planObj.product?.monthly : planObj.product?.annual;
     if (!product) return;
 
     setSelectedPlan(plan);
@@ -272,7 +272,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
                   </div>
                   {p.id !== "Free" && billingCycle === "annual" && "priceAnnualTotal" in p && (
                     <p className="mt-1 text-[11.5px] text-[var(--color-ink-faint)]">
-                      ₹{p.priceAnnualTotal.toLocaleString("en-IN")} charged once, then ₹{p.priceAnnualTotal.toLocaleString("en-IN")}/year. Cancel anytime.
+                      ₹{p.priceAnnualTotal?.toLocaleString("en-IN")} charged once, then ₹{p.priceAnnualTotal?.toLocaleString("en-IN")}/year. Cancel anytime.
                     </p>
                   )}
 

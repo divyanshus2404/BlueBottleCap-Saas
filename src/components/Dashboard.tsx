@@ -20,6 +20,7 @@ import { ReadinessCard } from "./ReadinessCard";
 import { ReferralCard } from "./ReferralCard";
 import { StreakSaveBanner } from "./StreakSaveBanner";
 import { evaluateStreak, isFreeSaveAvailable } from "../lib/streak";
+import { DailyQuote } from "./DailyQuote";
 
 export const Dashboard: React.FC = () => {
   const {
@@ -347,6 +348,8 @@ export const Dashboard: React.FC = () => {
               </div>
             ))}
           </div>
+
+          <DailyQuote variant="dashboard" />
 
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Left 2 column: Activity Log */}

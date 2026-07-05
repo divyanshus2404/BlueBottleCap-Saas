@@ -18,9 +18,11 @@ import { doc, onSnapshot } from "firebase/firestore";
 
 export interface UserProfile {
   avatarSvg?: string;
+  displayName?: string;
   email?: string;
   name?: string;
   onboardingComplete?: boolean;
+  photoURL?: string;
   [key: string]: unknown;
 }
 

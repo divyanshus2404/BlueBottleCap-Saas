@@ -1,4 +1,4 @@
-export type ActivePlan = 'Free' | 'Pro';
+export type ActivePlan = 'Free' | 'Basic' | 'Pro';
 
 export type ActiveView =
   | 'landing'

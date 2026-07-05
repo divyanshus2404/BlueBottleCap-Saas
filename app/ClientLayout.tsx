@@ -10,6 +10,7 @@ import { SmoothScroll } from "@/src/components/SmoothScroll";
 import { Footer } from "@/src/components/Footer";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
+import { WhatsAppButton } from "@/src/components/WhatsAppButton";
 
 /** Routes that should trigger the onboarding gate */
 const ONBOARDING_GATED_PATHS = ["/dashboard", "/tools", "/pdf-editor", "/flashcards"];
@@ -47,17 +48,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {/* Immersive / full-screen routes own their own chrome: the landing
               page has its own header+footer, and the auth/onboarding flows are
               standalone full-screen layouts. Hide the global nav there. */}
-          {!chromeless && (
+          {pathname !== "/" && pathname !== "/for-institutes" && (
             <Navigation onLoginClick={() => setIsAuthModalOpen(true)} />
           )}
           <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
           <div className="flex-grow">
             {children}
           </div>
-          {!chromeless && pathname !== "/virtual-test" && pathname !== "/pdf-editor" && (
+          {pathname !== "/" && pathname !== "/for-institutes" && pathname !== "/virtual-test" && pathname !== "/pdf-editor" && (
             <Footer />
           )}
-          {!hideFeedback && <FeedbackWidget />}
           <WhatsAppButton />
         </div>
       </ErrorBoundary>

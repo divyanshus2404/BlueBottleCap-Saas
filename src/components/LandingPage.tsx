@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { ActiveView } from "@/src/types";
 import { useI18n } from "@/src/lib/i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { DailyQuote } from "./DailyQuote";
 
 interface LandingPageProps {
   onNavigate: (view: ActiveView) => void;
@@ -697,6 +698,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           </div>
           <p className="bbc-reveal mt-[26px] text-center text-[13.5px] text-[var(--color-ink-faint)]">{t("pricing.note")} <a href="/for-institutes" className="font-semibold text-[var(--color-blue-ink)] hover:underline">{t("footer.forInstitutes")} →</a></p>
         </div>
+      </section>
+
+      {/* ── DAILY QUOTE ── */}
+      <section className="border-b border-[var(--color-line)] bg-white">
+        <DailyQuote />
       </section>
 
       {/* ── CLOSING ── */}
