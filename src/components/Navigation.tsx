@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Zap, Sparkles, BookOpen, Layers, Menu, X, Check, Award, Lock, Timer, Sun, Moon, CreditCard, Info, Map, Home, ChevronLeft } from "lucide-react";
@@ -26,8 +26,26 @@ export const Navigation: React.FC<NavigationProps> = ({
   const { currentUser, userProfile, signOutUser } = useAuth();
   const { userStats } = useGlobalState();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const saved = localStorage.getItem("bluebottlecap_theme");
+    if (saved) return saved === "dark";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
   const pathname = usePathname();
   const router = useRouter();
+
+  // Apply dark class to <html> whenever isDark changes
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("bluebottlecap_theme", isDark ? "dark" : "light");
+  }, [isDark]);
+
+  const toggleDark = () => setIsDark((prev) => !prev);
 
   const navLinks = [
     { href: "/", label: "Home", icon: <Home className="w-4 h-4" /> },
@@ -94,6 +112,16 @@ export const Navigation: React.FC<NavigationProps> = ({
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-3">
+
+          {/* Dark mode toggle */}
+          <button
+            id="dark-mode-toggle"
+            onClick={toggleDark}
+            title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            className="hidden md:flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-slate-50/50 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-500 dark:text-slate-300 transition cursor-pointer"
+          >
+            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
 
           {/* Authentication Menu */}
           {currentUser ? (

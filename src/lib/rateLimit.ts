@@ -1,82 +1,70 @@
-// Lightweight in-memory rate limiter.
-//
-// NOTE: This is per-instance state. On a single long-lived server it is solid;
-// on horizontally-scaled / serverless platforms (e.g. multiple Vercel lambdas)
-// each instance keeps its own counters, so it is a best-effort guard rather than
-// a global limit. For strict global limits, back this with Upstash Redis later.
+/**
+ * Simple in-memory rate limiter for Next.js API routes.
+ *
+ * Usage:
+ *   const limiter = getRateLimiter({ limit: 20, windowMs: 60_000 });
+ *   const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
+ *   if (!limiter.check(ip)) {
+ *     return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+ *   }
+ *
+ * NOTE: This is a per-process in-memory store. In a multi-instance
+ * deployment (e.g., Vercel with many serverless functions), requests
+ * are distributed across instances so the effective limit per IP is
+ * higher. For strict multi-instance rate limiting, use a Redis-backed
+ * solution such as @upstash/ratelimit.
+ */
 
-type Bucket = { count: number; resetAt: number };
-
-const buckets = new Map<string, Bucket>();
-
-export interface RateLimitResult {
-  ok: boolean;
-  remaining: number;
-  resetAt: number;
+interface RateLimiterOptions {
+  /** Max requests allowed per window */
+  limit: number;
+  /** Window duration in milliseconds */
+  windowMs: number;
 }
 
-/**
- * Fixed-window rate limiter.
- * @param key      Unique caller key (e.g. IP address or user id).
- * @param limit    Max requests allowed per window.
- * @param windowMs Window length in milliseconds.
- */
-export function rateLimit(key: string, limit = 20, windowMs = 60_000): RateLimitResult {
-  const now = Date.now();
-  const existing = buckets.get(key);
+interface RateLimiter {
+  /** Returns true if the request is allowed, false if rate-limited */
+  check: (key: string) => boolean;
+}
 
-  if (!existing || existing.resetAt < now) {
-    const resetAt = now + windowMs;
-    buckets.set(key, { count: 1, resetAt });
-    return { ok: true, remaining: limit - 1, resetAt };
+// Global store so the same limiter instance is reused across requests in the same process
+const stores = new Map<string, Map<string, { count: number; resetAt: number }>>();
+
+export function getRateLimiter(options: RateLimiterOptions): RateLimiter {
+  const storeKey = `${options.limit}:${options.windowMs}`;
+  if (!stores.has(storeKey)) {
+    stores.set(storeKey, new Map());
   }
+  const store = stores.get(storeKey)!;
 
-  existing.count += 1;
-  const ok = existing.count <= limit;
-  return { ok, remaining: Math.max(0, limit - existing.count), resetAt: existing.resetAt };
-}
+  return {
+    check(key: string): boolean {
+      const now = Date.now();
+      const record = store.get(key);
 
-/** Best-effort client IP extraction from standard proxy headers. */
-export function getClientIp(req: Request): string {
-  const xff = req.headers.get("x-forwarded-for");
-  if (xff) return xff.split(",")[0].trim();
-  return req.headers.get("x-real-ip") ?? "unknown";
-}
+      if (!record || now > record.resetAt) {
+        store.set(key, { count: 1, resetAt: now + options.windowMs });
+        return true;
+      }
 
-/**
- * Guard helper for API routes. Returns a Response to short-circuit with when the
- * caller is over the limit, or null when the request may proceed.
- */
-export function enforceRateLimit(
-  req: Request,
-  { limit = 20, windowMs = 60_000, prefix = "api" } = {},
-): Response | null {
-  const ip = getClientIp(req);
-  const { ok, remaining, resetAt } = rateLimit(`${prefix}:${ip}`, limit, windowMs);
-  if (ok) return null;
+      if (record.count >= options.limit) {
+        return false;
+      }
 
-  const retryAfter = Math.ceil((resetAt - Date.now()) / 1000);
-  return new Response(
-    JSON.stringify({ error: "Too many requests. Please slow down and try again shortly." }),
-    {
-      status: 429,
-      headers: {
-        "Content-Type": "application/json",
-        "Retry-After": String(retryAfter),
-        "X-RateLimit-Remaining": String(remaining),
-      },
+      record.count += 1;
+      return true;
     },
-  );
+  };
 }
 
-// Periodically evict expired buckets so the map does not grow unbounded.
-if (typeof setInterval !== "undefined") {
-  const timer = setInterval(() => {
-    const now = Date.now();
-    for (const [key, bucket] of buckets) {
-      if (bucket.resetAt < now) buckets.delete(key);
-    }
-  }, 5 * 60_000);
-  // Don't keep the event loop alive just for cleanup.
-  (timer as any)?.unref?.();
+/** Pre-built limiter: 20 AI requests per minute per IP */
+export const aiRateLimiter = getRateLimiter({ limit: 20, windowMs: 60_000 });
+
+/** Extracts the client IP from a Next.js Request */
+export function getClientIp(req: Request): string {
+  return (
+    req.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
+    req.headers.get('x-real-ip') ??
+    'unknown'
+  );
 }

@@ -20,6 +20,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
   const [showReceipt, setShowReceipt] = useState<boolean>(false);
   const [selectedPlan, setSelectedPlan] = useState<PlanId>("Free");
 
+  // Plans data — kept in sync with UserStats.activePlan type
   const plans = [
     {
       id: "Free" as const,
@@ -38,6 +39,24 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       ],
     },
     {
+      id: "Basic" as const,
+      name: "Basic",
+      desc: "For students who need a little more AI power",
+      priceMonthly: 49,
+      priceAnnual: 39,
+      buttonText: "Get Basic",
+      color: "border-blue-200 bg-blue-50/5",
+      badgeColor: "bg-blue-600 text-white",
+      icon: "📚",
+      features: [
+        "Everything in Free",
+        "100 AI credits per month",
+        "Unlimited PDF spots",
+        "Notes to study flashcards",
+        "Email support"
+      ]
+    },
+    {
       id: "Pro" as const,
       name: "Pro",
       desc: "The plan that actually gets you through exams.",
@@ -51,12 +70,12 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       icon: "👑",
       product: { monthly: "pro_monthly", annual: "pro_annual" },
       features: [
-        "Unlimited PDFs and chat",
-        "Flashcards, summaries, mocks",
-        "Day-by-day study plan",
-        "No watermarks on exports",
-        "Priority support",
-      ],
+        "Everything in Basic",
+        "Infinite AI exam tool runs",
+        "JEE MCQ Card practice sets",
+        "Day-by-day exam timetables",
+        "24/7 Priority support key"
+      ]
     },
   ];
 
@@ -107,33 +126,23 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
         name: "BlueBottleCap",
         description: `${plan} plan purchase`,
         order_id: data.order.id,
-        handler: async function (response: any) {
-          try {
-            const idToken = await auth?.currentUser?.getIdToken().catch(() => undefined);
-            const verifyResp = await fetch("/api/razorpay/verify", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ ...response, product, idToken }),
-            });
-            const verifyData = await verifyResp.json();
-            if (verifyResp.ok && verifyData.ok) {
-              // Use the server-returned plan, not the client's local guess, so
-              // a tampered client cannot claim Pro from a non-Pro signature.
-              const grantedPlan: PlanId = verifyData.plan === "Pro" ? "Pro" : "Free";
-              trackEvent("payment_success", { product });
-              setLoadingStep(4);
-              setShowReceipt(true);
-              onUpgradeApproved(grantedPlan);
-            } else {
-              trackEvent("payment_failed", { product, reason: "verify" });
-              alert("Payment verification failed");
-              setLoadingStep(-1);
-            }
-          } catch (e: any) {
-            // Network drop / non-JSON body after the buyer already paid —
-            // never leave the "securing payment" overlay hanging.
-            trackEvent("payment_failed", { product, reason: "verify_error" });
-            alert("Payment verification failed");
+        handler: async function (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) {
+          // Verify payment on server — server writes the plan upgrade to Firestore
+          // so the client can never self-upgrade without a valid HMAC signature.
+          const verifyResp = await fetch("/api/razorpay/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...response, plan, userId: undefined }),
+          });
+          const verifyData = await verifyResp.json();
+          if (verifyResp.ok && verifyData.ok) {
+            setLoadingStep(4);
+            setShowReceipt(true);
+            // onUpgradeApproved updates local state to reflect the new plan;
+            // Firestore was already written server-side in /api/razorpay/verify.
+            onUpgradeApproved(plan);
+          } else {
+            alert("Payment verification failed. Please contact support.");
             setLoadingStep(-1);
           }
         },

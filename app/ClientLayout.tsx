@@ -8,28 +8,36 @@ import { ToastContainer } from "@/src/components/ToastContainer";
 import { ErrorBoundary } from "@/src/components/ErrorBoundary";
 import { SmoothScroll } from "@/src/components/SmoothScroll";
 import { Footer } from "@/src/components/Footer";
-import { FeedbackWidget } from "@/src/components/FeedbackWidget";
-import { WhatsAppButton } from "@/src/components/WhatsAppButton";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/src/context/AuthContext";
+
+/** Routes that should trigger the onboarding gate */
+const ONBOARDING_GATED_PATHS = ["/dashboard", "/tools", "/pdf-editor", "/flashcards"];
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const pathname = usePathname();
-  // Routes that render their own full-screen chrome (no global nav/footer).
-  const chromeless = ["/", "/signup", "/onboarding", "/create-profile"].includes(pathname);
-  // Hide the feedback widget on auth/onboarding flows where it would distract
-  // mid-conversion. Keep it on the landing page — that's where most strangers see us.
-  const hideFeedback = ["/signup", "/onboarding", "/create-profile"].includes(pathname);
+  const router = useRouter();
+  const { currentUser, userProfile, initialised } = useAuth();
 
-  // Capture an inbound referral code (?ref=CODE) once, so it can be attributed
-  // to the referrer at signup. Only stores the first one seen.
+  // Onboarding gate: redirect new users to /onboarding if they haven't completed it
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const ref = new URLSearchParams(window.location.search).get("ref");
-    if (ref && !localStorage.getItem("bluebottlecap_referred_by")) {
-      localStorage.setItem("bluebottlecap_referred_by", ref.toUpperCase());
+    if (!initialised) return;
+    if (!currentUser) return;
+    if (pathname === "/onboarding") return;
+
+    const isGated = ONBOARDING_GATED_PATHS.some(
+      (p) => pathname === p || pathname.startsWith(p + "/")
+    );
+    if (!isGated) return;
+
+    // userProfile may be null briefly while Firestore loads; wait until it's set
+    if (userProfile === null) return;
+
+    if (!userProfile.onboardingComplete) {
+      router.replace("/onboarding");
     }
-  }, []);
+  }, [initialised, currentUser, userProfile, pathname, router]);
 
   return (
     <SmoothScroll>

@@ -1,126 +1,101 @@
-import { NextResponse } from "next/server";
-import { isProductId, productToPlan, verifyPaymentSignature, PRODUCTS, type ProductId } from "@/src/lib/razorpay";
-import { enforceRateLimit } from "@/src/lib/rateLimit";
-import { getAdmin } from "@/src/lib/firebaseAdmin";
-import { sendEmail } from "@/src/lib/email";
-import { receiptEmail } from "@/src/lib/emailTemplates";
+import { NextResponse } from 'next/server';
+import crypto from 'crypto';
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
 
-// Persist the purchase and grant the entitlement server-side so it survives
-// a localStorage wipe and can't be forged. Never throws — a persistence
-// failure must not make a real payment look failed to the buyer; it's
-// logged and recoverable from the Razorpay dashboard instead.
-async function persistPurchase(args: {
-  product: ProductId;
-  paymentId?: string;
-  orderId?: string;
-  idToken?: string;
-  buyerEmail?: string;
-}): Promise<{ email: string | null }> {
-  const admin = getAdmin();
-  if (!admin) return { email: args.buyerEmail || null }; // env not configured — legacy client-side behaviour
-
-  let uid: string | null = null;
-  let verifiedEmail: string | null = null;
-  if (args.idToken) {
-    try {
-      const decoded = await admin.auth.verifyIdToken(args.idToken);
-      uid = decoded.uid;
-      verifiedEmail = decoded.email ?? null;
-    } catch (err) {
-      console.error("verify: bad idToken, recording purchase without uid:", err);
+// ── Firebase Admin initialisation ──
+// Uses service-account credentials stored as an env variable (server-only,
+// never exposed to the client). If the variable is absent the verify endpoint
+// will still validate the Razorpay signature; it just won't update Firestore.
+function getAdminDb() {
+  if (!getApps().length) {
+    const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+    if (serviceAccount) {
+      try {
+        initializeApp({ credential: cert(JSON.parse(serviceAccount)) });
+      } catch {
+        console.warn('[Razorpay verify] Firebase admin init failed — Firestore update skipped.');
+        return null;
+      }
+    } else {
+      return null;
     }
   }
-  // Prefer the token-verified email over the client-supplied buyerEmail.
-  const email: string | null = verifiedEmail || args.buyerEmail || null;
-
   try {
-    const record = {
-      product: args.product,
-      amount: PRODUCTS[args.product].amount,
-      paymentId: args.paymentId || null,
-      orderId: args.orderId || null,
-      uid,
-      email,
-      createdAt: new Date().toISOString(),
-    };
-    // Idempotent: key by the unique Razorpay payment id so a retried verify
-    // updates the same doc instead of creating a duplicate. Fall back to an
-    // auto-id only when (unexpectedly) no payment id is present.
-    const purchases = admin.db.collection("purchases");
-    if (args.paymentId) await purchases.doc(args.paymentId).set(record, { merge: true });
-    else await purchases.add(record);
-
-    if (uid) {
-      const userRef = admin.db.collection("users").doc(uid);
-      const plan = productToPlan(args.product);
-      const today = new Date().toISOString().split("T")[0];
-      const updates: Record<string, unknown> =
-        plan === "Pro" ? { plan: "Pro", activePlan: "Pro" } :
-        args.product === "study_material" ? { studyMaterialUnlocked: true } :
-        args.product === "streak_save" ? { lastLoggedDate: today, lastActiveDate: today, streakSavedAt: today } :
-        {};
-      updates.updatedAt = new Date().toISOString();
-      await userRef.set(updates, { merge: true });
-    }
-  } catch (err) {
-    console.error("verify: failed to persist purchase:", err);
+    return getFirestore();
+  } catch {
+    return null;
   }
-  return { email };
 }
 
 export async function POST(req: Request) {
-  const limited = enforceRateLimit(req, { limit: 20, windowMs: 60_000, prefix: "rzp-verify" });
-  if (limited) return limited;
-
   try {
-    const body = await req.json().catch(() => ({}));
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, product, idToken, buyerEmail } = body as {
-      razorpay_order_id?: string;
-      razorpay_payment_id?: string;
-      razorpay_signature?: string;
-      product?: string;
-      idToken?: string;
-      buyerEmail?: string;
-    };
+    const body = await req.json();
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      plan,
+      userId,
+    } = body;
 
-    const valid = verifyPaymentSignature({ razorpay_order_id, razorpay_payment_id, razorpay_signature });
-    if (!valid) {
-      return NextResponse.json({ ok: false, error: "Invalid payment signature." }, { status: 400 });
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return NextResponse.json({ error: 'Missing payment fields.' }, { status: 400 });
     }
 
-    // Signature is authentic. The matching `order_id` was created server-side
-    // with a fixed price for this product id, so the price is trustworthy.
-    // We do not look the order up against Razorpay here — that would catch a
-    // user paying for product A and claiming product B, but in practice the
-    // client just picked an order id the server issued for the same product,
-    // so trusting it here is fine for the current surface area.
-    if (!isProductId(product)) {
-      return NextResponse.json({ ok: false, error: "Unknown product." }, { status: 400 });
+    const secret = process.env.RAZORPAY_KEY_SECRET;
+    if (!secret) {
+      return NextResponse.json(
+        { error: 'Payment service is not configured. Contact support.' },
+        { status: 503 }
+      );
     }
 
-    const plan = productToPlan(product);
+    // ── HMAC-SHA256 signature verification ──
+    // Razorpay specifies: HMAC = SHA256(order_id + "|" + payment_id, secret)
+    const expectedSignature = crypto
+      .createHmac('sha256', secret)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+      .digest('hex');
 
-    const { email } = await persistPurchase({
-      product,
-      paymentId: razorpay_payment_id,
-      orderId: razorpay_order_id,
-      idToken,
-      buyerEmail,
-    });
-
-    // Receipt email — best-effort, never blocks the success response.
-    if (email) {
-      const { subject, html, text } = receiptEmail({
-        productLabel: PRODUCTS[product].label,
-        amountPaise: PRODUCTS[product].amount,
-        paymentId: razorpay_payment_id,
-      });
-      sendEmail({ to: email, subject, html, text }).catch((e) => console.error("verify: receipt email failed:", e));
+    if (expectedSignature !== razorpay_signature) {
+      console.error('[Razorpay verify] Signature mismatch — possible tampered payment.');
+      return NextResponse.json({ ok: false, error: 'Payment verification failed.' }, { status: 400 });
     }
 
-    return NextResponse.json({ ok: true, product, plan });
-  } catch (err: any) {
-    console.error("verify error:", err);
-    return NextResponse.json({ ok: false, error: "Verification failed." }, { status: 500 });
+    // ── Signature is valid — upgrade the plan in Firestore server-side ──
+    // ── Signature is valid — handle unlock logic securely on server ──
+    if (userId) {
+      const db = getAdminDb();
+      if (db) {
+        const updates: Record<string, any> = {
+          updatedAt: new Date().toISOString(),
+          lastPaymentId: razorpay_payment_id,
+          lastOrderId: razorpay_order_id,
+        };
+
+        if (plan) {
+          const validPlans = ['Basic', 'Pro', 'Elite'];
+          if (validPlans.includes(plan)) {
+            const creditsMap: Record<string, number> = { Basic: 100, Pro: 99999, Elite: 99999 };
+            updates.activePlan = plan;
+            updates.plan = plan;
+            updates.creditsRemaining = creditsMap[plan as string] ?? 99999;
+          }
+        }
+        
+        if (body.testId) {
+          const FieldValue = require('firebase-admin/firestore').FieldValue;
+          updates.purchasedTests = FieldValue.arrayUnion(body.testId);
+        }
+
+        await db.collection('users').doc(userId as string).update(updates);
+      }
+    }
+
+    return NextResponse.json({ ok: true });
+  } catch (err: unknown) {
+    console.error('[/api/razorpay/verify]', err);
+    return NextResponse.json({ error: 'Verification error. Please contact support.' }, { status: 500 });
   }
 }
