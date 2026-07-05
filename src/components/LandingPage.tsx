@@ -600,47 +600,76 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       {/* ── HOW IT WORKS ── */}
       <section id="how" className="border-b border-[var(--color-line)] py-[88px]">
         <div className="mx-auto max-w-[1180px] px-7">
-          <div className="bbc-reveal mb-12 max-w-[34em]">
+          <div className="bbc-reveal mb-12 max-w-[38em]">
             <p className="bbc-eyebrow">How it works</p>
             <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">From a messy PDF to a real study session in under a minute.</h2>
+            <p className="mt-4 text-[16.5px] text-[var(--color-ink-soft)]">Three steps, one quiet loop. Drop in your material, ask it anything, then turn what you read into practice — all on one screen.</p>
           </div>
-          <div className="grid grid-cols-1 gap-[30px] md:grid-cols-3">
+          <div className="relative grid grid-cols-1 gap-[30px] md:grid-cols-3">
             {[
               {
-                s: "Step 01", h: "Upload", p: "Drop in a textbook chapter, lecture notes, or a past paper. Your file stays yours.",
+                s: "Step 01", h: "Upload your material", p: "Drop in a textbook chapter, your handwritten notes, or a past paper. It's read in seconds — and your file never leaves your account.",
                 art: (
-                  <svg viewBox="0 0 200 100" className="h-[88px] w-full" aria-hidden="true">
-                    <rect x="60" y="14" width="80" height="72" rx="3" stroke="var(--color-ink)" strokeWidth="1.3" fill="none"/>
-                    <path d="M100 30v32M86 46l14-14 14 14" stroke="var(--color-blue-ink)" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M76 72h48" stroke="var(--color-ink-faint)" strokeWidth="1.3" strokeLinecap="round" strokeDasharray="2 3"/>
+                  <svg viewBox="0 0 220 120" className="h-full w-full" aria-hidden="true">
+                    {/* dashed drop-zone */}
+                    <rect x="24" y="12" width="172" height="96" rx="10" stroke="var(--color-ink-faint)" strokeWidth="1.2" strokeDasharray="5 5" fill="none"/>
+                    {/* PDF document with folded corner */}
+                    <path d="M84 28h34l20 20v46a3 3 0 0 1-3 3H84a3 3 0 0 1-3-3V31a3 3 0 0 1 3-3Z" fill="var(--color-paper)" stroke="var(--color-ink)" strokeWidth="1.4"/>
+                    <path d="M118 28v20h20" fill="none" stroke="var(--color-ink)" strokeWidth="1.4" strokeLinejoin="round"/>
+                    <path d="M90 62h44M90 71h32M90 80h40" stroke="var(--color-ink-faint)" strokeWidth="1.4" strokeLinecap="round"/>
+                    <rect x="90" y="50" width="26" height="8" rx="2" fill="var(--color-blue-ink)"/>
+                    {/* upward upload arrow */}
+                    <circle cx="164" cy="40" r="15" fill="var(--color-blue-wash)" stroke="var(--color-blue-ink)" strokeWidth="1.3"/>
+                    <path d="M164 47v-14M157 40l7-7 7 7" stroke="var(--color-blue-ink)" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 ),
               },
               {
-                s: "Step 02", h: "Ask", p: "Ask anything in plain language. Get answers grounded in that exact document.",
+                s: "Step 02", h: "Ask in plain words", p: "Type a doubt like you'd text a friend. The answer comes back grounded in your exact document — and cites the page it came from, so you can trust it.",
                 art: (
-                  <svg viewBox="0 0 200 100" className="h-[88px] w-full" aria-hidden="true">
-                    <rect x="36" y="18" width="84" height="34" rx="6" stroke="var(--color-ink)" strokeWidth="1.3" fill="none"/>
-                    <path d="M50 30h56M50 40h40" stroke="var(--color-ink-faint)" strokeWidth="1.3" strokeLinecap="round"/>
-                    <rect x="80" y="50" width="84" height="34" rx="6" stroke="var(--color-blue-ink)" strokeWidth="1.4" fill="var(--color-blue-wash)"/>
-                    <path d="M94 64h56M94 74h36" stroke="var(--color-blue-deep)" strokeWidth="1.3" strokeLinecap="round"/>
+                  <svg viewBox="0 0 220 120" className="h-full w-full" aria-hidden="true">
+                    {/* user question bubble */}
+                    <path d="M58 16h96a8 8 0 0 1 8 8v18a8 8 0 0 1-8 8H74l-12 10V50h-4a8 8 0 0 1-8-8V24a8 8 0 0 1 8-8Z" fill="var(--color-blue-ink)"/>
+                    <path d="M70 28h72M70 37h44" stroke="#fff" strokeOpacity="0.85" strokeWidth="1.5" strokeLinecap="round"/>
+                    {/* AI answer bubble */}
+                    <path d="M40 62h108a8 8 0 0 1 8 8v30a8 8 0 0 1-8 8H56l-10 9v-9h-6a8 8 0 0 1-8-8V70a8 8 0 0 1 8-8Z" fill="var(--color-paper)" stroke="var(--color-ink)" strokeWidth="1.4"/>
+                    <path d="M52 74h84M52 82h64" stroke="var(--color-ink-faint)" strokeWidth="1.4" strokeLinecap="round"/>
+                    {/* citation chip */}
+                    <rect x="52" y="90" width="52" height="12" rx="4" fill="var(--color-blue-wash)" stroke="var(--color-blue-ink)" strokeWidth="0.9"/>
+                    <path d="M59 96h4M67 92v8" stroke="var(--color-blue-ink)" strokeWidth="1" strokeLinecap="round"/>
+                    <text x="74" y="99.5" fontSize="8" fontWeight="700" fill="var(--color-blue-ink)" fontFamily="ui-monospace, monospace">p. 47</text>
                   </svg>
                 ),
               },
               {
-                s: "Step 03", h: "Practice", p: "Spin up flashcards, a summary, or a timed mock from what you just read.",
+                s: "Step 03", h: "Practice what you read", p: "One tap turns that chapter into flashcards, a crisp summary, or a timed mock — so reading becomes revising, and revising becomes rank.",
                 art: (
-                  <svg viewBox="0 0 200 100" className="h-[88px] w-full" aria-hidden="true">
-                    <rect x="40" y="22" width="58" height="40" rx="4" stroke="var(--color-ink)" strokeWidth="1.3" fill="none"/>
-                    <rect x="56" y="34" width="58" height="40" rx="4" stroke="var(--color-blue-ink)" strokeWidth="1.4" fill="var(--color-blue-wash)"/>
-                    <rect x="72" y="46" width="58" height="40" rx="4" stroke="var(--color-ink)" strokeWidth="1.3" fill="var(--color-paper-card)"/>
-                    <path d="M88 66h26" stroke="var(--color-blue-deep)" strokeWidth="1.4" strokeLinecap="round"/>
+                  <svg viewBox="0 0 220 120" className="h-full w-full" aria-hidden="true">
+                    {/* fanned flashcards */}
+                    <g transform="rotate(-9 78 66)">
+                      <rect x="44" y="44" width="72" height="48" rx="6" fill="var(--color-paper)" stroke="var(--color-ink)" strokeWidth="1.3"/>
+                    </g>
+                    <rect x="56" y="40" width="72" height="48" rx="6" fill="var(--color-blue-wash)" stroke="var(--color-blue-ink)" strokeWidth="1.4"/>
+                    <path d="M68 58h48M68 68h30" stroke="var(--color-blue-deep)" strokeWidth="1.5" strokeLinecap="round"/>
+                    {/* timer / mock */}
+                    <circle cx="168" cy="66" r="26" fill="var(--color-paper-card)" stroke="var(--color-ink)" strokeWidth="1.4"/>
+                    <path d="M168 66V48" stroke="var(--color-blue-ink)" strokeWidth="1.6" strokeLinecap="round"/>
+                    <path d="M168 66l12 7" stroke="var(--color-blue-ink)" strokeWidth="1.6" strokeLinecap="round"/>
+                    <path d="M168 40v-6M186 48l4-4" stroke="var(--color-ink)" strokeWidth="1.4" strokeLinecap="round"/>
+                    {/* progress arc */}
+                    <path d="M168 40a26 26 0 0 1 22 40" fill="none" stroke="var(--color-blue-ink)" strokeWidth="2.4" strokeLinecap="round"/>
                   </svg>
                 ),
               },
-            ].map((step) => (
-              <div key={step.s} className="bbc-reveal border-t-2 border-[var(--color-ink)] pt-[22px]">
-                <div className="-mx-1 mb-[18px] flex items-center justify-center rounded-[8px] bg-[var(--color-paper-card)] py-3">{step.art}</div>
+            ].map((step, i) => (
+              <div key={step.s} className="bbc-reveal relative border-t-2 border-[var(--color-ink)] pt-[22px]">
+                <div className="-mx-1 mb-[18px] flex h-[132px] items-center justify-center rounded-[10px] border border-[var(--color-line)] bg-[var(--color-paper-card)] px-3 py-3">{step.art}</div>
+                {/* flow arrow to the next step (desktop only) */}
+                {i < 2 && (
+                  <div className="absolute -right-[24px] top-[86px] z-10 hidden h-8 w-8 items-center justify-center rounded-full border border-[var(--color-line)] bg-[var(--color-paper)] text-[var(--color-blue-ink)] md:flex" aria-hidden="true">
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </div>
+                )}
                 <span className="bbc-mono text-[12px] uppercase tracking-[.16em] text-[var(--color-ink-faint)]">{step.s}</span>
                 <h3 className="bbc-serif mt-[14px] mb-2 text-[21px] tracking-[-.01em]">{step.h}</h3>
                 <p className="text-[15.5px] text-[var(--color-ink-soft)]">{step.p}</p>
