@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, Rea
 import { UserStats, UsageStats, Flashcard, DailyActivity, RecentActivityItem } from "../types";
 import { useAuth } from "./AuthContext";
 import { db } from "../firebase";
-import { doc, getDoc, setDoc, updateDoc, collection, getDocs, addDoc, onSnapshot, query, where } from "firebase/firestore";
+import { doc, updateDoc, collection, getDocs, addDoc, onSnapshot, query, where } from "firebase/firestore";
 
 interface Toast {
   id: number;
@@ -14,7 +14,7 @@ interface Toast {
 
 interface GlobalState {
   pdfCount: number;
-  activeJob: any | null;
+  activeJob: Record<string, unknown> | null;
   dashboardLoading: boolean;
   lastLoggedDate: string;
   loginCount: number;
@@ -29,7 +29,7 @@ interface GlobalState {
   userStats: UserStats;
   usageStats: UsageStats;
   flashcards: Flashcard[];
-  
+
   // Actions
   recordActivity: (actionType: "query" | "card") => void;
   handleIncrementReview: () => void;
@@ -47,35 +47,19 @@ const GlobalStateContext = createContext<GlobalState | undefined>(undefined);
 
 let toastIdCounter = 0;
 
-const generateDefaultActivity = (): DailyActivity[] => {
-  const activities: DailyActivity[] = [];
-  const today = new Date();
-  for (let i = 60; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(today.getDate() - i);
-    const dateStr = d.toISOString().split("T")[0];
-    if (Math.random() < 0.4) {
-      const queriesUsed = Math.floor(Math.random() * 6) + 1;
-      const cardsCreated = Math.floor(Math.random() * 4);
-      const hoursSaved = parseFloat(((queriesUsed * 0.2) + (cardsCreated * 0.1)).toFixed(1));
-      activities.push({
-        date: dateStr,
-        queriesUsed,
-        cardsCreated,
-        hoursSaved
-      });
-    }
-  }
-  return activities;
-};
+/** Compute usage limits based on plan */
+function getMaxCredits(plan: string): number {
+  if (plan === "Free") return 25;
+  if (plan === "Basic") return 100;
+  return 99999;
+}
 
 export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   const { currentUser } = useAuth();
-  
-  // --- All state from App.tsx ---
+
   const [pdfCount, setPdfCount] = useState<number>(0);
-  const [activeJob, setActiveJob] = useState<any | null>(null);
-  const [dashboardLoading, setDashboardLoading] = useState<boolean>(false);
+  const [activeJob, setActiveJob] = useState<Record<string, unknown> | null>(null);
+  const [dashboardLoading, setDashboardLoading] = useState<boolean>(true);
   const [lastLoggedDate, setLastLoggedDate] = useState<string>("");
   const [loginCount, setLoginCount] = useState<number>(0);
   const [recentActivities, setRecentActivities] = useState<RecentActivityItem[]>([]);
@@ -90,102 +74,44 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const [dailyActivity, setDailyActivity] = useState<DailyActivity[]>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("bluebottlecap_daily_activity");
-      if (saved) {
-        try { return JSON.parse(saved); } catch (e) {}
-      }
-    }
-    return generateDefaultActivity();
+  // Start with empty arrays — real data comes from Firestore via onSnapshot
+  const [dailyActivity, setDailyActivity] = useState<DailyActivity[]>([]);
+  const [todayReviewsCount, setTodayReviewsCount] = useState<number>(0);
+  const [openedPapers, setOpenedPapers] = useState<string[]>([]);
+  const [toolCreditsLeft, setToolCreditsLeft] = useState<number>(5);
+
+  // Default userStats — overwritten by Firestore onSnapshot
+  const [userStats, setUserStats] = useState<UserStats>({
+    hoursSaved: 0,
+    streakDays: 0,
+    creditsLeft: 25,
+    activePlan: "Free",
+    purchasedTests: [],
+    studyMaterialUnlocked: false,
   });
 
-  const [todayReviewsCount, setTodayReviewsCount] = useState<number>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("bluebottlecap_today_reviews");
-      if (saved) {
-        const count = parseInt(saved, 10);
-        if (!isNaN(count)) return count;
-      }
-    }
-    return 0;
-  });
-
-  const [openedPapers, setOpenedPapers] = useState<string[]>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("bluebottlecap_opened_papers");
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed)) return parsed;
-        } catch (e) {}
-      }
-    }
-    return [];
-  });
-
-  const [toolCreditsLeft, setToolCreditsLeft] = useState<number>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("bluebottlecap_tool_credits");
-      if (saved) {
-        const count = parseInt(saved, 10);
-        if (!isNaN(count)) return count;
-      }
-    }
-    return 5;
-  });
-
-  const [userStats, setUserStats] = useState<UserStats>(() => {
-    if (typeof window !== "undefined") {
-      const savedPlan = (localStorage.getItem("bluebottlecap_active_plan") || "Free") as 'Free' | 'Basic' | 'Pro' | 'Elite';
-      const savedStreak = localStorage.getItem("bluebottlecap_streak_days");
-      const streakDays = savedStreak ? parseInt(savedStreak, 10) : 0;
-      const savedHours = localStorage.getItem("bluebottlecap_hours_saved");
-      const hoursSaved = savedHours ? parseFloat(savedHours) : 0.0;
-      const savedCredits = localStorage.getItem("bluebottlecap_credits_left");
-      const creditsLeft = savedCredits ? parseInt(savedCredits, 10) : (savedPlan === "Free" ? 25 : 99999);
-      const savedPurchases = localStorage.getItem("bluebottlecap_purchased_tests");
-      const purchasedTests = savedPurchases ? JSON.parse(savedPurchases) : [];
-      const studyMaterialUnlocked = localStorage.getItem("bluebottlecap_study_material_unlocked") === "true";
-      
-      return { hoursSaved, streakDays, creditsLeft, activePlan: savedPlan, purchasedTests, studyMaterialUnlocked };
-    }
-    return { hoursSaved: 0, streakDays: 0, creditsLeft: 25, activePlan: "Free", purchasedTests: [], studyMaterialUnlocked: false };
-  });
-
-  const [usageStats, setUsageStats] = useState<UsageStats>(() => {
-    if (typeof window !== "undefined") {
-      const savedPlan = localStorage.getItem("bluebottlecap_active_plan") || "Free";
-      const savedCredits = localStorage.getItem("bluebottlecap_credits_left");
-      const creditsLeft = savedCredits ? parseInt(savedCredits, 10) : (savedPlan === "Free" ? 25 : 99999);
-      const savedPapers = localStorage.getItem("bluebottlecap_opened_papers");
-      let papersCount = 1;
-      if (savedPapers) {
-        try {
-          const parsed = JSON.parse(savedPapers);
-          if (Array.isArray(parsed)) papersCount = parsed.length;
-        } catch (e) {}
-      }
-      return {
-        aiQueries: { current: creditsLeft, max: savedPlan === "Free" ? 25 : savedPlan === "Basic" ? 100 : 99999, unit: "credits" },
-        pdfEdits: { current: papersCount, max: savedPlan === "Free" ? 3 : 99999, unit: "spots" },
-        storage: { current: 120, max: savedPlan === "Free" ? 500 : savedPlan === "Basic" ? 2000 : savedPlan === "Pro" ? 10000 : 50000, unit: "MB" },
-      };
-    }
-    return { aiQueries: { current: 25, max: 25, unit: "credits" }, pdfEdits: { current: 1, max: 3, unit: "spots" }, storage: { current: 120, max: 500, unit: "MB" } };
-  });
-
-  useEffect(() => {
-    setUsageStats((prev) => {
-      const activePlan = userStats.activePlan;
-      return {
-        ...prev,
-        aiQueries: { ...prev.aiQueries, max: activePlan === "Free" ? 25 : activePlan === "Basic" ? 100 : 99999 },
-        pdfEdits: { current: activePlan === "Free" ? openedPapers.length : 4, max: activePlan === "Free" ? 3 : 99999, unit: "spots" },
-        storage: { current: 120, max: activePlan === "Free" ? 500 : activePlan === "Basic" ? 2000 : activePlan === "Pro" ? 10000 : 50000, unit: "MB" }
-      };
-    });
-  }, [openedPapers, userStats.activePlan]);
+  // usageStats is derived from userStats — computed, not independently stored
+  const usageStats: UsageStats = {
+    aiQueries: {
+      current: userStats.creditsLeft,
+      max: getMaxCredits(userStats.activePlan),
+      unit: "credits",
+    },
+    pdfEdits: {
+      current: openedPapers.length,
+      max: userStats.activePlan === "Free" ? 3 : 99999,
+      unit: "spots",
+    },
+    storage: {
+      current: 120,
+      max:
+        userStats.activePlan === "Free" ? 500
+        : userStats.activePlan === "Basic" ? 2000
+        : userStats.activePlan === "Pro" ? 10000
+        : 50000,
+      unit: "MB",
+    },
+  };
 
   const [flashcards, setFlashcards] = useState<Flashcard[]>([
     {
@@ -313,10 +239,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
         updated.push({ date: todayStr, queriesUsed: qUsed, cardsCreated: cCreated, hoursSaved: hSaved });
       }
 
-      if (typeof window !== "undefined") {
-        localStorage.setItem("bluebottlecap_daily_activity", JSON.stringify(updated));
-      }
-
+      // Firestore is the single source of truth — no localStorage write
       if (currentUser) {
         const userDocRef = doc(db, "users", currentUser.uid);
         updateDoc(userDocRef, { dailyActivity: updated }).catch((err) => console.error(err));
@@ -327,7 +250,6 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
 
     setUserStats((prev) => {
       const nextStats = { ...prev, hoursSaved: parseFloat((prev.hoursSaved + (actionType === "query" ? 0.2 : 0.1)).toFixed(1)) };
-      if (typeof window !== "undefined") localStorage.setItem("bluebottlecap_hours_saved", String(nextStats.hoursSaved));
       if (currentUser) {
         const userDocRef = doc(db, "users", currentUser.uid);
         updateDoc(userDocRef, { hoursSaved: nextStats.hoursSaved }).catch(err => console.error(err));
@@ -339,7 +261,6 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   const handleIncrementReview = () => {
     setTodayReviewsCount((prev) => {
       const nextCount = prev + 1;
-      if (typeof window !== "undefined") localStorage.setItem("bluebottlecap_today_reviews", String(nextCount));
       if (currentUser) {
         const userDocRef = doc(db, "users", currentUser.uid);
         updateDoc(userDocRef, { todayReviewsCount: nextCount }).catch((err) => console.error(err));
@@ -353,7 +274,6 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     if (toolCreditsLeft > 0) {
       const nextCount = toolCreditsLeft - 1;
       setToolCreditsLeft(nextCount);
-      if (typeof window !== "undefined") localStorage.setItem("bluebottlecap_tool_credits", String(nextCount));
       if (currentUser) {
         const userDocRef = doc(db, "users", currentUser.uid);
         updateDoc(userDocRef, { toolCreditsLeft: nextCount }).catch(err => console.error(err));
@@ -406,24 +326,21 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
       return true;
     }
 
-    if (usageStats.aiQueries.current > 0) {
-      const newQueriesLeft = usageStats.aiQueries.current - 1;
-      setUsageStats((prev) => ({ ...prev, aiQueries: { ...prev.aiQueries, current: newQueriesLeft } }));
-      setUserStats((prev) => {
-        if (typeof window !== "undefined") localStorage.setItem("bluebottlecap_credits_left", String(newQueriesLeft));
-        return { ...prev, creditsLeft: newQueriesLeft };
-      });
+    // Single source of truth: userStats.creditsLeft
+    if (userStats.creditsLeft > 0) {
+      const newCreditsLeft = userStats.creditsLeft - 1;
+      setUserStats((prev) => ({ ...prev, creditsLeft: newCreditsLeft }));
       recordActivity("query");
       if (currentUser) {
         const userDocRef = doc(db, "users", currentUser.uid);
-        updateDoc(userDocRef, { creditsLeft: newQueriesLeft }).catch((err) => console.error(err));
+        updateDoc(userDocRef, { creditsLeft: newCreditsLeft, creditsRemaining: newCreditsLeft }).catch((err) => console.error(err));
       }
-      if (newQueriesLeft <= 5 && newQueriesLeft > 0) {
-        showToast(`⚠️ Only ${newQueriesLeft} AI credits left — consider upgrading!`, "warning");
-      } else if (newQueriesLeft === 0) {
+      if (newCreditsLeft <= 5 && newCreditsLeft > 0) {
+        showToast(`⚠️ Only ${newCreditsLeft} AI credits left — consider upgrading!`, "warning");
+      } else if (newCreditsLeft === 0) {
         showToast("🚫 No AI credits left. Upgrade to continue.", "error");
       } else {
-        showToast(`✅ AI query used — ${newQueriesLeft} credits remaining`, "success");
+        showToast(`✅ AI query used — ${newCreditsLeft} credits remaining`, "success");
       }
       return true;
     }
@@ -433,21 +350,20 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
 
   const handleUpgradeAccount = async (plan: 'Free' | 'Basic' | 'Pro' | 'Elite') => {
     showToast(`🎉 Upgraded to ${plan} plan! All features unlocked.`, "success");
-    if (typeof window !== "undefined") {
-      localStorage.setItem("bluebottlecap_active_plan", plan);
-      localStorage.setItem("bluebottlecap_credits_left", plan === "Free" ? "25" : "99999");
-    }
-    setUserStats((prev) => ({ ...prev, activePlan: plan, creditsLeft: plan === "Free" ? 25 : 99999 }));
-    setUsageStats((prev) => ({
-      aiQueries: { current: plan === "Free" ? 25 : plan === "Basic" ? 100 : 99999, max: plan === "Free" ? 25 : plan === "Basic" ? 100 : 99999, unit: "credits" },
-      pdfEdits: { current: prev.pdfEdits.current, max: plan === "Free" ? 5 : plan === "Basic" ? 20 : 99999, unit: "spots" },
-      storage: { current: prev.storage.current, max: plan === "Free" ? 500 : plan === "Basic" ? 2000 : plan === "Pro" ? 10000 : 50000, unit: "MB" },
-    }));
+    const newCredits = getMaxCredits(plan);
+    setUserStats((prev) => ({ ...prev, activePlan: plan, creditsLeft: newCredits }));
+    // usageStats auto-computes from userStats — no separate setUsageStats call needed
 
     if (currentUser) {
       try {
         const userDocRef = doc(db, "users", currentUser.uid);
-        await updateDoc(userDocRef, { activePlan: plan, creditsLeft: plan === "Free" ? 25 : 99999, updatedAt: new Date().toISOString() });
+        await updateDoc(userDocRef, {
+          activePlan: plan,
+          plan,
+          creditsLeft: newCredits,
+          creditsRemaining: newCredits,
+          updatedAt: new Date().toISOString(),
+        });
       } catch (err) {
         console.error("Failed to update user plan in Firestore:", err);
       }
@@ -459,7 +375,6 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
       const currentPurchased = prev.purchasedTests || [];
       if (currentPurchased.includes(testId)) return prev;
       const next = [...currentPurchased, testId];
-      if (typeof window !== "undefined") localStorage.setItem("bluebottlecap_purchased_tests", JSON.stringify(next));
       if (currentUser) {
         const userDocRef = doc(db, "users", currentUser.uid);
         updateDoc(userDocRef, { purchasedTests: next, updatedAt: new Date().toISOString() }).catch(err => console.error(err));
@@ -469,7 +384,6 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const handleUnlockStudyMaterial = () => {
-    if (typeof window !== "undefined") localStorage.setItem("bluebottlecap_study_material_unlocked", "true");
     setUserStats(prev => ({ ...prev, studyMaterialUnlocked: true }));
     if (currentUser) {
       const userDocRef = doc(db, "users", currentUser.uid);
@@ -477,7 +391,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const value = {
+  const value: GlobalState = {
     pdfCount,
     activeJob,
     dashboardLoading,
@@ -492,7 +406,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     openedPapers,
     toolCreditsLeft,
     userStats,
-    usageStats,
+    usageStats,   // computed — mirrors userStats.creditsLeft
     flashcards,
     recordActivity,
     handleIncrementReview,
@@ -503,7 +417,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     handleUpgradeAccount,
     handlePurchaseTest,
     handleUnlockStudyMaterial,
-    setOpenedPapers
+    setOpenedPapers,
   };
 
   return <GlobalStateContext.Provider value={value}>{children}</GlobalStateContext.Provider>;

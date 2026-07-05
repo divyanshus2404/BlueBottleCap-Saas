@@ -20,7 +20,7 @@ export const Pricing: React.FC<PricingProps> = ({
   const [showReceipt, setShowReceipt] = useState<boolean>(false);
   const [selectedPlan, setSelectedPlan] = useState<'Free' | 'Basic' | 'Pro' | 'Elite'>("Free");
 
-  // Plans data mirroring the user assets exactly!
+  // Plans data — kept in sync with UserStats.activePlan type
   const plans = [
     {
       id: "Free" as const,
@@ -41,6 +41,24 @@ export const Pricing: React.FC<PricingProps> = ({
       ]
     },
     {
+      id: "Basic" as const,
+      name: "Basic",
+      desc: "For students who need a little more AI power",
+      priceMonthly: 49,
+      priceAnnual: 39,
+      buttonText: "Get Basic",
+      color: "border-blue-200 bg-blue-50/5",
+      badgeColor: "bg-blue-600 text-white",
+      icon: "📚",
+      features: [
+        "Everything in Free",
+        "100 AI credits per month",
+        "Unlimited PDF spots",
+        "Notes to study flashcards",
+        "Email support"
+      ]
+    },
+    {
       id: "Pro" as const,
       name: "Pro",
       desc: "Perfect for active exam preparation",
@@ -52,11 +70,10 @@ export const Pricing: React.FC<PricingProps> = ({
       isPopular: true,
       icon: "👑",
       features: [
-        "Everything in Free",
+        "Everything in Basic",
         "Infinite AI exam tool runs",
         "JEE MCQ Card practice sets",
         "Day-by-day exam timetables",
-        "Notes to study flashcards",
         "24/7 Priority support key"
       ]
     },
@@ -128,20 +145,23 @@ export const Pricing: React.FC<PricingProps> = ({
         name: "BlueBottleCap",
         description: `${plan} plan purchase`,
         order_id: data.order.id,
-        handler: async function (response: any) {
-          // Verify payment on server
+        handler: async function (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) {
+          // Verify payment on server — server writes the plan upgrade to Firestore
+          // so the client can never self-upgrade without a valid HMAC signature.
           const verifyResp = await fetch("/api/razorpay/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(response),
+            body: JSON.stringify({ ...response, plan, userId: undefined }),
           });
           const verifyData = await verifyResp.json();
           if (verifyResp.ok && verifyData.ok) {
             setLoadingStep(4);
             setShowReceipt(true);
+            // onUpgradeApproved updates local state to reflect the new plan;
+            // Firestore was already written server-side in /api/razorpay/verify.
             onUpgradeApproved(plan);
           } else {
-            alert("Payment verification failed");
+            alert("Payment verification failed. Please contact support.");
             setLoadingStep(-1);
           }
         },

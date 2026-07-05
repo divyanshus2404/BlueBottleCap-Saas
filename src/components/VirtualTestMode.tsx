@@ -166,10 +166,15 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
             const verifyResp = await fetch("/api/razorpay/verify", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(response),
+              body: JSON.stringify({
+                ...response,
+                userId: currentUser?.uid,
+                testId: testId
+              }),
             });
             const verifyData = await verifyResp.json();
             if (verifyResp.ok && verifyData.ok) {
+
               onPurchaseSuccess(testId);
               onToast(`🎉 Successfully unlocked ${testName}!`, "success");
             } else {

@@ -59,14 +59,10 @@ export const Dashboard: React.FC = () => {
     { id: "ach-2", name: "Consistent Scholar", description: "Maintain a study streak of 5 days or more.", icon: "🔥", unlocked: userStats.streakDays >= 5 },
     { id: "ach-3", name: "Retention Master", description: "Build your knowledge base with 5 or more active flashcards.", icon: "🧠", unlocked: true },
   ];
+  const { dashboardLoading } = useGlobalState();
   const [activeTab, setActiveTab] = useState<"workspace" | "analytics">("workspace");
-  const [isSyncing, setIsSyncing] = useState(true);
-
-  // Skeleton loader effect
-  useEffect(() => {
-    const timer = setTimeout(() => setIsSyncing(false), 1200);
-    return () => clearTimeout(timer);
-  }, [activeTab]);
+  // Use the real Firestore loading state — no fake timer
+  const isSyncing = dashboardLoading;
 
   const containerRef = React.useRef<HTMLDivElement>(null);
 
