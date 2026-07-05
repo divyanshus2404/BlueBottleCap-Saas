@@ -1,11 +1,5 @@
 {
   "version": 2,
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index.ts"
-    }
-  ],
   "crons": [
     { "path": "/api/cron/abandoned-checkout", "schedule": "0 2 * * *" },
     { "path": "/api/cron/deadline-nudge", "schedule": "0 4 * * 1" }
