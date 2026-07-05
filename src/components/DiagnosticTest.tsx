@@ -9,6 +9,7 @@ import {
   type DiagnosticResult,
 } from "@/src/lib/diagnostic";
 import { WhatsAppShare } from "./WhatsAppShare";
+import { DiagnosticShareCard } from "./DiagnosticShareCard";
 
 type Phase = "intro" | "question" | "result";
 
@@ -219,6 +220,8 @@ export const DiagnosticTest: React.FC = () => {
           <p className="mt-3 text-[12.5px] text-[var(--color-ink-faint)]">
             Share your score — see who's more JEE-ready.
           </p>
+
+          <DiagnosticShareCard result={result} />
         </div>
       )}
     </div>
