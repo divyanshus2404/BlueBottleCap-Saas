@@ -490,6 +490,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <clipPath id="bbc-bottle-interior">
                   <path d="M361 139 C 360 162 332 168 332 206 v250 a18 18 0 0 0 18 18 h60 a18 18 0 0 0 18 -18 v-250 c0 -38 -28 -44 -29 -67 Z" />
                 </clipPath>
+                <linearGradient id="bbc-liquid-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="var(--color-blue-ink)" stopOpacity="0.10" />
+                  <stop offset="100%" stopColor="var(--color-blue-ink)" stopOpacity="0.26" />
+                </linearGradient>
               </defs>
 
               {/* Halo behind the bottle */}
@@ -515,7 +519,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               {/* Animated liquid inside the body, clipped to bottle silhouette */}
               <g clipPath="url(#bbc-bottle-interior)">
                 <g className="bbc-liquid-rise">
-                  <rect className="bbc-liquid" x="320" y="320" width="120" height="160" />
+                  <rect x="320" y="320" width="120" height="160" fill="url(#bbc-liquid-grad)" />
                   <path
                     className="bbc-liquid bbc-liquid-wave"
                     d="M280 322 Q320 310 360 322 T440 322 T520 322 L520 340 L280 340 Z"
@@ -526,6 +530,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                     d="M280 328 Q320 316 360 328 T440 328 T520 328"
                   />
                 </g>
+                {/* Carbonation — bubbles rising through the liquid */}
+                <circle className="bbc-bubble" cx="352" cy="452" r="3" style={{ ["--d" as never]: 0, transformOrigin: "352px 452px" }} />
+                <circle className="bbc-bubble" cx="372" cy="464" r="2.2" style={{ ["--d" as never]: 1.3, transformOrigin: "372px 464px" }} />
+                <circle className="bbc-bubble" cx="392" cy="448" r="2.6" style={{ ["--d" as never]: 2.1, transformOrigin: "392px 448px" }} />
+                <circle className="bbc-bubble" cx="408" cy="460" r="1.8" style={{ ["--d" as never]: 0.7, transformOrigin: "408px 460px" }} />
+                <circle className="bbc-bubble" cx="364" cy="456" r="1.6" style={{ ["--d" as never]: 3, transformOrigin: "364px 456px" }} />
               </g>
 
               {/* Document card inside the bottle */}
@@ -534,38 +544,78 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <line className="bbc-stroke-ink" x1="358" y1="340" x2="402" y2="340" />
               <line className="bbc-stroke-ink" x1="358" y1="356" x2="388" y2="356" />
 
-              {/* Height indicator */}
-              <g className="bbc-stroke-ink" opacity=".5">
-                <line x1="300" y1="206" x2="312" y2="206" />
-                <line x1="306" y1="206" x2="306" y2="456" />
-                <line x1="300" y1="456" x2="312" y2="456" />
+              {/* Graduated progress scale — "full syllabus" at the neck down to
+                  "exam-ready" at the base, like markings on a measuring flask. */}
+              <g>
+                <line className="bbc-tick" x1="300" y1="206" x2="312" y2="206" />
+                <line className="bbc-tick" x1="306" y1="206" x2="306" y2="456" />
+                <line className="bbc-tick" x1="300" y1="456" x2="312" y2="456" />
+                {/* intermediate graduations */}
+                <line className="bbc-tick" x1="302" y1="268" x2="310" y2="268" />
+                <line className="bbc-tick" x1="302" y1="331" x2="310" y2="331" />
+                <line className="bbc-tick" x1="302" y1="393" x2="310" y2="393" />
+                <text className="bbc-tick-lbl" x="296" y="203" textAnchor="end">SYLLABUS</text>
+                <text className="bbc-tick-lbl" x="296" y="459" textAnchor="end">EXAM-READY</text>
               </g>
 
-              {/* Annotated labels — CSS var --i drives the stagger */}
+              {/* Annotated callouts — each has an icon glyph + micro-description.
+                  CSS var --i drives the staggered reveal. */}
               <g className="bbc-diag-label" style={{ ["--i" as never]: 0 }}>
                 <circle className="bbc-anchor" cx="361" cy="135" r="3" />
                 <path className="bbc-lead bbc-draw" d="M361 135 H188 V124" />
-                <text className="bbc-lbl-num" x="120" y="118">01</text>
-                <text className="bbc-lbl" x="146" y="118">STUDY PLANNER</text>
+                {/* calendar icon */}
+                <circle className="bbc-icn-bg" cx="100" cy="113" r="11" />
+                <rect className="bbc-icn" x="94" y="109" width="12" height="10" rx="2" />
+                <path className="bbc-icn" d="M94 112.5 h12" />
+                <path className="bbc-icn" d="M97 106.5 v3 M103 106.5 v3" />
+                <text className="bbc-lbl-num" x="120" y="112">01</text>
+                <text className="bbc-lbl" x="146" y="112">STUDY PLANNER</text>
+                <text className="bbc-lbl-desc" x="146" y="128">Plans your study weeks</text>
               </g>
               <g className="bbc-diag-label" style={{ ["--i" as never]: 1 }}>
                 <circle className="bbc-anchor" cx="332" cy="380" r="3" />
                 <path className="bbc-lead bbc-draw" d="M332 380 H188 V392" />
-                <text className="bbc-lbl-num" x="120" y="398">02</text>
-                <text className="bbc-lbl" x="146" y="398">SMART SUMMARIES</text>
+                {/* summary doc icon */}
+                <circle className="bbc-icn-bg" cx="100" cy="391" r="11" />
+                <rect className="bbc-icn" x="95" y="385" width="10" height="12" rx="1.5" />
+                <path className="bbc-icn" d="M97.5 388.5 h5 M97.5 391 h5 M97.5 393.5 h3" />
+                <text className="bbc-lbl-num" x="120" y="390">02</text>
+                <text className="bbc-lbl" x="146" y="390">SMART SUMMARIES</text>
+                <text className="bbc-lbl-desc" x="146" y="406">Only the tested points</text>
               </g>
               <g className="bbc-diag-label" style={{ ["--i" as never]: 2 }}>
                 <circle className="bbc-anchor" cx="406" cy="106" r="3" />
-                <path className="bbc-lead bbc-draw" d="M406 106 H572 V94" />
-                <text className="bbc-lbl-num" x="572" y="88">03</text>
-                <text className="bbc-lbl" x="598" y="88">AI PDF COPILOT</text>
+                <path className="bbc-lead bbc-draw" d="M406 106 H548 V94" />
+                {/* chat bubble icon */}
+                <circle className="bbc-icn-bg" cx="530" cy="83" r="11" />
+                <rect className="bbc-icn" x="524" y="78" width="12" height="9" rx="3" />
+                <path className="bbc-icn" d="M527 87 l-2 3 v-3" />
+                <path className="bbc-icn" d="M527 82.5 h.01 M530 82.5 h.01 M533 82.5 h.01" strokeWidth="1.8" />
+                <text className="bbc-lbl-num" x="548" y="82">03</text>
+                <text className="bbc-lbl" x="574" y="82">AI PDF COPILOT</text>
+                <text className="bbc-lbl-desc" x="574" y="98">Answers that cite the page</text>
               </g>
               <g className="bbc-diag-label" style={{ ["--i" as never]: 3 }}>
                 <circle className="bbc-anchor" cx="428" cy="420" r="3" />
-                <path className="bbc-lead bbc-draw" d="M428 420 H572 V432" />
-                <text className="bbc-lbl-num" x="572" y="438">04</text>
-                <text className="bbc-lbl" x="598" y="438">MOCK TEST MODE</text>
+                <path className="bbc-lead bbc-draw" d="M428 420 H548 V432" />
+                {/* timer icon */}
+                <circle className="bbc-icn-bg" cx="530" cy="433" r="11" />
+                <circle className="bbc-icn" cx="530" cy="434" r="6" />
+                <path className="bbc-icn" d="M530 434 v-3.5 M530 434 l3 2" />
+                <path className="bbc-icn" d="M527.5 426.5 h5" />
+                <text className="bbc-lbl-num" x="548" y="432">04</text>
+                <text className="bbc-lbl" x="574" y="432">MOCK TEST MODE</text>
+                <text className="bbc-lbl-desc" x="574" y="448">Runs like the real exam</text>
               </g>
+
+              {/* Patent-drawing flourishes: registration crosshairs + figure caption */}
+              <g className="bbc-reg">
+                <path d="M18 26 v-14 h14" />
+                <path d="M742 26 v-14 h-14" />
+                <path d="M18 534 v14 h14" />
+                <path d="M742 534 v14 h-14" />
+              </g>
+              <text className="bbc-fig" x="380" y="548" textAnchor="middle">FIG. 01 — THE BLUEBOTTLE STUDY SYSTEM</text>
             </svg>
           </div>
         </div>

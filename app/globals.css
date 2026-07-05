@@ -127,6 +127,16 @@ body {
 .bbc-liquid    { fill: var(--color-blue-ink); opacity:.14; }
 .bbc-liquid-line { fill:none; stroke: var(--color-blue-ink); stroke-width:1.4; opacity:.5; }
 
+/* Enriched anatomy-diagram parts */
+.bbc-lbl-desc  { font-family: var(--font-plex); font-size:10.5px; font-weight:500; letter-spacing:.03em; fill: var(--color-ink-soft); }
+.bbc-fig       { font-family: var(--font-plex); font-size:10.5px; font-weight:600; letter-spacing:.24em; fill: var(--color-ink-faint); }
+.bbc-tick      { stroke: var(--color-ink); stroke-width:1; opacity:.4; }
+.bbc-tick-lbl  { font-family: var(--font-plex); font-size:8.5px; font-weight:600; letter-spacing:.1em; fill: var(--color-ink-faint); }
+.bbc-reg       { stroke: var(--color-line-strong); stroke-width:1.1; opacity:.65; }
+.bbc-icn       { fill:none; stroke: var(--color-blue-ink); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.bbc-icn-bg    { fill: var(--color-blue-wash); stroke: var(--color-blue-ink); stroke-width:1.3; }
+.bbc-bubble    { fill: var(--color-blue-ink); opacity:0; }
+
 .bbc-row { transition: background .18s ease; }
 .bbc-row:hover { background: var(--color-paper-card); }
 .bbc-row:hover .bbc-arrow { transform: translateX(4px); color: var(--color-blue-ink); }
@@ -155,6 +165,10 @@ body {
 
   /* Soft pulsing halo behind the bottle to suggest motion / focus. */
   .bbc-halo-pulse { transform-origin: 380px 320px; animation: bbc-halo-pulse 5s ease-in-out infinite; }
+
+  /* Carbonation — bubbles drift up through the liquid once the diagram reveals.
+     Per-bubble --d staggers the loop so they don't rise in lockstep. */
+  .bbc-diagram.bbc-in .bbc-bubble { animation: bbc-bubble 4.2s ease-in infinite; animation-delay: calc(var(--d, 0) * 1s + 900ms); }
 
   /* Cascade — children of a revealed .bbc-cascade stagger in one after
      another. Used inside hero mock grids and the chat demo so the content
@@ -208,4 +222,11 @@ body {
   0%   { r: 3; }
   50%  { r: 7; }
   100% { r: 3; }
+}
+
+@keyframes bbc-bubble {
+  0%   { transform: translateY(0) scale(.7); opacity: 0; }
+  20%  { opacity: .3; }
+  85%  { opacity: .22; }
+  100% { transform: translateY(-96px) scale(1); opacity: 0; }
 }
