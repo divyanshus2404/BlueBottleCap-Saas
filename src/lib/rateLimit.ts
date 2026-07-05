@@ -68,3 +68,17 @@ export function getClientIp(req: Request): string {
     'unknown'
   );
 }
+
+/** Legacy compat for user routes */
+export function enforceRateLimit(req: Request, options?: { limit?: number, windowMs?: number, prefix?: string }) {
+  const ip = getClientIp(req);
+  const limit = options?.limit ?? 20;
+  const windowMs = options?.windowMs ?? 60_000;
+  const prefix = options?.prefix ?? "default";
+  
+  const limiter = getRateLimiter({ limit, windowMs });
+  if (!limiter.check(`${prefix}:${ip}`)) {
+    return new Response(JSON.stringify({ error: "Too many requests" }), { status: 429 });
+  }
+  return null;
+}
