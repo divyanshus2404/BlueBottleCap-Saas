@@ -1,46 +1,31 @@
-"use client";
-
 import React from "react";
 import Link from "next/link";
-import { Sparkles, Home, FileText } from "lucide-react";
+import { Home, FileText } from "lucide-react";
+
+// Branded 404, in the editorial design system (same tokens as the landing and
+// product) rather than the earlier off-brand slate styling.
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full text-center space-y-8">
-        {/* Large 404 */}
-        <div className="relative">
-          <div className="text-[160px] font-display font-black text-slate-100 leading-none select-none">
-            404
-          </div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-white rounded-3xl shadow-xl border border-slate-100 px-8 py-6 space-y-3">
-              <div className="w-14 h-14 mx-auto rounded-2xl bg-blue-50 flex items-center justify-center">
-                <Sparkles className="w-7 h-7 text-blue-600" />
-              </div>
-              <h1 className="font-display text-2xl font-black text-slate-900">Page not found</h1>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                This page doesn&apos;t exist or was removed. Head back to explore the working parts of BlueBottleCap.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 px-6 py-3 text-sm font-bold text-white hover:bg-slate-800 transition-colors"
-          >
-            <Home className="w-4 h-4" />
-            Back to Home
+    <div className="bbc relative min-h-screen overflow-hidden">
+      <div className="bbc-grid" aria-hidden="true" />
+      <div className="relative z-[2] mx-auto flex min-h-screen max-w-[560px] flex-col items-center justify-center px-7 text-center">
+        <p className="bbc-serif select-none text-[clamp(96px,20vw,180px)] font-semibold leading-none tracking-[-.04em] text-[var(--color-line-strong)]">
+          404
+        </p>
+        <p className="bbc-eyebrow mt-2">Page not found</p>
+        <h1 className="bbc-serif mt-3 text-[clamp(26px,3.6vw,40px)] leading-[1.1] tracking-[-.02em]">
+          This page doesn&apos;t exist.
+        </h1>
+        <p className="mt-4 text-[15px] leading-relaxed text-[var(--color-ink-soft)]">
+          It may have moved or never existed. Head back to the working parts of BlueBottleCap.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <Link href="/" className="bbc-btn bbc-btn-primary inline-flex items-center gap-2 px-6 py-3 text-[15px]">
+            <Home className="h-4 w-4" /> Back home
           </Link>
-          <Link
-            href="/pdf-editor"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
-          >
-            <FileText className="w-4 h-4" />
-            Try PDF Copilot
+          <Link href="/pdf-editor" className="bbc-btn bbc-btn-ghost inline-flex items-center gap-2 px-6 py-3 text-[15px]">
+            <FileText className="h-4 w-4" /> Try PDF Copilot
           </Link>
         </div>
       </div>
