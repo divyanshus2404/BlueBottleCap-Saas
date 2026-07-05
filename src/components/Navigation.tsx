@@ -144,6 +144,12 @@ export const Navigation: React.FC<NavigationProps> = ({
                   <p className="text-[9px] font-extrabold uppercase tracking-wider text-gray-400 font-mono">Signed in as</p>
                   <p className="text-[11px] font-bold text-brand-navy truncate mt-0.5">{currentUser.email}</p>
                 </div>
+                <a
+                  href="/profile"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs font-bold text-gray-700 hover:bg-gray-50 transition cursor-pointer"
+                >
+                  Edit Profile
+                </a>
                 <button
                   onClick={signOutUser}
                   className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs font-bold text-red-600 hover:bg-red-50 :bg-red-950/30 transition cursor-pointer"
@@ -233,6 +239,13 @@ export const Navigation: React.FC<NavigationProps> = ({
                   )}
                   <span className="text-xs font-semibold text-brand-navy truncate grow">{currentUser.displayName || currentUser.email}</span>
                 </div>
+                <a
+                  href="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-700 py-2.5 hover:bg-gray-50 transition cursor-pointer"
+                >
+                  Edit Profile
+                </a>
                 <button
                   onClick={() => {
                     signOutUser();
