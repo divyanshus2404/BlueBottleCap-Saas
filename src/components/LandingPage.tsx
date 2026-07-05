@@ -71,29 +71,29 @@ const ToolIcon = {
 };
 
 const tools = [
-  { n: "01", t: "Notes Scanner", d: "Photo of handwritten notes → clean, typed, equation-aware version. New.", Icon: ToolIcon.scan, href: "/scan-notes" },
-  { n: "02", t: "AI PDF Copilot", d: "Chat with any textbook or notes PDF. Answers cite the page they came from.", Icon: ToolIcon.pdf, href: "/pdf-editor" },
-  { n: "03", t: "PDF & File Tools", d: "PNG↔JPG↔WebP, PDF merge & split, compressor, resizer — all in your browser.", Icon: ToolIcon.tools, href: "/tools" },
-  { n: "04", t: "JEE Diagnostic", d: "2-minute readiness check that maps your weak topics. No signup.", Icon: ToolIcon.timer, href: "/diagnostic" },
-  { n: "05", t: "Flashcard Maker", d: "Turn a chapter into a spaced-repetition deck in one click.", Icon: ToolIcon.cards, href: "/pdf-editor" },
-  { n: "06", t: "Smart Summaries", d: "Long chapters condensed to the points that actually get tested.", Icon: ToolIcon.summary, href: "/pdf-editor" },
+  { n: "01", tKey: "tool.1t", dKey: "tool.1d", Icon: ToolIcon.scan, href: "/scan-notes" },
+  { n: "02", tKey: "tool.2t", dKey: "tool.2d", Icon: ToolIcon.pdf, href: "/pdf-editor" },
+  { n: "03", tKey: "tool.3t", dKey: "tool.3d", Icon: ToolIcon.tools, href: "/tools" },
+  { n: "04", tKey: "tool.4t", dKey: "tool.4d", Icon: ToolIcon.timer, href: "/diagnostic" },
+  { n: "05", tKey: "tool.5t", dKey: "tool.5d", Icon: ToolIcon.cards, href: "/pdf-editor" },
+  { n: "06", tKey: "tool.6t", dKey: "tool.6d", Icon: ToolIcon.summary, href: "/pdf-editor" },
 ];
 
 const plans = [
   {
-    name: "Free", price: "₹0", per: "/ forever", featured: false, cta: "Try it free", view: "pdf-editor" as ActiveView,
-    desc: "Enough to feel the difference. Not enough to live on.",
-    items: ["1 PDF upload", "5 chat messages per session", "Watermarked exports", "Study streak tracking"],
+    nameKey: "plan.free.name", price: "₹0", per: "/ forever", featured: false, ctaKey: "plan.free.cta", view: "pdf-editor" as ActiveView,
+    descKey: "plan.free.desc",
+    itemKeys: ["plan.free.i1", "plan.free.i2", "plan.free.i3", "plan.free.i4"],
   },
   {
-    name: "Pro", price: "₹199", per: "/ month", featured: true, tag: "Most popular", cta: "Get Pro", view: "pricing" as ActiveView,
-    desc: "The plan that actually gets you through exams.",
-    items: ["Unlimited PDFs and chat", "Flashcards, summaries, mocks", "Day-by-day study plan", "No watermarks", "Priority support"],
+    nameKey: "plan.pro.name", price: "₹199", per: "/ month", featured: true, tagKey: "plan.pro.tag", ctaKey: "plan.pro.cta", view: "pricing" as ActiveView,
+    descKey: "plan.pro.desc",
+    itemKeys: ["plan.pro.i1", "plan.pro.i2", "plan.pro.i3", "plan.pro.i4", "plan.pro.i5"],
   },
   {
-    name: "Pro · Annual", price: "₹1,499", per: "/ year", featured: false, tag: "Save 37%", cta: "Get yearly", view: "pricing" as ActiveView,
-    desc: "₹125/mo when paid yearly. Lock it in before exam crunch.",
-    items: ["Everything in Pro", "2 months free vs monthly", "Renewal-locked at this price", "Cancel anytime"],
+    nameKey: "plan.annual.name", price: "₹1,499", per: "/ year", featured: false, tagKey: "plan.annual.tag", ctaKey: "plan.annual.cta", view: "pricing" as ActiveView,
+    descKey: "plan.annual.desc",
+    itemKeys: ["plan.annual.i1", "plan.annual.i2", "plan.annual.i3", "plan.annual.i4"],
   },
 ];
 
@@ -207,20 +207,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             </div>
             <p className="bbc-reveal mt-[14px] flex items-center gap-1.5 text-[13px] text-[var(--color-ink-faint)]">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5l3 3 6-7" stroke="var(--color-blue-ink)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              No signup needed — try it instantly, free.
+              {t("hero.noSignup")}
             </p>
             <div className="bbc-reveal mt-[42px] flex flex-wrap items-center gap-x-[22px] gap-y-2 border-t border-[var(--color-line)] pt-[20px]">
               <div className="flex items-center gap-[8px] text-[13px] text-[var(--color-ink-faint)]">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.25" stroke="var(--color-blue-ink)" strokeWidth="1.4"/><path d="M5.5 8.5l1.7 1.7L10.7 6.4" stroke="var(--color-blue-ink)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
-                Free during early access
+                {t("hero.freeAccess")}
               </div>
               <div className="flex items-center gap-[8px] text-[13px] text-[var(--color-ink-faint)]">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.25" y="4.25" width="11.5" height="8.5" rx="1.5" stroke="var(--color-blue-ink)" strokeWidth="1.3"/><path d="M2.5 7h11" stroke="var(--color-blue-ink)" strokeWidth="1.3"/><path d="M4 4.25V3" stroke="var(--color-blue-ink)" strokeWidth="1.3" strokeLinecap="round"/><path d="M12 4.25V3" stroke="var(--color-blue-ink)" strokeWidth="1.3" strokeLinecap="round"/></svg>
-                No card needed
+                {t("hero.noCard")}
               </div>
               <div className="flex items-center gap-[8px] text-[13px] text-[var(--color-ink-faint)]">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5l2 4.3 4.5.5-3.4 3.1.9 4.6L8 11.6l-4 2.4.9-4.6L1.5 6.3l4.5-.5L8 1.5z" stroke="var(--color-blue-ink)" strokeWidth="1.3" strokeLinejoin="round" fill="none"/></svg>
-                Built for Indian engineering students
+                {t("hero.builtFor")}
               </div>
             </div>
           </div>
@@ -301,12 +301,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       <section className="border-b border-[var(--color-line)] py-[80px]">
         <div className="mx-auto max-w-[1180px] px-7">
           <div className="bbc-reveal mx-auto mb-12 max-w-[42em] text-center">
-            <p className="bbc-eyebrow">Which are you?</p>
+            <p className="bbc-eyebrow">{t("lanes.eyebrow")}</p>
             <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">
-              Same AI. Different lane.
+              {t("lanes.title")}
             </h2>
             <p className="mt-3 text-[16px] text-[var(--color-ink-soft)]">
-              Built to serve both sides of the coaching-classroom equation — students who study, institutes who teach.
+              {t("lanes.subhead")}
             </p>
           </div>
 
@@ -314,71 +314,61 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             {/* For students */}
             <div className="bbc-reveal bbc-lift flex flex-col rounded-[16px] border border-[var(--color-line)] bg-[var(--color-paper-card)] p-8">
               <div className="mb-4">
-                <p className="bbc-eyebrow text-[var(--color-ink)]">For students</p>
+                <p className="bbc-eyebrow text-[var(--color-ink)]">{t("student.for")}</p>
               </div>
               <h3 className="bbc-serif text-[24px] tracking-[-.01em] text-[var(--color-ink)]">
-                Study smarter, quieter.
+                {t("student.title")}
               </h3>
               <p className="mt-2 text-[14px] text-[var(--color-ink-soft)]">
-                Everything you need to prep for JEE, B.Tech, or GATE — chat with your PDFs, convert files, map your weak topics.
+                {t("student.desc")}
               </p>
               <ul className="mt-5 space-y-2.5 border-t border-[var(--color-line)] pt-5 text-left">
-                {[
-                  "PDF Copilot — chat with any textbook or notes",
-                  "File Tools — PNG↔JPG, PDF merge, split, compress",
-                  "JEE Diagnostic — 2-min weak-topic map, no signup",
-                  "Notes Scanner — photo of handwritten → typed",
-                ].map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-[13.5px] text-[var(--color-ink-soft)]"><Check />{f}</li>
+                {["student.f1", "student.f2", "student.f3", "student.f4"].map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-[13.5px] text-[var(--color-ink-soft)]"><Check />{t(f)}</li>
                 ))}
               </ul>
               <div className="mt-6 flex items-baseline gap-2 border-t border-[var(--color-line)] pt-5">
                 <span className="bbc-serif text-[24px] tracking-[-.01em]">₹0</span>
-                <span className="text-[12.5px] text-[var(--color-ink-faint)]">forever · </span>
+                <span className="text-[12.5px] text-[var(--color-ink-faint)]">{t("student.forever")}</span>
                 <span className="bbc-serif text-[24px] tracking-[-.01em]">₹199</span>
-                <span className="text-[12.5px] text-[var(--color-ink-faint)]">/mo Pro</span>
+                <span className="text-[12.5px] text-[var(--color-ink-faint)]">{t("student.moPro")}</span>
               </div>
               <button
                 onClick={() => onNavigate("tools")}
                 className="bbc-btn bbc-btn-ghost mt-5 w-full justify-center py-3 text-[14px]"
               >
-                Open the toolkit →
+                {t("student.cta")}
               </button>
             </div>
 
             {/* For coaching institutes */}
             <div className="bbc-reveal bbc-lift relative flex flex-col rounded-[16px] border border-[var(--color-blue-ink)] bg-white p-8 shadow-[0_0_0_1px_var(--color-blue-ink)_inset]">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[var(--color-blue-ink)] px-4 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
-                Higher-value lane
+                {t("inst.tag")}
               </div>
               <div className="mb-4">
-                <p className="bbc-eyebrow text-[var(--color-blue-ink)]">For coaching institutes</p>
+                <p className="bbc-eyebrow text-[var(--color-blue-ink)]">{t("inst.for")}</p>
               </div>
               <h3 className="bbc-serif text-[24px] tracking-[-.01em] text-[var(--color-ink)]">
-                AI mock tests, your branding.
+                {t("inst.title")}
               </h3>
               <p className="mt-2 text-[14px] text-[var(--color-ink-soft)]">
-                For coaching centers running JEE / NEET / CUET prep — the AI does the test-generation grind so your faculty can teach.
+                {t("inst.desc")}
               </p>
               <ul className="mt-5 space-y-2.5 border-t border-[var(--color-line)] pt-5 text-left">
-                {[
-                  "White-label mocks — your logo on every export",
-                  "Weak-topic maps per student + aggregate for the batch",
-                  "Batch weak-topic report — see where your class struggles",
-                  "One-link onboarding — students join in 2 minutes, no setup",
-                ].map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-[13.5px] text-[var(--color-ink-soft)]"><Check />{f}</li>
+                {["inst.f1", "inst.f2", "inst.f3", "inst.f4"].map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-[13.5px] text-[var(--color-ink-soft)]"><Check />{t(f)}</li>
                 ))}
               </ul>
               <div className="mt-6 flex items-baseline gap-2 border-t border-[var(--color-line)] pt-5">
                 <span className="bbc-serif text-[24px] tracking-[-.01em]">₹49–99</span>
-                <span className="text-[12.5px] text-[var(--color-ink-faint)]">per seat / month · min 50 seats</span>
+                <span className="text-[12.5px] text-[var(--color-ink-faint)]">{t("inst.per")}</span>
               </div>
               <a
                 href="/for-institutes"
                 className="bbc-btn bbc-btn-primary mt-5 w-full justify-center py-3 text-[14px]"
               >
-                Book a 15-min demo →
+                {t("inst.cta")}
               </a>
             </div>
           </div>
@@ -389,9 +379,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       <section className="border-b border-[var(--color-line)] bg-[var(--color-paper-card)] py-[88px]">
         <div className="mx-auto max-w-[1180px] px-7">
           <div className="bbc-reveal mx-auto mb-12 max-w-[40em] text-center">
-            <p className="bbc-eyebrow">A real session</p>
+            <p className="bbc-eyebrow">{t("demo.eyebrow")}</p>
             <h2 className="bbc-serif mt-3 text-[clamp(26px,3.2vw,38px)] leading-[1.12] tracking-[-.02em]">
-              Ask a question. Get an answer that <em className="not-italic italic font-medium text-[var(--color-blue-ink)]">cites the page</em>.
+              {lang === "en" ? (
+                <>Ask a question. Get an answer that <em className="not-italic italic font-medium text-[var(--color-blue-ink)]">cites the page</em>.</>
+              ) : (
+                t("demo.title")
+              )}
             </h2>
           </div>
 
@@ -454,12 +448,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       {/* ── PROBLEM BAND ── */}
       <section className="border-b border-[var(--color-line)] py-[96px] text-center">
         <div className="mx-auto max-w-[1180px] px-7">
-          <p className="bbc-eyebrow bbc-reveal">The honest problem</p>
+          <p className="bbc-eyebrow bbc-reveal">{t("problem.eyebrow")}</p>
           <p className="bbc-serif bbc-reveal mx-auto mt-[18px] max-w-[18ch] text-[clamp(26px,3.8vw,42px)] italic leading-[1.22] tracking-[-.01em]">
-            You spend more time hunting for good notes than studying them.
+            {t("problem.title")}
           </p>
           <p className="bbc-reveal mx-auto mt-[22px] max-w-[46ch] text-[var(--color-ink-soft)]">
-            Scattered PDFs, half-finished playlists, ten browser tabs. BlueBottleCap keeps one quiet workspace where your material, your questions, and your practice all live together.
+            {t("problem.body")}
           </p>
         </div>
       </section>
@@ -473,14 +467,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       <section className="border-b border-[var(--color-line)] py-[96px]">
         <div className="mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-10 px-7 md:grid-cols-[.9fr_1.1fr]">
           <div className="bbc-reveal">
-            <p className="bbc-eyebrow">The system, in one drawing</p>
+            <p className="bbc-eyebrow">{t("sys.eyebrow")}</p>
             <h2 className="bbc-serif mt-3 text-[clamp(28px,3.6vw,40px)] leading-[1.08] tracking-[-.02em]">
-              Four moving parts. One quiet workspace.
+              {t("sys.title")}
             </h2>
             <p className="mt-5 max-w-[42ch] text-[16px] leading-[1.6] text-[var(--color-ink-soft)]">
-              A study planner that reads your syllabus, summaries that pull the tested points, a PDF
-              copilot that cites its sources, and a mock-test mode that runs like the real exam —
-              all orbiting one thing: your own material.
+              {t("sys.desc")}
             </p>
           </div>
 
@@ -510,7 +502,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <path className="bbc-icn" d="M371 271 h13 l6 6 v22 a2 2 0 0 1 -2 2 h-17 a2 2 0 0 1 -2 -2 v-26 a2 2 0 0 1 2 -2 z" />
               <path className="bbc-icn" d="M384 271 v6 h6" />
               <path className="bbc-icn" d="M375 288 h11 M375 294 h8" />
-              <text className="bbc-core-lbl" x="380" y="344" textAnchor="middle">YOUR MATERIAL</text>
+              <text className="bbc-core-lbl" x="380" y="344" textAnchor="middle">{t("dg.core")}</text>
 
               {/* Four feature nodes in orbit, each with icon chip + callout */}
               <g className="bbc-diag-label" style={{ ["--i" as never]: 0 }}>
@@ -520,8 +512,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <path className="bbc-icn" d="M268 178.5 h12" />
                 <path className="bbc-icn" d="M271 172.5 v3 M277 172.5 v3" />
                 <text className="bbc-lbl-num" x="64" y="150">01</text>
-                <text className="bbc-lbl" x="90" y="150">STUDY PLANNER</text>
-                <text className="bbc-lbl-desc" x="90" y="166">Plans your study weeks</text>
+                <text className="bbc-lbl" x="90" y="150">{t("dg.n1")}</text>
+                <text className="bbc-lbl-desc" x="90" y="166">{t("dg.d1")}</text>
               </g>
               <g className="bbc-diag-label" style={{ ["--i" as never]: 1 }}>
                 <path className="bbc-lead bbc-draw" d="M274 391 L212 424" />
@@ -529,8 +521,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <rect className="bbc-icn" x="269" y="385" width="10" height="12" rx="1.5" />
                 <path className="bbc-icn" d="M271.5 388.5 h5 M271.5 391 h5 M271.5 393.5 h3" />
                 <text className="bbc-lbl-num" x="64" y="424">02</text>
-                <text className="bbc-lbl" x="90" y="424">SMART SUMMARIES</text>
-                <text className="bbc-lbl-desc" x="90" y="440">Only the tested points</text>
+                <text className="bbc-lbl" x="90" y="424">{t("dg.n2")}</text>
+                <text className="bbc-lbl-desc" x="90" y="440">{t("dg.d2")}</text>
               </g>
               <g className="bbc-diag-label" style={{ ["--i" as never]: 2 }}>
                 <path className="bbc-lead bbc-draw" d="M486 179 L548 150" />
@@ -539,8 +531,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <path className="bbc-icn" d="M483 183 l-2 3 v-3" />
                 <path className="bbc-icn" d="M483 178.5 h.01 M486 178.5 h.01 M489 178.5 h.01" strokeWidth="1.8" />
                 <text className="bbc-lbl-num" x="556" y="150">03</text>
-                <text className="bbc-lbl" x="582" y="150">AI PDF COPILOT</text>
-                <text className="bbc-lbl-desc" x="582" y="166">Answers that cite the page</text>
+                <text className="bbc-lbl" x="582" y="150">{t("dg.n3")}</text>
+                <text className="bbc-lbl-desc" x="582" y="166">{t("dg.d3")}</text>
               </g>
               <g className="bbc-diag-label" style={{ ["--i" as never]: 3 }}>
                 <path className="bbc-lead bbc-draw" d="M486 391 L548 424" />
@@ -549,8 +541,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <path className="bbc-icn" d="M486 392 v-3.5 M486 392 l3 2" />
                 <path className="bbc-icn" d="M483.5 384.5 h5" />
                 <text className="bbc-lbl-num" x="556" y="424">04</text>
-                <text className="bbc-lbl" x="582" y="424">MOCK TEST MODE</text>
-                <text className="bbc-lbl-desc" x="582" y="440">Runs like the real exam</text>
+                <text className="bbc-lbl" x="582" y="424">{t("dg.n4")}</text>
+                <text className="bbc-lbl-desc" x="582" y="440">{t("dg.d4")}</text>
               </g>
 
               {/* Blueprint flourishes: registration crosshairs + figure caption */}
@@ -570,9 +562,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       <section id="tools" className="border-b border-[var(--color-line)] py-[88px]">
         <div className="mx-auto max-w-[1180px] px-7">
           <div className="bbc-reveal mb-12 max-w-[36em]">
-            <p className="bbc-eyebrow">The suite</p>
-            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">Every tool your syllabus actually needs.</h2>
-            <p className="mt-[14px] text-[17px] text-[var(--color-ink-soft)]">Built around your material — for students studying it, and institutes teaching from it.</p>
+            <p className="bbc-eyebrow">{t("suite.eyebrow")}</p>
+            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">{t("suite.title")}</h2>
+            <p className="mt-[14px] text-[17px] text-[var(--color-ink-soft)]">{t("suite.subhead")}</p>
           </div>
           <div className="border-t border-[var(--color-line)]">
             {tools.map((tool) => (
@@ -583,8 +575,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               >
                 <span className="bbc-mono text-[15px] text-[var(--color-blue-ink)]">{tool.n}</span>
                 <tool.Icon className="text-[var(--color-blue-ink)]" />
-                <span className="bbc-serif text-[22px] tracking-[-.01em] text-[var(--color-ink)]">{tool.t}</span>
-                <span className="hidden text-[16px] text-[var(--color-ink-soft)] md:block">{tool.d}</span>
+                <span className="bbc-serif text-[22px] tracking-[-.01em] text-[var(--color-ink)]">{t(tool.tKey)}</span>
+                <span className="hidden text-[16px] text-[var(--color-ink-soft)] md:block">{t(tool.dKey)}</span>
                 <span className="bbc-arrow justify-self-end text-[var(--color-ink-faint)]">→</span>
               </a>
             ))}
@@ -596,14 +588,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       <section id="how" className="border-b border-[var(--color-line)] py-[88px]">
         <div className="mx-auto max-w-[1180px] px-7">
           <div className="bbc-reveal mb-12 max-w-[38em]">
-            <p className="bbc-eyebrow">How it works</p>
-            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">From a messy PDF to a real study session in under a minute.</h2>
-            <p className="mt-4 text-[16.5px] text-[var(--color-ink-soft)]">Three steps, one quiet loop. Drop in your material, ask it anything, then turn what you read into practice — all on one screen.</p>
+            <p className="bbc-eyebrow">{t("how.eyebrow")}</p>
+            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">{t("how.title")}</h2>
+            <p className="mt-4 text-[16.5px] text-[var(--color-ink-soft)]">{t("how.subhead")}</p>
           </div>
           <div className="relative grid grid-cols-1 gap-[30px] md:grid-cols-3">
             {[
               {
-                s: "Step 01", h: "Upload your material", p: "Drop in a textbook chapter, your handwritten notes, or a past paper. It's read in seconds — and your file never leaves your account.",
+                s: "Step 01", hKey: "how.s1t", pKey: "how.s1d",
                 art: (
                   <svg viewBox="0 0 220 120" className="h-full w-full" aria-hidden="true">
                     {/* dashed drop-zone */}
@@ -620,7 +612,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 ),
               },
               {
-                s: "Step 02", h: "Ask in plain words", p: "Type a doubt like you'd text a friend. The answer comes back grounded in your exact document — and cites the page it came from, so you can trust it.",
+                s: "Step 02", hKey: "how.s2t", pKey: "how.s2d",
                 art: (
                   <svg viewBox="0 0 220 120" className="h-full w-full" aria-hidden="true">
                     {/* user question bubble */}
@@ -637,7 +629,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 ),
               },
               {
-                s: "Step 03", h: "Practice what you read", p: "One tap turns that chapter into flashcards, a crisp summary, or a timed mock — so reading becomes revising, and revising becomes rank.",
+                s: "Step 03", hKey: "how.s3t", pKey: "how.s3d",
                 art: (
                   <svg viewBox="0 0 220 120" className="h-full w-full" aria-hidden="true">
                     {/* fanned flashcards */}
@@ -666,8 +658,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                   </div>
                 )}
                 <span className="bbc-mono text-[12px] uppercase tracking-[.16em] text-[var(--color-ink-faint)]">{step.s}</span>
-                <h3 className="bbc-serif mt-[14px] mb-2 text-[21px] tracking-[-.01em]">{step.h}</h3>
-                <p className="text-[15.5px] text-[var(--color-ink-soft)]">{step.p}</p>
+                <h3 className="bbc-serif mt-[14px] mb-2 text-[21px] tracking-[-.01em]">{t(step.hKey)}</h3>
+                <p className="text-[15.5px] text-[var(--color-ink-soft)]">{t(step.pKey)}</p>
               </div>
             ))}
           </div>
@@ -678,44 +670,44 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       <section id="pricing" className="border-b border-[var(--color-line)] py-[88px]">
         <div className="mx-auto max-w-[1180px] px-7">
           <div className="bbc-reveal mx-auto mb-12 max-w-[36em] text-center">
-            <p className="bbc-eyebrow">Pricing</p>
-            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">Fair pricing. Honest about it.</h2>
-            <p className="mt-[14px] text-[17px] text-[var(--color-ink-soft)]">Students start free forever. Institutes pay per seat. Full comparison on the <a href="/pricing" className="font-semibold text-[var(--color-blue-ink)] underline decoration-[var(--color-blue-wash)] underline-offset-4 hover:decoration-[var(--color-blue-ink)]">pricing page</a>.</p>
+            <p className="bbc-eyebrow">{t("pricing.eyebrow")}</p>
+            <h2 className="bbc-serif mt-3 text-[clamp(28px,3.4vw,40px)] leading-[1.1] tracking-[-.02em]">{t("pricing.title")}</h2>
+            <p className="mt-[14px] text-[17px] text-[var(--color-ink-soft)]">{t("pricing.subhead")} {t("pricing.full")} <a href="/pricing" className="font-semibold text-[var(--color-blue-ink)] underline decoration-[var(--color-blue-wash)] underline-offset-4 hover:decoration-[var(--color-blue-ink)]">{t("pricing.pageLink")}</a>.</p>
           </div>
           <div className="grid grid-cols-1 gap-[22px] md:grid-cols-3">
             {plans.map((plan) => (
-              <div key={plan.name} className={`bbc-reveal bbc-lift flex flex-col rounded-[14px] border p-[30px] ${plan.featured ? "border-[var(--color-blue-ink)] bg-white shadow-[0_0_0_1px_var(--color-blue-ink)_inset]" : "border-[var(--color-line)] bg-[var(--color-paper-card)]"}`}>
+              <div key={plan.nameKey} className={`bbc-reveal bbc-lift flex flex-col rounded-[14px] border p-[30px] ${plan.featured ? "border-[var(--color-blue-ink)] bg-white shadow-[0_0_0_1px_var(--color-blue-ink)_inset]" : "border-[var(--color-line)] bg-[var(--color-paper-card)]"}`}>
                 <div className="flex items-center justify-between">
-                  <span className="bbc-serif text-[20px] font-semibold">{plan.name}</span>
-                  {plan.tag && <span className="bbc-mono rounded-[6px] bg-[var(--color-blue-ink)] px-[9px] py-1 text-[10.5px] uppercase tracking-[.12em] text-white">{plan.tag}</span>}
+                  <span className="bbc-serif text-[20px] font-semibold">{t(plan.nameKey)}</span>
+                  {plan.tagKey && <span className="bbc-mono rounded-[6px] bg-[var(--color-blue-ink)] px-[9px] py-1 text-[10.5px] uppercase tracking-[.12em] text-white">{t(plan.tagKey)}</span>}
                 </div>
                 <div className="mt-5 mb-1 flex items-baseline gap-1">
                   <span className="bbc-serif text-[42px] font-semibold tracking-[-.02em]">{plan.price}</span>
                   <span className="bbc-mono text-[14px] text-[var(--color-ink-faint)]">{plan.per}</span>
                 </div>
-                <p className="mb-[18px] min-h-[42px] text-[14.5px] text-[var(--color-ink-soft)]">{plan.desc}</p>
+                <p className="mb-[18px] min-h-[42px] text-[14.5px] text-[var(--color-ink-soft)]">{t(plan.descKey)}</p>
                 <ul className="mb-[26px] flex-1 list-none p-0">
-                  {plan.items.map((it) => (
-                    <li key={it} className="flex items-start gap-[10px] py-[7px] text-[14.5px]"><Check />{it}</li>
+                  {plan.itemKeys.map((it) => (
+                    <li key={it} className="flex items-start gap-[10px] py-[7px] text-[14.5px]"><Check />{t(it)}</li>
                   ))}
                 </ul>
-                <button onClick={() => onNavigate(plan.view)} className={`bbc-btn w-full justify-center py-3 ${plan.featured ? "bbc-btn-primary" : "bbc-btn-ghost"}`}>{plan.cta}</button>
+                <button onClick={() => onNavigate(plan.view)} className={`bbc-btn w-full justify-center py-3 ${plan.featured ? "bbc-btn-primary" : "bbc-btn-ghost"}`}>{t(plan.ctaKey)}</button>
               </div>
             ))}
           </div>
-          <p className="bbc-reveal mt-[26px] text-center text-[13.5px] text-[var(--color-ink-faint)]">Students get 30% off any paid plan with a valid student ID or college email. Institute per-seat plans are on the <a href="/for-institutes" className="font-semibold text-[var(--color-blue-ink)] hover:underline">institute page</a>.</p>
+          <p className="bbc-reveal mt-[26px] text-center text-[13.5px] text-[var(--color-ink-faint)]">{t("pricing.note")} <a href="/for-institutes" className="font-semibold text-[var(--color-blue-ink)] hover:underline">{t("footer.forInstitutes")} →</a></p>
         </div>
       </section>
 
       {/* ── CLOSING ── */}
       <section className="border-b border-[var(--color-line)] py-[108px] text-center">
         <div className="mx-auto max-w-[1180px] px-7">
-          <p className="bbc-eyebrow bbc-reveal">Ready when you are</p>
-          <h2 className="bbc-serif bbc-reveal mx-auto mt-[14px] max-w-[16ch] text-[clamp(30px,4.4vw,52px)] leading-[1.08] tracking-[-.02em]">Quieter prep. Better marks.</h2>
+          <p className="bbc-eyebrow bbc-reveal">{t("close.eyebrow")}</p>
+          <h2 className="bbc-serif bbc-reveal mx-auto mt-[14px] max-w-[16ch] text-[clamp(30px,4.4vw,52px)] leading-[1.08] tracking-[-.02em]">{t("close.title")}</h2>
           <div className="bbc-reveal mt-[34px]">
-            <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">Open the toolkit</button>
+            <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">{t("close.cta")}</button>
           </div>
-          <p className="bbc-reveal mt-[18px] text-[13px] text-[var(--color-ink-faint)]">Free forever plan · UPI accepted · No card needed</p>
+          <p className="bbc-reveal mt-[18px] text-[13px] text-[var(--color-ink-faint)]">{t("close.trust")}</p>
         </div>
       </section>
 
@@ -724,13 +716,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-5 px-7">
           <div className="flex items-center gap-[11px] text-[15px] font-semibold"><Seal size={22} /> BlueBottleCap</div>
           <nav className="flex flex-wrap gap-6" aria-label="Footer">
-            <button onClick={() => scrollTo("tools")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">Tools</button>
-            <button onClick={() => scrollTo("pricing")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">Pricing</button>
-            <a href="/for-institutes" className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">For institutes</a>
-            <button onClick={() => onNavigate("about")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">About</button>
-            <button onClick={() => onNavigate("terms")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">Terms</button>
+            <button onClick={() => scrollTo("tools")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">{t("nav.tools")}</button>
+            <button onClick={() => scrollTo("pricing")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">{t("nav.pricing")}</button>
+            <a href="/for-institutes" className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">{t("footer.forInstitutes")}</a>
+            <button onClick={() => onNavigate("about")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">{t("footer.about")}</button>
+            <button onClick={() => onNavigate("terms")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">{t("footer.terms")}</button>
           </nav>
-          <span className="bbc-mono text-[12.5px] text-[var(--color-ink-faint)]">© 2026 · Made in India</span>
+          <span className="bbc-mono text-[12.5px] text-[var(--color-ink-faint)]">{t("footer.madeIn")}</span>
         </div>
       </footer>
     </div>
