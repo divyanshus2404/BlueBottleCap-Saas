@@ -153,6 +153,10 @@ body {
 @media (prefers-reduced-motion: no-preference) {
   .bbc-reveal { opacity:0; transform: translateY(14px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
   .bbc-reveal.bbc-in { opacity:1; transform:none; }
+  /* Fallback: if JS/IntersectionObserver never fires, content becomes visible
+     after 2s so the page is never blank. */
+  @keyframes bbc-reveal-fallback { to { opacity:1; transform:none; } }
+  .bbc-reveal:not(.bbc-in) { animation: bbc-reveal-fallback 0s 2s forwards; }
   .bbc-draw { stroke-dasharray: var(--len); stroke-dashoffset: var(--len); }
   .bbc-draw.bbc-in { transition: stroke-dashoffset 1.1s ease .2s; stroke-dashoffset: 0; }
 

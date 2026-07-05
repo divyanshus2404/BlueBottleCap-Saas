@@ -185,7 +185,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       {/* ── HERO ── */}
       <section className="relative overflow-hidden border-b border-[var(--color-line)]">
         <div className="bbc-grid" aria-hidden="true" />
-        <div className="relative z-[2] mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-10 px-7 py-[60px] md:grid-cols-[1fr_1.05fr] md:py-[76px]">
+        <div className="relative z-[2] mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-10 px-7 py-[40px] md:grid-cols-[1fr_1.05fr] md:py-[56px]">
           <div>
             <p className="bbc-eyebrow bbc-reveal">{t("hero.eyebrow")}</p>
             <h1 className="bbc-serif bbc-reveal mt-[18px] text-[clamp(40px,5.6vw,68px)] leading-[1.03] tracking-[-.02em]">
@@ -464,7 +464,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           scaffolding already in globals.css: bbc-bottle-float, bbc-halo-pulse,
           bbc-liquid-rise, bbc-liquid-wave, and staggered .bbc-diag-label
           reveals keyed off --i. */}
-      <section className="border-b border-[var(--color-line)] py-[96px]">
+      <section className="border-b border-[var(--color-line)] bg-white py-[96px]">
         <div className="mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-10 px-7 md:grid-cols-[.9fr_1.1fr]">
           <div className="bbc-reveal">
             <p className="bbc-eyebrow">{t("sys.eyebrow")}</p>
@@ -585,7 +585,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section id="how" className="border-b border-[var(--color-line)] py-[88px]">
+      <section id="how" className="border-b border-[var(--color-line)] bg-white py-[88px]">
         <div className="mx-auto max-w-[1180px] px-7">
           <div className="bbc-reveal mb-12 max-w-[38em]">
             <p className="bbc-eyebrow">{t("how.eyebrow")}</p>
@@ -700,14 +700,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── CLOSING ── */}
-      <section className="border-b border-[var(--color-line)] py-[108px] text-center">
-        <div className="mx-auto max-w-[1180px] px-7">
-          <p className="bbc-eyebrow bbc-reveal">{t("close.eyebrow")}</p>
-          <h2 className="bbc-serif bbc-reveal mx-auto mt-[14px] max-w-[16ch] text-[clamp(30px,4.4vw,52px)] leading-[1.08] tracking-[-.02em]">{t("close.title")}</h2>
+      <section className="relative overflow-hidden border-b border-[var(--color-line)] bg-[var(--color-blue-ink)] py-[108px] text-center text-white">
+        <div className="absolute inset-0 opacity-[.06]"><div className="bbc-grid" /></div>
+        <div className="relative z-[2] mx-auto max-w-[1180px] px-7">
+          <p className="bbc-mono bbc-reveal text-[11px] uppercase tracking-[.2em] text-white/60">{t("close.eyebrow")}</p>
+          <h2 className="bbc-serif bbc-reveal mx-auto mt-[14px] max-w-[16ch] text-[clamp(30px,4.4vw,52px)] leading-[1.08] tracking-[-.02em] text-white">{t("close.title")}</h2>
           <div className="bbc-reveal mt-[34px]">
-            <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">{t("close.cta")}</button>
+            <button onClick={() => onNavigate("tools")} className="bbc-btn rounded-[12px] bg-white px-[26px] py-[14px] text-[16px] font-semibold text-[var(--color-blue-ink)] shadow-lg transition hover:bg-white/90">{t("close.cta")}</button>
           </div>
-          <p className="bbc-reveal mt-[18px] text-[13px] text-[var(--color-ink-faint)]">{t("close.trust")}</p>
+          <p className="bbc-reveal mt-[18px] text-[13px] text-white/50">{t("close.trust")}</p>
         </div>
       </section>
 
