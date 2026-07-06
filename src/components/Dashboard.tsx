@@ -19,7 +19,10 @@ import { WeeklyWrapped } from "./WeeklyWrapped";
 import { ReadinessCard } from "./ReadinessCard";
 import { ReferralCard } from "./ReferralCard";
 import { StreakSaveBanner } from "./StreakSaveBanner";
+import { ProgressChart } from "./ProgressChart";
+import { Leaderboard } from "./Leaderboard";
 import { evaluateStreak, isFreeSaveAvailable } from "../lib/streak";
+import { scheduleStreakReminder } from "../lib/notifications";
 
 export const Dashboard: React.FC = () => {
   const {
@@ -43,6 +46,10 @@ export const Dashboard: React.FC = () => {
   const { currentUser } = useAuth();
   const [showWrapped, setShowWrapped] = useState(false);
   const [joinedWaitlist, setJoinedWaitlist] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    scheduleStreakReminder(userStats.streakDays, lastLoggedDate);
+  }, [userStats.streakDays, lastLoggedDate]);
 
   const joinWaitlist = async (feature: string) => {
     if (joinedWaitlist[feature]) return;
@@ -325,6 +332,9 @@ export const Dashboard: React.FC = () => {
           {/* Readiness + Today's Plan — the reason to come back tomorrow */}
           <ReadinessCard />
 
+          {/* Weekly progress chart */}
+          <ProgressChart />
+
           {/* Usage Stats Linear Bars */}
           <div className="grid gap-6 md:grid-cols-3">
             {[
@@ -421,6 +431,8 @@ export const Dashboard: React.FC = () => {
                 onClaim={claimReferralReward}
                 rewardsClaimed={referralRewardsClaimed}
               />
+
+              <Leaderboard />
 
               <div className="flex items-center justify-between">
                 <h2 className="bbc-serif flex items-center gap-2 text-[20px] tracking-[-.01em] text-[var(--color-ink)]">

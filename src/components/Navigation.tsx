@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Zap, Sparkles, BookOpen, Layers, Menu, X, Check, Award, Lock, Timer, Sun, Moon, CreditCard, Info, Map, Home, ChevronLeft } from "lucide-react";
+import { Zap, Sparkles, BookOpen, Layers, Menu, X, Check, Award, Lock, Timer, Sun, Moon, CreditCard, Info, Map, Home, ChevronLeft, FileText, BarChart3 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useGlobalState } from "../context/GlobalStateContext";
 import { MagneticWrapper } from "./MagneticWrapper";
@@ -50,9 +50,10 @@ export const Navigation: React.FC<NavigationProps> = ({
   const navLinks = [
     { href: "/", label: "Home", icon: <Home className="w-4 h-4" /> },
     { href: "/tools", label: "Tools", icon: <Layers className="w-4 h-4" /> },
+    { href: "/mock-test", label: "Mock Tests", icon: <FileText className="w-4 h-4" /> },
     { href: "/pdf-editor", label: "PDF Copilot", icon: <Sparkles className="w-4 h-4" /> },
+    { href: "/my-progress", label: "My Progress", icon: <BarChart3 className="w-4 h-4" /> },
     { href: "/dashboard", label: "Dashboard", icon: <Map className="w-4 h-4" /> },
-    { href: "/about", label: "About", icon: <Info className="w-4 h-4" /> },
   ];
 
   return (

@@ -11,6 +11,9 @@ import { Footer } from "@/src/components/Footer";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
 import { WhatsAppButton } from "@/src/components/WhatsAppButton";
+import { OnboardingTutorial } from "@/src/components/OnboardingTutorial";
+import { NotificationPrompt } from "@/src/components/NotificationPrompt";
+import { ContentProtection } from "@/src/components/ContentProtection";
 
 /** Routes that should trigger the onboarding gate */
 const ONBOARDING_GATED_PATHS = ["/dashboard", "/tools", "/pdf-editor", "/flashcards"];
@@ -44,6 +47,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     <SmoothScroll>
       <ErrorBoundary>
         <div className="min-h-screen bg-transparent font-sans antialiased flex flex-col">
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[10000] focus:rounded-lg focus:bg-[var(--color-blue-ink)] focus:px-4 focus:py-2 focus:text-white focus:outline-none">
+            Skip to content
+          </a>
           <GlobalBackground />
           {/* Immersive / full-screen routes own their own chrome: the landing
               page has its own header+footer, and the auth/onboarding flows are
@@ -52,13 +58,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <Navigation onLoginClick={() => setIsAuthModalOpen(true)} />
           )}
           <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
-          <div className="flex-grow">
+          <main id="main-content" className="flex-grow">
             {children}
-          </div>
+          </main>
           {pathname !== "/" && pathname !== "/for-institutes" && pathname !== "/virtual-test" && pathname !== "/pdf-editor" && (
             <Footer />
           )}
           <WhatsAppButton />
+          <OnboardingTutorial />
+          <NotificationPrompt />
+          <ContentProtection />
         </div>
       </ErrorBoundary>
     </SmoothScroll>
