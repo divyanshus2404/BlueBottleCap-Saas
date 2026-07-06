@@ -4,6 +4,7 @@ import React from "react";
 import { Providers } from "./providers";
 import ClientLayout from "./ClientLayout";
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 
 export const viewport: Viewport = {
   // Matches --color-ink so mobile status bars align with the editorial palette.
@@ -52,6 +53,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" type="image/png" href="/favicon.png" sizes="32x32" />
+        <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="manifest" href="/manifest.json" />
         {PLAUSIBLE_DOMAIN && (
           <script
             defer
@@ -72,6 +77,9 @@ export default function RootLayout({
         </Providers>
         {/* No-ops outside Vercel deployments, so safe in dev. */}
         <Analytics />
+        <Script id="sw-register" strategy="afterInteractive">
+          {`if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }`}
+        </Script>
       </body>
     </html>
   );

@@ -115,6 +115,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     let unsubProfile: (() => void) | undefined;
 
+    if (!auth) {
+      setLoading(false);
+      setInitialised(true);
+      return;
+    }
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
 

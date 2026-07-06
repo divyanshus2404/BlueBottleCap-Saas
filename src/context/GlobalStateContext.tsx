@@ -5,6 +5,10 @@ import { UserStats, UsageStats, Flashcard, DailyActivity, RecentActivityItem, Ac
 import { useAuth } from "./AuthContext";
 import { db } from "../firebase";
 import { doc, updateDoc, collection, getDocs, addDoc, onSnapshot, query, where } from "firebase/firestore";
+import { evaluateStreak } from "../lib/streak";
+
+const todayStr = (d: Date) => d.toISOString().split("T")[0];
+const monthStr = (d: Date) => d.toISOString().slice(0, 7);
 
 interface Toast {
   id: number;
@@ -493,7 +497,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
 
     setReferralRewardsClaimed(nextClaimed);
     setUserStats((prev) => ({ ...prev, creditsLeft: nextCredits }));
-    setUsageStats((prev) => ({ ...prev, aiQueries: { ...prev.aiQueries, current: nextCredits } }));
+    // usageStats is derived from userStats.creditsLeft — no separate update needed
     if (typeof window !== "undefined") {
       localStorage.setItem("bluebottlecap_credits_left", String(nextCredits));
     }
@@ -575,6 +579,13 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     handlePurchaseTest,
     handleUnlockStudyMaterial,
     setOpenedPapers,
+    referralCount,
+    referralRewardsClaimed,
+    refreshReferralCount,
+    claimReferralReward,
+    saveStreakToday,
+    freeStreakSaveMonth,
+    logStudyActivity,
   };
 
   return <GlobalStateContext.Provider value={value}>{children}</GlobalStateContext.Provider>;
