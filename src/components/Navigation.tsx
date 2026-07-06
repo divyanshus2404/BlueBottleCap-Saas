@@ -50,9 +50,9 @@ export const Navigation: React.FC<NavigationProps> = ({
   const navLinks = [
     { href: "/", label: "Home", icon: <Home className="w-4 h-4" /> },
     { href: "/tools", label: "Tools", icon: <Layers className="w-4 h-4" /> },
-    { href: "/mock-test", label: "Mock Tests", icon: <FileText className="w-4 h-4" /> },
+    { href: "/mock-test", label: "Mocks", icon: <FileText className="w-4 h-4" /> },
     { href: "/pdf-editor", label: "PDF Copilot", icon: <Sparkles className="w-4 h-4" /> },
-    { href: "/my-progress", label: "My Progress", icon: <BarChart3 className="w-4 h-4" /> },
+    { href: "/my-progress", label: "Progress", icon: <BarChart3 className="w-4 h-4" /> },
     { href: "/dashboard", label: "Dashboard", icon: <Map className="w-4 h-4" /> },
   ];
 
@@ -121,7 +121,9 @@ export const Navigation: React.FC<NavigationProps> = ({
             title={isDark ? "Switch to light mode" : "Switch to dark mode"}
             className="hidden md:flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-slate-50/50 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-500 dark:text-slate-300 transition cursor-pointer"
           >
-            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            <span className="inline-block transition-transform duration-300" style={{ transform: isDark ? "rotate(180deg)" : "rotate(0deg)" }}>
+              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </span>
           </button>
 
           {/* Authentication Menu */}

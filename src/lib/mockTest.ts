@@ -113,7 +113,7 @@ export const MOCK_TESTS: MockTestConfig[] = [
     name: "JEE Mini Mock — Set 2",
     duration: 30,
     marking: { correct: 4, incorrect: -1, unanswered: 0 },
-    questions: [...PHYSICS_QUESTIONS.slice(4), ...CHEMISTRY_QUESTIONS.slice(3, 7), ...MATHS_QUESTIONS.slice(3, 7)],
+    questions: [...PHYSICS_QUESTIONS.slice(4, 8), ...CHEMISTRY_QUESTIONS.slice(3, 7), ...MATHS_QUESTIONS.slice(3, 7)],
   },
   {
     id: "jee-full-1",

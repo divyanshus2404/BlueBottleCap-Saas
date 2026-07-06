@@ -17,7 +17,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
 }
 
 export function isNotificationEnabled(): boolean {
-  if (typeof window === "undefined") return false;
+  if (typeof window === "undefined" || !("Notification" in window)) return false;
   return Notification.permission === "granted" && localStorage.getItem(PERMISSION_KEY) === "1";
 }
 
@@ -46,7 +46,6 @@ export function scheduleStreakReminder(streakDays: number, lastLoggedDate: strin
 
   const lastReminder = localStorage.getItem(LAST_REMINDER_KEY);
   if (lastReminder === today) return;
-  localStorage.setItem(LAST_REMINDER_KEY, today);
 
   const messages = [
     { title: "Your streak is at risk! 🔥", body: `${streakDays}-day streak will break if you don't study today.` },
@@ -56,8 +55,9 @@ export function scheduleStreakReminder(streakDays: number, lastLoggedDate: strin
   const msg = messages[Math.floor(Math.random() * messages.length)];
 
   setTimeout(() => {
+    localStorage.setItem(LAST_REMINDER_KEY, today);
     sendLocalNotification(msg.title, msg.body, "/dashboard", "streak-reminder");
-  }, 2 * 60 * 60 * 1000); // 2 hours after page load
+  }, 2 * 60 * 60 * 1000);
 }
 
 export function sendStudyCompleteNotification(minutes: number) {

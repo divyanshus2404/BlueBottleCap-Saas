@@ -14,6 +14,8 @@ import { WhatsAppButton } from "@/src/components/WhatsAppButton";
 import { OnboardingTutorial } from "@/src/components/OnboardingTutorial";
 import { NotificationPrompt } from "@/src/components/NotificationPrompt";
 import { ContentProtection } from "@/src/components/ContentProtection";
+import { PageTransition } from "@/src/components/PageTransition";
+import { ScrollToTop } from "@/src/components/ScrollToTop";
 
 /** Routes that should trigger the onboarding gate */
 const ONBOARDING_GATED_PATHS = ["/dashboard", "/tools", "/pdf-editor", "/flashcards"];
@@ -59,15 +61,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           )}
           <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
           <main id="main-content" className="flex-grow">
-            {children}
+            <PageTransition>{children}</PageTransition>
           </main>
           {pathname !== "/" && pathname !== "/for-institutes" && pathname !== "/virtual-test" && pathname !== "/pdf-editor" && (
             <Footer />
           )}
           <WhatsAppButton />
-          <OnboardingTutorial />
-          <NotificationPrompt />
+          {currentUser && <OnboardingTutorial />}
+          {currentUser && <NotificationPrompt />}
           <ContentProtection />
+          <ScrollToTop />
         </div>
       </ErrorBoundary>
     </SmoothScroll>

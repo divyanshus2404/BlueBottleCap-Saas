@@ -72,6 +72,13 @@ export function OnboardingTutorial() {
     localStorage.setItem(STORAGE_KEY, "1");
   };
 
+  useEffect(() => {
+    if (!visible) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") dismiss(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [visible]);
+
   if (!visible) return null;
 
   const current = STEPS[step];
@@ -79,7 +86,7 @@ export function OnboardingTutorial() {
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-[440px] overflow-hidden rounded-2xl bg-white shadow-2xl">
+      <div role="dialog" aria-modal="true" aria-label="Onboarding tutorial" className="relative w-full max-w-[440px] overflow-hidden rounded-2xl bg-white shadow-2xl">
         {/* Progress bar */}
         <div className="h-1 bg-[var(--color-line)]">
           <div

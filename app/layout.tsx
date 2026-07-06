@@ -4,6 +4,7 @@ import React from "react";
 import { Providers } from "./providers";
 import ClientLayout from "./ClientLayout";
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 
 export const viewport: Viewport = {
   // Matches --color-ink so mobile status bars align with the editorial palette.
@@ -76,7 +77,9 @@ export default function RootLayout({
         </Providers>
         {/* No-ops outside Vercel deployments, so safe in dev. */}
         <Analytics />
-        <script dangerouslySetInnerHTML={{ __html: `if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}` }} />
+        <Script id="sw-register" strategy="afterInteractive">
+          {`if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }`}
+        </Script>
       </body>
     </html>
   );

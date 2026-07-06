@@ -116,6 +116,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     let unsubProfile: (() => void) | undefined;
 
     if (!auth) {
+      setLoading(false);
       setInitialised(true);
       return;
     }

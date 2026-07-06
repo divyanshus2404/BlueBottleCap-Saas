@@ -581,7 +581,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     setOpenedPapers,
     referralCount,
     referralRewardsClaimed,
-    refreshReferralCount: setReferralCount,
+    refreshReferralCount,
     claimReferralReward,
     saveStreakToday,
     freeStreakSaveMonth,

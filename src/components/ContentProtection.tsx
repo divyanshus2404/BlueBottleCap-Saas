@@ -10,8 +10,10 @@ export function ContentProtection() {
     }
 
     function blockKeys(e: KeyboardEvent) {
+      const target = e.target as HTMLElement;
+      const isEditable = target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable;
       const ctrl = e.ctrlKey || e.metaKey;
-      if (ctrl && ["c", "a", "u", "s", "p"].includes(e.key.toLowerCase())) {
+      if (!isEditable && ctrl && ["c", "a", "u", "s", "p"].includes(e.key.toLowerCase())) {
         e.preventDefault();
         return false;
       }

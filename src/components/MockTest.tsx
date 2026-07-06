@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { MOCK_TESTS, scoreMockTest, saveMockResult, type MockTestConfig, type MockTestResult } from "@/src/lib/mockTest";
 import { Clock, ChevronLeft, ChevronRight, Flag, CheckCircle, XCircle, Minus, BarChart3 } from "lucide-react";
+import { Confetti } from "./Confetti";
+import { useCountUp } from "@/src/hooks/useCountUp";
 
 type Phase = "select" | "test" | "result";
 
@@ -38,6 +40,27 @@ export function MockTest() {
     setPhase("result");
   };
   const submitTest = useCallback(() => submitRef.current(), []);
+
+  const idxRef = useRef(idx);
+  idxRef.current = idx;
+
+  useEffect(() => {
+    if (phase !== "test" || !test) return;
+    const currentTest = test;
+    function onKey(e: KeyboardEvent) {
+      const target = e.target as HTMLElement;
+      if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA") return;
+      if (e.key >= "1" && e.key <= "4") {
+        const optIdx = parseInt(e.key) - 1;
+        const qId = currentTest.questions[idxRef.current].id;
+        setAnswers((prev) => ({ ...prev, [qId]: prev[qId] === optIdx ? null : optIdx }));
+      }
+      if (e.key.toLowerCase() === "n" || e.key === "ArrowRight") setIdx((i) => Math.min(currentTest.questions.length - 1, i + 1));
+      if (e.key.toLowerCase() === "p" || e.key === "ArrowLeft") setIdx((i) => Math.max(0, i - 1));
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [phase, test]);
 
   useEffect(() => {
     if (phase !== "test") return;
@@ -227,13 +250,19 @@ export function MockTest() {
     );
   }
 
+  const animatedScore = useCountUp(result?.score ?? 0, 1500, phase === "result");
+  const animatedCorrect = useCountUp(result?.correct ?? 0, 1200, phase === "result");
+  const animatedIncorrect = useCountUp(result?.incorrect ?? 0, 1200, phase === "result");
+  const animatedUnanswered = useCountUp(result?.unanswered ?? 0, 1200, phase === "result");
+
   if (phase === "result" && result && test) {
     const pct = Math.round((result.score / result.maxScore) * 100);
     return (
       <div className="bbc mx-auto max-w-[720px] px-7 py-12">
+        <Confetti active={phase === "result" && pct >= 40} />
         <p className="bbc-eyebrow">Test Complete</p>
         <h1 className="bbc-serif mt-3 text-[clamp(28px,4vw,40px)] leading-[1.1] tracking-[-.02em]">
-          You scored <em className="italic font-medium text-[var(--color-blue-ink)]">{result.score}/{result.maxScore}</em>
+          You scored <em className="italic font-medium text-[var(--color-blue-ink)]">{animatedScore}/{result.maxScore}</em>
         </h1>
         <p className="mt-2 text-[15px] text-[var(--color-ink-soft)]">
           {result.testName} · Completed in {formatTime(result.timeTaken)}
@@ -243,17 +272,17 @@ export function MockTest() {
         <div className="mt-8 grid grid-cols-3 gap-3">
           <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-center">
             <CheckCircle className="mx-auto h-5 w-5 text-green-600" />
-            <p className="mt-1 text-[22px] font-bold text-green-700">{result.correct}</p>
+            <p className="mt-1 text-[22px] font-bold text-green-700">{animatedCorrect}</p>
             <p className="text-[11px] text-green-600">Correct</p>
           </div>
           <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-center">
             <XCircle className="mx-auto h-5 w-5 text-red-500" />
-            <p className="mt-1 text-[22px] font-bold text-red-600">{result.incorrect}</p>
+            <p className="mt-1 text-[22px] font-bold text-red-600">{animatedIncorrect}</p>
             <p className="text-[11px] text-red-500">Incorrect</p>
           </div>
           <div className="rounded-xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-4 text-center">
             <Minus className="mx-auto h-5 w-5 text-[var(--color-ink-faint)]" />
-            <p className="mt-1 text-[22px] font-bold text-[var(--color-ink)]">{result.unanswered}</p>
+            <p className="mt-1 text-[22px] font-bold text-[var(--color-ink)]">{animatedUnanswered}</p>
             <p className="text-[11px] text-[var(--color-ink-faint)]">Skipped</p>
           </div>
         </div>

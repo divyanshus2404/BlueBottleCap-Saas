@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import Link from "next/link";
 import {
   getMockResults,
   MOCK_TESTS,
@@ -29,6 +30,7 @@ import {
   Star,
   ChevronRight,
 } from "lucide-react";
+import { useCountUp } from "@/src/hooks/useCountUp";
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 
@@ -338,9 +340,9 @@ function RecommendationCard({ rec }: { rec: { icon: React.ReactNode; title: stri
         </div>
       </div>
       {rec.action && rec.href && (
-        <a href={rec.href} className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-blue-ink)] hover:underline ml-8">
+        <Link href={rec.href} className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-blue-ink)] hover:underline ml-8">
           {rec.action} <ChevronRight className="w-4 h-4" />
-        </a>
+        </Link>
       )}
     </div>
   );
@@ -446,9 +448,9 @@ function EmptyState({ name }: { name: string }) {
       <p className="text-[var(--color-ink-soft)] max-w-md mx-auto mb-6">
         Take your first mock test. Your personalized strengths, weaknesses, and improvement plan will appear here.
       </p>
-      <a href="/mock-test" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--color-blue-ink)] text-white font-semibold hover:opacity-90 transition">
+      <Link href="/mock-test" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--color-blue-ink)] text-white font-semibold hover:opacity-90 transition">
         <BookOpen className="w-4 h-4" /> Take a Mock Test
-      </a>
+      </Link>
     </div>
   );
 }
@@ -482,6 +484,12 @@ export function MyProgress() {
   const weaknesses = topicStats.filter((t) => t.accuracy < 50).slice(0, 5);
   const activeDays = history.filter((e) => e.studyMinutes > 0).length;
 
+  const animAvg = useCountUp(avgScore, 1200);
+  const animBest = useCountUp(bestScore, 1200);
+  const animTests = useCountUp(results.length, 800);
+  const animStudyH = useCountUp(Math.floor(totalStudyMins / 60), 1000);
+  const animStudyM = useCountUp(totalStudyMins % 60, 1000);
+
   const displayName = userProfile?.displayName || userProfile?.name || currentUser?.displayName || "";
   const email = userProfile?.email || currentUser?.email || "";
   const avatarSvg = userProfile?.avatarSvg;
@@ -504,9 +512,9 @@ export function MyProgress() {
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={<Target className="w-5 h-5" />} label="Avg Score" value={`${avgScore}%`} sub={`Best: ${bestScore}%`} />
-        <StatCard icon={<Flame className="w-5 h-5" />} label="Tests Taken" value={`${results.length}`} sub={`${activeDays} active days`} />
-        <StatCard icon={<Clock className="w-5 h-5" />} label="Study Time" value={totalStudyMins >= 60 ? `${Math.floor(totalStudyMins / 60)}h ${totalStudyMins % 60}m` : `${totalStudyMins}m`} sub={`${totalCards} cards reviewed`} />
+        <StatCard icon={<Target className="w-5 h-5" />} label="Avg Score" value={`${animAvg}%`} sub={`Best: ${animBest}%`} />
+        <StatCard icon={<Flame className="w-5 h-5" />} label="Tests Taken" value={`${animTests}`} sub={`${activeDays} active days`} />
+        <StatCard icon={<Clock className="w-5 h-5" />} label="Study Time" value={totalStudyMins >= 60 ? `${animStudyH}h ${animStudyM}m` : `${animStudyM}m`} sub={`${totalCards} cards reviewed`} />
         <StatCard
           icon={scoreDelta !== null && scoreDelta >= 0 ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
           label="Last vs Prev"

@@ -19,6 +19,8 @@ self.addEventListener("activate", (e) => {
 
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
+  const reqUrl = new URL(e.request.url);
+  if (reqUrl.pathname.startsWith("/api/")) return;
   e.respondWith(
     fetch(e.request)
       .then((res) => {
@@ -34,7 +36,8 @@ self.addEventListener("fetch", (e) => {
 
 // Push notification handler
 self.addEventListener("push", (e) => {
-  const data = e.data ? e.data.json() : {};
+  let data = {};
+  try { data = e.data ? e.data.json() : {}; } catch (_) {}
   const title = data.title || "BlueBottleCap";
   const options = {
     body: data.body || "Time to study!",
