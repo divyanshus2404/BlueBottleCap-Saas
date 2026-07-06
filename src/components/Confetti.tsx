@@ -20,7 +20,10 @@ export function Confetti({ active }: { active: boolean }) {
   const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
-    if (!active) return;
+    if (!active) {
+      setParticles([]);
+      return;
+    }
     const ps: Particle[] = [];
     for (let i = 0; i < 80; i++) {
       ps.push({
