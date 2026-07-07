@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Zap, BookOpen, Layers, Menu, X, Lock, Map, Home, ChevronLeft, ChevronDown, FileText, BarChart3, Brain, Clock, Newspaper, ScrollText, Moon, Sun } from "lucide-react";
+import { Zap, BookOpen, Layers, Menu, X, Lock, Map, Home, ChevronLeft, ChevronDown, FileText, BarChart3, Brain, Clock, Newspaper, ScrollText } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useGlobalState } from "../context/GlobalStateContext";
 import { MagneticWrapper } from "./MagneticWrapper";
@@ -86,25 +86,9 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
   const { userStats } = useGlobalState();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
-
-  useEffect(() => {
-    // Opt-in only: several pages still have light-only styling, so we never
-    // auto-enable dark from the OS preference — only from an explicit choice.
-    const dark = localStorage.getItem("bbc-theme") === "dark";
-    setIsDark(dark);
-    document.documentElement.classList.toggle("dark", dark);
-  }, []);
-
-  const toggleTheme = () => {
-    const next = !isDark;
-    setIsDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("bbc-theme", next ? "dark" : "light");
-  };
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -195,13 +179,6 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
 
         {/* Right Side */}
         <div className="flex items-center gap-3">
-          <button
-            onClick={toggleTheme}
-            className="hidden md:flex items-center justify-center w-8 h-8 rounded-full border border-[var(--color-line)] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] hover:bg-[var(--color-paper-card)] transition"
-            aria-label="Toggle dark mode"
-          >
-            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          </button>
           {currentUser ? (
             <div className="hidden md:block relative group">
               <button className="flex items-center gap-2 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)]/50 hover:bg-[var(--color-paper)]/50 px-3 h-9 text-xs font-bold text-brand-navy transition cursor-pointer">
@@ -288,16 +265,6 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
 
           {/* Bottom section: auth + plan */}
           <div className="border-t border-[var(--color-line)] pt-3 mt-1 space-y-3">
-            <div className="flex items-center justify-between px-4">
-              <span className="text-xs text-[var(--color-ink-faint)]">Theme</span>
-              <button
-                onClick={toggleTheme}
-                className="flex items-center gap-1.5 rounded-full border border-[var(--color-line)] px-3 py-1 text-[11px] font-semibold text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition"
-              >
-                {isDark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
-                {isDark ? "Light" : "Dark"}
-              </button>
-            </div>
             <div className="flex items-center justify-between px-4">
               <span className="text-xs text-[var(--color-ink-faint)]">Plan</span>
               <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${

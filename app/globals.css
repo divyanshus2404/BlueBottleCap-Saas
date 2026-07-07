@@ -48,22 +48,6 @@ body {
   -webkit-touch-callout: none;
 }
 
-html.dark {
-  --color-paper: #111114;
-  --color-paper-card: #1A1A1F;
-  --color-ink: #E8E6E1;
-  --color-ink-soft: #9B9DA5;
-  --color-ink-faint: #6B6D75;
-  --color-line: #2A2A30;
-  --color-line-strong: #3A3A42;
-  --color-blue-ink: #6B8AFF;
-  --color-blue-deep: #8DA4FF;
-  --color-blue-wash: #1A1D2E;
-  --color-brand-navy: #E8E6E1;
-  --color-brand-sky: #6B8AFF;
-  --color-brand-cobalt: #6B8AFF;
-}
-
 input, textarea, [contenteditable="true"] {
   -webkit-user-select: text;
   -moz-user-select: text;
