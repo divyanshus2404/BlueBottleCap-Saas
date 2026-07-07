@@ -1,3 +1,8 @@
+export interface BlogGif {
+  url: string;
+  alt: string;
+}
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -6,8 +11,35 @@ export interface BlogPost {
   date: string;
   readTime: number;
   tags: string[];
+  heroGif?: BlogGif;
+  heroGradient?: string;
+  heroEmoji?: string;
   content: string;
 }
+
+export const CATEGORY_GRADIENTS: Record<string, { gradient: string; emoji: string }> = {
+  JEE: { gradient: "from-blue-600 via-indigo-500 to-purple-600", emoji: "⚛️" },
+  NEET: { gradient: "from-emerald-500 via-teal-500 to-cyan-600", emoji: "🧬" },
+  "Study Tips": { gradient: "from-amber-500 via-orange-500 to-red-500", emoji: "📚" },
+  Strategy: { gradient: "from-violet-600 via-purple-500 to-fuchsia-500", emoji: "🎯" },
+};
+
+export const TOPIC_GIFS: Record<string, BlogGif> = {
+  physics: { url: "https://media4.giphy.com/media/3o6Zt6ML6BklcajjsA/giphy.gif", alt: "Physics animation" },
+  biology: { url: "https://media0.giphy.com/media/l46Cy1rHbQ92uuLXa/giphy.gif", alt: "Biology DNA animation" },
+  chemistry: { url: "https://media3.giphy.com/media/ccRMvuh3PeuSGgOWVx/giphy.gif", alt: "Chemistry flask" },
+  maths: { url: "https://media1.giphy.com/media/26BRuo6sLetdllPAQ/giphy.gif", alt: "Math calculations" },
+  study: { url: "https://media2.giphy.com/media/WoWm8YzFQJg5i/giphy.gif", alt: "Studying" },
+  strategy: { url: "https://media0.giphy.com/media/l0IylOPCNkiqOgMyA/giphy.gif", alt: "Chess strategy" },
+  exam: { url: "https://media1.giphy.com/media/bAlGLD0BQBiFa/giphy.gif", alt: "Exam time" },
+  celebrate: { url: "https://media0.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif", alt: "Celebration" },
+  focus: { url: "https://media3.giphy.com/media/IPbS5R4fSUl5S/giphy.gif", alt: "Deep focus" },
+  clock: { url: "https://media2.giphy.com/media/xTiTnxCaP0qE2XYalO/giphy.gif", alt: "Clock ticking" },
+  brain: { url: "https://media4.giphy.com/media/xT77XWum9yH7zNkFW0/giphy.gif", alt: "Brain power" },
+  writing: { url: "https://media1.giphy.com/media/XIqCQx02E1U9W/giphy.gif", alt: "Writing notes" },
+  mistake: { url: "https://media3.giphy.com/media/3oEjHAUOqG3lSS0f1C/giphy.gif", alt: "Facepalm" },
+  success: { url: "https://media0.giphy.com/media/26u4cqiYI30juCOGY/giphy.gif", alt: "Success" },
+};
 
 export const BLOG_POSTS: BlogPost[] = [
   {
@@ -18,7 +50,12 @@ export const BLOG_POSTS: BlogPost[] = [
     date: "2026-07-01",
     readTime: 8,
     tags: ["JEE", "Physics", "Mistakes", "Tips"],
-    content: `## 1. Ignoring Sign Conventions in Optics
+    heroGif: TOPIC_GIFS.mistake,
+    heroGradient: CATEGORY_GRADIENTS.JEE.gradient,
+    heroEmoji: "⚠️",
+    content: `!gif[physics]
+
+## 1. Ignoring Sign Conventions in Optics
 
 The single biggest mark-killer in JEE Physics. Students solve the mirror/lens formula correctly but forget the Cartesian sign convention.
 
@@ -94,7 +131,12 @@ This isn't a physics mistake — it's an exam strategy failure. "Find the accele
     date: "2026-06-28",
     readTime: 10,
     tags: ["NEET", "Biology", "Strategy", "Last Month"],
-    content: `## Why Biology Decides Your NEET Rank
+    heroGif: TOPIC_GIFS.biology,
+    heroGradient: CATEGORY_GRADIENTS.NEET.gradient,
+    heroEmoji: "🧬",
+    content: `!gif[biology]
+
+## Why Biology Decides Your NEET Rank
 
 Biology carries 360 marks out of 720 in NEET — exactly half. Most top rankers score 340+ in Biology alone. The strategy is simple: **NCERT is the Bible**.
 
@@ -165,7 +207,12 @@ Solve NEET papers from the last 5 years (2021-2025). You'll notice:
     date: "2026-06-20",
     readTime: 7,
     tags: ["Study Tips", "Productivity", "Focus", "Schedule"],
-    content: `## The Problem With "Just Study More"
+    heroGif: TOPIC_GIFS.focus,
+    heroGradient: CATEGORY_GRADIENTS["Study Tips"].gradient,
+    heroEmoji: "⏰",
+    content: `!gif[study]
+
+## The Problem With "Just Study More"
 
 Every coaching teacher says "study 12-14 hours daily." Nobody explains *how*. Sitting at a desk for 12 hours ≠ 12 hours of effective study. Most students get 4-5 hours of real focus in a 12-hour session.
 
@@ -243,7 +290,12 @@ Every 50 minutes, you MUST break. Not "check your phone" — that's more screen 
     date: "2026-06-15",
     readTime: 9,
     tags: ["JEE", "Strategy", "JEE Mains", "JEE Advanced"],
-    content: `## The Fundamental Difference
+    heroGif: TOPIC_GIFS.strategy,
+    heroGradient: CATEGORY_GRADIENTS.Strategy.gradient,
+    heroEmoji: "⚔️",
+    content: `!gif[exam]
+
+## The Fundamental Difference
 
 **JEE Mains** tests speed and accuracy. 90 questions in 180 minutes = 2 minutes per question. Most questions are direct formula application.
 
@@ -315,7 +367,12 @@ Don't prepare for "JEE." Prepare for *two different exams* that share a syllabus
     date: "2026-06-10",
     readTime: 12,
     tags: ["JEE", "NEET", "Chemistry", "Organic Chemistry"],
-    content: `## Why a Reaction Map Works
+    heroGif: TOPIC_GIFS.chemistry,
+    heroGradient: CATEGORY_GRADIENTS.JEE.gradient,
+    heroEmoji: "🧪",
+    content: `!gif[chemistry]
+
+## Why a Reaction Map Works
 
 Organic Chemistry has 100+ reactions. Learning them as isolated facts is impossible. But if you organize them as *conversions between functional groups*, patterns emerge.
 
@@ -405,7 +462,12 @@ If you can classify a reaction into one of these three, you can predict the prod
     date: "2026-06-05",
     readTime: 6,
     tags: ["JEE", "Strategy", "Time Management", "Exam Tips"],
-    content: `## The 3-Pass Strategy
+    heroGif: TOPIC_GIFS.clock,
+    heroGradient: CATEGORY_GRADIENTS.Strategy.gradient,
+    heroEmoji: "⏱️",
+    content: `!gif[clock]
+
+## The 3-Pass Strategy
 
 Most students solve questions sequentially: Q1, Q2, Q3... This is the worst possible approach. Here's what 99+ percentilers do:
 

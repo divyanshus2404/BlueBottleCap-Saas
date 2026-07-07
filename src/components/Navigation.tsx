@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Zap, BookOpen, Layers, Menu, X, Lock, Map, Home, ChevronLeft, ChevronDown, FileText, BarChart3, Brain, Clock, Newspaper, ScrollText } from "lucide-react";
+import { Zap, BookOpen, Layers, Menu, X, Lock, Map, Home, ChevronLeft, ChevronDown, FileText, BarChart3, Brain, Clock, Newspaper, ScrollText, Moon, Sun } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useGlobalState } from "../context/GlobalStateContext";
 import { MagneticWrapper } from "./MagneticWrapper";
@@ -25,6 +25,7 @@ const primaryLinks = [
   { href: "/tools", label: "Tools", icon: <Layers className="w-4 h-4" /> },
   { href: "/mock-test", label: "Mocks", icon: <FileText className="w-4 h-4" /> },
   { href: "/dashboard", label: "Dashboard", icon: <Map className="w-4 h-4" /> },
+  { href: "/blog", label: "Blog", icon: <Newspaper className="w-4 h-4" /> },
 ];
 
 const moreLinks = [
@@ -32,7 +33,6 @@ const moreLinks = [
   { href: "/flashcards", label: "Flashcards", icon: <Brain className="w-4 h-4" /> },
   { href: "/my-progress", label: "Progress", icon: <BarChart3 className="w-4 h-4" /> },
   { href: "/study-timer", label: "Study Timer", icon: <Clock className="w-4 h-4" /> },
-  { href: "/blog", label: "Blog", icon: <Newspaper className="w-4 h-4" /> },
   { href: "/previous-year-papers", label: "Past Papers", icon: <ScrollText className="w-4 h-4" /> },
 ];
 
@@ -86,9 +86,25 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
   const { userStats } = useGlobalState();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    // Opt-in only: several pages still have light-only styling, so we never
+    // auto-enable dark from the OS preference — only from an explicit choice.
+    const dark = localStorage.getItem("bbc-theme") === "dark";
+    setIsDark(dark);
+    document.documentElement.classList.toggle("dark", dark);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    setIsDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    localStorage.setItem("bbc-theme", next ? "dark" : "light");
+  };
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -103,7 +119,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
   const isMoreActive = moreLinks.some((l) => pathname === l.href);
 
   return (
-    <header className="bbc sticky top-0 z-50 w-full border-b border-[var(--color-line)] bg-[rgba(245,244,239,.82)] backdrop-blur-md transition-colors duration-300">
+    <header className="bbc sticky top-0 z-50 w-full border-b border-[var(--color-line)] bg-[var(--color-paper)]/82 backdrop-blur-md transition-colors duration-300">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
         {/* Left: Back + Logo */}
@@ -111,7 +127,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
           {pathname !== "/" && pathname !== "/dashboard" && (
             <button
               onClick={() => router.back()}
-              className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 transition-colors shadow-xs cursor-pointer group"
+              className="flex items-center justify-center w-8 h-8 rounded-full border border-[var(--color-line)] bg-[var(--color-paper-card)] hover:bg-[var(--color-paper)] text-[var(--color-ink-soft)] transition-colors shadow-xs cursor-pointer group"
               title="Go Back"
             >
               <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
@@ -153,7 +169,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
             </button>
 
             {moreOpen && (
-              <div className="absolute right-0 top-[calc(100%+6px)] w-52 rounded-2xl border border-[var(--color-line)] bg-white p-1.5 shadow-xl z-50 fade-in">
+              <div className="absolute right-0 top-[calc(100%+6px)] w-52 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-1.5 shadow-xl z-50 fade-in">
                 {moreLinks.map((link) => {
                   const isActive = pathname === link.href;
                   return (
@@ -164,7 +180,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
                       className={`flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold transition-all ${
                         isActive
                           ? "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]"
-                          : "text-[var(--color-ink-soft)] hover:bg-gray-50 hover:text-[var(--color-ink)]"
+                          : "text-[var(--color-ink-soft)] hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)]"
                       }`}
                     >
                       {link.icon}
@@ -179,9 +195,16 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
 
         {/* Right Side */}
         <div className="flex items-center gap-3">
+          <button
+            onClick={toggleTheme}
+            className="hidden md:flex items-center justify-center w-8 h-8 rounded-full border border-[var(--color-line)] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] hover:bg-[var(--color-paper-card)] transition"
+            aria-label="Toggle dark mode"
+          >
+            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
           {currentUser ? (
             <div className="hidden md:block relative group">
-              <button className="flex items-center gap-2 rounded-xl border border-gray-200 bg-slate-50/50 hover:bg-slate-100/50 px-3 h-9 text-xs font-bold text-brand-navy transition cursor-pointer">
+              <button className="flex items-center gap-2 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)]/50 hover:bg-[var(--color-paper)]/50 px-3 h-9 text-xs font-bold text-brand-navy transition cursor-pointer">
                 {userProfile?.avatarSvg ? (
                   <div className="w-5 h-5 rounded-full shrink-0 overflow-hidden bg-brand-cobalt/10 flex items-center justify-center" dangerouslySetInnerHTML={{ __html: userProfile.avatarSvg }} />
                 ) : currentUser.photoURL ? (
@@ -191,14 +214,14 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
                     {currentUser.email?.charAt(0).toUpperCase()}
                   </div>
                 )}
-                <span className="max-w-24 truncate text-gray-700">{currentUser.displayName || currentUser.email}</span>
+                <span className="max-w-24 truncate text-[var(--color-ink)]">{currentUser.displayName || currentUser.email}</span>
               </button>
-              <div className="absolute right-0 top-[80%] pt-3.5 w-48 origin-top-right rounded-2xl border border-gray-150 bg-white p-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <div className="px-3 py-2.5 border-b border-gray-100 mb-1">
-                  <p className="text-[9px] font-extrabold uppercase tracking-wider text-gray-400 font-mono">Signed in as</p>
+              <div className="absolute right-0 top-[80%] pt-3.5 w-48 origin-top-right rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="px-3 py-2.5 border-b border-[var(--color-line)] mb-1">
+                  <p className="text-[9px] font-extrabold uppercase tracking-wider text-[var(--color-ink-faint)] font-mono">Signed in as</p>
                   <p className="text-[11px] font-bold text-brand-navy truncate mt-0.5">{currentUser.email}</p>
                 </div>
-                <a href="/profile" className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs font-bold text-gray-700 hover:bg-gray-50 transition cursor-pointer">
+                <a href="/profile" className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs font-bold text-[var(--color-ink)] hover:bg-[var(--color-paper)] transition cursor-pointer">
                   Edit Profile
                 </a>
                 <button onClick={signOutUser} className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs font-bold text-red-600 hover:bg-red-50 transition cursor-pointer">
@@ -209,7 +232,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
           ) : (
             <button
               onClick={onLoginClick}
-              className="hidden md:flex items-center gap-1.5 px-2 h-9 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition cursor-pointer"
+              className="hidden md:flex items-center gap-1.5 px-2 h-9 text-[13px] font-medium text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition cursor-pointer"
             >
               Sign In
             </button>
@@ -225,7 +248,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle Menu"
-            className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+            className="rounded-lg p-1.5 text-[var(--color-ink-faint)] hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)] cursor-pointer"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -251,7 +274,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
                       className={`flex w-full items-center gap-2.5 rounded-lg px-4 py-2.5 text-[13px] font-semibold transition-all ${
                         isActive
                           ? "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]"
-                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                          : "text-[var(--color-ink-soft)] hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)]"
                       }`}
                     >
                       {link.icon}
@@ -264,20 +287,30 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
           ))}
 
           {/* Bottom section: auth + plan */}
-          <div className="border-t border-gray-100 pt-3 mt-1 space-y-3">
+          <div className="border-t border-[var(--color-line)] pt-3 mt-1 space-y-3">
             <div className="flex items-center justify-between px-4">
-              <span className="text-xs text-gray-500">Plan</span>
+              <span className="text-xs text-[var(--color-ink-faint)]">Theme</span>
+              <button
+                onClick={toggleTheme}
+                className="flex items-center gap-1.5 rounded-full border border-[var(--color-line)] px-3 py-1 text-[11px] font-semibold text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition"
+              >
+                {isDark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+                {isDark ? "Light" : "Dark"}
+              </button>
+            </div>
+            <div className="flex items-center justify-between px-4">
+              <span className="text-xs text-[var(--color-ink-faint)]">Plan</span>
               <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
                 userStats.activePlan === "Pro"
                   ? "bg-purple-100 text-purple-700"
-                  : "bg-slate-100 text-slate-700"
+                  : "bg-[var(--color-paper)] text-[var(--color-ink-soft)]"
               }`}>
                 {userStats.activePlan}
               </span>
             </div>
 
             {currentUser ? (
-              <div className="px-4 py-2 bg-slate-50 rounded-2xl space-y-2">
+              <div className="px-4 py-2 bg-[var(--color-paper)] rounded-2xl space-y-2">
                 <div className="flex items-center gap-2">
                   {userProfile?.avatarSvg ? (
                     <div className="w-6 h-6 rounded-full shrink-0 overflow-hidden bg-brand-cobalt/10 flex items-center justify-center" dangerouslySetInnerHTML={{ __html: userProfile.avatarSvg }} />
@@ -294,7 +327,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
                   <a
                     href="/profile"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex flex-1 items-center justify-center rounded-xl border border-gray-200 text-xs font-bold text-gray-700 py-2 hover:bg-gray-50 transition cursor-pointer"
+                    className="flex flex-1 items-center justify-center rounded-xl border border-[var(--color-line)] text-xs font-bold text-[var(--color-ink)] py-2 hover:bg-[var(--color-paper)] transition cursor-pointer"
                   >
                     Profile
                   </a>
@@ -309,7 +342,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
             ) : (
               <button
                 onClick={() => { onLoginClick(); setMobileMenuOpen(false); }}
-                className="flex w-full items-center justify-center rounded-xl border border-gray-200 py-2.5 text-sm font-semibold text-gray-700 hover:bg-slate-50 transition cursor-pointer"
+                className="flex w-full items-center justify-center rounded-xl border border-[var(--color-line)] py-2.5 text-sm font-semibold text-[var(--color-ink)] hover:bg-[var(--color-paper)] transition cursor-pointer"
               >
                 Sign In
               </button>

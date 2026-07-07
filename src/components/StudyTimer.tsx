@@ -47,41 +47,41 @@ export function StudyTimer() {
     return currentPreset.longBreak * 60;
   }, [currentPreset]);
 
+  // Tick effect: the updater stays pure (Strict Mode may invoke it twice);
+  // completion side effects live in the effect below, keyed on timeLeft === 0.
   useEffect(() => {
     if (!running) return;
     intervalRef.current = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(intervalRef.current);
-          if (phase === "focus") {
-            const elapsed = Math.round((accumulatedRef.current + Date.now() - startedRef.current) / 60000);
-            accumulatedRef.current = 0;
-            logStudyMinutes(elapsed, currentUser?.uid);
-            setTotalMinutes((t) => t + elapsed);
-            setSessions((s) => s + 1);
-            trackEvent("study_session_completed", { minutes: elapsed, preset: currentPreset.label });
-            const nextSessions = sessions + 1;
-            const nextPhase = nextSessions % 4 === 0 ? "longBreak" : "break";
-            setPhase(nextPhase);
-            setRunning(false);
-            if ("Notification" in window && Notification.permission === "granted") {
-              new Notification("Focus session complete!", { body: "Time for a break. Great work! 🎉", icon: "/icon-192.png" });
-            }
-            return getDuration(nextPhase);
-          } else {
-            setPhase("focus");
-            setRunning(false);
-            if ("Notification" in window && Notification.permission === "granted") {
-              new Notification("Break's over!", { body: "Ready for the next focus session? 🧠", icon: "/icon-192.png" });
-            }
-            return getDuration("focus");
-          }
-        }
-        return prev - 1;
-      });
+      setTimeLeft((prev) => (prev <= 1 ? 0 : prev - 1));
     }, 1000);
     return () => clearInterval(intervalRef.current);
-  }, [running, phase, sessions, getDuration, currentUser, currentPreset.label]);
+  }, [running]);
+
+  useEffect(() => {
+    if (!running || timeLeft !== 0) return;
+    clearInterval(intervalRef.current);
+    setRunning(false);
+    if (phase === "focus") {
+      const elapsed = Math.round((accumulatedRef.current + Date.now() - startedRef.current) / 60000);
+      accumulatedRef.current = 0;
+      logStudyMinutes(elapsed, currentUser?.uid);
+      setTotalMinutes((t) => t + elapsed);
+      setSessions((s) => s + 1);
+      trackEvent("study_session_completed", { minutes: elapsed, preset: currentPreset.label });
+      const nextPhase = (sessions + 1) % 4 === 0 ? "longBreak" : "break";
+      setPhase(nextPhase);
+      setTimeLeft(getDuration(nextPhase));
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("Focus session complete!", { body: "Time for a break. Great work! 🎉", icon: "/icon-192.png" });
+      }
+    } else {
+      setPhase("focus");
+      setTimeLeft(getDuration("focus"));
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("Break's over!", { body: "Ready for the next focus session? 🧠", icon: "/icon-192.png" });
+      }
+    }
+  }, [timeLeft, running, phase, sessions, getDuration, currentUser, currentPreset.label]);
 
   const toggle = () => {
     if (!running) {

@@ -4,6 +4,7 @@ import { ActiveView } from "@/src/types";
 import { useI18n } from "@/src/lib/i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { DailyQuote } from "./DailyQuote";
+import { Hero3D } from "./Hero3D";
 
 interface LandingPageProps {
   onNavigate: (view: ActiveView) => void;
@@ -293,6 +294,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           </div>
         </div>
       </section>
+
+      {/* ── 3D SHOWCASE ──
+          Dark, Apple-style interlude with a Three.js liquid-glass orb.
+          Lazy-loaded and reduced-motion-aware; sits between the paper-white
+          hero above and the two-lanes section below as a scroll "moment". */}
+      <Hero3D onCta={() => onNavigate("tools")} />
 
       {/* ── TWO LANES ──
           Two audience-specific cards right after the hero. Student card on

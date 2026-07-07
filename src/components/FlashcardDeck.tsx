@@ -11,20 +11,26 @@ const STORAGE_KEY = "bbc_sr_cards";
 
 function loadCards(): SRCard[] {
   if (typeof window === "undefined") return [];
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved) {
-    const parsed: SRCard[] = JSON.parse(saved);
-    const savedIds = new Set(parsed.map((c) => c.id));
-    const newCards = flashcardsData
-      .filter((f) => !savedIds.has(f.id))
-      .map((f) => initSRCard({ id: f.id, question: f.question, answer: f.answer, category: f.category }));
-    return [...parsed, ...newCards];
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed: SRCard[] = JSON.parse(saved);
+      const savedIds = new Set(parsed.map((c) => c.id));
+      const newCards = flashcardsData
+        .filter((f) => !savedIds.has(f.id))
+        .map((f) => initSRCard({ id: f.id, question: f.question, answer: f.answer, category: f.category }));
+      return [...parsed, ...newCards];
+    }
+  } catch {
+    // corrupted storage, start fresh
   }
   return flashcardsData.map((f) => initSRCard({ id: f.id, question: f.question, answer: f.answer, category: f.category }));
 }
 
 function saveCards(cards: SRCard[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+  } catch {}
 }
 
 const GRADE_BUTTONS: { grade: Grade; label: string; color: string; key: string }[] = [
@@ -161,6 +167,19 @@ export function FlashcardDeck() {
             {cat === "all" ? "All" : cat}
           </button>
         ))}
+      </div>
+
+      {/* Session progress */}
+      <div className="mt-4 flex items-center gap-3">
+        <div className="flex-1 h-1.5 rounded-full bg-[var(--color-line)] overflow-hidden">
+          <div
+            className="h-full rounded-full bg-[var(--color-blue-ink)] transition-all duration-500"
+            style={{ width: `${Math.min(100, (reviewed / (reviewed + filteredDue.length)) * 100)}%` }}
+          />
+        </div>
+        <span className="text-[11px] font-semibold text-[var(--color-ink-faint)] whitespace-nowrap">
+          {reviewed}/{reviewed + filteredDue.length}
+        </span>
       </div>
 
       <div className="mt-6">

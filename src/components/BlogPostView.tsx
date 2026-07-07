@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft, Clock, Share2 } from "lucide-react";
 import { WhatsAppShare } from "./WhatsAppShare";
-import type { BlogPost } from "@/src/data/blogPosts";
+import { TOPIC_GIFS, CATEGORY_GRADIENTS, type BlogPost } from "@/src/data/blogPosts";
 import { trackEvent } from "@/src/lib/analytics";
 
 function renderMarkdown(content: string): React.ReactNode[] {
@@ -77,6 +77,20 @@ function renderMarkdown(content: string): React.ReactNode[] {
       flushList();
     }
 
+    const gifMatch = line.match(/^!gif\[(.+?)\]$/);
+    if (gifMatch) {
+      const keyword = gifMatch[1].toLowerCase();
+      const gif = TOPIC_GIFS[keyword];
+      if (gif) {
+        elements.push(
+          <div key={`gif-${i}`} className="my-6 overflow-hidden rounded-2xl border border-[var(--color-line)]">
+            <img src={gif.url} alt={gif.alt} className="w-full max-h-[300px] object-cover" loading="lazy" />
+          </div>
+        );
+      }
+      continue;
+    }
+
     if (line.startsWith("## ")) {
       elements.push(<h2 key={i} className="mt-8 mb-3 text-[20px] font-bold text-[var(--color-ink)]">{line.slice(3)}</h2>);
     } else if (line.startsWith("### ")) {
@@ -127,6 +141,8 @@ export function BlogPostView({ post }: { post: BlogPost }) {
         </span>
       </div>
 
+      <PostHero post={post} />
+
       <h1 className="bbc-serif mt-4 text-[clamp(26px,4vw,38px)] leading-[1.12] tracking-[-.02em]">
         {post.title}
       </h1>
@@ -166,5 +182,30 @@ export function BlogPostView({ post }: { post: BlogPost }) {
         ))}
       </div>
     </article>
+  );
+}
+
+function PostHero({ post }: { post: BlogPost }) {
+  const grad = CATEGORY_GRADIENTS[post.category];
+  const gradient = post.heroGradient || grad?.gradient || "from-gray-600 to-gray-800";
+  const emoji = post.heroEmoji || grad?.emoji || "📝";
+  const [gifFailed, setGifFailed] = React.useState(false);
+
+  return (
+    <div className="mt-4 overflow-hidden rounded-2xl border border-[var(--color-line)] h-[200px] sm:h-[260px] relative">
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient}`} />
+      {post.heroGif && !gifFailed ? (
+        <img
+          src={post.heroGif.url}
+          alt={post.heroGif.alt}
+          className="relative h-full w-full object-cover mix-blend-luminosity opacity-50"
+          loading="eager"
+          onError={() => setGifFailed(true)}
+        />
+      ) : (
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
+      )}
+      <div className="absolute bottom-4 right-4 text-[40px] drop-shadow-lg">{emoji}</div>
+    </div>
   );
 }

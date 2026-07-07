@@ -51,8 +51,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Applies the saved theme before first paint. Must live in <head>
+            (body-level script tags don't execute during client render) and
+            <html> needs suppressHydrationWarning since the class is set
+            client-side before hydration. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(localStorage.getItem('bbc-theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}})()`,
+          }}
+        />
         <link rel="icon" type="image/png" href="/favicon.png" sizes="32x32" />
         <link rel="icon" type="image/svg+xml" href="/icon.svg" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
