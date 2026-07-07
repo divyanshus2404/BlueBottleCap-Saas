@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 import { aiRateLimiter, getClientIp } from '@/src/lib/rateLimit';
+import { requireAuth } from '@/src/lib/authGuard';
 
 function getAIClient() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -20,11 +21,17 @@ export async function POST(req: Request) {
     );
   }
 
+  const auth = await requireAuth(req);
+  if (auth.error) return auth.error;
+
   try {
     const { text, focus } = await req.json();
     if (!text || (text as string).trim() === '') {
       return NextResponse.json({ error: 'Text is required for summarization.' }, { status: 400 });
     }
+
+    // Cap input to 50,000 characters to control API costs
+    const cappedText = (text as string).slice(0, 50000);
 
     const client = getAIClient();
     const response = await client.models.generateContent({
@@ -38,7 +45,7 @@ Format the summary in clean, readable markdown with this structure:
 - **Critical Spark Questions** (2-3 thought-provoking study questions for discussion)
 
 Text to summarize:
-${text}`,
+${cappedText}`,
     });
 
     return NextResponse.json({ summary: response.text });
