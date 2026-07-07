@@ -7,9 +7,9 @@ export default function SignUpRoute() {
   const router = useRouter();
 
   const handleNavigate = (view: string) => {
-    if (view === "landing") router.push("/");
-    else if (view === "study-material-page") router.push("/study-material");
-    else router.push("/" + view);
+    if (view === "landing") window.location.href = "/";
+    else if (view === "study-material-page") window.location.href = "/study-material";
+    else window.location.href = "/" + view;
   };
 
   return <SignUpPage setCurrentView={handleNavigate} />;
