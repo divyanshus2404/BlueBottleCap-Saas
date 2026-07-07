@@ -58,9 +58,9 @@ export function middleware(request: NextRequest) {
   const sessionCookie = request.cookies.get('__session')?.value;
 
   if (!sessionCookie) {
-    // Not logged in — redirect to landing page
+    // Not logged in — redirect to signup page
     const url = request.nextUrl.clone();
-    url.pathname = '/';
+    url.pathname = '/signup';
     url.searchParams.set('auth', 'required');
     return NextResponse.redirect(url);
   }
