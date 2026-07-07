@@ -182,7 +182,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ setCurrentView }) => {
     setError(null);
     setSuccessMsg(null);
     try {
-      const res = await fetch("http://localhost:3001/api/auth/send-otp", {
+      const res = await fetch("/api/email/welcome", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

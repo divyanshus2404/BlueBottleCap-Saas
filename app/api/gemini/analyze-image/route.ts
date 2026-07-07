@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 import { aiRateLimiter, getClientIp } from '@/src/lib/rateLimit';
+import { requireAuth } from '@/src/lib/authGuard';
 
 function getAIClient() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -14,11 +15,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Too many requests. Please wait before trying again.' }, { status: 429 });
   }
 
+  const auth = await requireAuth(req);
+  if (auth.error) return auth.error;
+
   try {
     const { image, prompt } = await req.json();
 
     if (!image || !image.startsWith('data:')) {
       return NextResponse.json({ error: 'Valid base64 image data is required.' }, { status: 400 });
+    }
+
+    // Limit image data to 10MB to prevent excessively large Gemini calls
+    if (image.length > 10 * 1024 * 1024) {
+      return NextResponse.json({ error: 'Image is too large. Please use a smaller image.' }, { status: 400 });
     }
 
     const ai = getAIClient();
