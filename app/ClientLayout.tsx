@@ -45,6 +45,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     }
   }, [initialised, currentUser, userProfile, pathname, router]);
 
+  // Listen for custom event to open auth modal from anywhere
+  useEffect(() => {
+    const handleOpenAuth = () => setIsAuthModalOpen(true);
+    window.addEventListener("open-auth-modal", handleOpenAuth);
+    return () => window.removeEventListener("open-auth-modal", handleOpenAuth);
+  }, []);
+
   return (
     <SmoothScroll>
       <ErrorBoundary>

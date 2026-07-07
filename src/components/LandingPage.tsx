@@ -179,8 +179,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           </nav>
           <div className="flex items-center gap-[14px]">
             <LanguageSwitcher />
-            <button onClick={() => onNavigate("signup")} className="hidden text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)] sm:block">{t("nav.signin")}</button>
-            <button onClick={() => onNavigate(currentUser ? "tools" : "signup")} className="bbc-btn bbc-btn-primary px-5 py-[11px] text-[15px]">{t("nav.startFree")}</button>
+            <button onClick={() => { if (!currentUser) window.dispatchEvent(new CustomEvent("open-auth-modal")); }} className="hidden text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)] sm:block">{t("nav.signin")}</button>
+            <button onClick={() => { currentUser ? onNavigate("tools") : window.dispatchEvent(new CustomEvent("open-auth-modal")); }} className="bbc-btn bbc-btn-primary px-5 py-[11px] text-[15px]">{t("nav.startFree")}</button>
           </div>
         </div>
       </header>
@@ -202,7 +202,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               {t("hero.subhead")}
             </p>
             <div className="bbc-reveal mt-[34px] flex flex-wrap items-center gap-4">
-              <button onClick={() => onNavigate(currentUser ? "tools" : "signup")} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">{t("hero.cta")}</button>
+              <button onClick={() => { currentUser ? onNavigate("tools") : window.dispatchEvent(new CustomEvent("open-auth-modal")); }} className="bbc-btn bbc-btn-primary px-[26px] py-[14px] text-[16px]">{t("hero.cta")}</button>
               <a href="/for-institutes" className="inline-flex items-center gap-[7px] text-[15px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-blue-ink)]">
                 {t("hero.forInstitutes")}
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -337,8 +337,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <span className="text-[12.5px] text-[var(--color-ink-faint)]">{t("student.moPro")}</span>
               </div>
               <button
-                onClick={() => onNavigate(currentUser ? "tools" : "signup")}
-                className="bbc-btn bbc-btn-ghost mt-5 w-full justify-center py-3 text-[14px]"
+                onClick={() => { currentUser ? onNavigate("tools") : window.dispatchEvent(new CustomEvent("open-auth-modal")); }}
+                className="bbc-btn bbc-btn-primary mt-5 w-full py-3.5 text-[15px]"
               >
                 {t("student.cta")}
               </button>
