@@ -11,15 +11,20 @@ export async function POST(req: Request) {
   const limited = enforceRateLimit(req, { limit: 10, windowMs: 300_000, prefix: "otp-verify" });
   if (limited) return limited;
 
-  let body: any;
+  let body: unknown;
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
   }
 
-  const email = validEmail(body.email);
-  const code = typeof body.code === "string" ? body.code.trim() : "";
+  if (typeof body !== "object" || body === null || Array.isArray(body)) {
+    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  const b = body as Record<string, unknown>;
+  const email = validEmail(b.email);
+  const code = typeof b.code === "string" ? b.code.trim() : "";
   if (!email || !code || code.length !== 6) {
     return NextResponse.json({ error: "Email and 6-digit code are required." }, { status: 400 });
   }
@@ -65,10 +70,10 @@ export async function POST(req: Request) {
   try {
     const existing = await admin.auth.getUserByEmail(email);
     uid = existing.uid;
-    // Mark email as verified if not already
     if (!existing.emailVerified) {
       await admin.auth.updateUser(uid, { emailVerified: true });
     }
+    await admin.db.collection("users").doc(uid).set({ email }, { merge: true });
   } catch (err: any) {
     if (err.code === "auth/user-not-found") {
       const created = await admin.auth.createUser({

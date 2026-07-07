@@ -25,9 +25,6 @@ import type { NextRequest } from 'next/server';
 const PROTECTED_PATHS = [
   '/dashboard',
   '/pdf-editor',
-  '/tools',
-  '/pricing',
-  '/flashcards',
   '/virtual-test',
   '/create-profile',
   '/onboarding',
@@ -40,8 +37,6 @@ const PROTECTED_PATHS = [
 const VERIFIED_ONLY_PATHS = [
   '/dashboard',
   '/pdf-editor',
-  '/tools',
-  '/flashcards',
   '/virtual-test',
 ];
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { ChevronLeft, ChevronRight, Play, Pause, FileText, Brain, Timer, BarChart3, BookOpen, Newspaper, CheckCircle, Flame, Clock, Trophy, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
@@ -13,6 +13,17 @@ const SLIDES = [
   { id: "pyq", label: "Past Papers" },
   { id: "cta", label: "Get Started" },
 ];
+
+const Slide = ({ index, cur, children }: { index: number; cur: number; children: React.ReactNode }) => (
+  <div
+    className={`absolute inset-0 flex flex-col items-center justify-center px-6 sm:px-10 py-10 transition-all duration-500 ${
+      cur === index ? "opacity-100 translate-x-0" : index < cur ? "opacity-0 -translate-x-16" : "opacity-0 translate-x-16"
+    }`}
+    style={{ pointerEvents: cur === index ? "auto" : "none" }}
+  >
+    {children}
+  </div>
+);
 
 export function ProductTour() {
   const [cur, setCur] = useState(0);
@@ -71,31 +82,22 @@ export function ProductTour() {
     }
   }, [cur]);
 
-  const Slide = ({ index, children }: { index: number; children: React.ReactNode }) => (
-    <div
-      className={`absolute inset-0 flex flex-col items-center justify-center px-6 sm:px-10 py-10 transition-all duration-500 ${
-        cur === index ? "opacity-100 translate-x-0" : index < cur ? "opacity-0 -translate-x-16" : "opacity-0 translate-x-16"
-      }`}
-      style={{ pointerEvents: cur === index ? "auto" : "none" }}
-    >
-      {children}
-    </div>
-  );
+  const dots = useMemo(() => Array.from({ length: 12 }).map((_, i) => ({
+    left: `${10 + Math.random() * 80}%`,
+    top: `${10 + Math.random() * 80}%`,
+    animation: `float ${6 + Math.random() * 4}s ease-in-out infinite ${Math.random() * 4}s`,
+  })), []);
 
   return (
     <div className="bbc mx-auto max-w-[820px] px-4 py-8 sm:py-12">
       <div className="relative overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] shadow-xl" style={{ minHeight: 500 }}>
         {/* Decorative dots */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {Array.from({ length: 12 }).map((_, i) => (
+          {dots.map((style, i) => (
             <div
               key={i}
               className="absolute w-1 h-1 rounded-full bg-[var(--color-blue-ink)] opacity-[0.07]"
-              style={{
-                left: `${10 + Math.random() * 80}%`,
-                top: `${10 + Math.random() * 80}%`,
-                animation: `float ${6 + Math.random() * 4}s ease-in-out infinite ${Math.random() * 4}s`,
-              }}
+              style={style}
             />
           ))}
         </div>
@@ -110,7 +112,7 @@ export function ProductTour() {
         </button>
 
         {/* Slide 0: Intro */}
-        <Slide index={0}>
+        <Slide cur={cur} index={0}>
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[var(--color-blue-wash)] mb-6">
             <span className="text-4xl">🧪</span>
           </div>
@@ -124,7 +126,7 @@ export function ProductTour() {
         </Slide>
 
         {/* Slide 1: Mock Tests */}
-        <Slide index={1}>
+        <Slide cur={cur} index={1}>
           <h2 className="bbc-serif text-center text-[clamp(22px,3.5vw,30px)] leading-[1.1] tracking-[-0.02em] mb-1">
             <FileText className="inline w-6 h-6 text-[var(--color-blue-ink)] mr-2 -mt-1" />
             Real <span className="text-[var(--color-blue-ink)]">Mock Tests</span>
@@ -158,7 +160,7 @@ export function ProductTour() {
         </Slide>
 
         {/* Slide 2: AI Tools */}
-        <Slide index={2}>
+        <Slide cur={cur} index={2}>
           <h2 className="bbc-serif text-center text-[clamp(22px,3.5vw,30px)] leading-[1.1] tracking-[-0.02em] mb-1">
             🤖 AI-Powered <span className="text-[var(--color-blue-ink)]">Study Tools</span>
           </h2>
@@ -186,7 +188,7 @@ export function ProductTour() {
         </Slide>
 
         {/* Slide 3: Flashcards */}
-        <Slide index={3}>
+        <Slide cur={cur} index={3}>
           <h2 className="bbc-serif text-center text-[clamp(22px,3.5vw,30px)] leading-[1.1] tracking-[-0.02em] mb-1">
             <Brain className="inline w-6 h-6 text-[var(--color-blue-ink)] mr-2 -mt-1" />
             Smart <span className="text-[var(--color-blue-ink)]">Flashcards</span>
@@ -218,7 +220,7 @@ export function ProductTour() {
         </Slide>
 
         {/* Slide 4: Progress */}
-        <Slide index={4}>
+        <Slide cur={cur} index={4}>
           <h2 className="bbc-serif text-center text-[clamp(22px,3.5vw,30px)] leading-[1.1] tracking-[-0.02em] mb-1">
             📈 Track Your <span className="text-[var(--color-blue-ink)]">Progress</span>
           </h2>
@@ -254,7 +256,7 @@ export function ProductTour() {
         </Slide>
 
         {/* Slide 5: PYQ */}
-        <Slide index={5}>
+        <Slide cur={cur} index={5}>
           <h2 className="bbc-serif text-center text-[clamp(22px,3.5vw,30px)] leading-[1.1] tracking-[-0.02em] mb-1">
             📋 Previous Year <span className="text-[var(--color-blue-ink)]">Papers</span>
           </h2>
@@ -276,7 +278,7 @@ export function ProductTour() {
         </Slide>
 
         {/* Slide 6: CTA */}
-        <Slide index={6}>
+        <Slide cur={cur} index={6}>
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[var(--color-blue-wash)] mb-6">
             <span className="text-4xl">🚀</span>
           </div>

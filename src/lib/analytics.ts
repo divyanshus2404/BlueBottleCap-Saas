@@ -18,6 +18,7 @@ export type FunnelEvent =
   | "mock_generate_started"
   | "mock_generate_success"
   | "mock_generate_failed"
+  | "auth_gate_shown"
   | "test_started"
   | "test_completed"
   | "flashcard_reviewed"

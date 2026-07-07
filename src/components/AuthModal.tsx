@@ -47,6 +47,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     setOtpDigits(["", "", "", "", "", ""]);
   };
 
+  const closeAndReset = () => {
+    setMode("entry");
+    setName("");
+    setEmail("");
+    setPassword("");
+    setError(null);
+    setSuccessMsg(null);
+    setOtpDigits(["", "", "", "", "", ""]);
+    setLoading(false);
+    onClose();
+  };
+
   const goBack = () => {
     resetState();
     setMode("entry");
@@ -117,7 +129,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         throw new Error(data.error || "Verification failed.");
       }
       await signInWithToken(data.customToken);
-      onClose();
+      closeAndReset();
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -132,10 +144,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     try {
       if (mode === "email-signup") {
         await signUp(email, password, name);
-        onClose();
+        closeAndReset();
       } else if (mode === "email-signin") {
         await signIn(email, password);
-        onClose();
+        closeAndReset();
       } else if (mode === "forgot") {
         await resetPassword(email);
         setSuccessMsg("Password reset email sent! Check your inbox.");
@@ -152,7 +164,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     setLoading(true);
     try {
       await signInWithGoogle();
-      onClose();
+      closeAndReset();
     } catch (err: any) {
       setError(err.message || "Google Sign-In failed.");
     } finally {
@@ -166,11 +178,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="bbc fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-[var(--color-ink)]/45 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-[var(--color-ink)]/45 backdrop-blur-sm" onClick={closeAndReset} />
 
       <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-8 shadow-2xl fade-in">
         <button
-          onClick={onClose}
+          onClick={closeAndReset}
           className="absolute right-4 top-4 rounded-xl p-1.5 text-[var(--color-ink-faint)] transition hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)] cursor-pointer"
         >
           <X className="h-5 w-5" />

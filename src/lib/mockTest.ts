@@ -390,6 +390,7 @@ export async function getMockResultsWithSync(uid: string): Promise<MockTestResul
     const { loadMockResultsFromFirestore, mergeLocalAndRemote } = await import("./firestoreSync");
     const remote = await loadMockResultsFromFirestore(uid);
     const merged = mergeLocalAndRemote(local, remote, (r) => r.testId + "_" + r.completedAt);
+    merged.sort((a, b) => new Date(a.completedAt).getTime() - new Date(b.completedAt).getTime());
     localStorage.setItem(RESULTS_KEY, JSON.stringify(merged.slice(-50)));
     return merged;
   } catch {

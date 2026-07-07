@@ -17,7 +17,8 @@ const STUDY_LOG_KEY = "bbc_study_log";
 
 function logStudyMinutes(minutes: number, uid?: string | null) {
   if (typeof window === "undefined" || minutes < 1) return;
-  const today = new Date().toISOString().split("T")[0];
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const log: Record<string, number> = JSON.parse(localStorage.getItem(STUDY_LOG_KEY) || "{}");
   log[today] = (log[today] || 0) + minutes;
   localStorage.setItem(STUDY_LOG_KEY, JSON.stringify(log));
@@ -36,6 +37,7 @@ export function StudyTimer() {
   const [totalMinutes, setTotalMinutes] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval>>(undefined);
   const startedRef = useRef(0);
+  const accumulatedRef = useRef(0);
 
   const currentPreset = PRESETS[preset];
 
@@ -52,7 +54,8 @@ export function StudyTimer() {
         if (prev <= 1) {
           clearInterval(intervalRef.current);
           if (phase === "focus") {
-            const elapsed = Math.round((Date.now() - startedRef.current) / 60000);
+            const elapsed = Math.round((accumulatedRef.current + Date.now() - startedRef.current) / 60000);
+            accumulatedRef.current = 0;
             logStudyMinutes(elapsed, currentUser?.uid);
             setTotalMinutes((t) => t + elapsed);
             setSessions((s) => s + 1);
@@ -81,13 +84,18 @@ export function StudyTimer() {
   }, [running, phase, sessions, getDuration, currentUser, currentPreset.label]);
 
   const toggle = () => {
-    if (!running) startedRef.current = Date.now();
+    if (!running) {
+      startedRef.current = Date.now();
+    } else {
+      accumulatedRef.current += Date.now() - startedRef.current;
+    }
     setRunning((r) => !r);
   };
 
   const reset = () => {
     clearInterval(intervalRef.current);
     setRunning(false);
+    accumulatedRef.current = 0;
     setTimeLeft(getDuration(phase));
   };
 

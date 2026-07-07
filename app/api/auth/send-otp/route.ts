@@ -15,14 +15,18 @@ export async function POST(req: Request) {
   const limited = enforceRateLimit(req, { limit: 5, windowMs: 300_000, prefix: "otp-send" });
   if (limited) return limited;
 
-  let body: any;
+  let body: unknown;
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
   }
 
-  const email = validEmail(body.email);
+  if (typeof body !== "object" || body === null || Array.isArray(body)) {
+    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  const email = validEmail((body as Record<string, unknown>).email);
   if (!email) {
     return NextResponse.json({ error: "A valid email is required." }, { status: 400 });
   }
@@ -58,6 +62,11 @@ export async function POST(req: Request) {
     html,
     text: `Your BlueBottleCap verification code is: ${otp}. It expires in 10 minutes.`,
   });
+
+  if (!result.ok) {
+    await docRef.delete();
+    return NextResponse.json({ error: "Failed to send verification email." }, { status: 502 });
+  }
 
   return NextResponse.json({ ok: true, delivery: result.delivery });
 }

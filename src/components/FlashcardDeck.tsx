@@ -102,8 +102,8 @@ export function FlashcardDeck() {
         const btn = GRADE_BUTTONS[parseInt(e.key) - 1];
         if (btn) handleGrade(btn.grade);
       }
-      if (e.key === "ArrowRight") setIdx((i) => Math.min(filteredDue.length - 1, i + 1));
-      if (e.key === "ArrowLeft") setIdx((i) => Math.max(0, i - 1));
+      if (e.key === "ArrowRight") { setIdx((i) => Math.min(filteredDue.length - 1, i + 1)); setFlipped(false); }
+      if (e.key === "ArrowLeft") { setIdx((i) => Math.max(0, i - 1)); setFlipped(false); }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);

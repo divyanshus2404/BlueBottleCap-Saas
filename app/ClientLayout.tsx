@@ -8,7 +8,7 @@ import { ToastContainer } from "@/src/components/ToastContainer";
 import { ErrorBoundary } from "@/src/components/ErrorBoundary";
 import { SmoothScroll } from "@/src/components/SmoothScroll";
 import { Footer } from "@/src/components/Footer";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
 import { WhatsAppButton } from "@/src/components/WhatsAppButton";
 import { OnboardingTutorial } from "@/src/components/OnboardingTutorial";
@@ -26,8 +26,15 @@ const ONBOARDING_GATED_PATHS = ["/dashboard", "/tools", "/pdf-editor", "/flashca
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const { currentUser, userProfile, initialised } = useAuth();
+
+  useEffect(() => {
+    if (searchParams.get("auth") === "required" && !currentUser) {
+      setIsAuthModalOpen(true);
+    }
+  }, [searchParams, currentUser]);
   const { userStats } = useGlobalState();
   useFaviconBadge(userStats.streakDays);
 
