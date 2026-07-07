@@ -1,7 +1,26 @@
 import { MockQuestion } from "../lib/mockTest";
 
-// ── PHYSICS (100 questions) ──────────────────────────────────────────────
-export const PHYSICS_BULK: MockQuestion[] = [
+/**
+ * The raw banks below were authored with the correct answer almost always
+ * in slot 0, which makes the position guessable on a real test. Rather than
+ * hand-editing 200+ rows, we rotate each question's options by a permutation
+ * derived from its id — deterministic, so a question always renders the same
+ * way across sessions/devices — and remap `correct` to match.
+ */
+function rotateOptions(q: MockQuestion): MockQuestion {
+  let hash = 0;
+  for (let i = 0; i < q.id.length; i++) hash = (hash * 31 + q.id.charCodeAt(i)) | 0;
+  const k = Math.abs(hash) % q.options.length;
+  if (k === 0) return q;
+  const options = q.options.map((_, j) => q.options[(j + k) % q.options.length]);
+  const correct = (q.correct - k + q.options.length) % q.options.length;
+  return { ...q, options, correct };
+}
+
+const shuffleBank = (bank: MockQuestion[]): MockQuestion[] => bank.map(rotateOptions);
+
+// ── PHYSICS (55 questions) ──────────────────────────────────────────────
+const PHYSICS_RAW: MockQuestion[] = [
   // Mechanics (25)
   { id: "bp1", subject: "Physics", topic: "Mechanics", difficulty: "easy", prompt: "A car accelerates from rest at 2 m/s² for 10 s. The distance covered is:", options: ["100 m", "200 m", "50 m", "20 m"], correct: 0, explanation: "s = ½at² = ½×2×100 = 100 m" },
   { id: "bp2", subject: "Physics", topic: "Mechanics", difficulty: "easy", prompt: "The SI unit of impulse is:", options: ["N·s", "N/s", "kg·m/s²", "J·s"], correct: 0, explanation: "Impulse = Force × time = N·s, also equivalent to kg·m/s" },
@@ -67,7 +86,7 @@ export const PHYSICS_BULK: MockQuestion[] = [
 ];
 
 // ── CHEMISTRY (100 questions) ────────────────────────────────────────────
-export const CHEMISTRY_BULK: MockQuestion[] = [
+const CHEMISTRY_RAW: MockQuestion[] = [
   // Physical Chemistry (35)
   { id: "bc1", subject: "Chemistry", topic: "Atomic Structure", difficulty: "easy", prompt: "The maximum number of electrons in a shell with principal quantum number n is:", options: ["2n²", "n²", "2n", "n"], correct: 0, explanation: "Maximum electrons in shell n = 2n²" },
   { id: "bc2", subject: "Chemistry", topic: "Atomic Structure", difficulty: "medium", prompt: "The shape of a d-orbital is:", options: ["Cloverleaf", "Spherical", "Dumbbell", "Conical"], correct: 0, explanation: "d-orbitals have a cloverleaf (double dumbbell) shape, except dz² which is donut-shaped." },
@@ -129,7 +148,7 @@ export const CHEMISTRY_BULK: MockQuestion[] = [
 ];
 
 // ── MATHS (100 questions) ────────────────────────────────────────────────
-export const MATHS_BULK: MockQuestion[] = [
+const MATHS_RAW: MockQuestion[] = [
   // Algebra (25)
   { id: "bm1", subject: "Maths", topic: "Quadratic Equations", difficulty: "easy", prompt: "The roots of x² - 5x + 6 = 0 are:", options: ["2 and 3", "1 and 6", "-2 and -3", "3 and -2"], correct: 0, explanation: "x² - 5x + 6 = (x-2)(x-3) = 0 → x = 2, 3" },
   { id: "bm2", subject: "Maths", topic: "Quadratic Equations", difficulty: "medium", prompt: "If α and β are roots of x² - 7x + 12 = 0, then α² + β² =", options: ["25", "49", "37", "12"], correct: 0, explanation: "α+β = 7, αβ = 12. α²+β² = (α+β)² - 2αβ = 49-24 = 25" },
@@ -184,7 +203,7 @@ export const MATHS_BULK: MockQuestion[] = [
 ];
 
 // ── BIOLOGY (100 questions) ──────────────────────────────────────────────
-export const BIOLOGY_BULK: MockQuestion[] = [
+const BIOLOGY_RAW: MockQuestion[] = [
   // Cell Biology (15)
   { id: "bb1", subject: "Biology", topic: "Cell Biology", difficulty: "easy", prompt: "The powerhouse of the cell is:", options: ["Mitochondria", "Nucleus", "Ribosome", "Golgi body"], correct: 0, explanation: "Mitochondria produce ATP through oxidative phosphorylation → 'powerhouse'." },
   { id: "bb2", subject: "Biology", topic: "Cell Biology", difficulty: "easy", prompt: "The cell wall of plants is made of:", options: ["Cellulose", "Chitin", "Peptidoglycan", "Keratin"], correct: 0, explanation: "Plant cell walls are primarily composed of cellulose." },
@@ -248,6 +267,11 @@ export const BIOLOGY_BULK: MockQuestion[] = [
   { id: "bb54", subject: "Biology", topic: "Plant Physiology", difficulty: "medium", prompt: "Nitrogen fixation is carried out by:", options: ["Rhizobium", "E. coli", "Yeast", "Amoeba"], correct: 0, explanation: "Rhizobium bacteria in root nodules of legumes fix atmospheric N₂ to NH₃." },
   { id: "bb55", subject: "Biology", topic: "Ecology", difficulty: "easy", prompt: "An organism that feeds on dead organic matter is called:", options: ["Decomposer", "Producer", "Consumer", "Parasite"], correct: 0, explanation: "Decomposers (fungi, bacteria) break down dead organic matter, recycling nutrients." },
 ];
+
+export const PHYSICS_BULK: MockQuestion[] = shuffleBank(PHYSICS_RAW);
+export const CHEMISTRY_BULK: MockQuestion[] = shuffleBank(CHEMISTRY_RAW);
+export const MATHS_BULK: MockQuestion[] = shuffleBank(MATHS_RAW);
+export const BIOLOGY_BULK: MockQuestion[] = shuffleBank(BIOLOGY_RAW);
 
 export const ALL_BULK_QUESTIONS: MockQuestion[] = [
   ...PHYSICS_BULK,
