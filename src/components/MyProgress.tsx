@@ -262,7 +262,7 @@ function ProfileCard({ name, email, avatarSvg, streakDays, plan, readiness }: {
           <h2 className="text-2xl font-extrabold text-[var(--color-ink)]">{name || "Student"}</h2>
           {email && <p className="text-sm text-[var(--color-ink-faint)] mt-0.5">{email}</p>}
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 dark:bg-orange-950/40 text-orange-700 dark:text-orange-300">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-700">
               <Flame className="w-3.5 h-3.5" /> {streakDays}-day streak
             </span>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]">
@@ -314,7 +314,7 @@ function TopicChip({ stat }: { stat: TopicStat }) {
   const isStrong = stat.accuracy >= 70;
   const isWeak = stat.accuracy < 40;
   return (
-    <div className={`flex items-center justify-between rounded-xl border px-4 py-3 ${isWeak ? "border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/30" : isStrong ? "border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30" : "border-[var(--color-line)] bg-[var(--color-paper-card)]"}`}>
+    <div className={`flex items-center justify-between rounded-xl border px-4 py-3 ${isWeak ? "border-red-300 bg-red-50" : isStrong ? "border-emerald-300 bg-emerald-50" : "border-[var(--color-line)] bg-[var(--color-paper-card)]"}`}>
       <div className="flex items-center gap-3 min-w-0">
         {isWeak ? <AlertTriangle className="w-4 h-4 text-red-500 shrink-0" /> : isStrong ? <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" /> : <Target className="w-4 h-4 text-[var(--color-ink-faint)] shrink-0" />}
         <div className="min-w-0">
@@ -322,7 +322,7 @@ function TopicChip({ stat }: { stat: TopicStat }) {
           <p className="text-xs text-[var(--color-ink-faint)]">{stat.subject} · {stat.attempted} attempted</p>
         </div>
       </div>
-      <span className={`text-sm font-bold tabular-nums ml-3 ${isWeak ? "text-red-600 dark:text-red-400" : isStrong ? "text-emerald-600 dark:text-emerald-400" : "text-[var(--color-ink-soft)]"}`}>
+      <span className={`text-sm font-bold tabular-nums ml-3 ${isWeak ? "text-red-600" : isStrong ? "text-emerald-600" : "text-[var(--color-ink-soft)]"}`}>
         {stat.accuracy}%
       </span>
     </div>
@@ -615,7 +615,7 @@ export function MyProgress() {
                         <p className="text-sm font-medium text-[var(--color-ink)] truncate">{r.testName}</p>
                         <p className="text-xs text-[var(--color-ink-faint)]">{new Date(r.completedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</p>
                       </div>
-                      <span className={`text-sm font-bold tabular-nums ${pct >= 60 ? "text-emerald-600 dark:text-emerald-400" : pct >= 40 ? "text-amber-600 dark:text-amber-400" : "text-red-600 dark:text-red-400"}`}>
+                      <span className={`text-sm font-bold tabular-nums ${pct >= 60 ? "text-emerald-600" : pct >= 40 ? "text-amber-600" : "text-red-600"}`}>
                         {r.score}/{r.maxScore}
                       </span>
                     </div>

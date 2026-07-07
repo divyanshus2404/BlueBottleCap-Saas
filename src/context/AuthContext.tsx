@@ -11,6 +11,7 @@ import {
   signInWithPopup,
   updateProfile,
   sendEmailVerification,
+  signInWithCustomToken,
   reload,
 } from "firebase/auth";
 import { auth, googleProvider, db } from "../firebase";
@@ -35,6 +36,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, name?: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithToken: (token: string) => Promise<void>;
   signOutUser: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   resendVerificationEmail: () => Promise<void>;
@@ -88,7 +90,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = async () => {
     const credential = await signInWithPopup(auth, googleProvider);
-    // Google accounts are pre-verified
+    setSessionCookies(credential.user);
+  };
+
+  const signInWithToken = async (token: string) => {
+    const credential = await signInWithCustomToken(auth, token);
     setSessionCookies(credential.user);
   };
 
@@ -163,6 +169,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signUp,
     signIn,
     signInWithGoogle,
+    signInWithToken,
     signOutUser,
     resetPassword,
     resendVerificationEmail,

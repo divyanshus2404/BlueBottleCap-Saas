@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { UserStats } from "../types";
 import { Check, Zap, ShieldCheck, Printer, ArrowRight, Loader2 } from "lucide-react";
 import { trackEvent } from "../lib/analytics";
@@ -15,6 +16,7 @@ interface PricingProps {
 }
 
 export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, onNavigateTo }) => {
+  const router = useRouter();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
   const [loadingStep, setLoadingStep] = useState<number>(-1);
   const [showReceipt, setShowReceipt] = useState<boolean>(false);
@@ -132,15 +134,18 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
           const verifyResp = await fetch("/api/razorpay/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...response, plan, userId: undefined }),
+            body: JSON.stringify({ ...response, plan, userId: auth?.currentUser?.uid }),
           });
           const verifyData = await verifyResp.json();
           if (verifyResp.ok && verifyData.ok) {
-            setLoadingStep(4);
-            setShowReceipt(true);
-            // onUpgradeApproved updates local state to reflect the new plan;
-            // Firestore was already written server-side in /api/razorpay/verify.
             onUpgradeApproved(plan);
+            trackEvent("payment_success", { plan, billing: billingCycle, paymentId: response.razorpay_payment_id });
+            const params = new URLSearchParams({
+              plan,
+              billing: billingCycle,
+              paymentId: response.razorpay_payment_id,
+            });
+            router.push(`/payment-success?${params.toString()}`);
           } else {
             alert("Payment verification failed. Please contact support.");
             setLoadingStep(-1);

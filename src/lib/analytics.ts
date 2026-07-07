@@ -17,7 +17,17 @@ export type FunnelEvent =
   | "streak_banner_shown"
   | "mock_generate_started"
   | "mock_generate_success"
-  | "mock_generate_failed";
+  | "mock_generate_failed"
+  | "test_started"
+  | "test_completed"
+  | "flashcard_reviewed"
+  | "study_session_completed"
+  | "share_clicked"
+  | "pwa_install_accepted"
+  | "blog_post_read"
+  | "question_attempted"
+  | "pyq_paper_opened"
+  | "tool_used";
 
 export function trackEvent(name: FunnelEvent, props: Record<string, string | number | null> = {}): void {
   try {
@@ -28,6 +38,11 @@ export function trackEvent(name: FunnelEvent, props: Record<string, string | num
       plausible(name, { props });
     }
 
+    // Vercel Analytics custom events
+    if (typeof (window as any).va === "function") {
+      (window as any).va("event", { name, ...props });
+    }
+
     if (db) {
       addDoc(collection(db, "events"), {
         name,
@@ -35,11 +50,29 @@ export function trackEvent(name: FunnelEvent, props: Record<string, string | num
         uid: auth?.currentUser?.uid || null,
         path: window.location.pathname,
         createdAt: new Date().toISOString(),
-      }).catch(() => {
-        // Swallow — rules may deny anonymous writes; checkout must proceed.
-      });
+      }).catch(() => {});
     }
+
+    // Local event log for debugging and on-device analytics
+    const key = "bbc_events";
+    const events = JSON.parse(localStorage.getItem(key) || "[]");
+    events.push({ name, ts: new Date().toISOString(), props });
+    if (events.length > 500) events.splice(0, events.length - 500);
+    localStorage.setItem(key, JSON.stringify(events));
   } catch {
-    // Never let analytics take down the purchase flow.
+    // Never let analytics break the app.
+  }
+}
+
+export function getEventCount(name: string, sinceDaysAgo = 7): number {
+  if (typeof window === "undefined") return 0;
+  try {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - sinceDaysAgo);
+    const cutoffStr = cutoff.toISOString();
+    const events: Array<{ name: string; ts: string }> = JSON.parse(localStorage.getItem("bbc_events") || "[]");
+    return events.filter((e) => e.name === name && e.ts >= cutoffStr).length;
+  } catch {
+    return 0;
   }
 }

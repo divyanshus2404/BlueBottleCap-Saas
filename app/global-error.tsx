@@ -1,12 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
 
 // Last-resort boundary: catches errors in the root layout itself. It replaces
 // the whole document, so it renders its own <html>/<body> and uses inline
 // styles (app CSS may not be available here). Kept minimal but on-brand.
 
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  useEffect(() => { Sentry.captureException(error); }, [error]);
   return (
     <html lang="en">
       <body style={{ margin: 0, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#f5f4ef", fontFamily: "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif", color: "#181A1F" }}>

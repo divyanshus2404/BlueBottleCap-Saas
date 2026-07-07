@@ -16,6 +16,9 @@ import { NotificationPrompt } from "@/src/components/NotificationPrompt";
 import { ContentProtection } from "@/src/components/ContentProtection";
 import { PageTransition } from "@/src/components/PageTransition";
 import { ScrollToTop } from "@/src/components/ScrollToTop";
+import { PWAInstallPrompt } from "@/src/components/PWAInstallPrompt";
+import { useFaviconBadge } from "@/src/hooks/useFaviconBadge";
+import { useGlobalState } from "@/src/context/GlobalStateContext";
 
 /** Routes that should trigger the onboarding gate */
 const ONBOARDING_GATED_PATHS = ["/dashboard", "/tools", "/pdf-editor", "/flashcards"];
@@ -25,6 +28,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   const router = useRouter();
   const { currentUser, userProfile, initialised } = useAuth();
+  const { userStats } = useGlobalState();
+  useFaviconBadge(userStats.streakDays);
 
   // Onboarding gate: redirect new users to /onboarding if they haven't completed it
   useEffect(() => {
@@ -71,6 +76,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {currentUser && <NotificationPrompt />}
           <ContentProtection />
           <ScrollToTop />
+          <PWAInstallPrompt />
         </div>
       </ErrorBoundary>
     </SmoothScroll>
