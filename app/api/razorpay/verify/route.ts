@@ -101,7 +101,7 @@ export async function POST(req: Request) {
       }
     }
 
-    await admin.db.collection('users').doc(userId).update(updates);
+    await admin.db.collection('users').doc(userId).set(updates, { merge: true });
 
     return NextResponse.json({ ok: true });
   } catch (err: unknown) {

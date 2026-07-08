@@ -26,7 +26,6 @@ const PROTECTED_PATHS = [
   '/dashboard',
   '/pdf-editor',
   '/tools',
-  '/pricing',
   '/flashcards',
   '/virtual-test',
   '/create-profile',

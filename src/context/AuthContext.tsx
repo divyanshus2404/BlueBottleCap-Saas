@@ -56,13 +56,14 @@ export function useAuth() {
 
 function setSessionCookies(user: User) {
   const maxAge = 60 * 60 * 24 * 7; // 7 days
-  document.cookie = `__session=${user.uid}; path=/; max-age=${maxAge}; SameSite=Lax`;
-  document.cookie = `__email_verified=${user.emailVerified}; path=/; max-age=${maxAge}; SameSite=Lax`;
+  const secure = location.protocol === 'https:' ? '; Secure' : '';
+  document.cookie = `__session=${user.uid}; path=/; max-age=${maxAge}; SameSite=Lax${secure}`;
+  document.cookie = `__email_verified=${user.emailVerified}; path=/; max-age=${maxAge}; SameSite=Lax${secure}`;
 }
 
 function clearSessionCookies() {
-  document.cookie = "__session=; path=/; max-age=0";
-  document.cookie = "__email_verified=; path=/; max-age=0";
+  document.cookie = "__session=; path=/; max-age=0; SameSite=Lax";
+  document.cookie = "__email_verified=; path=/; max-age=0; SameSite=Lax";
 }
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

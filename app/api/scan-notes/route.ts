@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 import { enforceRateLimit } from "@/src/lib/rateLimit";
+import { requireAuth } from "@/src/lib/authGuard";
 
 export const runtime = "nodejs";
 // Notes can be image-heavy and Gemini Vision needs a moment.
@@ -48,6 +49,10 @@ NOT_READABLE
 export async function POST(req: Request) {
   const limited = enforceRateLimit(req, { limit: 8, windowMs: 60_000, prefix: "scan-notes" });
   if (limited) return limited;
+
+  // Require authentication — protects Gemini API quota from anonymous abuse
+  const auth = await requireAuth(req);
+  if (auth.error) return auth.error;
 
   let form: FormData;
   try {
