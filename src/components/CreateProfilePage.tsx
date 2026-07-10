@@ -59,6 +59,7 @@ export const CreateProfilePage: React.FC<CreateProfilePageProps> = ({ setCurrent
     if (!user) return;
     setLoading(true);
     try {
+      if (!db) return;
       const userRef = doc(db, 'users', user.uid);
       const snap = await getDoc(userRef);
       const isNew = !snap.exists();

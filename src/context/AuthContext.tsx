@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   User,
-  onAuthStateChanged,
+  onIdTokenChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
@@ -54,16 +54,19 @@ export function useAuth() {
 // real security lives in Firestore Security Rules. They exist solely to
 // prevent unauthenticated page renders.
 
-function setSessionCookies(user: User) {
-  const maxAge = 60 * 60 * 24 * 7; // 7 days
-  const secure = location.protocol === 'https:' ? '; Secure' : '';
-  document.cookie = `__session=${user.uid}; path=/; max-age=${maxAge}; SameSite=Lax${secure}`;
-  document.cookie = `__email_verified=${user.emailVerified}; path=/; max-age=${maxAge}; SameSite=Lax${secure}`;
+async function setSessionCookies(user: User) {
+  try {
+    const token = await user.getIdToken();
+    const maxAge = 60 * 60 * 24 * 7; // 7 days (middleware will keep them logged in, frontend will refresh token on load)
+    const secure = location.protocol === 'https:' ? '; Secure' : '';
+    document.cookie = `__session=${token}; path=/; max-age=${maxAge}; SameSite=Lax${secure}`;
+  } catch (err) {
+    console.error("Failed to set session cookie", err);
+  }
 }
 
 function clearSessionCookies() {
   document.cookie = "__session=; path=/; max-age=0; SameSite=Lax";
-  document.cookie = "__email_verified=; path=/; max-age=0; SameSite=Lax";
 }
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -73,24 +76,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [initialised, setInitialised] = useState(false);
 
   const signUp = async (email: string, password: string, name?: string) => {
+    if (!auth) throw new Error("Auth not initialized");
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     if (name && userCredential.user) {
       await updateProfile(userCredential.user, { displayName: name });
     }
     // Send verification email immediately after sign-up
     await sendEmailVerification(userCredential.user);
-    setSessionCookies(userCredential.user);
+    await setSessionCookies(userCredential.user);
   };
 
   const signIn = async (email: string, password: string) => {
+    if (!auth) throw new Error("Auth not initialized");
     const credential = await signInWithEmailAndPassword(auth, email, password);
-    setSessionCookies(credential.user);
+    await setSessionCookies(credential.user);
   };
 
   const signInWithGoogle = async () => {
+    if (!auth || !googleProvider) throw new Error("Auth not initialized");
     const credential = await signInWithPopup(auth, googleProvider);
-    // Google accounts are pre-verified
-    setSessionCookies(credential.user);
+    await setSessionCookies(credential.user);
   };
 
   const signOutUser = async () => {
@@ -101,15 +106,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
     clearSessionCookies();
+    if (!auth) throw new Error("Auth not initialized");
     return signOut(auth);
   };
 
   const resetPassword = (email: string) => {
+    if (!auth) throw new Error("Auth not initialized");
     return sendPasswordResetEmail(auth, email);
   };
 
   const resendVerificationEmail = async () => {
-    if (!auth.currentUser) throw new Error("No user is signed in.");
+    if (!auth || !auth.currentUser) throw new Error("No user is signed in.");
     await sendEmailVerification(auth.currentUser);
   };
 
@@ -121,10 +128,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setInitialised(true);
       return;
     }
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onIdTokenChanged(auth, (user) => {
       setCurrentUser(user);
 
-      if (user) {
+      if (user && db) {
         // Keep session cookies fresh on every auth state change
         if (typeof document !== "undefined") {
           setSessionCookies(user);

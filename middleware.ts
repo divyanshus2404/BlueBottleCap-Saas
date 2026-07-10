@@ -21,6 +21,28 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+/**
+ * Helper to decode a JWT payload in the Edge runtime.
+ * We don't verify the signature here (that happens in authGuard.ts for API routes).
+ * This is just to quickly check claims like email_verified for routing purposes.
+ */
+function decodeJwtPayload(token: string) {
+  try {
+    const base64Url = token.split('.')[1];
+    if (!base64Url) return null;
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch {
+    return null;
+  }
+}
+
 /** Routes that require authentication */
 const PROTECTED_PATHS = [
   '/dashboard',
@@ -69,9 +91,10 @@ export function middleware(request: NextRequest) {
     (path) => pathname === path || pathname.startsWith(path + '/')
   );
 
-  if (isVerifiedOnlyPath) {
-    const emailVerified = request.cookies.get('__email_verified')?.value;
-    if (emailVerified === 'false') {
+  if (isVerifiedOnlyPath && sessionCookie) {
+    const payload = decodeJwtPayload(sessionCookie);
+    // If the token is successfully decoded and email_verified is explicitly false
+    if (payload && payload.email_verified === false) {
       const url = request.nextUrl.clone();
       url.pathname = '/verify-email';
       return NextResponse.redirect(url);

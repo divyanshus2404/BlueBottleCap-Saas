@@ -295,6 +295,7 @@ export const VirtualTestMode: React.FC<VirtualTestModeProps> = ({
     setPerformanceHistory(prev => [newRecord, ...prev]);
 
     if (currentUser) {
+      if (!db) return;
       addDoc(collection(db, "test_results"), {
         ...newRecord,
         userId: currentUser.uid,

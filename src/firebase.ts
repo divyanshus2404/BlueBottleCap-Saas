@@ -29,26 +29,26 @@ if (isConfigured) {
 
 // getAuth/getFirestore throw on an invalid config, which would white-screen the
 // entire app at module load. Guard them so the UI still renders without Firebase.
-function safeAuth(): Auth {
-  if (typeof window === "undefined" || !app) return null as unknown as Auth;
+function safeAuth(): Auth | null {
+  if (typeof window === "undefined" || !app) return null;
   try {
     return getAuth(app);
   } catch (error) {
     console.warn("getAuth failed:", error);
-    return null as unknown as Auth;
+    return null;
   }
 }
 
-function safeDb(): Firestore {
-  if (typeof window === "undefined" || !app) return null as unknown as Firestore;
+function safeDb(): Firestore | null {
+  if (typeof window === "undefined" || !app) return null;
   try {
     return getFirestore(app);
   } catch (error) {
     console.warn("getFirestore failed:", error);
-    return null as unknown as Firestore;
+    return null;
   }
 }
 
 export const auth = safeAuth();
-export const googleProvider = typeof window !== "undefined" ? new GoogleAuthProvider() : null as unknown as GoogleAuthProvider;
+export const googleProvider = typeof window !== "undefined" ? new GoogleAuthProvider() : null;
 export const db = safeDb();
