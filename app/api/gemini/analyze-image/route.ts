@@ -68,6 +68,9 @@ export async function POST(req: Request) {
     if (message.toLowerCase().includes('quota') || message.includes('429')) {
       return NextResponse.json({ error: 'AI service is temporarily busy. Please try again.' }, { status: 429 });
     }
-    return NextResponse.json({ error: 'Failed to analyze image.' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Couldn\'t read that image. Make sure it\'s clear, well-lit, and under 10 MB.' },
+      { status: 500 }
+    );
   }
 }

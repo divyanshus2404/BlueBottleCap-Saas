@@ -69,6 +69,9 @@ ${cappedText}`,
         { status: 429 }
       );
     }
-    return NextResponse.json({ error: 'An error occurred during summarization.' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Couldn\'t generate a summary. If the text is very long, try a smaller chunk.' },
+      { status: 500 }
+    );
   }
 }

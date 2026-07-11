@@ -112,6 +112,9 @@ export async function POST(req: Request) {
         { status: 429 }
       );
     }
-    return NextResponse.json({ error: 'An error occurred. Please try again.' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'The AI hit a snag on that message. Try rephrasing or send it again in a few seconds.' },
+      { status: 500 }
+    );
   }
 }

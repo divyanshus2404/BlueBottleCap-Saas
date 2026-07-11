@@ -336,6 +336,23 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
           </a>
         </div>
 
+        {/* Payer-safety strip — refund policy + support link on every checkout
+            surface. Cheaper to reassure here than to eat a chargeback later. */}
+        <div className="mx-auto mt-6 flex max-w-[760px] flex-col items-center justify-center gap-2 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] px-6 py-4 text-center text-[13px] text-[var(--color-ink-soft)] md:flex-row md:gap-6">
+          <span className="inline-flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3l7 3.5v5c0 4.5-3 8.5-7 9.5-4-1-7-5-7-9.5v-5L12 3z" stroke="var(--color-blue-ink)" strokeWidth="1.6" strokeLinejoin="round" />
+              <path d="M8.5 12l2.5 2.5 4.5-5" stroke="var(--color-blue-ink)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <a href="/refunds" className="font-semibold text-[var(--color-blue-ink)] underline">7-day money-back guarantee</a>
+          </span>
+          <span className="hidden md:inline text-[var(--color-line-strong)]">·</span>
+          <span>
+            Questions?{" "}
+            <a href="mailto:support@bluebottlecap.com" className="font-semibold text-[var(--color-blue-ink)] underline">support@bluebottlecap.com</a>
+          </span>
+        </div>
+
         {/* FAQ */}
         <div className="mt-20 border-t border-[var(--color-line)] pt-16">
           <h2 className="bbc-serif mb-8 text-center text-[clamp(26px,3.4vw,38px)] tracking-[-.02em]">

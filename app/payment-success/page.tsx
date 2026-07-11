@@ -3,10 +3,15 @@
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import Link from "next/link";
-import { CheckCircle, ArrowRight, Download, Crown, Sparkles, Zap, Copy, Check } from "lucide-react";
+import { CheckCircle, ArrowRight, Crown, Sparkles, Zap, Copy, Check, Loader2, AlertTriangle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/src/context/AuthContext";
 import { Confetti } from "@/src/components/Confetti";
+
+type VerifyState =
+  | { status: "checking" }
+  | { status: "ok"; productId: string | null }
+  | { status: "invalid"; message: string };
 
 function PaymentSuccessContent() {
   const params = useSearchParams();
@@ -16,11 +21,47 @@ function PaymentSuccessContent() {
   const { currentUser } = useAuth();
   const [copied, setCopied] = useState(false);
   const [showConfetti, setShowConfetti] = useState(true);
+  const [verify, setVerify] = useState<VerifyState>({ status: "checking" });
 
   useEffect(() => {
     const t = setTimeout(() => setShowConfetti(false), 5000);
     return () => clearTimeout(t);
   }, []);
+
+  // Server-verify the paymentId before rendering "You're Pro". Without this,
+  // anyone can visit /payment-success?plan=Pro and see a legit-looking
+  // success screen — a screenshot-fraud vector even though it doesn't
+  // actually grant Pro.
+  useEffect(() => {
+    if (!paymentId) {
+      setVerify({ status: "invalid", message: "No payment id in the URL." });
+      return;
+    }
+    if (!paymentId.startsWith("pay_")) {
+      setVerify({ status: "invalid", message: "This link doesn't look like a real payment." });
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const resp = await fetch(`/api/razorpay/payment-status?payment_id=${encodeURIComponent(paymentId)}`);
+        const data = await resp.json();
+        if (cancelled) return;
+        if (resp.ok && data?.verified) {
+          setVerify({ status: "ok", productId: data.productId ?? null });
+        } else {
+          setVerify({
+            status: "invalid",
+            message: data?.error || "We couldn't confirm this payment yet.",
+          });
+        }
+      } catch {
+        if (cancelled) return;
+        setVerify({ status: "invalid", message: "Network error while verifying payment." });
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [paymentId]);
 
   const copyPaymentId = () => {
     if (paymentId) {
@@ -52,6 +93,56 @@ function PaymentSuccessContent() {
     Basic: { monthly: "₹49/mo", annual: "₹39/mo (₹468/yr)" },
     Pro: { monthly: "₹199/mo", annual: "₹125/mo (₹1,499/yr)" },
   };
+
+  // Checking Razorpay — render a neutral "verifying" state instead of the
+  // celebratory Welcome screen. This is what someone visiting the URL
+  // directly (without a real payment) will always see.
+  if (verify.status === "checking") {
+    return (
+      <div className="bbc min-h-screen">
+        <div className="bbc-grid" aria-hidden="true" />
+        <div className="relative z-[2] mx-auto flex min-h-screen max-w-[520px] flex-col items-center justify-center px-6 text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-blue-ink)]" />
+          <p className="mt-4 text-[14px] font-semibold text-[var(--color-ink)]">Confirming your payment…</p>
+          <p className="mt-2 text-[13px] text-[var(--color-ink-soft)]">
+            This usually takes a second or two.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (verify.status === "invalid") {
+    return (
+      <div className="bbc min-h-screen">
+        <div className="bbc-grid" aria-hidden="true" />
+        <div className="relative z-[2] mx-auto flex min-h-screen max-w-[520px] flex-col items-center justify-center px-6 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-100">
+            <AlertTriangle className="h-6 w-6 text-amber-600" />
+          </div>
+          <h1 className="bbc-serif mt-5 text-[clamp(24px,3.6vw,32px)] leading-[1.15] tracking-[-0.02em]">
+            We couldn&apos;t confirm this payment.
+          </h1>
+          <p className="mt-3 text-[14px] leading-relaxed text-[var(--color-ink-soft)]">
+            {verify.message} If you did just pay, refresh the page — Razorpay
+            can take a few seconds to settle. Otherwise, email us with your
+            payment id and we&apos;ll sort it in minutes.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Link href="/pricing" className="bbc-btn bbc-btn-ghost px-5 py-2.5 text-[13px]">
+              Back to pricing
+            </Link>
+            <a
+              href="mailto:support@bluebottlecap.com?subject=Payment%20verification%20problem"
+              className="bbc-btn bbc-btn-primary px-5 py-2.5 text-[13px]"
+            >
+              Email support
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bbc min-h-screen">
