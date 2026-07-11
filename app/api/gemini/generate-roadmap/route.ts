@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 import { aiRateLimiter, getClientIp } from '@/src/lib/rateLimit';
+import { requireAuth } from '@/src/lib/authGuard';
 
 function getAIClient() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -13,6 +14,9 @@ export async function POST(req: Request) {
   if (!aiRateLimiter.check(ip)) {
     return NextResponse.json({ error: 'Too many requests. Please wait before trying again.' }, { status: 429 });
   }
+
+  const auth = await requireAuth(req);
+  if (auth.error) return auth.error;
 
   try {
     const { prompt } = await req.json();

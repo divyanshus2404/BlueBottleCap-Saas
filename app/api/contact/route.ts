@@ -2,6 +2,15 @@ import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { getRateLimiter, getClientIp } from '@/src/lib/rateLimit';
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 // Stricter rate limit for email — 3 per hour per IP
 const emailRateLimiter = getRateLimiter({ limit: 3, windowMs: 60 * 60 * 1000 });
 
@@ -62,11 +71,11 @@ export async function POST(req: Request) {
         <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
           <h2 style="color:#1e3a5f;">New Contact Message</h2>
           <table style="border-collapse:collapse;width:100%;">
-            <tr><td style="padding:8px;font-weight:bold;color:#555;">Name</td><td style="padding:8px;">${name}</td></tr>
-            <tr style="background:#f9f9f9;"><td style="padding:8px;font-weight:bold;color:#555;">Email</td><td style="padding:8px;"><a href="mailto:${email}">${email}</a></td></tr>
+            <tr><td style="padding:8px;font-weight:bold;color:#555;">Name</td><td style="padding:8px;">${escapeHtml(name)}</td></tr>
+            <tr style="background:#f9f9f9;"><td style="padding:8px;font-weight:bold;color:#555;">Email</td><td style="padding:8px;"><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></td></tr>
           </table>
           <div style="margin-top:16px;padding:16px;background:#f0f4ff;border-radius:8px;">
-            <p style="margin:0;white-space:pre-wrap;">${message}</p>
+            <p style="margin:0;white-space:pre-wrap;">${escapeHtml(message)}</p>
           </div>
           <p style="color:#999;font-size:12px;margin-top:24px;">Sent via BlueBottleCap contact form</p>
         </div>

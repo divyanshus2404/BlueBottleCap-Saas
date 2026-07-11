@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 import { enforceRateLimit } from "@/src/lib/rateLimit";
 import { TOOLS } from "@/src/lib/tools";
+import { requireAuth } from '@/src/lib/authGuard';
 
 function getAIClient() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -34,6 +35,9 @@ function keywordMatch(query: string): string[] {
 export async function POST(req: Request) {
   const limited = enforceRateLimit(req, { limit: 30, windowMs: 60_000, prefix: "tool-recommend" });
   if (limited) return limited;
+
+  const auth = await requireAuth(req);
+  if (auth.error) return auth.error;
 
   try {
     const { query } = (await req.json().catch(() => ({}))) as { query?: string };

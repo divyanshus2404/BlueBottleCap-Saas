@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 import { aiRateLimiter, getClientIp } from '@/src/lib/rateLimit';
+import { requireAuth } from '@/src/lib/authGuard';
 
 function getAIClient() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -20,13 +21,18 @@ export async function POST(req: Request) {
     );
   }
 
+  // Require authentication — protects Gemini API quota from anonymous abuse
+  const auth = await requireAuth(req);
+  if (auth.error) return auth.error;
+
   try {
     const { messages, paperContext, highlightedText } = await req.json();
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: 'Messages array is required.' }, { status: 400 });
     }
 
-    const client = getAIClient();
+    // Cap conversation history to prevent expensive API calls
+    const cappedMessages = messages.slice(-30);
 
     let systemInstruction =
       'You are BlueBottleCap Co-Pilot, an advanced academic AI assistant. You help students understand research papers, complex mathematics, visual homework equations, and coding problems. Provide direct, informative, encouraging, and detailed study assistance. Format all math notation with clear standard text or Markdown LaTeX formats.';
@@ -37,7 +43,7 @@ export async function POST(req: Request) {
       systemInstruction += `\n\nHighlighted text selection by user:\n"${highlightedText}"`;
     }
 
-    const contents = messages.map((msg: { role: string; content: string }) => ({
+    const contents = cappedMessages.map((msg: { role: string; content: string }) => ({
       role: msg.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: msg.content }],
     }));

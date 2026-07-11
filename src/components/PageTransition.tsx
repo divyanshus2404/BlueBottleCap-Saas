@@ -15,7 +15,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   const reduceMotion = useReducedMotion();
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    <AnimatePresence mode="wait">
       <motion.div
         key={pathname}
         variants={reduceMotion ? { hidden: {}, enter: {}, exit: {} } : variants}
