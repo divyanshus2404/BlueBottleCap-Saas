@@ -25,6 +25,7 @@ export function useFirebaseJEE() {
     async function loadInitialData() {
       try {
         setLoading(true);
+        if (!db) throw new Error("Database not initialized");
         // Load mock tests
         const mockSnapshot = await getDocs(collection(db, "jee_mock_tests"));
         const fetchedMockTests: RepeatedTest[] = mockSnapshot.docs.map(doc => ({
@@ -68,6 +69,7 @@ export function useFirebaseJEE() {
 
   const loadChapterQuestions = async (subjectId: string, chapterId: string): Promise<JEEQuestion[]> => {
     try {
+      if (!db) throw new Error("Database not initialized");
       const qSnapshot = await getDocs(collection(db, `jee_subjects/${subjectId}/chapters/${chapterId}/questions`));
       return qSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as JEEQuestion[];
     } catch (err) {

@@ -31,33 +31,18 @@ interface AuthError {
  * as the middleware — real security is Firestore Rules).
  */
 export async function requireAuth(req: Request): Promise<AuthResult | AuthError> {
-  // 1. Try Authorization header (Bearer <idToken>) for strongest verification
+  // 1. Get token from Authorization header or fallback to __session cookie
+  let token = '';
   const authHeader = req.headers.get('authorization');
   if (authHeader?.startsWith('Bearer ')) {
-    const idToken = authHeader.slice(7);
-    const admin = getAdmin();
-    if (admin) {
-      try {
-        const decoded = await admin.auth.verifyIdToken(idToken);
-        return { userId: decoded.uid, error: null };
-      } catch {
-        return {
-          userId: null,
-          error: NextResponse.json(
-            { error: 'Invalid or expired session. Please sign in again.' },
-            { status: 401 }
-          ),
-        };
-      }
-    }
+    token = authHeader.slice(7);
+  } else {
+    const cookieHeader = req.headers.get('cookie') ?? '';
+    const sessionMatch = cookieHeader.match(/__session=([^;]+)/);
+    token = sessionMatch?.[1] || '';
   }
 
-  // 2. Fall back to __session cookie (same as middleware)
-  const cookieHeader = req.headers.get('cookie') ?? '';
-  const sessionMatch = cookieHeader.match(/__session=([^;]+)/);
-  const userId = sessionMatch?.[1];
-
-  if (!userId) {
+  if (!token) {
     return {
       userId: null,
       error: NextResponse.json(
@@ -67,5 +52,48 @@ export async function requireAuth(req: Request): Promise<AuthResult | AuthError>
     };
   }
 
-  return { userId, error: null };
+  // 2. Cryptographically verify the token if Admin SDK is configured
+  const admin = getAdmin();
+  if (admin) {
+    try {
+      const decoded = await admin.auth.verifyIdToken(token);
+      return { userId: decoded.uid, error: null };
+    } catch {
+      return {
+        userId: null,
+        error: NextResponse.json(
+          { error: 'Session expired or invalid. Please sign in again or refresh the page.' },
+          { status: 401 }
+        ),
+      };
+    }
+  }
+
+  // 3. Fallback for local dev without Admin SDK: Soft decode the JWT payload
+  try {
+    const base64Url = token.split('.')[1];
+    if (!base64Url) throw new Error('Invalid JWT');
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    const decoded = JSON.parse(jsonPayload);
+    const uid = decoded.uid || decoded.user_id;
+    if (uid) {
+      return { userId: uid, error: null };
+    }
+  } catch {
+    // fall through
+  }
+
+  return {
+    userId: null,
+    error: NextResponse.json(
+      { error: 'Invalid session format.' },
+      { status: 401 }
+    ),
+  };
 }

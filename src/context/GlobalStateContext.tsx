@@ -159,7 +159,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   ]);
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser || !db) return;
 
     setDashboardLoading(true);
     const userDocRef = doc(db, "users", currentUser.uid);
@@ -288,7 +288,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
       if (typeof window !== "undefined") {
         localStorage.setItem("bluebottlecap_streak_days", String(nextStreak));
       }
-      if (currentUser) {
+      if (currentUser && db) {
         const userDocRef = doc(db, "users", currentUser.uid);
         updateDoc(userDocRef, {
           streak: nextStreak,
@@ -327,7 +327,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
       }
 
       // Firestore is the single source of truth — no localStorage write
-      if (currentUser) {
+      if (currentUser && db) {
         const userDocRef = doc(db, "users", currentUser.uid);
         updateDoc(userDocRef, { dailyActivity: updated }).catch((err) => console.error(err));
       }
@@ -337,7 +337,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
 
     setUserStats((prev) => {
       const nextStats = { ...prev, hoursSaved: parseFloat((prev.hoursSaved + (actionType === "query" ? 0.2 : 0.1)).toFixed(1)) };
-      if (currentUser) {
+      if (currentUser && db) {
         const userDocRef = doc(db, "users", currentUser.uid);
         updateDoc(userDocRef, { hoursSaved: nextStats.hoursSaved }).catch(err => console.error(err));
       }
@@ -349,7 +349,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     logStudyActivity();
     setTodayReviewsCount((prev) => {
       const nextCount = prev + 1;
-      if (currentUser) {
+      if (currentUser && db) {
         const userDocRef = doc(db, "users", currentUser.uid);
         updateDoc(userDocRef, { todayReviewsCount: nextCount }).catch((err) => console.error(err));
       }
@@ -366,7 +366,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
       logStudyActivity();
       const nextCount = toolCreditsLeft - 1;
       setToolCreditsLeft(nextCount);
-      if (currentUser) {
+      if (currentUser && db) {
         const userDocRef = doc(db, "users", currentUser.uid);
         updateDoc(userDocRef, { toolCreditsLeft: nextCount }).catch(err => console.error(err));
       }
@@ -377,7 +377,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
 
   const handleUpdateFlashcard = async (id: string, updates: Partial<Flashcard>) => {
     setFlashcards(prev => prev.map(fc => fc.id === id ? { ...fc, ...updates } : fc));
-    if (currentUser) {
+    if (currentUser && db) {
       try {
         const docRef = doc(db, "users", currentUser.uid, "flashcards", id);
         await updateDoc(docRef, updates);
@@ -391,7 +391,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     recordActivity("card");
     showToast("🧠 Flashcard saved to your study bank!", "success");
 
-    if (currentUser) {
+    if (currentUser && db) {
       try {
         const fcCollectionRef = collection(db, "users", currentUser.uid, "flashcards");
         const docRef = await addDoc(fcCollectionRef, {
@@ -423,7 +423,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
       const newCreditsLeft = userStats.creditsLeft - 1;
       setUserStats((prev) => ({ ...prev, creditsLeft: newCreditsLeft }));
       recordActivity("query");
-      if (currentUser) {
+      if (currentUser && db) {
         const userDocRef = doc(db, "users", currentUser.uid);
         updateDoc(userDocRef, { creditsLeft: newCreditsLeft, creditsRemaining: newCreditsLeft }).catch((err) => console.error(err));
       }
@@ -446,7 +446,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     setUserStats((prev) => ({ ...prev, activePlan: plan, creditsLeft: newCredits }));
     // usageStats auto-computes from userStats — no separate setUsageStats call needed
 
-    if (currentUser) {
+    if (currentUser && db) {
       try {
         const userDocRef = doc(db, "users", currentUser.uid);
         await updateDoc(userDocRef, {
@@ -467,7 +467,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
       const currentPurchased = prev.purchasedTests || [];
       if (currentPurchased.includes(testId)) return prev;
       const next = [...currentPurchased, testId];
-      if (currentUser) {
+      if (currentUser && db) {
         const userDocRef = doc(db, "users", currentUser.uid);
         updateDoc(userDocRef, { purchasedTests: next, updatedAt: new Date().toISOString() }).catch(err => console.error(err));
       }
@@ -479,7 +479,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     setReferralCount(n);
     // Persist the freshest number to Firestore so other surfaces (future
     // emails, admin dashboard) can read a stable count without re-querying.
-    if (currentUser) {
+    if (currentUser && db) {
       const userDocRef = doc(db, "users", currentUser.uid);
       updateDoc(userDocRef, { referralCount: n }).catch(err => console.error(err));
     }
@@ -503,7 +503,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     }
     showToast(`+${bonus} AI queries added — thanks for the referrals.`, "success");
 
-    if (currentUser) {
+    if (currentUser && db) {
       const userDocRef = doc(db, "users", currentUser.uid);
       try {
         await updateDoc(userDocRef, {
@@ -528,7 +528,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("bluebottlecap_last_logged_date", today);
       if (opts?.free) localStorage.setItem("bluebottlecap_free_streak_save_month", month);
     }
-    if (currentUser) {
+    if (currentUser && db) {
       const userDocRef = doc(db, "users", currentUser.uid);
       try {
         await updateDoc(userDocRef, {
@@ -546,7 +546,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
 
   const handleUnlockStudyMaterial = () => {
     setUserStats(prev => ({ ...prev, studyMaterialUnlocked: true }));
-    if (currentUser) {
+    if (currentUser && db) {
       const userDocRef = doc(db, "users", currentUser.uid);
       updateDoc(userDocRef, { studyMaterialUnlocked: true, updatedAt: new Date().toISOString() }).catch(err => console.error(err));
     }

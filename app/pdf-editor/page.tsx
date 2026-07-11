@@ -35,7 +35,7 @@ export default function PdfCopilotPage() {
       if (prev.includes(paperId)) return prev;
       const next = [...prev, paperId];
       localStorage.setItem("bluebottlecap_opened_papers", JSON.stringify(next));
-      if (currentUser) {
+      if (currentUser && db) {
         const userDocRef = doc(db, "users", currentUser.uid);
         updateDoc(userDocRef, { openedPapers: next }).catch(err => console.error(err));
       }

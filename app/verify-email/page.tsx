@@ -29,8 +29,9 @@ export default function VerifyEmailPage() {
       try {
         await currentUser.reload();
         if (currentUser.emailVerified) {
-          // Update the session cookie so middleware sees verified status
-          document.cookie = `__email_verified=true; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
+          // Force refresh the token to update the email_verified claim in the JWT.
+          // This triggers onIdTokenChanged, which updates the __session cookie.
+          await currentUser.getIdToken(true);
           router.replace("/dashboard");
         }
       } catch {
@@ -60,7 +61,7 @@ export default function VerifyEmailPage() {
     try {
       await currentUser?.reload();
       if (currentUser?.emailVerified) {
-        document.cookie = `__email_verified=true; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
+        await currentUser.getIdToken(true);
         router.replace("/dashboard");
       } else {
         setError("Email not verified yet. Please check your inbox and click the link.");
