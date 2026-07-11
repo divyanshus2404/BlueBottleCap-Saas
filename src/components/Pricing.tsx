@@ -110,10 +110,14 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
     trackEvent("checkout_opened", { product });
 
     try {
+      // Send productId + userId so the server can write both into the order
+      // notes. The verify endpoint reads from notes as the ONLY source of
+      // truth — if we don't send the uid here, the payment succeeds but no
+      // Pro entitlement gets written to Firestore.
       const resp = await fetch("/api/razorpay/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ product }),
+        body: JSON.stringify({ productId: product, userId: auth?.currentUser?.uid }),
       });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "Failed to create order");

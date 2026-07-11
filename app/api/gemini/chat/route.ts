@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 import { aiRateLimiter, getClientIp } from '@/src/lib/rateLimit';
 import { requireAuth } from '@/src/lib/authGuard';
+import { enforceUserQuota } from '@/src/lib/userQuota';
 
 function getAIClient() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -24,6 +25,11 @@ export async function POST(req: Request) {
   // Require authentication — protects Gemini API quota from anonymous abuse
   const auth = await requireAuth(req);
   if (auth.error) return auth.error;
+
+  // Per-user daily cap (Pro gets a much higher cap). Prevents a single logged-in
+  // user from draining the Gemini budget even if they stay under the IP rate limit.
+  const quota = await enforceUserQuota(auth.userId, "chat");
+  if (!quota.ok) return quota.error!;
 
   try {
     const { messages, paperContext, highlightedText } = await req.json();

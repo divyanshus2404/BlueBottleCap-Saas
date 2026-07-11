@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 import { enforceRateLimit } from "@/src/lib/rateLimit";
 import { requireAuth } from "@/src/lib/authGuard";
+import { enforceUserQuota } from "@/src/lib/userQuota";
 
 export const runtime = "nodejs";
 // Notes can be image-heavy and Gemini Vision needs a moment.
@@ -53,6 +54,9 @@ export async function POST(req: Request) {
   // Require authentication — protects Gemini API quota from anonymous abuse
   const auth = await requireAuth(req);
   if (auth.error) return auth.error;
+
+  const quota = await enforceUserQuota(auth.userId, "scan_notes");
+  if (!quota.ok) return quota.error!;
 
   let form: FormData;
   try {

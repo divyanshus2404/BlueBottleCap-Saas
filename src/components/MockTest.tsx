@@ -106,6 +106,15 @@ export function MockTest() {
     return () => clearInterval(timerRef.current);
   }, [phase]);
 
+  // Result-screen count-up animations. These MUST be declared before any
+  // conditional early return — React tracks hooks by call order, so gating
+  // them behind `if (phase === "result")` violates the Rules of Hooks and
+  // crashes the whole route when the result screen renders.
+  const animatedScore = useCountUp(result?.score ?? 0, 1500, phase === "result");
+  const animatedCorrect = useCountUp(result?.correct ?? 0, 1200, phase === "result");
+  const animatedIncorrect = useCountUp(result?.incorrect ?? 0, 1200, phase === "result");
+  const animatedUnanswered = useCountUp(result?.unanswered ?? 0, 1200, phase === "result");
+
   const formatTime = (s: number) => {
     const m = Math.floor(s / 60);
     const sec = s % 60;
@@ -346,11 +355,6 @@ export function MockTest() {
       </div>
     );
   }
-
-  const animatedScore = useCountUp(result?.score ?? 0, 1500, phase === "result");
-  const animatedCorrect = useCountUp(result?.correct ?? 0, 1200, phase === "result");
-  const animatedIncorrect = useCountUp(result?.incorrect ?? 0, 1200, phase === "result");
-  const animatedUnanswered = useCountUp(result?.unanswered ?? 0, 1200, phase === "result");
 
   if (phase === "result" && result && test) {
     const pct = Math.round((result.score / result.maxScore) * 100);
