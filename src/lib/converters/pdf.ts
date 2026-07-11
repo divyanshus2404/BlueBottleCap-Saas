@@ -13,7 +13,7 @@ export async function mergePdfs(files: File[]): Promise<Blob> {
     pages.forEach((p) => out.addPage(p));
   }
   const merged = await out.save();
-  return new Blob([merged], { type: "application/pdf" });
+  return new Blob([merged as BlobPart], { type: "application/pdf" });
 }
 
 /**
@@ -52,7 +52,7 @@ export async function splitPdf(file: File, pageSpec: string): Promise<Blob> {
   const copied = await out.copyPages(src, indices);
   copied.forEach((p) => out.addPage(p));
   const split = await out.save();
-  return new Blob([split], { type: "application/pdf" });
+  return new Blob([split as BlobPart], { type: "application/pdf" });
 }
 
 export async function getPdfPageCount(file: File): Promise<number> {

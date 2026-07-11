@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
-@custom-variant dark (&:is(.dark *));
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -70,11 +69,6 @@ input, textarea, [contenteditable="true"] {
   border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
-.dark-glass-panel {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
 
 @keyframes confettiFall {
   0% { transform: translateY(0) rotate(0deg); opacity: 1; }
@@ -267,31 +261,3 @@ input, textarea, [contenteditable="true"] {
   50%      { transform: scale(1.14); opacity: .13; }
 }
 
-/* ============================================================
-   Dark mode — override CSS custom properties on .dark
-   ============================================================ */
-.dark {
-  --color-paper: #0F1117;
-  --color-paper-card: #1A1D27;
-  --color-ink: #E8E9EC;
-  --color-ink-soft: #9CA0AB;
-  --color-ink-faint: #6B6F7A;
-  --color-line: #2A2D38;
-  --color-line-strong: #3A3E4A;
-  --color-blue-ink: #4B6FF7;
-  --color-blue-deep: #6B8AFF;
-  --color-blue-wash: rgba(75,111,247,.12);
-  --color-brand-navy: #E8E9EC;
-  --color-brand-sky: #4B6FF7;
-  --color-brand-cobalt: #4B6FF7;
-}
-.dark body,
-.dark .bbc { background: var(--color-paper); color: var(--color-ink); }
-.dark .glass-panel { background: rgba(15,17,23,.75); border-color: rgba(255,255,255,.06); }
-.dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); }
-.dark ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.3); }
-.dark .bbc-grid {
-  background-image:
-    linear-gradient(to right, rgba(255,255,255,.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,.03) 1px, transparent 1px);
-}

@@ -2,13 +2,21 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { MOCK_TESTS, scoreMockTest, saveMockResult, type MockTestConfig, type MockTestResult } from "@/src/lib/mockTest";
-import { Clock, ChevronLeft, ChevronRight, Flag, CheckCircle, XCircle, Minus, BarChart3 } from "lucide-react";
+import { Clock, ChevronLeft, ChevronRight, Flag, CheckCircle, XCircle, Minus, BarChart3, Share2, Lock, Sparkles } from "lucide-react";
 import { Confetti } from "./Confetti";
+import { WhatsAppShare } from "./WhatsAppShare";
 import { useCountUp } from "@/src/hooks/useCountUp";
+import { useAuth } from "@/src/context/AuthContext";
+import { AuthModal } from "./AuthModal";
+import { trackEvent } from "@/src/lib/analytics";
+
+const FREE_TEST_LIMIT = 3;
+const FREE_TESTS_KEY = "bluebottlecap_free_tests_taken";
 
 type Phase = "select" | "test" | "result";
 
 export function MockTest() {
+  const { currentUser } = useAuth();
   const [phase, setPhase] = useState<Phase>("select");
   const [test, setTest] = useState<MockTestConfig | null>(null);
   const [idx, setIdx] = useState(0);
@@ -18,8 +26,27 @@ export function MockTest() {
   const [startTime, setStartTime] = useState(0);
   const [result, setResult] = useState<MockTestResult | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval>>(undefined);
+  const [showAuthGate, setShowAuthGate] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [freeTestsUsed, setFreeTestsUsed] = useState(0);
+
+  useEffect(() => {
+    setFreeTestsUsed(JSON.parse(localStorage.getItem(FREE_TESTS_KEY) || "0"));
+  }, []);
+
+  const recordFreeTest = () => {
+    const next = freeTestsUsed + 1;
+    setFreeTestsUsed(next);
+    localStorage.setItem(FREE_TESTS_KEY, JSON.stringify(next));
+  };
 
   const startTest = (t: MockTestConfig) => {
+    if (!currentUser && freeTestsUsed >= FREE_TEST_LIMIT) {
+      setShowAuthGate(true);
+      trackEvent("auth_gate_shown", { trigger: "mock_test_limit", testsUsed: freeTestsUsed });
+      return;
+    }
+    if (!currentUser) recordFreeTest();
     setTest(t);
     setIdx(0);
     setAnswers({});
@@ -27,6 +54,7 @@ export function MockTest() {
     setTimeLeft(t.duration * 60);
     setStartTime(Date.now());
     setPhase("test");
+    trackEvent("test_started", { testId: t.id, questionCount: t.questions.length });
   };
 
   const submitRef = useRef(() => {});
@@ -35,9 +63,10 @@ export function MockTest() {
     clearInterval(timerRef.current);
     const timeTaken = Math.round((Date.now() - startTime) / 1000);
     const r = scoreMockTest(test, answers, timeTaken);
-    saveMockResult(r);
+    saveMockResult(r, currentUser?.uid);
     setResult(r);
     setPhase("result");
+    trackEvent("test_completed", { testId: test.id, score: r.score, maxScore: r.maxScore, pct: Math.round((r.score / r.maxScore) * 100) });
   };
   const submitTest = useCallback(() => submitRef.current(), []);
 
@@ -94,38 +123,106 @@ export function MockTest() {
           Timed tests with JEE marking scheme (+4, -1). Pick a set and start — no pausing allowed.
         </p>
 
+        {/* Free test usage indicator */}
+        {!currentUser && (
+          <div className="mt-6 flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+            <Sparkles className="h-5 w-5 shrink-0 text-amber-500" />
+            <div className="flex-1">
+              <p className="text-[13px] font-semibold text-amber-800">
+                {freeTestsUsed >= FREE_TEST_LIMIT
+                  ? "You've used all 3 free tests"
+                  : `${FREE_TEST_LIMIT - freeTestsUsed} free test${FREE_TEST_LIMIT - freeTestsUsed === 1 ? "" : "s"} remaining`}
+              </p>
+              <p className="text-[11px] text-amber-600">
+                {freeTestsUsed >= FREE_TEST_LIMIT
+                  ? "Sign up to continue — it's free!"
+                  : "Sign up for unlimited access to all mock tests."}
+              </p>
+            </div>
+            {freeTestsUsed >= FREE_TEST_LIMIT && (
+              <button
+                onClick={() => setShowAuthGate(true)}
+                className="shrink-0 rounded-lg bg-amber-500 px-3 py-1.5 text-[12px] font-bold text-white transition hover:bg-amber-600"
+              >
+                Sign Up Free
+              </button>
+            )}
+          </div>
+        )}
+
         <div className="mt-8 space-y-4">
-          {MOCK_TESTS.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => startTest(t)}
-              className="group w-full rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-5 text-left transition hover:border-[var(--color-blue-ink)] hover:shadow-lg"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-[17px] font-bold text-[var(--color-ink)]">{t.name}</h3>
-                  <p className="mt-1 text-[13px] text-[var(--color-ink-soft)]">
-                    {t.questions.length} questions · {t.duration} min · +{t.marking.correct}/{t.marking.incorrect} marking
-                  </p>
+          {MOCK_TESTS.map((t) => {
+            const isLocked = !currentUser && freeTestsUsed >= FREE_TEST_LIMIT;
+            return (
+              <button
+                key={t.id}
+                onClick={() => startTest(t)}
+                className={`group w-full rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-5 text-left transition ${isLocked ? "opacity-60" : "hover:border-[var(--color-blue-ink)] hover:shadow-lg"}`}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-[17px] font-bold text-[var(--color-ink)]">{t.name}</h3>
+                    <p className="mt-1 text-[13px] text-[var(--color-ink-soft)]">
+                      {t.questions.length} questions · {t.duration} min · +{t.marking.correct}/{t.marking.incorrect} marking
+                    </p>
+                  </div>
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl transition ${isLocked ? "bg-gray-100 text-gray-400" : "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)] group-hover:bg-[var(--color-blue-ink)] group-hover:text-white"}`}>
+                    {isLocked ? <Lock className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+                  </div>
                 </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)] transition group-hover:bg-[var(--color-blue-ink)] group-hover:text-white">
-                  <ChevronRight className="h-5 w-5" />
+                <div className="mt-3 flex gap-2">
+                  {["Physics", "Chemistry", "Maths", "Biology"].map((s) => {
+                    const count = t.questions.filter((q) => q.subject === s).length;
+                    if (!count) return null;
+                    return (
+                      <span key={s} className="rounded-full bg-[var(--color-blue-wash)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--color-blue-ink)]">
+                        {s}: {count}
+                      </span>
+                    );
+                  })}
                 </div>
-              </div>
-              <div className="mt-3 flex gap-2">
-                {["Physics", "Chemistry", "Maths"].map((s) => {
-                  const count = t.questions.filter((q) => q.subject === s).length;
-                  if (!count) return null;
-                  return (
-                    <span key={s} className="rounded-full bg-[var(--color-blue-wash)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--color-blue-ink)]">
-                      {s}: {count}
-                    </span>
-                  );
-                })}
-              </div>
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
+
+        {/* Auth gate modal */}
+        {showAuthGate && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+            <div className="w-full max-w-[420px] rounded-2xl bg-[var(--color-paper)] p-8 shadow-2xl">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-blue-wash)]">
+                <Lock className="h-7 w-7 text-[var(--color-blue-ink)]" />
+              </div>
+              <h2 className="bbc-serif text-center text-[22px] leading-tight text-[var(--color-ink)]">
+                You've used your 3 free tests
+              </h2>
+              <p className="mt-2 text-center text-[14px] text-[var(--color-ink-soft)]">
+                Create a free account to unlock unlimited mock tests, progress tracking, and AI-powered study tools.
+              </p>
+              <ul className="mt-5 space-y-2">
+                {["Unlimited mock tests (JEE + NEET)", "Track your progress across tests", "25 free AI tool credits", "Detailed performance analytics"].map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-[13px] text-[var(--color-ink-soft)]">
+                    <CheckCircle className="h-4 w-4 shrink-0 text-emerald-500" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => { setShowAuthGate(false); setShowAuthModal(true); }}
+                className="bbc-btn bbc-btn-primary mt-6 w-full justify-center py-3 text-[14px]"
+              >
+                Sign Up Free
+              </button>
+              <button
+                onClick={() => setShowAuthGate(false)}
+                className="mt-2 w-full py-2 text-center text-[12px] text-[var(--color-ink-faint)] hover:text-[var(--color-ink-soft)]"
+              >
+                Maybe later
+              </button>
+            </div>
+          </div>
+        )}
+        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
       </div>
     );
   }
@@ -335,10 +432,31 @@ export function MockTest() {
           </div>
         </div>
 
-        <div className="mt-10 flex gap-3">
-          <button onClick={() => setPhase("select")} className="bbc-btn bbc-btn-primary flex-1 justify-center py-3 text-[14px]">
-            Take Another Test
-          </button>
+        <div className="mt-10 flex flex-col gap-3">
+          <div className="flex gap-3">
+            <button onClick={() => setPhase("select")} className="bbc-btn bbc-btn-primary flex-1 justify-center py-3 text-[14px]">
+              Take Another Test
+            </button>
+            <button
+              onClick={() => {
+                const text = `I scored ${result.score}/${result.maxScore} (${pct}%) on ${result.testName} at BlueBottleCap! 🎯\n\nSubject breakdown:\n${result.subjectBreakdown.map(s => `${s.subject}: ${s.correct}/${s.total}`).join("\n")}\n\nTry it yourself 👉 https://bluebottlecap.com/mock-test`;
+                trackEvent("share_clicked", { method: "native", testId: result.testId });
+                if (navigator.share) {
+                  navigator.share({ title: "My Mock Test Score", text }).catch(() => {});
+                } else {
+                  navigator.clipboard.writeText(text).then(() => {});
+                }
+              }}
+              className="flex items-center justify-center gap-2 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper-card)] px-4 py-3 text-[13px] font-bold text-[var(--color-ink-soft)] transition hover:border-[var(--color-blue-ink)] hover:text-[var(--color-blue-ink)]"
+            >
+              <Share2 className="h-4 w-4" /> Share
+            </button>
+          </div>
+          <WhatsAppShare
+            text={`🎯 I scored ${result.score}/${result.maxScore} (${pct}%) on ${result.testName} at BlueBottleCap!\n\n📊 Subject breakdown:\n${result.subjectBreakdown.map(s => `• ${s.subject}: ${s.correct}/${s.total}`).join("\n")}\n\nPrepare for JEE/NEET free 👉 https://bluebottlecap.com/mock-test`}
+            label="Share on WhatsApp"
+            className="flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-[14px] font-bold text-white transition hover:brightness-105"
+          />
         </div>
       </div>
     );

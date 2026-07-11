@@ -8,7 +8,7 @@ import { ToastContainer } from "@/src/components/ToastContainer";
 import { ErrorBoundary } from "@/src/components/ErrorBoundary";
 import { SmoothScroll } from "@/src/components/SmoothScroll";
 import { Footer } from "@/src/components/Footer";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
 import { WhatsAppButton } from "@/src/components/WhatsAppButton";
 import { OnboardingTutorial } from "@/src/components/OnboardingTutorial";
@@ -16,34 +16,23 @@ import { NotificationPrompt } from "@/src/components/NotificationPrompt";
 import { ContentProtection } from "@/src/components/ContentProtection";
 import { PageTransition } from "@/src/components/PageTransition";
 import { ScrollToTop } from "@/src/components/ScrollToTop";
-
-/** Routes that should trigger the onboarding gate */
-const ONBOARDING_GATED_PATHS = ["/dashboard", "/tools", "/pdf-editor", "/flashcards"];
+import { PWAInstallPrompt } from "@/src/components/PWAInstallPrompt";
+import { useFaviconBadge } from "@/src/hooks/useFaviconBadge";
+import { useGlobalState } from "@/src/context/GlobalStateContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
-  const { currentUser, userProfile, initialised } = useAuth();
+  const searchParams = useSearchParams();
+  const { currentUser } = useAuth();
 
-  // Onboarding gate: redirect new users to /onboarding if they haven't completed it
   useEffect(() => {
-    if (!initialised) return;
-    if (!currentUser) return;
-    if (pathname === "/onboarding") return;
-
-    const isGated = ONBOARDING_GATED_PATHS.some(
-      (p) => pathname === p || pathname.startsWith(p + "/")
-    );
-    if (!isGated) return;
-
-    // userProfile may be null briefly while Firestore loads; wait until it's set
-    if (userProfile === null) return;
-
-    if (!userProfile.onboardingComplete) {
-      router.replace("/onboarding");
+    if (searchParams.get("auth") === "required" && !currentUser) {
+      setIsAuthModalOpen(true);
     }
-  }, [initialised, currentUser, userProfile, pathname, router]);
+  }, [searchParams, currentUser]);
+  const { userStats } = useGlobalState();
+  useFaviconBadge(userStats.streakDays);
 
   return (
     <SmoothScroll>
@@ -71,6 +60,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {currentUser && <NotificationPrompt />}
           <ContentProtection />
           <ScrollToTop />
+          <PWAInstallPrompt />
         </div>
       </ErrorBoundary>
     </SmoothScroll>

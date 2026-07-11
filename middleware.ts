@@ -47,8 +47,6 @@ function decodeJwtPayload(token: string) {
 const PROTECTED_PATHS = [
   '/dashboard',
   '/pdf-editor',
-  '/tools',
-  '/flashcards',
   '/virtual-test',
   '/create-profile',
   '/onboarding',
@@ -61,8 +59,6 @@ const PROTECTED_PATHS = [
 const VERIFIED_ONLY_PATHS = [
   '/dashboard',
   '/pdf-editor',
-  '/tools',
-  '/flashcards',
   '/virtual-test',
 ];
 
