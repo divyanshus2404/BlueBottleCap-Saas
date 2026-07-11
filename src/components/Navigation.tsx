@@ -69,7 +69,7 @@ const NavLink = ({ href, label, icon, pathname, onClick }: { href: string; label
     <Link
       href={href}
       onClick={onClick}
-      className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-200 ${
+      className={`bbc-underline-fx flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-200 ${
         isActive
           ? "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]"
           : "text-[var(--color-ink-soft)] hover:bg-[var(--color-paper-card)] hover:text-[var(--color-ink)]"
@@ -124,7 +124,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
               className="flex cursor-pointer items-center gap-[11px] transition-opacity hover:opacity-90"
               aria-label="BlueBottleCap home"
             >
-              <Seal size={28} />
+              <span className="bbc-breathe inline-flex"><Seal size={28} /></span>
               <span className="text-[17px] font-semibold tracking-[-.01em] text-[var(--color-ink)]">
                 BlueBottleCap
               </span>

@@ -219,6 +219,43 @@ input, textarea, [contenteditable="true"] {
 @media (prefers-reduced-motion: no-preference) {
   .bbc-lift { transition: transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease, border-color .25s ease; }
   .bbc-lift:hover { transform: translateY(-3px); box-shadow: 0 22px 44px -24px rgba(20,30,55,.28); }
+
+  /* Subtle sitewide polish — three barely-there micro-interactions.
+     Kept intentionally small so the editorial feel isn't broken. */
+
+  /* Nav / text link: a 1px underline draws in from the left on hover. */
+  .bbc-underline-fx { position: relative; }
+  .bbc-underline-fx::after {
+    content: "";
+    position: absolute;
+    left: 12px;   /* aligns with the inner padding on NavLink */
+    right: 12px;
+    bottom: 6px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform .28s cubic-bezier(.2,.7,.2,1);
+    opacity: .55;
+  }
+  .bbc-underline-fx:hover::after { transform: scaleX(1); }
+
+  /* Brand seal in the header: a very slow, near-invisible breath.
+     Amplitude is 1.5% — enough to feel alive, not enough to notice. */
+  .bbc-breathe { animation: bbc-breathe 7s ease-in-out infinite; transform-origin: center; }
+
+  /* Primary CTA: a slow ambient glow that rides on the existing hover
+     shadow. Off by default; only shows on the class'd variant. */
+  .bbc-glow { animation: bbc-glow 4.5s ease-in-out infinite; }
+}
+
+@keyframes bbc-breathe {
+  0%, 100% { transform: scale(1);     opacity: 1; }
+  50%      { transform: scale(1.015); opacity: .96; }
+}
+@keyframes bbc-glow {
+  0%, 100% { box-shadow: 0 6px 18px -12px rgba(27,63,203,.35); }
+  50%      { box-shadow: 0 10px 26px -12px rgba(27,63,203,.55); }
 }
 
 @keyframes bbc-caret-blink {
