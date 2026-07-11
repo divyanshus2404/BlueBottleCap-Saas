@@ -105,7 +105,7 @@ export const createZip = (files: ZipFileEntry[]): Blob => {
   eocdView.setUint32(16, currentOffset, true); // start of central directory offset
   eocdView.setUint16(20, 0, true);          // comment length
   
-  const blobParts: (Uint8Array | Blob)[] = [...parts, ...cdfhs, eocd];
+  const blobParts: BlobPart[] = [...parts, ...cdfhs, eocd] as BlobPart[];
   return new Blob(blobParts, { type: "application/zip" });
 };
 
