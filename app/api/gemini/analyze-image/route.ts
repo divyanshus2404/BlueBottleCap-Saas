@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 import { aiRateLimiter, getClientIp } from '@/src/lib/rateLimit';
 import { requireAuth } from '@/src/lib/authGuard';
+import { enforceUserQuota } from '@/src/lib/userQuota';
 
 function getAIClient() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -17,6 +18,9 @@ export async function POST(req: Request) {
 
   const auth = await requireAuth(req);
   if (auth.error) return auth.error;
+
+  const quota = await enforceUserQuota(auth.userId, "analyze_image");
+  if (!quota.ok) return quota.error!;
 
   try {
     const { image, prompt } = await req.json();
