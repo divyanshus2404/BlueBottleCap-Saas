@@ -533,7 +533,7 @@ export function getPostBySlug(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find((p) => p.slug === slug);
 }
 
-export function getPostsByCategory(category: string): BlogPost[] {
+export function getPostsByCategory(category: BlogPost["category"] | "all"): BlogPost[] {
   if (category === "all") return BLOG_POSTS;
   return BLOG_POSTS.filter((p) => p.category === category);
 }

@@ -67,7 +67,7 @@ function renderMarkdown(content: string): React.ReactNode[] {
       flushTable();
     }
 
-    if (line.startsWith("- **") || line.startsWith("- ")) {
+    if (line.startsWith("- ")) {
       flushTable();
       if (!inList) inList = true;
       const text = line.replace(/^- /, "");
@@ -84,7 +84,15 @@ function renderMarkdown(content: string): React.ReactNode[] {
       if (gif) {
         elements.push(
           <div key={`gif-${i}`} className="my-6 overflow-hidden rounded-2xl border border-[var(--color-line)]">
-            <img src={gif.url} alt={gif.alt} className="w-full max-h-[300px] object-cover" loading="lazy" />
+            {/* Hide the container if the external Giphy URL 404s so a broken
+                image icon doesn't sit inside the post. */}
+            <img
+              src={gif.url}
+              alt={gif.alt}
+              className="w-full max-h-[300px] object-cover"
+              loading="lazy"
+              onError={(e) => { (e.currentTarget.parentElement as HTMLElement).style.display = "none"; }}
+            />
           </div>
         );
       }
@@ -161,10 +169,11 @@ export function BlogPostView({ post }: { post: BlogPost }) {
           <WhatsAppShare text={shareText} label="Share on WhatsApp" />
           <button
             onClick={() => {
+              const url = `https://bluebottlecap.com/blog/${post.slug}`;
               if (navigator.share) {
-                navigator.share({ title: post.title, text: post.description, url: `/blog/${post.slug}` }).catch(() => {});
+                navigator.share({ title: post.title, text: post.description, url }).catch(() => {});
               } else {
-                navigator.clipboard.writeText(`https://bluebottlecap.com/blog/${post.slug}`);
+                navigator.clipboard?.writeText(url).catch(() => {});
               }
             }}
             className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-line)] px-4 py-2.5 text-[13.5px] font-bold text-[var(--color-ink-soft)] transition hover:border-[var(--color-blue-ink)] hover:text-[var(--color-blue-ink)]"

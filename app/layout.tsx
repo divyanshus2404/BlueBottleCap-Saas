@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import React from "react";
+import React, { Suspense } from "react";
 import { Providers } from "./providers";
 import ClientLayout from "./ClientLayout";
 import { Analytics } from "@vercel/analytics/next";
@@ -71,9 +71,14 @@ export default function RootLayout({
           when a tab loaded with dark-mode preference. */}
       <body className="antialiased min-h-screen">
         <Providers>
-          <ClientLayout>
-            {children}
-          </ClientLayout>
+          {/* Suspense boundary is required because ClientLayout calls
+              useSearchParams(); without it the static App Router build
+              would opt every page into client-side rendering. */}
+          <Suspense fallback={null}>
+            <ClientLayout>
+              {children}
+            </ClientLayout>
+          </Suspense>
         </Providers>
         {/* No-ops outside Vercel deployments, so safe in dev. */}
         <Analytics />
