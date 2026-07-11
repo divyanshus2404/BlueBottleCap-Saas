@@ -6,6 +6,7 @@ import { type SRCard, type Grade, initSRCard, reviewCard, getDueCards } from "@/
 import { flashcardsData } from "@/src/data/flashcardsData";
 import { useAuth } from "@/src/context/AuthContext";
 import { trackEvent } from "@/src/lib/analytics";
+import { StreakChip } from "./StreakChip";
 
 const STORAGE_KEY = "bbc_sr_cards";
 
@@ -145,7 +146,10 @@ export function FlashcardDeck() {
 
   return (
     <div className="bbc mx-auto max-w-[720px] px-7 py-12">
-      <p className="bbc-eyebrow">Flashcards</p>
+      <div className="flex items-center justify-between gap-3">
+        <p className="bbc-eyebrow">Flashcards</p>
+        <StreakChip />
+      </div>
       <h1 className="bbc-serif mt-3 text-[clamp(28px,4vw,42px)] leading-[1.08] tracking-[-.02em]">
         Spaced Repetition
       </h1>

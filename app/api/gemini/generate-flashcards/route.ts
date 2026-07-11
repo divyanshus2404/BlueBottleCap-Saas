@@ -89,6 +89,9 @@ Do NOT include numbering in the question text.`;
     if (message.toLowerCase().includes('quota') || message.includes('429')) {
       return NextResponse.json({ error: 'AI service is temporarily busy. Please try again.' }, { status: 429 });
     }
-    return NextResponse.json({ error: 'Failed to generate flashcards.' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Couldn\'t generate flashcards for that topic. Try a more specific chapter name.' },
+      { status: 500 }
+    );
   }
 }
