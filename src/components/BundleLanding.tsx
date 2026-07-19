@@ -155,7 +155,7 @@ export const BundleLanding: React.FC<BundleLandingProps> = ({
           <p className="mx-auto mt-4 max-w-[38em] text-[16px] text-[var(--color-ink-soft)]">
             Your 10 chapter-wise JEE mocks + weak-topic analysis will arrive at
             <span className="mx-1 font-semibold text-[var(--color-ink)]">{purchased.email}</span>
-            within 24 hours. If you don't see it, check your spam folder or WhatsApp us on the number in the receipt email.
+            within 24 hours. If you don't see it, check your spam folder or email support@bluebottlecap.com.
           </p>
           <div className="mt-8 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-6 text-left">
             <p className="bbc-eyebrow text-[10px]">While you wait</p>

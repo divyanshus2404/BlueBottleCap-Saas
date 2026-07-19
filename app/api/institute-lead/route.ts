@@ -143,7 +143,7 @@ export async function POST(req: Request) {
     });
   } catch (err) {
     console.error("[institute-lead] sendMail failed:", err);
-    return NextResponse.json({ error: "Could not send. Please WhatsApp us directly." }, { status: 502 });
+    return NextResponse.json({ error: "Could not send. Please email support@bluebottlecap.com directly." }, { status: 502 });
   }
 
   return NextResponse.json({ ok: true, delivery: "email" });

@@ -10,7 +10,6 @@ import { SmoothScroll } from "@/src/components/SmoothScroll";
 import { Footer } from "@/src/components/Footer";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
-import { WhatsAppButton } from "@/src/components/WhatsAppButton";
 import { OnboardingTutorial } from "@/src/components/OnboardingTutorial";
 import { NotificationPrompt } from "@/src/components/NotificationPrompt";
 import { ContentProtection } from "@/src/components/ContentProtection";
@@ -55,7 +54,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {pathname !== "/" && pathname !== "/for-institutes" && pathname !== "/virtual-test" && pathname !== "/pdf-editor" && (
             <Footer />
           )}
-          <WhatsAppButton />
           {currentUser && <OnboardingTutorial />}
           {currentUser && <NotificationPrompt />}
           <ContentProtection />
