@@ -35,6 +35,12 @@ export function PWAInstallPrompt() {
       return;
     }
 
+    // Layout <head> script stashes the event if it fired before mount.
+    const stashed = (window as any).__bbcInstallPrompt as BeforeInstallPromptEvent | undefined;
+    if (stashed) {
+      setDeferredPrompt(stashed);
+      setTimeout(() => setVisible(true), 3000);
+    }
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
