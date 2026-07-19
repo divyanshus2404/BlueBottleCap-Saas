@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.bluebottlecap.app",
+    "sha256_cert_fingerprints": ["97:A3:86:D0:1E:C4:90:EF:DF:09:6F:A9:CA:D7:8E:85:FA:89:4D:E0:E7:64:CF:28:C6:D2:72:C3:C3:E2:AC:81"]
+  }
+}]
