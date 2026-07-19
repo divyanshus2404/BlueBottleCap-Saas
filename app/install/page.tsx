@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { Download, Monitor, Smartphone, Apple, Chrome, Globe, ArrowLeft, CheckCircle, Share, MoreVertical, Plus, ExternalLink } from "lucide-react";
 import Link from "next/link";
-import { whatsappContactUrl } from "@/src/lib/whatsapp";
 
 type Platform = "iphone" | "android" | "mac" | "windows";
 
@@ -489,18 +488,16 @@ export default function InstallPage() {
           ))}
         </div>
 
-        {/* CTA — only rendered when a real support number is configured */}
-        {whatsappContactUrl() && (
-          <div className="mt-10 text-center">
-            <p className="text-[13px] text-[var(--color-ink-faint)]">
-              Having trouble?{" "}
-              <a href={whatsappContactUrl("Hi! I need help installing BlueBottleCap.") ?? "#"} target="_blank" rel="noopener noreferrer" className="font-semibold text-[var(--color-blue-ink)] hover:underline">
-                WhatsApp us
-              </a>{" "}
-              and we'll walk you through it.
-            </p>
-          </div>
-        )}
+        {/* CTA */}
+        <div className="mt-10 text-center">
+          <p className="text-[13px] text-[var(--color-ink-faint)]">
+            Having trouble?{" "}
+            <a href="mailto:support@bluebottlecap.com" className="font-semibold text-[var(--color-blue-ink)] hover:underline">
+              Email support@bluebottlecap.com
+            </a>{" "}
+            and we'll walk you through it.
+          </p>
+        </div>
       </div>
     </div>
   );
