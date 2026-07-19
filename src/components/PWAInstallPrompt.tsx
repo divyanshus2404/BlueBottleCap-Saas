@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Download, X } from "lucide-react";
+import { Download, X, Share } from "lucide-react";
 import { trackEvent } from "@/src/lib/analytics";
 
 interface BeforeInstallPromptEvent extends Event {
@@ -11,12 +11,29 @@ interface BeforeInstallPromptEvent extends Event {
 
 const DISMISS_KEY = "bbc_pwa_dismissed";
 
+function isIOS() {
+  if (typeof navigator === "undefined") return false;
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+}
+
+function isInStandaloneMode() {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(display-mode: standalone)").matches || (navigator as any).standalone === true;
+}
+
 export function PWAInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [visible, setVisible] = useState(false);
+  const [iosPrompt, setIosPrompt] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem(DISMISS_KEY)) return;
+    if (isInStandaloneMode()) return;
+
+    if (isIOS()) {
+      setTimeout(() => setIosPrompt(true), 5000);
+      return;
+    }
 
     const handler = (e: Event) => {
       e.preventDefault();
@@ -37,13 +54,43 @@ export function PWAInstallPrompt() {
 
   const dismiss = () => {
     setVisible(false);
+    setIosPrompt(false);
     localStorage.setItem(DISMISS_KEY, "1");
   };
+
+  if (iosPrompt) {
+    return (
+      <div className="fixed bottom-20 left-4 right-4 z-[9998] mx-auto max-w-sm md:left-auto md:right-5">
+        <div className="flex items-start gap-3 rounded-2xl border border-[var(--color-line)] bg-white p-4 shadow-xl shadow-slate-200/60">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-blue-wash)]">
+            <Download className="h-5 w-5 text-[var(--color-blue-ink)]" />
+          </div>
+          <div className="flex-1">
+            <p className="text-[14px] font-bold text-[var(--color-ink)]">Install BlueBottleCap</p>
+            <p className="mt-0.5 text-[12px] text-[var(--color-ink-soft)]">
+              Tap <Share className="inline h-3.5 w-3.5 align-text-bottom text-[var(--color-blue-ink)]" /> then <strong>"Add to Home Screen"</strong> to install.
+            </p>
+            <div className="mt-2 flex gap-2">
+              <a href="/install" className="rounded-lg bg-[var(--color-blue-ink)] px-4 py-1.5 text-[12px] font-bold text-white transition hover:brightness-110">
+                See how
+              </a>
+              <button onClick={dismiss} className="rounded-lg px-3 py-1.5 text-[12px] font-semibold text-[var(--color-ink-faint)] transition hover:bg-gray-100">
+                Not now
+              </button>
+            </div>
+          </div>
+          <button onClick={dismiss} className="shrink-0 text-gray-300 hover:text-gray-500 transition">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-20 left-4 right-4 z-[9998] mx-auto max-w-sm animate-in slide-in-from-bottom-4 fade-in duration-300 md:left-auto md:right-5">
+    <div className="fixed bottom-20 left-4 right-4 z-[9998] mx-auto max-w-sm md:left-auto md:right-5">
       <div className="flex items-start gap-3 rounded-2xl border border-[var(--color-line)] bg-white p-4 shadow-xl shadow-slate-200/60">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-blue-wash)]">
           <Download className="h-5 w-5 text-[var(--color-blue-ink)]" />

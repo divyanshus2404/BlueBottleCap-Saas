@@ -243,6 +243,46 @@ export const InstituteLanding: React.FC = () => {
         </div>
       </section>
 
+      {/* PILOT OFFER */}
+      <section className="relative z-[2] border-y border-[var(--color-blue-ink)]/15 bg-gradient-to-b from-[var(--color-blue-wash)] to-[var(--color-paper)]">
+        <div className="mx-auto max-w-[820px] px-7 py-[72px] text-center">
+          <p className="bbc-eyebrow text-[var(--color-blue-ink)]">Zero-risk pilot</p>
+          <h2 className="bbc-serif mt-3 text-[clamp(26px,3.6vw,42px)] tracking-[-.02em]">
+            50 seats free for 30 days.
+          </h2>
+          <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-[var(--color-ink-soft)]">
+            No credit card. No contract. No demo call required. Fill out one form, get your branded workspace in 24 hours, and let your students try it. If it doesn't work — walk away.
+          </p>
+          <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+            <a
+              href="https://forms.gle/YOUR_FORM_ID"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bbc-btn bbc-btn-primary px-8 py-3.5 text-[15px]"
+            >
+              Start my free pilot
+            </a>
+            <button onClick={scrollToDemo} className="bbc-btn bbc-btn-ghost px-6 py-3.5 text-[13px]">
+              I'd rather see a demo first
+            </button>
+          </div>
+          <div className="mx-auto mt-8 grid max-w-md grid-cols-3 gap-4">
+            <div>
+              <p className="bbc-serif text-[28px] tracking-[-.02em] text-[var(--color-ink)]">50</p>
+              <p className="mt-1 text-[11px] font-semibold uppercase tracking-[.12em] text-[var(--color-ink-faint)]">Free seats</p>
+            </div>
+            <div>
+              <p className="bbc-serif text-[28px] tracking-[-.02em] text-[var(--color-ink)]">30</p>
+              <p className="mt-1 text-[11px] font-semibold uppercase tracking-[.12em] text-[var(--color-ink-faint)]">Days to try</p>
+            </div>
+            <div>
+              <p className="bbc-serif text-[28px] tracking-[-.02em] text-[var(--color-ink)]">₹0</p>
+              <p className="mt-1 text-[11px] font-semibold uppercase tracking-[.12em] text-[var(--color-ink-faint)]">Until you decide</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ */}
       <section className="relative z-[2] mx-auto max-w-[1080px] px-7 py-[72px]">
         <div className="mb-10 text-center">
