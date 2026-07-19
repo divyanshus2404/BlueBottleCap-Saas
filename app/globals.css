@@ -223,39 +223,41 @@ input, textarea, [contenteditable="true"] {
   /* Subtle sitewide polish — three barely-there micro-interactions.
      Kept intentionally small so the editorial feel isn't broken. */
 
-  /* Nav / text link: a 1px underline draws in from the left on hover. */
+  /* Nav / text link: a 1.5px underline draws in from the left on hover. */
   .bbc-underline-fx { position: relative; }
   .bbc-underline-fx::after {
     content: "";
     position: absolute;
     left: 12px;   /* aligns with the inner padding on NavLink */
     right: 12px;
-    bottom: 6px;
-    height: 1px;
+    bottom: 5px;
+    height: 1.5px;
     background: currentColor;
     transform: scaleX(0);
     transform-origin: left center;
-    transition: transform .28s cubic-bezier(.2,.7,.2,1);
-    opacity: .55;
+    transition: transform .32s cubic-bezier(.2,.7,.2,1), opacity .32s ease;
+    opacity: .8;
+    border-radius: 1px;
   }
   .bbc-underline-fx:hover::after { transform: scaleX(1); }
 
-  /* Brand seal in the header: a very slow, near-invisible breath.
-     Amplitude is 1.5% — enough to feel alive, not enough to notice. */
-  .bbc-breathe { animation: bbc-breathe 7s ease-in-out infinite; transform-origin: center; }
+  /* Brand seal in the header: a slow, visible-if-you-look breath.
+     Amplitude 3% — perceptible without feeling like a heartbeat. */
+  .bbc-breathe { animation: bbc-breathe 5.5s ease-in-out infinite; transform-origin: center; }
 
-  /* Primary CTA: a slow ambient glow that rides on the existing hover
-     shadow. Off by default; only shows on the class'd variant. */
+  /* Primary CTA: a slow ambient glow so the button has depth. Applied
+     via .bbc-btn-primary automatically — no per-call opt-in needed. */
+  .bbc-btn-primary { animation: bbc-glow 4.5s ease-in-out infinite; }
   .bbc-glow { animation: bbc-glow 4.5s ease-in-out infinite; }
 }
 
 @keyframes bbc-breathe {
-  0%, 100% { transform: scale(1);     opacity: 1; }
-  50%      { transform: scale(1.015); opacity: .96; }
+  0%, 100% { transform: scale(1);    opacity: 1; }
+  50%      { transform: scale(1.03); opacity: .94; }
 }
 @keyframes bbc-glow {
-  0%, 100% { box-shadow: 0 6px 18px -12px rgba(27,63,203,.35); }
-  50%      { box-shadow: 0 10px 26px -12px rgba(27,63,203,.55); }
+  0%, 100% { box-shadow: 0 8px 20px -10px rgba(27,63,203,.35); }
+  50%      { box-shadow: 0 14px 34px -12px rgba(27,63,203,.65); }
 }
 
 @keyframes bbc-caret-blink {
@@ -296,5 +298,134 @@ input, textarea, [contenteditable="true"] {
 @keyframes bbc-corepulse {
   0%, 100% { transform: scale(1);    opacity: .08; }
   50%      { transform: scale(1.14); opacity: .13; }
+}
+
+/* ============================================================
+   3D Depth & Polish — v3 upgrade
+   ============================================================ */
+
+@keyframes bbc-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33%      { transform: translateY(-8px) rotate(1deg); }
+  66%      { transform: translateY(-4px) rotate(-0.5deg); }
+}
+@keyframes bbc-float-slow {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50%      { transform: translateY(-12px) translateX(6px); }
+}
+@keyframes bbc-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.bbc header {
+  background: rgba(245,244,239,.6) !important;
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 4px 24px -8px rgba(20,30,55,.06);
+}
+
+.bbc-hero-bg {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 30%, rgba(27,63,203,.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 70%, rgba(122,90,248,.04) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(27,63,203,.03) 0%, transparent 50%);
+}
+
+.bbc-tilt-card { perspective: 1200px; }
+.bbc-tilt-card > * {
+  transform: rotateY(-2.5deg) rotateX(1.5deg);
+  transform-style: preserve-3d;
+  transition: transform .4s cubic-bezier(.2,.7,.2,1);
+}
+.bbc-tilt-card:hover > * { transform: rotateY(0deg) rotateX(0deg); }
+
+.bbc-card-3d {
+  box-shadow:
+    0 1px 2px rgba(20,30,55,.06),
+    0 4px 8px -2px rgba(20,30,55,.08),
+    0 16px 40px -12px rgba(20,30,55,.14),
+    0 32px 64px -24px rgba(27,63,203,.08);
+  transition: transform .3s cubic-bezier(.2,.7,.2,1), box-shadow .3s ease;
+}
+.bbc-card-3d:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 1px 2px rgba(20,30,55,.04),
+    0 6px 12px -2px rgba(20,30,55,.1),
+    0 24px 52px -16px rgba(20,30,55,.18),
+    0 40px 80px -28px rgba(27,63,203,.12);
+}
+
+.bbc-blob {
+  position: absolute; pointer-events: none; z-index: 0;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: .5;
+}
+.bbc-blob-blue { background: radial-gradient(circle, rgba(27,63,203,.12) 0%, transparent 70%); }
+.bbc-blob-purple { background: radial-gradient(circle, rgba(122,90,248,.1) 0%, transparent 70%); }
+
+.bbc-float { animation: bbc-float 6s ease-in-out infinite; }
+.bbc-float-slow { animation: bbc-float-slow 9s ease-in-out infinite; }
+
+.bbc-section-glow { position: relative; }
+.bbc-section-glow::before {
+  content: "";
+  position: absolute;
+  top: -1px; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(27,63,203,.2) 30%, rgba(122,90,248,.15) 70%, transparent);
+}
+
+.bbc-featured-glow { position: relative; }
+.bbc-featured-glow::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(27,63,203,.3), rgba(122,90,248,.2), rgba(27,63,203,.3));
+  z-index: -1;
+  filter: blur(12px);
+  opacity: .6;
+}
+
+.bbc-step-art {
+  background: linear-gradient(135deg, var(--color-paper-card) 0%, rgba(237,239,251,.3) 100%);
+  box-shadow: inset 0 2px 8px rgba(20,30,55,.04), 0 1px 3px rgba(20,30,55,.06);
+}
+
+.bbc-closing-bg {
+  background: linear-gradient(135deg, #152ea8 0%, #1B3FCB 40%, #2a4fd6 100%) !important;
+}
+.bbc-closing-bg::after {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at 70% 30%, rgba(255,255,255,.08) 0%, transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(122,90,248,.15) 0%, transparent 40%);
+}
+
+.bbc-row-3d { transition: background .18s ease, transform .18s ease, box-shadow .18s ease; border-radius: 8px; }
+.bbc-row-3d:hover {
+  background: var(--color-paper-card);
+  transform: translateX(4px);
+  box-shadow: -4px 0 0 var(--color-blue-ink);
+}
+
+.bbc-shimmer-text {
+  background: linear-gradient(90deg, var(--color-ink) 40%, var(--color-blue-ink) 50%, var(--color-ink) 60%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: bbc-shimmer 6s linear infinite;
+}
+
+.bbc-lane-student {
+  background: linear-gradient(145deg, rgba(251,250,246,.9) 0%, rgba(237,239,251,.4) 100%);
+  backdrop-filter: blur(8px);
+}
+.bbc-lane-institute {
+  background: linear-gradient(145deg, #ffffff 0%, rgba(237,239,251,.5) 100%);
 }
 

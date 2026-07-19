@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Sparkles, Shield, Mail } from "lucide-react";
+import { Sparkles, Shield, Mail, Download } from "lucide-react";
 
 export function Footer() {
   return (
@@ -48,6 +48,11 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/dashboard" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Dashboard</Link>
+              </li>
+              <li>
+                <Link href="/install" className="inline-flex items-center gap-1.5 text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">
+                  <Download className="h-3 w-3 text-[var(--color-blue-ink)]" /> Install App
+                </Link>
               </li>
               <li>
                 <Link href="/about" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">About us</Link>

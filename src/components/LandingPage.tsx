@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ActiveView } from "@/src/types";
 import { useI18n } from "@/src/lib/i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -98,6 +98,42 @@ const plans = [
   },
 ];
 
+const AnimatedStat = ({ end, label, suffix }: { end: number; label: string; suffix: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [value, setValue] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !hasAnimated) {
+        setHasAnimated(true);
+        const duration = 1200;
+        const start = performance.now();
+        const step = (now: number) => {
+          const t = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
+          setValue(Math.round(eased * end));
+          if (t < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+        io.disconnect();
+      }
+    }, { threshold: 0.5 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [end, hasAnimated]);
+  return (
+    <div ref={ref} className="text-center">
+      <p className="bbc-serif text-[clamp(32px,4vw,48px)] font-semibold tracking-[-.02em] text-[var(--color-ink)]">
+        {value}{suffix}
+      </p>
+      <p className="mt-1 text-[12px] font-semibold uppercase tracking-[.16em] text-[var(--color-ink-faint)]">{label}</p>
+    </div>
+  );
+};
+
+
 export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const { t, lang } = useI18n();
@@ -144,7 +180,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
     return () => { io.disconnect(); dio?.disconnect(); };
   }, []);
 
-  const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const scrollTo = (id: string) => { setMobileOpen(false); document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); };
 
   return (
     <div ref={rootRef} className="bbc min-h-screen" id="top">
@@ -174,18 +211,40 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             <button onClick={() => scrollTo("tools")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">{t("nav.tools")}</button>
             <button onClick={() => scrollTo("how")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">{t("nav.how")}</button>
             <button onClick={() => scrollTo("pricing")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">{t("nav.pricing")}</button>
+            <a href="/install" className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Install</a>
           </nav>
           <div className="flex items-center gap-[14px]">
             <LanguageSwitcher />
             <button onClick={() => onNavigate("signup")} className="hidden text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)] sm:block">{t("nav.signin")}</button>
-            <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary px-5 py-[11px] text-[15px]">{t("nav.startFree")}</button>
+            <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary !hidden px-5 py-[11px] text-[15px] sm:!inline-flex">{t("nav.startFree")}</button>
+            <button onClick={() => setMobileOpen(!mobileOpen)} className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-line)] md:hidden" aria-label="Menu">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-ink)" strokeWidth="2" strokeLinecap="round">
+                {mobileOpen ? <><path d="M18 6L6 18"/><path d="M6 6l12 12"/></> : <><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></>}
+              </svg>
+            </button>
           </div>
         </div>
+        {mobileOpen && (
+          <div className="border-t border-[var(--color-line)] bg-[var(--color-paper-card)] px-7 py-4 md:hidden">
+            <nav className="flex flex-col gap-3">
+              <button onClick={() => scrollTo("tools")} className="text-left text-[15px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">{t("nav.tools")}</button>
+              <button onClick={() => scrollTo("how")} className="text-left text-[15px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">{t("nav.how")}</button>
+              <button onClick={() => scrollTo("pricing")} className="text-left text-[15px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">{t("nav.pricing")}</button>
+              <a href="/install" onClick={() => setMobileOpen(false)} className="text-left text-[15px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Install App</a>
+              <button onClick={() => { setMobileOpen(false); onNavigate("signup"); }} className="text-left text-[15px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">{t("nav.signin")}</button>
+              <button onClick={() => { setMobileOpen(false); onNavigate("tools"); }} className="bbc-btn bbc-btn-primary mt-1 w-full justify-center py-3 text-[15px]">{t("nav.startFree")}</button>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden border-b border-[var(--color-line)]">
         <div className="bbc-grid" aria-hidden="true" />
+        <div className="bbc-hero-bg" aria-hidden="true" />
+        {/* Floating decorative blobs */}
+        <div className="bbc-blob bbc-blob-blue bbc-float-slow" style={{width:320,height:320,top:'-10%',right:'-5%'}} aria-hidden="true" />
+        <div className="bbc-blob bbc-blob-purple bbc-float" style={{width:240,height:240,bottom:'5%',left:'-8%'}} aria-hidden="true" />
         <div className="relative z-[2] mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-10 px-7 py-[40px] md:grid-cols-[1fr_1.05fr] md:py-[56px]">
           <div>
             <p className="bbc-eyebrow bbc-reveal">{t("hero.eyebrow")}</p>
@@ -232,8 +291,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               (b) reads professional to institute owners scanning the page;
               (c) mirrors the browser-chrome mockup style already used in
               the "A real session" section further down for consistency. */}
-          <div className="bbc-reveal mx-auto w-full max-w-[520px] md:max-w-none" aria-hidden="true">
-            <div className="bbc-hero-float overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-white shadow-[0_30px_60px_-30px_rgba(20,30,55,.18)]">
+          <div className="bbc-reveal bbc-tilt-card mx-auto w-full max-w-[520px] md:max-w-none" aria-hidden="true">
+            <div className="bbc-hero-float bbc-card-3d overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-white">
               {/* Browser chrome */}
               <div className="flex items-center gap-[10px] border-b border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-[10px]">
                 <span className="h-[10px] w-[10px] rounded-full bg-[var(--color-line)]" />
@@ -294,12 +353,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* ── TWO LANES ──
-          Two audience-specific cards right after the hero. Student card on
-          the left, institute card on the right (highlighted with the primary
-          border since it's the higher-value lane). Anyone landing on the
-          page decides in one glance which one they are and clicks through. */}
-      <section className="border-b border-[var(--color-line)] py-[80px]">
+      {/* ── STATS STRIP ── */}
+      <div className="border-b border-[var(--color-line)] py-[40px]">
+        <div className="mx-auto grid max-w-[1180px] grid-cols-3 gap-6 px-7">
+          {[
+            { end: 15, label: "Study tools", suffix: "+" },
+            { end: 100, label: "Local & private", suffix: "%" },
+            { end: 8, label: "File formats", suffix: "+" },
+          ].map((s) => (
+            <AnimatedStat key={s.label} end={s.end} label={s.label} suffix={s.suffix} />
+          ))}
+        </div>
+      </div>
+
+      {/* ── TWO LANES ── */}
+      <section className="bbc-section-glow relative border-b border-[var(--color-line)] py-[80px]">
+        <div className="bbc-blob bbc-blob-blue bbc-float" style={{width:280,height:280,top:'20%',right:'-6%'}} aria-hidden="true" />
         <div className="mx-auto max-w-[1180px] px-7">
           <div className="bbc-reveal mx-auto mb-12 max-w-[42em] text-center">
             <p className="bbc-eyebrow">{t("lanes.eyebrow")}</p>
@@ -313,7 +382,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
           <div className="grid gap-6 md:grid-cols-2">
             {/* For students */}
-            <div className="bbc-reveal bbc-lift flex flex-col rounded-[16px] border border-[var(--color-line)] bg-[var(--color-paper-card)] p-8">
+            <div className="bbc-reveal bbc-lift bbc-lane-student flex flex-col rounded-[16px] border border-[var(--color-line)] p-8">
               <div className="mb-4">
                 <p className="bbc-eyebrow text-[var(--color-ink)]">{t("student.for")}</p>
               </div>
@@ -343,7 +412,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             </div>
 
             {/* For coaching institutes */}
-            <div className="bbc-reveal bbc-lift relative flex flex-col rounded-[16px] border border-[var(--color-blue-ink)] bg-white p-8 shadow-[0_0_0_1px_var(--color-blue-ink)_inset]">
+            <div className="bbc-reveal bbc-lift bbc-featured-glow bbc-lane-institute relative flex flex-col rounded-[16px] border border-[var(--color-blue-ink)] p-8 shadow-[0_0_0_1px_var(--color-blue-ink)_inset]">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[var(--color-blue-ink)] px-4 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
                 {t("inst.tag")}
               </div>
@@ -390,7 +459,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             </h2>
           </div>
 
-          <div className="bbc-reveal mx-auto max-w-[1080px] overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-white shadow-[0_30px_60px_-30px_rgba(20,30,55,.18)]">
+          <div className="bbc-reveal bbc-card-3d mx-auto max-w-[1080px] overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-white">
             {/* browser chrome */}
             <div className="flex items-center gap-[10px] border-b border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-[10px]">
               <span className="h-[10px] w-[10px] rounded-full bg-[var(--color-line)]" />
@@ -447,10 +516,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── PROBLEM BAND ── */}
-      <section className="border-b border-[var(--color-line)] py-[96px] text-center">
-        <div className="mx-auto max-w-[1180px] px-7">
+      <section className="bbc-section-glow relative border-b border-[var(--color-line)] py-[96px] text-center">
+        <div className="bbc-blob bbc-blob-purple bbc-float-slow" style={{width:300,height:300,top:'10%',left:'50%',transform:'translateX(-50%)'}} aria-hidden="true" />
+        <div className="relative z-[1] mx-auto max-w-[1180px] px-7">
           <p className="bbc-eyebrow bbc-reveal">{t("problem.eyebrow")}</p>
-          <p className="bbc-serif bbc-reveal mx-auto mt-[18px] max-w-[18ch] text-[clamp(26px,3.8vw,42px)] italic leading-[1.22] tracking-[-.01em]">
+          <p className="bbc-serif bbc-reveal bbc-shimmer-text mx-auto mt-[18px] max-w-[18ch] text-[clamp(26px,3.8vw,42px)] italic leading-[1.22] tracking-[-.01em]">
             {t("problem.title")}
           </p>
           <p className="bbc-reveal mx-auto mt-[22px] max-w-[46ch] text-[var(--color-ink-soft)]">
@@ -465,8 +535,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           scaffolding already in globals.css: bbc-bottle-float, bbc-halo-pulse,
           bbc-liquid-rise, bbc-liquid-wave, and staggered .bbc-diag-label
           reveals keyed off --i. */}
-      <section className="border-b border-[var(--color-line)] bg-white py-[96px]">
-        <div className="mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-10 px-7 md:grid-cols-[.9fr_1.1fr]">
+      <section className="bbc-section-glow relative overflow-hidden border-b border-[var(--color-line)] bg-white py-[96px]">
+        <div className="bbc-blob bbc-blob-blue bbc-float" style={{width:400,height:400,top:'-15%',left:'-10%'}} aria-hidden="true" />
+        <div className="relative z-[1] mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-10 px-7 md:grid-cols-[.9fr_1.1fr]">
           <div className="bbc-reveal">
             <p className="bbc-eyebrow">{t("sys.eyebrow")}</p>
             <h2 className="bbc-serif mt-3 text-[clamp(28px,3.6vw,40px)] leading-[1.08] tracking-[-.02em]">
@@ -560,7 +631,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── TOOLS / INDEX ── */}
-      <section id="tools" className="border-b border-[var(--color-line)] py-[88px]">
+      <section id="tools" className="bbc-section-glow relative border-b border-[var(--color-line)] py-[88px]">
         <div className="mx-auto max-w-[1180px] px-7">
           <div className="bbc-reveal mb-12 max-w-[36em]">
             <p className="bbc-eyebrow">{t("suite.eyebrow")}</p>
@@ -572,7 +643,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <a
                 key={tool.n}
                 href={tool.href}
-                className="bbc-row bbc-reveal grid grid-cols-[36px_28px_1fr_22px] items-center gap-5 border-b border-[var(--color-line)] px-1 py-[26px] no-underline md:grid-cols-[56px_30px_1fr_1.3fr_24px] md:gap-6"
+                className="bbc-row bbc-row-3d bbc-reveal grid grid-cols-[36px_28px_1fr_22px] items-center gap-5 border-b border-[var(--color-line)] px-3 py-[26px] no-underline md:grid-cols-[56px_30px_1fr_1.3fr_24px] md:gap-6"
               >
                 <span className="bbc-mono text-[15px] text-[var(--color-blue-ink)]">{tool.n}</span>
                 <tool.Icon className="text-[var(--color-blue-ink)]" />
@@ -651,7 +722,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               },
             ].map((step, i) => (
               <div key={step.s} className="bbc-reveal relative border-t-2 border-[var(--color-ink)] pt-[22px]">
-                <div className="-mx-1 mb-[18px] flex h-[132px] items-center justify-center rounded-[10px] border border-[var(--color-line)] bg-[var(--color-paper-card)] px-3 py-3">{step.art}</div>
+                <div className="bbc-step-art -mx-1 mb-[18px] flex h-[132px] items-center justify-center rounded-[10px] border border-[var(--color-line)] px-3 py-3">{step.art}</div>
                 {/* flow arrow to the next step (desktop only) */}
                 {i < 2 && (
                   <div className="absolute -right-[24px] top-[86px] z-10 hidden h-8 w-8 items-center justify-center rounded-full border border-[var(--color-line)] bg-[var(--color-paper)] text-[var(--color-blue-ink)] md:flex" aria-hidden="true">
@@ -677,7 +748,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           </div>
           <div className="grid grid-cols-1 gap-[22px] md:grid-cols-3">
             {plans.map((plan) => (
-              <div key={plan.nameKey} className={`bbc-reveal bbc-lift flex flex-col rounded-[14px] border p-[30px] ${plan.featured ? "border-[var(--color-blue-ink)] bg-white shadow-[0_0_0_1px_var(--color-blue-ink)_inset]" : "border-[var(--color-line)] bg-[var(--color-paper-card)]"}`}>
+              <div key={plan.nameKey} className={`bbc-reveal bbc-lift flex flex-col rounded-[14px] border p-[30px] ${plan.featured ? "bbc-featured-glow border-[var(--color-blue-ink)] bg-white shadow-[0_0_0_1px_var(--color-blue-ink)_inset]" : "bbc-card-3d border-[var(--color-line)] bg-[var(--color-paper-card)]"}`}>
                 <div className="flex items-center justify-between">
                   <span className="bbc-serif text-[20px] font-semibold">{t(plan.nameKey)}</span>
                   {plan.tagKey && <span className="bbc-mono rounded-[6px] bg-[var(--color-blue-ink)] px-[9px] py-1 text-[10.5px] uppercase tracking-[.12em] text-white">{t(plan.tagKey)}</span>}
@@ -706,7 +777,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── CLOSING ── */}
-      <section className="relative overflow-hidden border-b border-[var(--color-line)] bg-[var(--color-blue-ink)] py-[108px] text-center text-white">
+      <section className="bbc-closing-bg relative overflow-hidden border-b border-[var(--color-line)] py-[108px] text-center text-white">
         <div className="absolute inset-0 opacity-[.06]"><div className="bbc-grid" /></div>
         <div className="relative z-[2] mx-auto max-w-[1180px] px-7">
           <p className="bbc-mono bbc-reveal text-[11px] uppercase tracking-[.2em] text-white/60">{t("close.eyebrow")}</p>
@@ -726,6 +797,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             <button onClick={() => scrollTo("tools")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">{t("nav.tools")}</button>
             <button onClick={() => scrollTo("pricing")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">{t("nav.pricing")}</button>
             <a href="/for-institutes" className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">{t("footer.forInstitutes")}</a>
+            <a href="/install" className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">Install App</a>
             <button onClick={() => onNavigate("about")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">{t("footer.about")}</button>
             <button onClick={() => onNavigate("terms")} className="text-[13.5px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">{t("footer.terms")}</button>
           </nav>

@@ -62,7 +62,7 @@ export const StreakSaveBanner: React.FC<StreakSaveBannerProps> = ({ streakDays, 
       const resp = await fetch("/api/razorpay/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ product: "streak_save" }),
+        body: JSON.stringify({ productId: "streak_save", userId: auth?.currentUser?.uid }),
       });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "Could not open checkout.");
