@@ -337,6 +337,12 @@ export default function InstallPage() {
       setInstalled(true);
     }
 
+    // The layout <head> script stashes the event before React mounts;
+    // read it back here, and also listen in case it fires later.
+    const stashed = (window as any).__bbcInstallPrompt as BeforeInstallPromptEvent | undefined;
+    if (stashed) setDeferredPrompt(stashed);
+    const onReady = () => setDeferredPrompt((window as any).__bbcInstallPrompt ?? null);
+    window.addEventListener("bbc-install-ready", onReady);
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
@@ -345,17 +351,20 @@ export default function InstallPage() {
     const onInstalled = () => setInstalled(true);
     window.addEventListener("appinstalled", onInstalled);
     return () => {
+      window.removeEventListener("bbc-install-ready", onReady);
       window.removeEventListener("beforeinstallprompt", handler);
       window.removeEventListener("appinstalled", onInstalled);
     };
   }, []);
 
   const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      await deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
+    const prompt = deferredPrompt ?? ((window as any).__bbcInstallPrompt as BeforeInstallPromptEvent | undefined);
+    if (prompt) {
+      await prompt.prompt();
+      const { outcome } = await prompt.userChoice;
       if (outcome === "accepted") setInstalled(true);
       setDeferredPrompt(null);
+      (window as any).__bbcInstallPrompt = undefined;
     } else {
       document.getElementById("install-guide")?.scrollIntoView({ behavior: "smooth" });
     }

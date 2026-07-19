@@ -57,6 +57,14 @@ export default function RootLayout({
         <link rel="icon" type="image/svg+xml" href="/icon.svg" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
+        {/* Stash the install prompt before React mounts — beforeinstallprompt
+            often fires during initial load, earlier than any useEffect listener.
+            Consumers read window.__bbcInstallPrompt or listen for bbc-install-ready. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__bbcInstallPrompt=e;window.dispatchEvent(new Event('bbc-install-ready'));});`,
+          }}
+        />
         {PLAUSIBLE_DOMAIN && (
           <script
             defer
