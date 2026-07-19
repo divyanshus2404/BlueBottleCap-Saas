@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { UserStats } from "../types";
-import { Check, Zap, ShieldCheck, Printer, ArrowRight, Loader2 } from "lucide-react";
+import { Check, Zap, ShieldCheck, Printer, ArrowRight, Loader2, BookOpen, Crown } from "lucide-react";
 import { trackEvent } from "../lib/analytics";
 import { auth } from "../firebase";
 
@@ -31,7 +31,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       priceMonthly: 0,
       priceAnnual: 0,
       buttonText: "Start free",
-      icon: "⚡",
+      icon: Zap,
       product: { monthly: null, annual: null },
       features: [
         "1 PDF upload",
@@ -49,7 +49,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       buttonText: "Get Basic",
       color: "border-blue-200 bg-blue-50/5",
       badgeColor: "bg-blue-600 text-white",
-      icon: "📚",
+      icon: BookOpen,
       features: [
         "Everything in Free",
         "100 AI credits per month",
@@ -69,7 +69,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       priceAnnualTotal: 1499,
       buttonText: "Get Pro",
       isPopular: true,
-      icon: "👑",
+      icon: Crown,
       product: { monthly: "pro_monthly", annual: "pro_annual" },
       features: [
         "Everything in Basic",
@@ -267,7 +267,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="bbc-eyebrow text-[var(--color-ink)]">{p.name}</span>
-                    <span className="text-lg">{p.icon}</span>
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--color-blue-wash)]"><p.icon className="h-4 w-4 text-[var(--color-blue-ink)]" /></span>
                   </div>
                   <p className="mt-4 text-[13px] text-[var(--color-ink-faint)]">{p.desc}</p>
 

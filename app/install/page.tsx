@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Download, Monitor, Smartphone, Apple, Chrome, Globe, ArrowLeft, CheckCircle, Share, MoreVertical, Plus, ExternalLink } from "lucide-react";
+import { Download, Monitor, Smartphone, Apple, Chrome, Globe, ArrowLeft, CheckCircle, Share, MoreVertical, Plus, ExternalLink, Zap, WifiOff, Bell, HardDrive } from "lucide-react";
 import Link from "next/link";
 
 type Platform = "iphone" | "android" | "mac" | "windows";
@@ -431,13 +431,13 @@ export default function InstallPage() {
         {/* Benefits */}
         <div className="mx-auto mt-8 grid max-w-lg grid-cols-2 gap-3 sm:grid-cols-4">
           {[
-            { icon: "⚡", label: "Instant open" },
-            { icon: "📴", label: "Works offline" },
-            { icon: "🔔", label: "Notifications" },
-            { icon: "💾", label: "Under 1 MB" },
+            { icon: Zap, label: "Instant open" },
+            { icon: WifiOff, label: "Works offline" },
+            { icon: Bell, label: "Notifications" },
+            { icon: HardDrive, label: "Under 1 MB" },
           ].map((b) => (
             <div key={b.label} className="rounded-xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-3 text-center">
-              <span className="text-[20px]">{b.icon}</span>
+              <b.icon className="mx-auto h-5 w-5 text-[var(--color-blue-ink)]" />
               <p className="mt-1 text-[11px] font-semibold text-[var(--color-ink-soft)]">{b.label}</p>
             </div>
           ))}
