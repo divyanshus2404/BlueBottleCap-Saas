@@ -400,24 +400,29 @@ export default function InstallPage() {
             No app store needed. Install directly from your browser — it takes 10 seconds and works just like a native app.
           </p>
 
-          <div className="mt-6">
+          <div className="mt-6 flex flex-col items-center gap-3">
             {installed ? (
               <div className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-line)] bg-[var(--color-blue-wash)] px-6 py-3.5 text-[15px] font-bold text-[var(--color-blue-ink)]">
                 <CheckCircle className="h-5 w-5" /> BlueBottleCap is installed
               </div>
             ) : (
               <>
-                <button
-                  onClick={handleInstallClick}
+                <a
+                  href="/bluebottlecap.apk"
+                  download="bluebottlecap.apk"
                   className="inline-flex items-center gap-2.5 rounded-xl bg-[var(--color-blue-ink)] px-7 py-3.5 text-[15px] font-bold text-white shadow-lg transition hover:brightness-110 active:scale-[.98]"
                 >
-                  <Download className="h-5 w-5" /> Click here to install BlueBottleCap
+                  <Download className="h-5 w-5" /> Download BlueBottleCap for Android
+                </a>
+                <p className="text-[12px] text-[var(--color-ink-faint)]">
+                  Direct .apk download (~1&nbsp;MB). Android may ask you to allow installs from your browser — that's normal for apps outside the Play Store.
+                </p>
+                <button
+                  onClick={handleInstallClick}
+                  className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper-card)] px-5 py-2.5 text-[13px] font-bold text-[var(--color-ink)] transition hover:border-[var(--color-ink-faint)]"
+                >
+                  <Smartphone className="h-4 w-4" /> On iPhone / Mac / Windows? Install the web app
                 </button>
-                {!deferredPrompt && (
-                  <p className="mt-2.5 text-[12px] text-[var(--color-ink-faint)]">
-                    If nothing pops up, your browser needs a couple of taps — the button will take you to the steps below.
-                  </p>
-                )}
               </>
             )}
           </div>
