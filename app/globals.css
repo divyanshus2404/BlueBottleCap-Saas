@@ -155,6 +155,11 @@ input, textarea, [contenteditable="true"] {
 .bbc-arrow { transition: transform .18s ease, color .18s ease; }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* Pure-CSS entrance — no JS needed, always ends visible. */
+  @keyframes bbc-fade-up { from { opacity:0; transform: translateY(18px); } to { opacity:1; transform:none; } }
+  .about-content { animation: bbc-fade-up .7s cubic-bezier(.2,.7,.2,1) both .1s; }
+  .faq-section { animation: bbc-fade-up .7s cubic-bezier(.2,.7,.2,1) both .25s; }
+
   .bbc-reveal { opacity:0; transform: translateY(14px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
   .bbc-reveal.bbc-in { opacity:1; transform:none; }
   /* Fallback: if JS/IntersectionObserver never fires, content becomes visible
