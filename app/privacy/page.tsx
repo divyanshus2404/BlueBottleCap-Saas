@@ -45,7 +45,7 @@ export default function PrivacyPolicyPage() {
             </h2>
             <ul className="list-disc space-y-1.5 pl-5 text-[15px]">
               <li>We collect only what we need to run the product: your account details and study activity.</li>
-              <li>Files you process with our browser tools <strong className="text-[var(--color-ink)]">never leave your device</strong>.</li>
+              <li>Files you convert, compress, merge, or split are processed <strong className="text-[var(--color-ink)]">entirely on your device</strong>. Notes or images you submit for AI analysis are sent to our AI provider (Google Gemini) to generate the result.</li>
               <li>Payments are handled by Razorpay — we never see or store your card or UPI details.</li>
               <li>We never sell your data. Ever.</li>
               <li>You can ask us to delete your account and data at any time.</li>
@@ -85,7 +85,9 @@ export default function PrivacyPolicyPage() {
             <p>
               Files you convert, compress, merge, or split with our file tools are processed{" "}
               <strong className="text-[var(--color-ink)]">entirely in your browser</strong> — they are
-              never uploaded to our servers.
+              never uploaded to our servers. The exception is AI features: notes you scan and images or
+              PDFs you submit for AI analysis are sent to our AI provider (Google Gemini) to generate
+              the result, and are not used by us for anything else.
             </p>
             <p>
               Payment card numbers, UPI IDs, and banking details are handled directly by{" "}
