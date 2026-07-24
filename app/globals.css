@@ -42,21 +42,75 @@
    layout.tsx (before paint, no flash) based on localStorage bbc_theme
    or the OS preference. */
 .dark {
-  --color-paper: #14151A;
-  --color-paper-card: #1C1E24;
-  --color-ink: #ECEDEF;
-  --color-ink-soft: #A6A9B2;
-  --color-ink-faint: #71747E;
-  --color-line: #2A2C34;
-  --color-line-strong: #383B45;
-  --color-blue-ink: #5B78F0;
-  --color-blue-deep: #7C93F2;
-  --color-blue-wash: #1E2540;
-  --color-brand-navy: #ECEDEF;
-  --color-brand-sky: #5B78F0;
-  --color-brand-cobalt: #5B78F0;
+  /* Editorial dark: near-black blue-tinted paper, bright warm ink,
+     periwinkle accent that reads as text AND survives as a button bg. */
+  --color-paper: #0F1014;
+  --color-paper-card: #17181E;
+  --color-ink: #F4F4F6;
+  --color-ink-soft: #B9BDC7;
+  --color-ink-faint: #838791;
+  --color-line: #262830;
+  --color-line-strong: #363943;
+  --color-blue-ink: #7E96F8;
+  --color-blue-deep: #9DAFFA;
+  --color-blue-wash: #1D2440;
+  --color-brand-navy: #F4F4F6;
+  --color-brand-sky: #7E96F8;
+  --color-brand-cobalt: #7E96F8;
   color-scheme: dark;
 }
+
+/* ── Dark-mode remaps for hardcoded light utilities ──────────────────
+   Marketing sections and mock-UI cards use literal bg-white / gray-*
+   classes. Rather than fork every component, remap those utilities
+   when .dark is active so surfaces and their text stay legible. */
+.dark .bg-white { background-color: var(--color-paper-card); }
+.dark .hover\:bg-white\/90:hover { background-color: var(--color-paper); }
+.dark .bg-gray-50, .dark .bg-gray-100 { background-color: #20222A; }
+.dark .hover\:bg-gray-100:hover { background-color: #262830; }
+.dark .text-gray-500, .dark .text-gray-600 { color: #9CA0AA; }
+.dark .text-gray-300 { color: #5A5D66; }
+.dark .hover\:text-gray-500:hover { color: #B9BDC7; }
+.dark .bg-red-50 { background-color: rgba(248,113,113,.12); }
+.dark .hover\:bg-red-100\/50:hover { background-color: rgba(248,113,113,.22); }
+.dark .text-red-600 { color: #F87171; }
+.dark .hover\:bg-red-50:hover { background-color: rgba(248,113,113,.12); }
+.dark .bg-purple-100 { background-color: rgba(192,132,252,.16); }
+.dark .text-purple-700 { color: #C4A5F7; }
+.dark [class*="shadow-slate"] { --tw-shadow-color: rgba(0,0,0,.55); }
+
+/* Dark variants of the decorative layers (they hardcode light-mode
+   rgba values). Grid lines flip to faint white; glows get stronger so
+   the page keeps its depth on near-black paper. */
+.dark .bbc-grid {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.045) 1px, transparent 1px);
+}
+.dark .bbc-hero-bg {
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 30%, rgba(126,150,248,.10) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 70%, rgba(155,125,255,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(126,150,248,.05) 0%, transparent 50%);
+}
+.dark .bbc-card-3d,
+.dark .bbc-card-3d:hover {
+  box-shadow:
+    0 1px 2px rgba(0,0,0,.5),
+    0 8px 24px -6px rgba(0,0,0,.55),
+    0 24px 64px -16px rgba(0,0,0,.6);
+}
+.dark .bbc-blob-blue { background: radial-gradient(circle, rgba(126,150,248,.16) 0%, transparent 70%); }
+.dark .bbc-blob-purple { background: radial-gradient(circle, rgba(155,125,255,.13) 0%, transparent 70%); }
+.dark .bbc-section-glow::before {
+  background: linear-gradient(90deg, transparent, rgba(126,150,248,.35) 30%, rgba(155,125,255,.28) 70%, transparent);
+}
+
+/* Translucent sticky-header background. The Tailwind alpha shorthand
+   (bg-[var(--color-paper)]/82) bakes in the LIGHT paper value at build
+   time, so headers stayed light in dark mode — this class resolves the
+   variable at paint time instead. */
+.bbc-header-glass { background: color-mix(in srgb, var(--color-paper) 85%, transparent); }
 
 /* Decorative absolutely-positioned elements (bbc-blob etc.) can poke past
    the viewport on small screens; clip instead of allowing sideways scroll.
@@ -351,7 +405,7 @@ input, textarea, [contenteditable="true"] {
 }
 
 .bbc header {
-  background: rgba(245,244,239,.6) !important;
+  background: color-mix(in srgb, var(--color-paper) 60%, transparent) !important;
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
   box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 4px 24px -8px rgba(20,30,55,.06);

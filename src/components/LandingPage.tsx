@@ -205,7 +205,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       />
 
       {/* ── HEADER ── */}
-      <header className="sticky top-0 z-50 border-b border-[var(--color-line)] bg-[var(--color-paper)]/82 backdrop-blur-md">
+      <header className="bbc-header-glass sticky top-0 z-50 border-b border-[var(--color-line)] backdrop-blur-md">
         <div className="mx-auto flex h-[68px] max-w-[1180px] items-center justify-between px-7">
           <div className="flex items-center gap-3">
             <button

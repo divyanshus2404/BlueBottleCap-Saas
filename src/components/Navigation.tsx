@@ -42,7 +42,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
 
   return (
     <>
-      <header className="bbc sticky top-0 z-50 w-full border-b border-[var(--color-line)] bg-[var(--color-paper)]/82 backdrop-blur-md transition-colors duration-300">
+      <header className="bbc bbc-header-glass sticky top-0 z-50 w-full border-b border-[var(--color-line)] backdrop-blur-md transition-colors duration-300">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
           {/* Left: Menu + Logo */}
@@ -109,7 +109,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
 
             {currentUser ? (
               <div className="hidden md:block relative group">
-                <button className="flex items-center gap-2 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)]/50 hover:bg-[var(--color-paper)]/50 px-3 h-9 text-xs font-bold text-brand-navy transition cursor-pointer">
+                <button className="flex items-center gap-2 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper-card)] hover:bg-[var(--color-paper)] px-3 h-9 text-xs font-bold text-brand-navy transition cursor-pointer">
                   {userProfile?.avatarSvg ? (
                     <div className="w-5 h-5 rounded-full shrink-0 overflow-hidden bg-brand-cobalt/10 flex items-center justify-center" dangerouslySetInnerHTML={{ __html: userProfile.avatarSvg }} />
                   ) : currentUser.photoURL ? (
