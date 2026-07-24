@@ -22,9 +22,23 @@ const FAQS: { q: string; a: string }[] = [
   },
 ];
 
+const FAQ_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQS.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
 export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
   return (
     <div className="bbc relative min-h-screen overflow-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
+      />
       <div className="bbc-grid" aria-hidden="true" />
 
       <div className="relative z-[2] mx-auto max-w-[1180px] px-7 pt-20 pb-28">

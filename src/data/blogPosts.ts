@@ -527,6 +527,156 @@ The goal isn't to finish all questions. The goal is to maximize marks in 180 min
 
 *Practice the 3-pass strategy with our [timed mock tests](/mock-test). The timer is real — no pausing allowed.*`,
   },
+  {
+    slug: "active-recall-vs-rereading",
+    title: "Active Recall vs Re-reading: Why Your Revision Isn't Working",
+    description: "Re-reading notes feels productive but retains almost nothing. Here's the science of active recall and how to switch your entire revision to it in a week.",
+    category: "Study Tips",
+    date: "2026-07-10",
+    readTime: 7,
+    tags: ["Study Tips", "Active Recall", "Revision", "Memory"],
+    heroGif: TOPIC_GIFS.brain,
+    heroGradient: CATEGORY_GRADIENTS["Study Tips"].gradient,
+    heroEmoji: "🧠",
+    content: `!gif[brain]
+
+## The Illusion of Fluency
+
+You read a chapter for the third time. It feels familiar. Your brain interprets that familiarity as knowledge. Then the exam asks you to *produce* the concept from scratch — and it's gone.
+
+Psychologists call this the **illusion of fluency**: recognition feels like recall, but they are completely different memory processes. Recognition is a multiple-choice skill. Recall is what JEE and NEET actually demand in numericals and assertion-reason questions.
+
+## What the Research Says
+
+In a landmark study (Karpicke & Roediger, 2008), students who tested themselves retained **~80%** of material after a week. Students who re-read the same material four times retained **~36%**. Same time invested, double the retention.
+
+## How to Switch to Active Recall
+
+**1. Close-book summaries.** After every chapter, close the book and write everything you remember. Then open it and fill the gaps in a different colour — those gaps are your actual syllabus.
+
+**2. Question-first revision.** Never "revise Thermodynamics." Instead: attempt 15 Thermodynamics questions. Wherever you get stuck, *that's* what you revise.
+
+**3. Flashcards with a twist.** Don't just make definition cards. Make "why" cards: *Why does entropy increase in free expansion?* Explaining beats defining.
+
+**4. The blank-page test.** Before a mock, take a blank page and reconstruct the formula sheet from memory. This single habit covers more revision than 3 hours of note-reading.
+
+## The First Week Feels Worse — That's the Point
+
+Active recall feels harder because it *is* harder. That difficulty is literally the signal that memory is being strengthened (psychologists call it "desirable difficulty"). Re-reading feels smooth because nothing is happening.
+
+---
+
+*Turn any chapter into recall practice with our [flashcards](/flashcards) and [question bank](/question-bank) — both free.*`,
+  },
+  {
+    slug: "jee-2027-preparation-timeline-class-11",
+    title: "Starting JEE Prep in Class 11? Here's Your 2-Year Timeline",
+    description: "A month-by-month roadmap for Class 11 students starting JEE preparation: what to cover when, when to start mocks, and the mistakes that cost aspirants their first year.",
+    category: "JEE",
+    date: "2026-07-15",
+    readTime: 9,
+    tags: ["JEE", "Class 11", "Timeline", "Planning"],
+    heroGif: TOPIC_GIFS.strategy,
+    heroGradient: CATEGORY_GRADIENTS.JEE.gradient,
+    heroEmoji: "🗓️",
+    content: `!gif[strategy]
+
+## The Two-Year Advantage (If You Don't Waste It)
+
+Most students who start JEE prep in Class 11 lose their advantage in the first six months — not from laziness, but from the wrong sequence. Here's the timeline that works.
+
+## Class 11: Months 1–6 (June–November)
+
+**Goal: NCERT-level mastery of Class 11 topics, in sync with school.**
+
+- Physics: Units & Measurement → Kinematics → Laws of Motion → Work-Energy-Power
+- Chemistry: Mole Concept (do this until it's reflexive), Atomic Structure, Bonding
+- Maths: Sets, Quadratics, Sequences & Series, Trigonometry
+
+**The mistake to avoid:** jumping to advanced problem books before NCERT is solid. Advanced problems on a weak foundation teach you tricks, not concepts.
+
+## Class 11: Months 7–12 (December–May)
+
+**Goal: finish the Class 11 syllabus + first exposure to JEE-level problems.**
+
+- Start one standard problem book per subject — not three.
+- Take your **first mock in February**, syllabus-limited. The score doesn't matter; the experience of 3 timed hours does.
+- Before summer break: complete Rotational Motion and Equilibrium (Chemistry) — these are the two most common "carry-forward" backlogs.
+
+## Class 12: Months 13–18 (June–November)
+
+**Goal: Class 12 syllabus at full speed + weekly revision cycles for Class 11.**
+
+- Class 12 topics carry more JEE weightage (Calculus, Electrodynamics, Organic Chemistry). Don't sacrifice them to revise Class 11 endlessly.
+- One full syllabus-so-far mock **every two weeks**.
+- Maintain an error notebook. Every mock mistake gets one line: topic, mistake type, fix.
+
+## Class 12: Months 19–24 (December–May)
+
+**Goal: mocks, analysis, and targeted patching.**
+
+- January onwards: **two full mocks a week**, each followed by a 2-hour analysis session. The analysis is where the marks come from — an unanalysed mock is wasted.
+- Revise only from your error notebook and formula sheets. No new books. No new topics after February.
+- Sleep 7 hours. A rested brain outperforms a crammed one in every study on exam performance.
+
+## The Only Three Metrics That Matter
+
+1. **Syllabus coverage** — are you on pace with the timeline above?
+2. **Mock score trend** — direction matters more than absolute score until March.
+3. **Repeat-mistake rate** — if the same mistake appears in three mocks, your analysis process is broken, not your knowledge.
+
+---
+
+*Check where you stand right now with our free [2-minute JEE diagnostic](/diagnostic), then track your mock trend on [My Progress](/my-progress).*`,
+  },
+  {
+    slug: "how-to-analyse-mock-tests",
+    title: "You're Taking Mocks Wrong: The 2-Hour Analysis Method",
+    description: "A mock test without analysis is just 3 hours of stress. This is the exact post-mock routine toppers use to convert every test into a rank boost.",
+    category: "Strategy",
+    date: "2026-07-18",
+    readTime: 6,
+    tags: ["Strategy", "Mock Tests", "Analysis", "JEE", "NEET"],
+    heroGif: TOPIC_GIFS.exam,
+    heroGradient: CATEGORY_GRADIENTS.Strategy.gradient,
+    heroEmoji: "🔍",
+    content: `!gif[exam]
+
+## The Rule: Analysis Time ≥ ⅔ of Test Time
+
+A 3-hour mock deserves a 2-hour analysis. If you're taking mocks daily and "checking your score," you're building stamina but not rank. Here's the routine.
+
+## Step 1: Sort Every Question into Four Buckets (30 min)
+
+Go question by question and label each one:
+
+- **✅ Right & sure** — skip these, they're done.
+- **🍀 Right but guessed** — treat as wrong. You got lucky; the concept is missing.
+- **❌ Wrong: silly mistake** — calculation slip, misread question, sign error.
+- **🕳️ Wrong: concept gap** — you genuinely didn't know how to approach it.
+
+## Step 2: Attack the Silly Mistakes (30 min)
+
+Silly mistakes aren't random — they cluster. Track them across mocks and you'll find *your* pattern: maybe you drop negative signs under time pressure, or misread "incorrect" as "correct" in statement questions.
+
+**Fix:** for each pattern, write a personal checklist rule ("circle the word NOT/INCORRECT in every question"). Apply it in the next mock. One pattern eliminated = 8–12 marks recovered.
+
+## Step 3: Patch One Concept Gap Fully (45 min)
+
+Don't try to patch every gap from one mock. Pick the **highest-weightage** gap, go back to theory, then solve 10 fresh problems on exactly that concept. One gap fully closed beats five gaps half-closed.
+
+## Step 4: Log It (15 min)
+
+One line per mistake in your error notebook: *topic → what happened → the rule that prevents it.* Before your next mock, read the notebook. That 10-minute read is the highest-ROI revision that exists.
+
+## The Compounding Effect
+
+Do this for 20 mocks and you've eliminated ~15 personal error patterns and closed 20 concept gaps. That's typically a **40–60 mark** improvement — without learning a single new chapter.
+
+---
+
+*Our [mock tests](/mock-test) auto-sort your answers into these buckets and track your repeat mistakes on [My Progress](/my-progress).*`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {

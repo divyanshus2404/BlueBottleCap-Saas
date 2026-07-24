@@ -4,6 +4,8 @@ import { ActiveView } from "@/src/types";
 import { useI18n } from "@/src/lib/i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { DailyQuote } from "./DailyQuote";
+import { AppSidebar } from "./AppSidebar";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface LandingPageProps {
   onNavigate: (view: ActiveView) => void;
@@ -181,6 +183,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   }, []);
 
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const scrollTo = (id: string) => { setMobileOpen(false); document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); };
 
   return (
@@ -202,18 +205,30 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       />
 
       {/* ── HEADER ── */}
-      <header className="sticky top-0 z-50 border-b border-[var(--color-line)] bg-[rgba(245,244,239,.82)] backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-[var(--color-line)] bg-[var(--color-paper)]/82 backdrop-blur-md">
         <div className="mx-auto flex h-[68px] max-w-[1180px] items-center justify-between px-7">
-          <button onClick={() => scrollTo("top")} className="flex items-center gap-[11px] text-[16px] font-semibold tracking-[-.01em]" aria-label="BlueBottleCap home">
-            <Seal /> BlueBottleCap
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-line)] text-[var(--color-ink-soft)] transition-colors hover:bg-[var(--color-paper-card)] hover:text-[var(--color-ink)]"
+              aria-label="Open menu"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>
+              </svg>
+            </button>
+            <button onClick={() => scrollTo("top")} className="flex items-center gap-[11px] text-[16px] font-semibold tracking-[-.01em]" aria-label="BlueBottleCap home">
+              <Seal /> <span className="hidden min-[420px]:inline">BlueBottleCap</span>
+            </button>
+          </div>
           <nav className="hidden gap-[30px] md:flex" aria-label="Primary">
             <button onClick={() => scrollTo("tools")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">{t("nav.tools")}</button>
             <button onClick={() => scrollTo("how")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">{t("nav.how")}</button>
             <button onClick={() => scrollTo("pricing")} className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">{t("nav.pricing")}</button>
             <a href="/install" className="text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Install</a>
           </nav>
-          <div className="flex items-center gap-[14px]">
+          <div className="flex items-center gap-2 sm:gap-[14px]">
+            <ThemeToggle />
             <LanguageSwitcher />
             <button onClick={() => onNavigate("signup")} className="hidden text-[14.5px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)] sm:block">{t("nav.signin")}</button>
             <button onClick={() => onNavigate("tools")} className="bbc-btn bbc-btn-primary !hidden px-5 py-[11px] text-[15px] sm:!inline-flex">{t("nav.startFree")}</button>
@@ -237,6 +252,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           </div>
         )}
       </header>
+
+      <AppSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} onSignIn={() => onNavigate("signup")} />
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden border-b border-[var(--color-line)]">

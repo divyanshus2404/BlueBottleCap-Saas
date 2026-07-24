@@ -13,6 +13,23 @@ const PLATFORMS: { id: Platform; label: string; icon: React.ReactNode; color: st
   { id: "windows", label: "Windows", icon: <Monitor className="h-5 w-5" />, color: "bg-sky-600 text-white" },
 ];
 
+const INSTALL_FAQS = [
+  { q: "Is this a real app?", a: "Yes — it's a Progressive Web App (PWA). It runs like a native app but installs from your browser. No app store, no storage wasted." },
+  { q: "Will it use a lot of storage?", a: "Under 1 MB. Smaller than a single photo on your phone." },
+  { q: "Can I uninstall it?", a: "Just like any app. Long-press the icon on your phone, or drag it out of the Dock on Mac." },
+  { q: "Why not just use the website?", a: "The installed version opens instantly (no browser tabs), supports push notifications for study reminders, and works offline." },
+];
+
+const INSTALL_FAQ_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: INSTALL_FAQS.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
 function StepCard({ step, title, description, visual }: { step: number; title: string; description: string; visual: React.ReactNode }) {
   return (
     <div className="flex gap-5">
@@ -379,6 +396,10 @@ export default function InstallPage() {
 
   return (
     <div className="bbc relative min-h-screen overflow-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(INSTALL_FAQ_JSONLD) }}
+      />
       <div className="bbc-grid" aria-hidden="true" />
       <div className="relative z-[2] mx-auto max-w-[720px] px-7 py-12 sm:py-16">
         <Link href="/" className="mb-8 inline-flex items-center gap-2 text-[13px] font-semibold text-[var(--color-ink-faint)] transition hover:text-[var(--color-ink)]">
@@ -475,12 +496,7 @@ export default function InstallPage() {
         {/* FAQ */}
         <div className="mt-10 space-y-4">
           <h3 className="text-center text-[12px] font-bold uppercase tracking-[.15em] text-[var(--color-ink-faint)]">Common questions</h3>
-          {[
-            { q: "Is this a real app?", a: "Yes — it's a Progressive Web App (PWA). It runs like a native app but installs from your browser. No app store, no storage wasted." },
-            { q: "Will it use a lot of storage?", a: "Under 1 MB. Smaller than a single photo on your phone." },
-            { q: "Can I uninstall it?", a: "Just like any app. Long-press the icon on your phone, or drag it out of the Dock on Mac." },
-            { q: "Why not just use the website?", a: "The installed version opens instantly (no browser tabs), supports push notifications for study reminders, and works offline." },
-          ].map((f) => (
+          {INSTALL_FAQS.map((f) => (
             <div key={f.q} className="rounded-xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-4">
               <h4 className="text-[14px] font-semibold text-[var(--color-ink)]">{f.q}</h4>
               <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--color-ink-soft)]">{f.a}</p>

@@ -36,6 +36,33 @@
   --color-brand-cobalt: #1B3FCB;  /* = blue-ink */
 }
 
+/* ── DARK MODE ─────────────────────────────────────────────────────
+   The whole design system is token-based, so dark mode is a variable
+   swap. The `dark` class is set on <html> by an inline script in
+   layout.tsx (before paint, no flash) based on localStorage bbc_theme
+   or the OS preference. */
+.dark {
+  --color-paper: #14151A;
+  --color-paper-card: #1C1E24;
+  --color-ink: #ECEDEF;
+  --color-ink-soft: #A6A9B2;
+  --color-ink-faint: #71747E;
+  --color-line: #2A2C34;
+  --color-line-strong: #383B45;
+  --color-blue-ink: #5B78F0;
+  --color-blue-deep: #7C93F2;
+  --color-blue-wash: #1E2540;
+  --color-brand-navy: #ECEDEF;
+  --color-brand-sky: #5B78F0;
+  --color-brand-cobalt: #5B78F0;
+  color-scheme: dark;
+}
+
+/* Decorative absolutely-positioned elements (bbc-blob etc.) can poke past
+   the viewport on small screens; clip instead of allowing sideways scroll.
+   `clip` (not `hidden`) keeps position:sticky working. */
+html, body { overflow-x: clip; }
+
 /* App-wide defaults: page background and base typography now match
    the landing without requiring every page to manually apply .bbc. */
 body {
