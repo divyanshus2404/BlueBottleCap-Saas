@@ -366,12 +366,31 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 </div>
               </div>
             </div>
+
+            {/* Live-activity ticker chips — fill the space under the mockup
+                with gentle, staggered motion instead of dead paper. */}
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3" aria-hidden="true">
+              {[
+                { dot: true, text: "PDF read in 2.1s" },
+                { dot: false, text: "Mock generated · 30 Qs" },
+                { dot: false, text: "12 flashcards created" },
+              ].map((c, i) => (
+                <span
+                  key={c.text}
+                  className="bbc-activity-chip inline-flex items-center gap-2 rounded-full border border-[var(--color-line)] bg-[var(--color-paper-card)] px-3.5 py-1.5 text-[12px] font-semibold text-[var(--color-ink-soft)]"
+                  style={{ animationDelay: `${i * 1.1}s` }}
+                >
+                  <span className={`h-1.5 w-1.5 rounded-full ${c.dot ? "animate-pulse bg-emerald-500" : "bg-[var(--color-blue-ink)]"}`} />
+                  {c.text}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── STATS STRIP ── */}
-      <div className="border-b border-[var(--color-line)] py-[40px]">
+      <div className="border-b border-[var(--color-line)] py-[28px]">
         <div className="mx-auto grid max-w-[1180px] grid-cols-3 gap-6 px-7">
           {[
             { end: 15, label: "Study tools", suffix: "+" },

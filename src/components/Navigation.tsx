@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Layers, Menu, Map, Home, ChevronLeft, FileText } from "lucide-react";
+import { Layers, Menu, Map, Home, ChevronLeft, FileText, BookOpen, Brain, ScrollText } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useGlobalState } from "../context/GlobalStateContext";
 import { MagneticWrapper } from "./MagneticWrapper";
@@ -20,8 +20,11 @@ const Seal = ({ size = 24 }: { size?: number }) => (
 
 const topLinks = [
   { href: "/", label: "Home", icon: <Home className="w-4 h-4" /> },
-  { href: "/tools", label: "Tools", icon: <Layers className="w-4 h-4" /> },
   { href: "/mock-test", label: "Mocks", icon: <FileText className="w-4 h-4" /> },
+  { href: "/question-bank", label: "Questions", icon: <BookOpen className="w-4 h-4" /> },
+  { href: "/flashcards", label: "Flashcards", icon: <Brain className="w-4 h-4" /> },
+  { href: "/previous-year-papers", label: "Papers", icon: <ScrollText className="w-4 h-4" /> },
+  { href: "/tools", label: "Tools", icon: <Layers className="w-4 h-4" /> },
   { href: "/dashboard", label: "Dashboard", icon: <Map className="w-4 h-4" /> },
 ];
 
@@ -78,14 +81,14 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
           </div>
 
           {/* Center: Primary nav (desktop) */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-0.5">
             {topLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`bbc-underline-fx flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-200 ${
+                  className={`bbc-underline-fx flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold transition-all duration-200 ${
                     isActive
                       ? "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]"
                       : "text-[var(--color-ink-soft)] hover:bg-[var(--color-paper-card)] hover:text-[var(--color-ink)]"

@@ -149,6 +149,10 @@ input, textarea, [contenteditable="true"] {
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.4);
 }
+.dark .glass-panel {
+  background: rgba(23, 24, 30, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
 
 
 @keyframes confettiFall {
@@ -199,6 +203,7 @@ input, textarea, [contenteditable="true"] {
 .bbc-btn-primary:hover { background: var(--color-blue-deep); transform: translateY(-1px); box-shadow: 0 10px 22px -12px rgba(27,63,203,.55); }
 .bbc-btn-ghost { background: transparent; color: var(--color-ink); border-color: var(--color-line-strong); }
 .bbc-btn-ghost:hover { background:#fff; }
+.dark .bbc-btn-ghost:hover { background: var(--color-paper-card); }
 .bbc a:focus-visible, .bbc button:focus-visible { outline: 2px solid var(--color-blue-ink); outline-offset: 3px; border-radius: 8px; }
 
 .bbc-stroke    { fill:none; stroke: var(--color-blue-ink); stroke-width:2; stroke-linejoin:round; stroke-linecap:round; }
@@ -444,6 +449,15 @@ input, textarea, [contenteditable="true"] {
     0 40px 80px -28px rgba(27,63,203,.12);
 }
 
+/* Hero live-activity chips: slow rise-and-settle loop, staggered per chip
+   via inline animation-delay. Deliberately subtle — 4px travel, long cycle. */
+@keyframes bbc-chip-drift {
+  0%, 100% { transform: translateY(0); opacity: .75; }
+  50%      { transform: translateY(-4px); opacity: 1; }
+}
+.bbc-activity-chip { animation: bbc-chip-drift 4.5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .bbc-activity-chip { animation: none; } }
+
 .bbc-blob {
   position: absolute; pointer-events: none; z-index: 0;
   border-radius: 50%;
@@ -480,6 +494,10 @@ input, textarea, [contenteditable="true"] {
   background: linear-gradient(135deg, var(--color-paper-card) 0%, rgba(237,239,251,.3) 100%);
   box-shadow: inset 0 2px 8px rgba(20,30,55,.04), 0 1px 3px rgba(20,30,55,.06);
 }
+.dark .bbc-step-art {
+  background: linear-gradient(135deg, #1A1C23 0%, #1B2135 100%);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.4);
+}
 
 .bbc-closing-bg {
   background: linear-gradient(135deg, #152ea8 0%, #1B3FCB 40%, #2a4fd6 100%) !important;
@@ -513,5 +531,11 @@ input, textarea, [contenteditable="true"] {
 }
 .bbc-lane-institute {
   background: linear-gradient(145deg, #ffffff 0%, rgba(237,239,251,.5) 100%);
+}
+.dark .bbc-lane-student {
+  background: linear-gradient(145deg, #1A1C23 0%, #171A26 100%);
+}
+.dark .bbc-lane-institute {
+  background: linear-gradient(145deg, #1B1E2A 0%, #182036 100%);
 }
 
