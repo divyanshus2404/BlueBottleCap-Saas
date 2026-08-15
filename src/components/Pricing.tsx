@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { UserStats } from "../types";
-import { Check, Zap, ShieldCheck, Printer, ArrowRight, Loader2 } from "lucide-react";
+import { Check, Zap, ShieldCheck, Printer, ArrowRight, Loader2, BookOpen, Crown } from "lucide-react";
 import { trackEvent } from "../lib/analytics";
 import { auth } from "../firebase";
 
@@ -15,6 +16,7 @@ interface PricingProps {
 }
 
 export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, onNavigateTo }) => {
+  const router = useRouter();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
   const [loadingStep, setLoadingStep] = useState<number>(-1);
   const [showReceipt, setShowReceipt] = useState<boolean>(false);
@@ -29,7 +31,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       priceMonthly: 0,
       priceAnnual: 0,
       buttonText: "Start free",
-      icon: "⚡",
+      icon: Zap,
       product: { monthly: null, annual: null },
       features: [
         "1 PDF upload",
@@ -47,7 +49,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       buttonText: "Get Basic",
       color: "border-blue-200 bg-blue-50/5",
       badgeColor: "bg-blue-600 text-white",
-      icon: "📚",
+      icon: BookOpen,
       features: [
         "Everything in Free",
         "100 AI credits per month",
@@ -67,7 +69,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       priceAnnualTotal: 1499,
       buttonText: "Get Pro",
       isPopular: true,
-      icon: "👑",
+      icon: Crown,
       product: { monthly: "pro_monthly", annual: "pro_annual" },
       features: [
         "Everything in Basic",
@@ -108,10 +110,14 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
     trackEvent("checkout_opened", { product });
 
     try {
+      // Send productId + userId so the server can write both into the order
+      // notes. The verify endpoint reads from notes as the ONLY source of
+      // truth — if we don't send the uid here, the payment succeeds but no
+      // Pro entitlement gets written to Firestore.
       const resp = await fetch("/api/razorpay/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ product }),
+        body: JSON.stringify({ productId: product, userId: auth?.currentUser?.uid }),
       });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "Failed to create order");
@@ -132,15 +138,18 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
           const verifyResp = await fetch("/api/razorpay/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...response, plan, userId: undefined }),
+            body: JSON.stringify({ ...response, plan, userId: auth?.currentUser?.uid }),
           });
           const verifyData = await verifyResp.json();
           if (verifyResp.ok && verifyData.ok) {
-            setLoadingStep(4);
-            setShowReceipt(true);
-            // onUpgradeApproved updates local state to reflect the new plan;
-            // Firestore was already written server-side in /api/razorpay/verify.
             onUpgradeApproved(plan);
+            trackEvent("payment_success", { plan, billing: billingCycle, paymentId: response.razorpay_payment_id });
+            const params = new URLSearchParams({
+              plan,
+              billing: billingCycle,
+              paymentId: response.razorpay_payment_id,
+            });
+            router.push(`/payment-success?${params.toString()}`);
           } else {
             alert("Payment verification failed. Please contact support.");
             setLoadingStep(-1);
@@ -258,7 +267,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="bbc-eyebrow text-[var(--color-ink)]">{p.name}</span>
-                    <span className="text-lg">{p.icon}</span>
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--color-blue-wash)]"><p.icon className="h-4 w-4 text-[var(--color-blue-ink)]" /></span>
                   </div>
                   <p className="mt-4 text-[13px] text-[var(--color-ink-faint)]">{p.desc}</p>
 
@@ -325,6 +334,23 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
           <a href="/for-institutes" className="bbc-btn bbc-btn-ghost mt-4 justify-center whitespace-nowrap px-4 py-2.5 text-[13px] md:mt-0">
             See institute plans →
           </a>
+        </div>
+
+        {/* Payer-safety strip — refund policy + support link on every checkout
+            surface. Cheaper to reassure here than to eat a chargeback later. */}
+        <div className="mx-auto mt-6 flex max-w-[760px] flex-col items-center justify-center gap-2 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] px-6 py-4 text-center text-[13px] text-[var(--color-ink-soft)] md:flex-row md:gap-6">
+          <span className="inline-flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3l7 3.5v5c0 4.5-3 8.5-7 9.5-4-1-7-5-7-9.5v-5L12 3z" stroke="var(--color-blue-ink)" strokeWidth="1.6" strokeLinejoin="round" />
+              <path d="M8.5 12l2.5 2.5 4.5-5" stroke="var(--color-blue-ink)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <a href="/refunds" className="font-semibold text-[var(--color-blue-ink)] underline">7-day money-back guarantee</a>
+          </span>
+          <span className="hidden md:inline text-[var(--color-line-strong)]">·</span>
+          <span>
+            Questions?{" "}
+            <a href="mailto:support@bluebottlecap.com" className="font-semibold text-[var(--color-blue-ink)] underline">support@bluebottlecap.com</a>
+          </span>
         </div>
 
         {/* FAQ */}

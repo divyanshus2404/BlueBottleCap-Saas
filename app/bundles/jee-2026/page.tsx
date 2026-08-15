@@ -42,7 +42,7 @@ export default function JeeBundle2026Page() {
         },
         {
           q: "Can I buy for a friend?",
-          a: "Yes. Enter their name and email — they'll get the mocks. Just make sure to WhatsApp us their preferred delivery time if it matters.",
+          a: "Yes. Enter their name and email — they'll get the mocks. Just email support@bluebottlecap.com their preferred delivery time if it matters.",
         },
         {
           q: "Do I need to sign up?",

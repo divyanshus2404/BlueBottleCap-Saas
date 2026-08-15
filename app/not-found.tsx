@@ -1,6 +1,11 @@
 import React from "react";
 import Link from "next/link";
-import { Home, FileText } from "lucide-react";
+import { Home, Wrench, BookOpen, Layers } from "lucide-react";
+
+export const metadata = {
+  title: "Page not found · BlueBottleCap",
+  robots: { index: false, follow: true },
+};
 
 // Branded 404, in the editorial design system (same tokens as the landing and
 // product) rather than the earlier off-brand slate styling.
@@ -22,10 +27,16 @@ export default function NotFound() {
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link href="/" className="bbc-btn bbc-btn-primary inline-flex items-center gap-2 px-6 py-3 text-[15px]">
-            <Home className="h-4 w-4" /> Back home
+            <Home className="h-4 w-4" /> Home
           </Link>
-          <Link href="/pdf-editor" className="bbc-btn bbc-btn-ghost inline-flex items-center gap-2 px-6 py-3 text-[15px]">
-            <FileText className="h-4 w-4" /> Try PDF Copilot
+          <Link href="/tools" className="bbc-btn bbc-btn-ghost inline-flex items-center gap-2 px-6 py-3 text-[15px]">
+            <Wrench className="h-4 w-4" /> Tools
+          </Link>
+          <Link href="/mock-test" className="bbc-btn bbc-btn-ghost inline-flex items-center gap-2 px-6 py-3 text-[15px]">
+            <Layers className="h-4 w-4" /> Mocks
+          </Link>
+          <Link href="/blog" className="bbc-btn bbc-btn-ghost inline-flex items-center gap-2 px-6 py-3 text-[15px]">
+            <BookOpen className="h-4 w-4" /> Blog
           </Link>
         </div>
       </div>

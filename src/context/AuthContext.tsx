@@ -11,6 +11,7 @@ import {
   signInWithPopup,
   updateProfile,
   sendEmailVerification,
+  signInWithCustomToken,
   reload,
 } from "firebase/auth";
 import { auth, googleProvider, db } from "../firebase";
@@ -35,6 +36,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, name?: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithToken: (token: string) => Promise<void>;
   signOutUser: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   resendVerificationEmail: () => Promise<void>;
@@ -95,6 +97,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signInWithGoogle = async () => {
     if (!auth || !googleProvider) throw new Error("Auth not initialized");
     const credential = await signInWithPopup(auth, googleProvider);
+    await setSessionCookies(credential.user);
+  };
+
+  const signInWithToken = async (token: string) => {
+    if (!auth) throw new Error("Auth not initialized");
+    const credential = await signInWithCustomToken(auth, token);
     await setSessionCookies(credential.user);
   };
 
@@ -171,6 +179,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signUp,
     signIn,
     signInWithGoogle,
+    signInWithToken,
     signOutUser,
     resetPassword,
     resendVerificationEmail,

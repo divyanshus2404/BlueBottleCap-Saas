@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import React from "react";
+import React, { Suspense } from "react";
 import { Providers } from "./providers";
 import ClientLayout from "./ClientLayout";
 import { Analytics } from "@vercel/analytics/next";
@@ -55,8 +55,16 @@ export default function RootLayout({
       <head>
         <link rel="icon" type="image/png" href="/favicon.png" sizes="32x32" />
         <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-        <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
+        {/* Stash the install prompt before React mounts — beforeinstallprompt
+            often fires during initial load, earlier than any useEffect listener.
+            Consumers read window.__bbcInstallPrompt or listen for bbc-install-ready. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__bbcInstallPrompt=e;window.dispatchEvent(new Event('bbc-install-ready'));});`,
+          }}
+        />
         {PLAUSIBLE_DOMAIN && (
           <script
             defer
@@ -71,9 +79,14 @@ export default function RootLayout({
           when a tab loaded with dark-mode preference. */}
       <body className="antialiased min-h-screen">
         <Providers>
-          <ClientLayout>
-            {children}
-          </ClientLayout>
+          {/* Suspense boundary is required because ClientLayout calls
+              useSearchParams(); without it the static App Router build
+              would opt every page into client-side rendering. */}
+          <Suspense fallback={null}>
+            <ClientLayout>
+              {children}
+            </ClientLayout>
+          </Suspense>
         </Providers>
         {/* No-ops outside Vercel deployments, so safe in dev. */}
         <Analytics />

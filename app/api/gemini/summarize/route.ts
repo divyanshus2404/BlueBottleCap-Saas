@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 import { aiRateLimiter, getClientIp } from '@/src/lib/rateLimit';
 import { requireAuth } from '@/src/lib/authGuard';
+import { enforceUserQuota } from '@/src/lib/userQuota';
 
 function getAIClient() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -23,6 +24,9 @@ export async function POST(req: Request) {
 
   const auth = await requireAuth(req);
   if (auth.error) return auth.error;
+
+  const quota = await enforceUserQuota(auth.userId, "summarize");
+  if (!quota.ok) return quota.error!;
 
   try {
     const { text, focus } = await req.json();
@@ -65,6 +69,9 @@ ${cappedText}`,
         { status: 429 }
       );
     }
-    return NextResponse.json({ error: 'An error occurred during summarization.' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Couldn\'t generate a summary. If the text is very long, try a smaller chunk.' },
+      { status: 500 }
+    );
   }
 }

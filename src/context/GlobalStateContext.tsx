@@ -441,25 +441,17 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const handleUpgradeAccount = async (plan: ActivePlan) => {
-    showToast(`🎉 Upgraded to ${plan} plan! All features unlocked.`, "success");
+    // Optimistic UI: unlock features immediately. The authoritative source
+    // for the plan is the server-side Razorpay verify route, which writes
+    // activePlan/creditsRemaining to Firestore via Admin SDK. The onSnapshot
+    // listener above will reconcile this state on the next tick.
+    //
+    // Firestore rules deny client writes to entitlement fields (see
+    // firestore.rules), so we deliberately don't try to persist here — that
+    // would just log a permission-denied error.
     const newCredits = getMaxCredits(plan);
     setUserStats((prev) => ({ ...prev, activePlan: plan, creditsLeft: newCredits }));
-    // usageStats auto-computes from userStats — no separate setUsageStats call needed
-
-    if (currentUser && db) {
-      try {
-        const userDocRef = doc(db, "users", currentUser.uid);
-        await updateDoc(userDocRef, {
-          activePlan: plan,
-          plan,
-          creditsLeft: newCredits,
-          creditsRemaining: newCredits,
-          updatedAt: new Date().toISOString(),
-        });
-      } catch (err) {
-        console.error("Failed to update user plan in Firestore:", err);
-      }
-    }
+    showToast(`🎉 Upgraded to ${plan} plan! All features unlocked.`, "success");
   };
 
   const handlePurchaseTest = async (testId: string) => {

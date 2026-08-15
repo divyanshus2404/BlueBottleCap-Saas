@@ -1,6 +1,6 @@
 export interface MockQuestion {
   id: string;
-  subject: "Physics" | "Chemistry" | "Maths";
+  subject: "Physics" | "Chemistry" | "Maths" | "Biology";
   topic: string;
   prompt: string;
   options: string[];
@@ -31,7 +31,7 @@ export interface MockTestResult {
   subjectBreakdown: { subject: string; correct: number; total: number; score: number }[];
 }
 
-const PHYSICS_QUESTIONS: MockQuestion[] = [
+export const PHYSICS_QUESTIONS: MockQuestion[] = [
   { id: "mt-p1", subject: "Physics", topic: "Mechanics", difficulty: "easy", prompt: "A ball is thrown vertically upward with velocity 20 m/s. What is the maximum height reached? (g = 10 m/s²)", options: ["10 m", "20 m", "30 m", "40 m"], correct: 1, explanation: "h = v²/2g = 400/20 = 20 m" },
   { id: "mt-p2", subject: "Physics", topic: "Mechanics", difficulty: "medium", prompt: "Two blocks of masses 3 kg and 5 kg are connected by a string over a frictionless pulley. Find the acceleration of the system. (g = 10 m/s²)", options: ["2.5 m/s²", "3.75 m/s²", "5 m/s²", "1.25 m/s²"], correct: 0, explanation: "a = (m₂-m₁)g/(m₁+m₂) = (5-3)×10/(5+3) = 2.5 m/s²" },
   { id: "mt-p3", subject: "Physics", topic: "Electrostatics", difficulty: "medium", prompt: "Two charges of +2μC and -2μC are placed 10 cm apart. What is the electric field at the midpoint?", options: ["0 N/C", "1.44 × 10⁶ N/C", "2.88 × 10⁶ N/C", "7.2 × 10⁵ N/C"], correct: 2, explanation: "Fields from both charges point in the same direction at the midpoint. E = 2 × kq/r² = 2 × 9×10⁹ × 2×10⁻⁶ / (0.05)² = 2.88 × 10⁶ N/C" },
@@ -54,7 +54,7 @@ const PHYSICS_QUESTIONS: MockQuestion[] = [
   { id: "mt-p20", subject: "Physics", topic: "Nuclear Physics", difficulty: "hard", prompt: "The binding energy per nucleon is maximum for:", options: ["U-238", "Fe-56", "He-4", "H-2"], correct: 1, explanation: "Fe-56 has the highest binding energy per nucleon (~8.8 MeV), making it the most stable nucleus." },
 ];
 
-const CHEMISTRY_QUESTIONS: MockQuestion[] = [
+export const CHEMISTRY_QUESTIONS: MockQuestion[] = [
   { id: "mt-c1", subject: "Chemistry", topic: "Atomic Structure", difficulty: "easy", prompt: "The number of radial nodes for a 3p orbital is:", options: ["0", "1", "2", "3"], correct: 1, explanation: "Radial nodes = n - l - 1 = 3 - 1 - 1 = 1" },
   { id: "mt-c2", subject: "Chemistry", topic: "Chemical Bonding", difficulty: "medium", prompt: "Which molecule has the highest bond order?", options: ["O₂", "N₂", "F₂", "C₂"], correct: 1, explanation: "N₂ has bond order 3 (triple bond), highest among these." },
   { id: "mt-c3", subject: "Chemistry", topic: "Organic Chemistry", difficulty: "medium", prompt: "The IUPAC name of CH₃CH(OH)CH₃ is:", options: ["1-propanol", "2-propanol", "propan-1-ol", "isopropyl alcohol"], correct: 1, explanation: "OH is on the second carbon, making it propan-2-ol or 2-propanol." },
@@ -77,7 +77,7 @@ const CHEMISTRY_QUESTIONS: MockQuestion[] = [
   { id: "mt-c20", subject: "Chemistry", topic: "Thermodynamics", difficulty: "medium", prompt: "For a spontaneous process at constant T and P:", options: ["ΔH must be negative", "ΔG must be negative", "ΔS must be positive", "ΔG must be positive"], correct: 1, explanation: "At constant T and P, a process is spontaneous when ΔG < 0 (Gibbs free energy decreases)." },
 ];
 
-const MATHS_QUESTIONS: MockQuestion[] = [
+export const MATHS_QUESTIONS: MockQuestion[] = [
   { id: "mt-m1", subject: "Maths", topic: "Calculus", difficulty: "easy", prompt: "∫₀¹ x² dx = ?", options: ["1/2", "1/3", "1/4", "1"], correct: 1, explanation: "[x³/3]₀¹ = 1/3" },
   { id: "mt-m2", subject: "Maths", topic: "Algebra", difficulty: "medium", prompt: "If α and β are roots of x² - 5x + 6 = 0, then α³ + β³ = ?", options: ["35", "65", "125", "63"], correct: 0, explanation: "α=2, β=3. α³+β³ = 8+27 = 35. Or use α³+β³ = (α+β)³ - 3αβ(α+β) = 125 - 90 = 35" },
   { id: "mt-m3", subject: "Maths", topic: "Trigonometry", difficulty: "easy", prompt: "sin²(30°) + cos²(30°) = ?", options: ["0", "1/2", "1", "√3/2"], correct: 2, explanation: "Pythagorean identity: sin²θ + cos²θ = 1 for all θ" },
@@ -99,6 +99,37 @@ const MATHS_QUESTIONS: MockQuestion[] = [
   { id: "mt-m19", subject: "Maths", topic: "Calculus", difficulty: "hard", prompt: "The area bounded by y = x², x-axis, x=0 and x=2 is:", options: ["4/3", "8/3", "4", "2"], correct: 1, explanation: "A = ∫₀² x² dx = [x³/3]₀² = 8/3" },
   { id: "mt-m20", subject: "Maths", topic: "Statistics", difficulty: "easy", prompt: "The variance of the data 2, 4, 6, 8, 10 is:", options: ["4", "6", "8", "10"], correct: 2, explanation: "Mean=6. Variance = [(16+4+0+4+16)/5] = 40/5 = 8" },
 ];
+
+// --- NEET Biology Questions ---
+export const BIOLOGY_QUESTIONS: MockQuestion[] = [
+  { id: "mt-b1", subject: "Biology", topic: "Cell Biology", difficulty: "easy", prompt: "The powerhouse of the cell is:", options: ["Nucleus", "Ribosome", "Mitochondria", "Golgi body"], correct: 2, explanation: "Mitochondria produce ATP through oxidative phosphorylation, earning the name 'powerhouse of the cell'." },
+  { id: "mt-b2", subject: "Biology", topic: "Genetics", difficulty: "medium", prompt: "Mendel's law of independent assortment is applicable to genes located on:", options: ["Same chromosome", "Different chromosomes", "Sex chromosomes only", "Autosomes only"], correct: 1, explanation: "Independent assortment applies to genes on different chromosomes as they segregate independently during meiosis." },
+  { id: "mt-b3", subject: "Biology", topic: "Human Physiology", difficulty: "easy", prompt: "The functional unit of the kidney is:", options: ["Neuron", "Nephron", "Glomerulus", "Bowman's capsule"], correct: 1, explanation: "Nephron is the structural and functional unit of the kidney, responsible for urine formation." },
+  { id: "mt-b4", subject: "Biology", topic: "Ecology", difficulty: "medium", prompt: "In an ecosystem, the flow of energy is:", options: ["Bidirectional", "Unidirectional", "Multidirectional", "Cyclic"], correct: 1, explanation: "Energy flows unidirectionally: Sun → Producers → Consumers. It cannot be recycled." },
+  { id: "mt-b5", subject: "Biology", topic: "Plant Physiology", difficulty: "hard", prompt: "C4 plants differ from C3 plants in having:", options: ["Calvin cycle only", "Kranz anatomy", "No photorespiration or Kranz anatomy", "Kranz anatomy and less photorespiration"], correct: 3, explanation: "C4 plants have Kranz anatomy (bundle sheath cells) and show minimal photorespiration due to CO₂ concentration mechanism." },
+  { id: "mt-b6", subject: "Biology", topic: "Molecular Biology", difficulty: "medium", prompt: "The enzyme responsible for transcription in eukaryotes for mRNA synthesis is:", options: ["RNA Polymerase I", "RNA Polymerase II", "RNA Polymerase III", "DNA Polymerase"], correct: 1, explanation: "RNA Polymerase II transcribes mRNA (hnRNA) in eukaryotes." },
+  { id: "mt-b7", subject: "Biology", topic: "Evolution", difficulty: "easy", prompt: "Darwin's finches are an example of:", options: ["Convergent evolution", "Adaptive radiation", "Industrial melanism", "Co-evolution"], correct: 1, explanation: "Darwin's finches show adaptive radiation — one ancestral species diversified into many species with different beak shapes for different food sources." },
+  { id: "mt-b8", subject: "Biology", topic: "Human Reproduction", difficulty: "medium", prompt: "Fertilization in humans normally occurs in the:", options: ["Uterus", "Vagina", "Ampulla of fallopian tube", "Cervix"], correct: 2, explanation: "Fertilization typically occurs in the ampullary-isthmic junction of the fallopian tube." },
+  { id: "mt-b9", subject: "Biology", topic: "Biotechnology", difficulty: "hard", prompt: "The vector commonly used in gene cloning is:", options: ["Bacteriophage only", "pBR322", "Ti plasmid only", "Cosmid only"], correct: 1, explanation: "pBR322 is the most commonly used cloning vector. It has ampicillin and tetracycline resistance genes as selectable markers." },
+  { id: "mt-b10", subject: "Biology", topic: "Immunology", difficulty: "medium", prompt: "Which immunoglobulin is the first to be produced during a primary immune response?", options: ["IgA", "IgG", "IgE", "IgM"], correct: 3, explanation: "IgM is the first antibody produced during a primary immune response. It is a pentamer and activates complement." },
+  { id: "mt-b11", subject: "Biology", topic: "Plant Anatomy", difficulty: "easy", prompt: "Meristematic tissue is characterized by:", options: ["Thick cell walls", "Large vacuoles", "Active cell division", "Intercellular spaces"], correct: 2, explanation: "Meristematic cells are undifferentiated, have thin walls, dense cytoplasm, and undergo active division." },
+  { id: "mt-b12", subject: "Biology", topic: "Animal Kingdom", difficulty: "medium", prompt: "Which phylum shows the presence of a water vascular system?", options: ["Arthropoda", "Mollusca", "Echinodermata", "Annelida"], correct: 2, explanation: "Echinoderms (starfish, sea urchins) have a unique water vascular system used for locomotion, feeding, and respiration." },
+  { id: "mt-b13", subject: "Biology", topic: "Biomolecules", difficulty: "easy", prompt: "Enzymes are chemically:", options: ["Carbohydrates", "Lipids", "Proteins", "Nucleic acids"], correct: 2, explanation: "Almost all enzymes are proteins (except ribozymes which are RNA). They act as biological catalysts." },
+  { id: "mt-b14", subject: "Biology", topic: "Genetics", difficulty: "hard", prompt: "A cross between AaBb × aabb is an example of:", options: ["Monohybrid cross", "Test cross", "Back cross", "Dihybrid test cross"], correct: 3, explanation: "Crossing a dihybrid (AaBb) with a double recessive (aabb) is a dihybrid test cross to determine the genotype." },
+  { id: "mt-b15", subject: "Biology", topic: "Ecology", difficulty: "medium", prompt: "The pyramid of energy in an ecosystem is always:", options: ["Inverted", "Upright", "Spindle-shaped", "Variable"], correct: 1, explanation: "The pyramid of energy is always upright because energy decreases at each successive trophic level (10% rule)." },
+  { id: "mt-b16", subject: "Biology", topic: "Cell Biology", difficulty: "hard", prompt: "During which phase of the cell cycle does DNA replication occur?", options: ["G1 phase", "S phase", "G2 phase", "M phase"], correct: 1, explanation: "DNA replication occurs during the S (synthesis) phase of interphase, where DNA content doubles from 2n to 4n." },
+  { id: "mt-b17", subject: "Biology", topic: "Human Physiology", difficulty: "easy", prompt: "The hormone insulin is secreted by:", options: ["Alpha cells of pancreas", "Beta cells of pancreas", "Delta cells of pancreas", "Acinar cells"], correct: 1, explanation: "Insulin is secreted by β-cells of the Islets of Langerhans in the pancreas. It lowers blood glucose." },
+  { id: "mt-b18", subject: "Biology", topic: "Molecular Biology", difficulty: "hard", prompt: "The Lac operon is an example of:", options: ["Positive regulation only", "Negative regulation only", "Both positive and negative regulation", "Constitutive expression"], correct: 2, explanation: "Lac operon has both negative (repressor protein) and positive (CAP-cAMP complex) regulation." },
+  { id: "mt-b19", subject: "Biology", topic: "Plant Physiology", difficulty: "medium", prompt: "Abscisic acid is also known as:", options: ["Growth hormone", "Stress hormone", "Ripening hormone", "Flowering hormone"], correct: 1, explanation: "ABA is called the stress hormone as it helps plants respond to drought, salinity, and other stresses by closing stomata." },
+  { id: "mt-b20", subject: "Biology", topic: "Biodiversity", difficulty: "easy", prompt: "The term 'biodiversity' was popularized by:", options: ["Charles Darwin", "Edward Wilson", "Alexander von Humboldt", "Robert May"], correct: 1, explanation: "Edward O. Wilson popularized the term 'biodiversity' in 1986 at the National Forum on BioDiversity." },
+];
+
+import { PHYSICS_BULK, CHEMISTRY_BULK, MATHS_BULK, BIOLOGY_BULK } from "../data/bulkQuestions";
+
+const ALL_PHYSICS = [...PHYSICS_QUESTIONS, ...PHYSICS_BULK];
+const ALL_CHEMISTRY = [...CHEMISTRY_QUESTIONS, ...CHEMISTRY_BULK];
+const ALL_MATHS = [...MATHS_QUESTIONS, ...MATHS_BULK];
+const ALL_BIOLOGY = [...BIOLOGY_QUESTIONS, ...BIOLOGY_BULK];
 
 export const MOCK_TESTS: MockTestConfig[] = [
   {
@@ -143,7 +174,159 @@ export const MOCK_TESTS: MockTestConfig[] = [
     marking: { correct: 4, incorrect: -1, unanswered: 0 },
     questions: [...PHYSICS_QUESTIONS.slice(10), ...CHEMISTRY_QUESTIONS.slice(10), ...MATHS_QUESTIONS.slice(10)],
   },
+  {
+    id: "neet-mini-1",
+    name: "NEET Mini Mock — Set 1",
+    duration: 30,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...BIOLOGY_QUESTIONS.slice(0, 5), ...PHYSICS_QUESTIONS.slice(0, 3), ...CHEMISTRY_QUESTIONS.slice(0, 2)],
+  },
+  {
+    id: "neet-mini-2",
+    name: "NEET Mini Mock — Set 2",
+    duration: 30,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...BIOLOGY_QUESTIONS.slice(5, 10), ...PHYSICS_QUESTIONS.slice(3, 6), ...CHEMISTRY_QUESTIONS.slice(2, 5)],
+  },
+  {
+    id: "neet-full-1",
+    name: "NEET Full Mock — Paper 1",
+    duration: 60,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...BIOLOGY_QUESTIONS.slice(0, 20), ...PHYSICS_QUESTIONS.slice(0, 10), ...CHEMISTRY_QUESTIONS.slice(0, 10)],
+  },
+  // ── Bulk JEE tests ──
+  {
+    id: "jee-mini-5",
+    name: "JEE Mini Mock — Set 5",
+    duration: 30,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...PHYSICS_BULK.slice(0, 4), ...CHEMISTRY_BULK.slice(0, 3), ...MATHS_BULK.slice(0, 3)],
+  },
+  {
+    id: "jee-mini-6",
+    name: "JEE Mini Mock — Set 6",
+    duration: 30,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...PHYSICS_BULK.slice(4, 8), ...CHEMISTRY_BULK.slice(3, 6), ...MATHS_BULK.slice(3, 6)],
+  },
+  {
+    id: "jee-mini-7",
+    name: "JEE Mini Mock — Set 7",
+    duration: 30,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...PHYSICS_BULK.slice(8, 12), ...CHEMISTRY_BULK.slice(6, 10), ...MATHS_BULK.slice(6, 10)],
+  },
+  {
+    id: "jee-mini-8",
+    name: "JEE Mini Mock — Set 8",
+    duration: 30,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...PHYSICS_BULK.slice(12, 16), ...CHEMISTRY_BULK.slice(10, 14), ...MATHS_BULK.slice(10, 14)],
+  },
+  {
+    id: "jee-full-3",
+    name: "JEE Full Mock — Paper 3",
+    duration: 60,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...PHYSICS_BULK.slice(0, 15), ...CHEMISTRY_BULK.slice(0, 15), ...MATHS_BULK.slice(0, 15)],
+  },
+  {
+    id: "jee-full-4",
+    name: "JEE Full Mock — Paper 4",
+    duration: 60,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...PHYSICS_BULK.slice(15, 30), ...CHEMISTRY_BULK.slice(15, 30), ...MATHS_BULK.slice(15, 30)],
+  },
+  {
+    id: "jee-full-5",
+    name: "JEE Full Mock — Paper 5",
+    duration: 60,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...PHYSICS_BULK.slice(30, 45), ...CHEMISTRY_BULK.slice(30, 45), ...MATHS_BULK.slice(30, 45)],
+  },
+  {
+    id: "jee-mega-1",
+    name: "JEE Mega Mock — 75 Questions",
+    duration: 120,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...ALL_PHYSICS.slice(0, 25), ...ALL_CHEMISTRY.slice(0, 25), ...ALL_MATHS.slice(0, 25)],
+  },
+  // ── Bulk NEET tests ──
+  {
+    id: "neet-mini-3",
+    name: "NEET Mini Mock — Set 3",
+    duration: 30,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...BIOLOGY_BULK.slice(0, 5), ...PHYSICS_BULK.slice(0, 3), ...CHEMISTRY_BULK.slice(0, 2)],
+  },
+  {
+    id: "neet-mini-4",
+    name: "NEET Mini Mock — Set 4",
+    duration: 30,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...BIOLOGY_BULK.slice(5, 10), ...PHYSICS_BULK.slice(3, 6), ...CHEMISTRY_BULK.slice(2, 5)],
+  },
+  {
+    id: "neet-mini-5",
+    name: "NEET Mini Mock — Set 5",
+    duration: 30,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...BIOLOGY_BULK.slice(10, 15), ...PHYSICS_BULK.slice(6, 9), ...CHEMISTRY_BULK.slice(5, 8)],
+  },
+  {
+    id: "neet-full-2",
+    name: "NEET Full Mock — Paper 2",
+    duration: 60,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...BIOLOGY_BULK.slice(0, 20), ...PHYSICS_BULK.slice(0, 10), ...CHEMISTRY_BULK.slice(0, 10)],
+  },
+  {
+    id: "neet-full-3",
+    name: "NEET Full Mock — Paper 3",
+    duration: 60,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...BIOLOGY_BULK.slice(20, 40), ...PHYSICS_BULK.slice(10, 20), ...CHEMISTRY_BULK.slice(10, 20)],
+  },
+  {
+    id: "neet-mega-1",
+    name: "NEET Mega Mock — 90 Questions",
+    duration: 120,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: [...ALL_BIOLOGY.slice(0, 45), ...ALL_PHYSICS.slice(0, 23), ...ALL_CHEMISTRY.slice(0, 22)],
+  },
+  // ── Topic-wise tests ──
+  {
+    id: "topic-mechanics",
+    name: "Topic Test — Mechanics",
+    duration: 20,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: ALL_PHYSICS.filter(q => q.topic === "Mechanics").slice(0, 10),
+  },
+  {
+    id: "topic-organic",
+    name: "Topic Test — Organic Chemistry",
+    duration: 20,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: ALL_CHEMISTRY.filter(q => q.topic === "Organic Chemistry").slice(0, 10),
+  },
+  {
+    id: "topic-calculus",
+    name: "Topic Test — Calculus",
+    duration: 20,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: ALL_MATHS.filter(q => q.topic.includes("Calcul") || q.topic === "Differentiation" || q.topic === "Integration" || q.topic === "Limits").slice(0, 10),
+  },
+  {
+    id: "topic-genetics",
+    name: "Topic Test — Genetics & Molecular Biology",
+    duration: 20,
+    marking: { correct: 4, incorrect: -1, unanswered: 0 },
+    questions: ALL_BIOLOGY.filter(q => q.topic === "Genetics" || q.topic === "Molecular Biology").slice(0, 10),
+  },
 ];
+
+export { ALL_PHYSICS, ALL_CHEMISTRY, ALL_MATHS, ALL_BIOLOGY };
 
 export function scoreMockTest(test: MockTestConfig, answers: Record<string, number | null>, timeTaken: number): MockTestResult {
   let correct = 0, incorrect = 0, unanswered = 0, score = 0;
@@ -186,14 +369,31 @@ export function scoreMockTest(test: MockTestConfig, answers: Record<string, numb
 
 const RESULTS_KEY = "bluebottlecap_mock_results";
 
-export function saveMockResult(result: MockTestResult) {
+export function saveMockResult(result: MockTestResult, uid?: string | null) {
   if (typeof window === "undefined") return;
   const existing = JSON.parse(localStorage.getItem(RESULTS_KEY) || "[]");
   existing.push(result);
-  localStorage.setItem(RESULTS_KEY, JSON.stringify(existing.slice(-20)));
+  localStorage.setItem(RESULTS_KEY, JSON.stringify(existing.slice(-50)));
+  if (uid) {
+    import("./firestoreSync").then((m) => m.syncMockResultToFirestore(uid, result)).catch(() => {});
+  }
 }
 
 export function getMockResults(): MockTestResult[] {
   if (typeof window === "undefined") return [];
   return JSON.parse(localStorage.getItem(RESULTS_KEY) || "[]");
+}
+
+export async function getMockResultsWithSync(uid: string): Promise<MockTestResult[]> {
+  const local = getMockResults();
+  try {
+    const { loadMockResultsFromFirestore, mergeLocalAndRemote } = await import("./firestoreSync");
+    const remote = await loadMockResultsFromFirestore(uid);
+    const merged = mergeLocalAndRemote(local, remote, (r) => r.testId + "_" + r.completedAt);
+    merged.sort((a, b) => new Date(a.completedAt).getTime() - new Date(b.completedAt).getTime());
+    localStorage.setItem(RESULTS_KEY, JSON.stringify(merged.slice(-50)));
+    return merged;
+  } catch {
+    return local;
+  }
 }

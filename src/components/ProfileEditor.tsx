@@ -4,8 +4,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { useAuth, UserProfile } from "@/src/context/AuthContext";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/src/firebase";
-import { Camera, Check, ChevronLeft, Loader2, User } from "lucide-react";
+import { Camera, Check, ChevronLeft, Loader2, User, Mail, ShieldCheck, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useGlobalState } from "@/src/context/GlobalStateContext";
 
 const AVATARS = [
   { id: "av-blue", bg: "#1B3FCB", emoji: "📘" },
@@ -33,6 +35,37 @@ export function ProfileEditor() {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelResult, setCancelResult] = useState<"ok" | "err" | null>(null);
+  const { userStats, showToast } = useGlobalState();
+  const isPro = userStats.activePlan === "Pro";
+  const cancelled = (userProfile as { subscriptionCancelled?: boolean } | null)?.subscriptionCancelled === true;
+
+  const handleCancelSubscription = async () => {
+    if (!currentUser) return;
+    if (!window.confirm("Cancel your Pro plan? You'll keep access for the period you've already paid for; you won't be charged again.")) return;
+    setCancelling(true);
+    setCancelResult(null);
+    try {
+      const idToken = await currentUser.getIdToken().catch(() => null);
+      const resp = await fetch("/api/user/cancel-subscription", {
+        method: "POST",
+        headers: idToken ? { Authorization: `Bearer ${idToken}` } : {},
+      });
+      if (resp.ok) {
+        setCancelResult("ok");
+        showToast?.("Subscription cancelled — you won't be charged again.", "success");
+      } else {
+        setCancelResult("err");
+        showToast?.("Couldn't cancel. Email support@bluebottlecap.com and we'll do it manually.", "error");
+      }
+    } catch {
+      setCancelResult("err");
+      showToast?.("Network error. Email support@bluebottlecap.com to cancel.", "error");
+    } finally {
+      setCancelling(false);
+    }
+  };
 
   useEffect(() => {
     if (userProfile) {
@@ -201,6 +234,51 @@ export function ProfileEditor() {
           <label className="bbc-mono text-[10.5px] uppercase tracking-[.18em] text-[var(--color-ink-faint)]">Email</label>
           <p className="mt-2 rounded-[12px] border border-[var(--color-line)] bg-[var(--color-paper-card)] px-4 py-3 text-[15px] text-[var(--color-ink-soft)]">
             {currentUser.email || "—"}
+          </p>
+        </div>
+
+        {/* Subscription */}
+        <div className="mt-8 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="bbc-mono text-[10.5px] uppercase tracking-[.18em] text-[var(--color-ink-faint)]">Plan</label>
+              <p className="mt-1 text-[16px] font-bold text-[var(--color-ink)]">
+                {userStats.activePlan || "Free"}
+                {cancelled && <span className="ml-2 text-[12px] font-semibold text-amber-600">Cancelled</span>}
+              </p>
+            </div>
+            {isPro && !cancelled && (
+              <button
+                onClick={handleCancelSubscription}
+                disabled={cancelling}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--color-line)] px-3.5 py-2 text-[12.5px] font-semibold text-[var(--color-ink-soft)] transition hover:border-red-300 hover:text-red-600 disabled:opacity-50"
+              >
+                {cancelling ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <X className="h-3.5 w-3.5" />}
+                {cancelling ? "Cancelling…" : "Cancel plan"}
+              </button>
+            )}
+            {!isPro && (
+              <Link
+                href="/pricing"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--color-blue-ink)] px-3.5 py-2 text-[12.5px] font-semibold text-white transition hover:brightness-110"
+              >
+                <ShieldCheck className="h-3.5 w-3.5" /> Upgrade
+              </Link>
+            )}
+          </div>
+          {cancelled && (
+            <p className="mt-3 text-[13px] leading-relaxed text-[var(--color-ink-soft)]">
+              Auto-renewal is off. You&apos;ll keep access for the period you&apos;ve
+              already paid for. Change your mind?{" "}
+              <Link href="/pricing" className="font-semibold text-[var(--color-blue-ink)] underline">Reactivate</Link>.
+            </p>
+          )}
+          <p className="mt-3 flex items-center gap-1.5 text-[12.5px] text-[var(--color-ink-faint)]">
+            <Mail className="h-3.5 w-3.5" />
+            Billing questions:{" "}
+            <a href="mailto:support@bluebottlecap.com" className="font-semibold text-[var(--color-blue-ink)] underline">support@bluebottlecap.com</a>
+            <span className="mx-1.5">·</span>
+            <Link href="/refunds" className="font-semibold text-[var(--color-blue-ink)] underline">Refund policy</Link>
           </p>
         </div>
 

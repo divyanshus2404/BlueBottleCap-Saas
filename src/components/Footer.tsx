@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Sparkles, Shield, Mail } from "lucide-react";
+import { Sparkles, Shield, Mail, Download } from "lucide-react";
 
 export function Footer() {
   return (
@@ -13,7 +13,10 @@ export function Footer() {
           <div className="max-w-sm space-y-4 md:col-span-2">
             <div className="flex items-center gap-2">
               <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--color-blue-ink)]">
-                <Sparkles className="h-4 w-4 text-white" />
+                <svg width="16" height="16" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                  <path d="M13.4 7.5h5.2v1.7h-1v2.2l1.5 2.8v8.8c0 .7-.5 1.2-1.2 1.2h-4.8c-.7 0-1.2-.5-1.2-1.2v-8.8l1.5-2.8V9.2h-1V7.5z" fill="none" stroke="#fff" strokeWidth="1.3" strokeLinejoin="round"/>
+                  <path d="M13.5 7.5h5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round"/>
+                </svg>
               </span>
               <span className="bbc-serif text-[19px] tracking-[-.01em] text-[var(--color-ink)]">
                 BlueBottleCap
@@ -50,6 +53,11 @@ export function Footer() {
                 <Link href="/dashboard" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Dashboard</Link>
               </li>
               <li>
+                <Link href="/install" className="inline-flex items-center gap-1.5 text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">
+                  <Download className="h-3 w-3 text-[var(--color-blue-ink)]" /> Install App
+                </Link>
+              </li>
+              <li>
                 <Link href="/about" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">About us</Link>
               </li>
               <li>
@@ -68,7 +76,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <Link href="/terms" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Refund policy</Link>
+                <Link href="/refunds" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Refund policy</Link>
               </li>
               <li>
                 <Link href="/terms" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Privacy policy</Link>

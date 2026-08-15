@@ -4,23 +4,36 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     // ── Users collection ──
-    // Each user can only read/write their own document.
+    // Users can read their own doc freely, but writes are restricted:
+    // billing/entitlement fields (activePlan, creditsRemaining, purchases,
+    // etc.) can ONLY be written by the server via Admin SDK. The client can
+    // update everyday progress fields (streak, study log, avatar, etc.).
+    //
+    // Without this split, any signed-in user could self-upgrade to Pro from
+    // the browser console by calling updateDoc({ activePlan: "Pro" }).
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null && request.auth.uid == userId;
 
-      // Sub-collections: pdfs, flashcards, jobs, roadmaps
+      allow create: if request.auth != null
+        && request.auth.uid == userId
+        && !hasEntitlementFields(request.resource.data);
+
+      allow update: if request.auth != null
+        && request.auth.uid == userId
+        && !changesEntitlementFields();
+
+      allow delete: if false;
+
+      // Sub-collections stay open for the owning user — no billing state here.
       match /pdfs/{docId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
-
       match /flashcards/{docId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
-
       match /jobs/{docId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
-
       match /roadmaps/{docId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
@@ -31,15 +44,43 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false; // only writable via Admin SDK / Firebase console
     }
-
     match /jee_questions/{docId}/{rest=**} {
       allow read: if true;
       allow write: if false;
+    }
+
+    // ── OTP codes — server-only. ──
+    // Never readable/writable by clients. The OTP flow uses Admin SDK.
+    match /otpCodes/{docId} {
+      allow read, write: if false;
     }
 
     // ── Default: deny all ──
     match /{document=**} {
       allow read, write: if false;
     }
+  }
+
+  // ── Helpers ──
+  // Fields that must only be set/modified by the server (Razorpay verify
+  // route, OTP verify route). Admin SDK bypasses rules entirely, so the
+  // server can still write these; clients cannot.
+  function entitlementFields() {
+    return [
+      "activePlan", "plan", "creditsRemaining", "creditsLeft",
+      "purchasedTests", "purchasedMaterial", "studyMaterialUnlocked",
+      "lastPaymentId", "lastOrderId", "streakSaved", "lastStreakSaveAt",
+      "emailVerified", "role"
+    ];
+  }
+
+  function hasEntitlementFields(data) {
+    return data.keys().hasAny(entitlementFields());
+  }
+
+  function changesEntitlementFields() {
+    // Which fields are being added/changed in this update?
+    let writing = request.resource.data.diff(resource.data).affectedKeys();
+    return writing.hasAny(entitlementFields());
   }
 }
