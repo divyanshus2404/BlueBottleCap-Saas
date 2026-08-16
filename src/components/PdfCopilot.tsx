@@ -872,7 +872,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                       
                       const pageHls = highlights.filter(hl => hl.pageIndex === currentPage);
                       if (pageHls.length > 0) {
-                        let paragraphElements: React.ReactNode[] = [];
+                        const paragraphElements: React.ReactNode[] = [];
                         let currentText = par;
 
                         pageHls.forEach((hl) => {

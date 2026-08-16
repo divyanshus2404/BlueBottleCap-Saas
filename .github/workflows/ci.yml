@@ -17,9 +17,8 @@ jobs:
       - run: npm ci
       - name: Type check
         run: npx tsc --noEmit
-      # Lint step intentionally omitted: `next lint` isn't configured yet and
-      # drops into an interactive setup prompt that would hang CI. Add it back
-      # once ESLint is configured (npx @next/codemod next-lint-to-eslint-cli .).
+      - name: Lint
+        run: npx next lint
       - name: Build
         run: npm run build
         env:
