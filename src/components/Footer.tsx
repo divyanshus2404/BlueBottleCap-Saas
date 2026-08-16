@@ -79,7 +79,7 @@ export function Footer() {
                 <Link href="/refunds" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Refund policy</Link>
               </li>
               <li>
-                <Link href="/terms" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Privacy policy</Link>
+                <Link href="/privacy" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Privacy policy</Link>
               </li>
               <li className="flex items-center gap-1.5 pt-1 text-[12px] text-[var(--color-ink-faint)]">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-blue-ink)]" />

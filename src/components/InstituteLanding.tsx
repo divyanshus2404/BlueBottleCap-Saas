@@ -251,13 +251,11 @@ export const InstituteLanding: React.FC = () => {
             50 seats free for 30 days.
           </h2>
           <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-[var(--color-ink-soft)]">
-            No credit card. No contract. No demo call required. Fill out one form, get your branded workspace in 24 hours, and let your students try it. If it doesn't work — walk away.
+            No credit card. No contract. No demo call required. One email, get your branded workspace in 24 hours, and let your students try it. If it doesn't work — walk away.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <a
-              href="https://forms.gle/YOUR_FORM_ID"
-              target="_blank"
-              rel="noopener noreferrer"
+              href={`mailto:support@bluebottlecap.com?subject=${encodeURIComponent("Free pilot request — 50 seats")}&body=${encodeURIComponent("Hi! I'd like to start the free 30-day pilot for my institute.\n\nInstitute name:\nCity:\nApprox. number of students:\nPhone (optional):")}`}
               className="bbc-btn bbc-btn-primary px-8 py-3.5 text-[15px]"
             >
               Start my free pilot

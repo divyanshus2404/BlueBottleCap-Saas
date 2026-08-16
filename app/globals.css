@@ -36,6 +36,87 @@
   --color-brand-cobalt: #1B3FCB;  /* = blue-ink */
 }
 
+/* ── DARK MODE ─────────────────────────────────────────────────────
+   The whole design system is token-based, so dark mode is a variable
+   swap. The `dark` class is set on <html> by an inline script in
+   layout.tsx (before paint, no flash) based on localStorage bbc_theme
+   or the OS preference. */
+.dark {
+  /* Editorial dark: near-black blue-tinted paper, bright warm ink,
+     periwinkle accent that reads as text AND survives as a button bg. */
+  --color-paper: #0F1014;
+  --color-paper-card: #17181E;
+  --color-ink: #F4F4F6;
+  --color-ink-soft: #B9BDC7;
+  --color-ink-faint: #838791;
+  --color-line: #262830;
+  --color-line-strong: #363943;
+  --color-blue-ink: #7E96F8;
+  --color-blue-deep: #9DAFFA;
+  --color-blue-wash: #1D2440;
+  --color-brand-navy: #F4F4F6;
+  --color-brand-sky: #7E96F8;
+  --color-brand-cobalt: #7E96F8;
+  color-scheme: dark;
+}
+
+/* ── Dark-mode remaps for hardcoded light utilities ──────────────────
+   Marketing sections and mock-UI cards use literal bg-white / gray-*
+   classes. Rather than fork every component, remap those utilities
+   when .dark is active so surfaces and their text stay legible. */
+.dark .bg-white { background-color: var(--color-paper-card); }
+.dark .hover\:bg-white\/90:hover { background-color: var(--color-paper); }
+.dark .bg-gray-50, .dark .bg-gray-100 { background-color: #20222A; }
+.dark .hover\:bg-gray-100:hover { background-color: #262830; }
+.dark .text-gray-500, .dark .text-gray-600 { color: #9CA0AA; }
+.dark .text-gray-300 { color: #5A5D66; }
+.dark .hover\:text-gray-500:hover { color: #B9BDC7; }
+.dark .bg-red-50 { background-color: rgba(248,113,113,.12); }
+.dark .hover\:bg-red-100\/50:hover { background-color: rgba(248,113,113,.22); }
+.dark .text-red-600 { color: #F87171; }
+.dark .hover\:bg-red-50:hover { background-color: rgba(248,113,113,.12); }
+.dark .bg-purple-100 { background-color: rgba(192,132,252,.16); }
+.dark .text-purple-700 { color: #C4A5F7; }
+.dark [class*="shadow-slate"] { --tw-shadow-color: rgba(0,0,0,.55); }
+
+/* Dark variants of the decorative layers (they hardcode light-mode
+   rgba values). Grid lines flip to faint white; glows get stronger so
+   the page keeps its depth on near-black paper. */
+.dark .bbc-grid {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.045) 1px, transparent 1px);
+}
+.dark .bbc-hero-bg {
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 30%, rgba(126,150,248,.10) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 70%, rgba(155,125,255,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(126,150,248,.05) 0%, transparent 50%);
+}
+.dark .bbc-card-3d,
+.dark .bbc-card-3d:hover {
+  box-shadow:
+    0 1px 2px rgba(0,0,0,.5),
+    0 8px 24px -6px rgba(0,0,0,.55),
+    0 24px 64px -16px rgba(0,0,0,.6);
+}
+.dark .bbc-blob-blue { background: radial-gradient(circle, rgba(126,150,248,.16) 0%, transparent 70%); }
+.dark .bbc-blob-purple { background: radial-gradient(circle, rgba(155,125,255,.13) 0%, transparent 70%); }
+.dark .bbc-section-glow::before {
+  background: linear-gradient(90deg, transparent, rgba(126,150,248,.35) 30%, rgba(155,125,255,.28) 70%, transparent);
+}
+
+/* Translucent sticky-header background. The Tailwind alpha shorthand
+   (bg-[var(--color-paper)]/82) bakes in the LIGHT paper value at build
+   time, so headers stayed light in dark mode — this class resolves the
+   variable at paint time instead. */
+.bbc-header-glass { background: color-mix(in srgb, var(--color-paper) 85%, transparent); }
+
+/* Decorative absolutely-positioned elements (bbc-blob etc.) can poke past
+   the viewport on small screens; clip instead of allowing sideways scroll.
+   `clip` (not `hidden`) keeps position:sticky working. */
+html, body { overflow-x: clip; }
+
 /* App-wide defaults: page background and base typography now match
    the landing without requiring every page to manually apply .bbc. */
 body {
@@ -67,6 +148,10 @@ input, textarea, [contenteditable="true"] {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.dark .glass-panel {
+  background: rgba(23, 24, 30, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 
@@ -118,6 +203,7 @@ input, textarea, [contenteditable="true"] {
 .bbc-btn-primary:hover { background: var(--color-blue-deep); transform: translateY(-1px); box-shadow: 0 10px 22px -12px rgba(27,63,203,.55); }
 .bbc-btn-ghost { background: transparent; color: var(--color-ink); border-color: var(--color-line-strong); }
 .bbc-btn-ghost:hover { background:#fff; }
+.dark .bbc-btn-ghost:hover { background: var(--color-paper-card); }
 .bbc a:focus-visible, .bbc button:focus-visible { outline: 2px solid var(--color-blue-ink); outline-offset: 3px; border-radius: 8px; }
 
 .bbc-stroke    { fill:none; stroke: var(--color-blue-ink); stroke-width:2; stroke-linejoin:round; stroke-linecap:round; }
@@ -155,6 +241,11 @@ input, textarea, [contenteditable="true"] {
 .bbc-arrow { transition: transform .18s ease, color .18s ease; }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* Pure-CSS entrance — no JS needed, always ends visible. */
+  @keyframes bbc-fade-up { from { opacity:0; transform: translateY(18px); } to { opacity:1; transform:none; } }
+  .about-content { animation: bbc-fade-up .7s cubic-bezier(.2,.7,.2,1) both .1s; }
+  .faq-section { animation: bbc-fade-up .7s cubic-bezier(.2,.7,.2,1) both .25s; }
+
   .bbc-reveal { opacity:0; transform: translateY(14px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
   .bbc-reveal.bbc-in { opacity:1; transform:none; }
   /* Fallback: if JS/IntersectionObserver never fires, content becomes visible
@@ -367,7 +458,7 @@ input, textarea, [contenteditable="true"] {
 }
 
 .bbc header {
-  background: rgba(245,244,239,.6) !important;
+  background: color-mix(in srgb, var(--color-paper) 60%, transparent) !important;
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
   box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 4px 24px -8px rgba(20,30,55,.06);
@@ -406,6 +497,15 @@ input, textarea, [contenteditable="true"] {
     0 40px 80px -28px rgba(27,63,203,.12);
 }
 
+/* Hero live-activity chips: slow rise-and-settle loop, staggered per chip
+   via inline animation-delay. Deliberately subtle — 4px travel, long cycle. */
+@keyframes bbc-chip-drift {
+  0%, 100% { transform: translateY(0); opacity: .75; }
+  50%      { transform: translateY(-4px); opacity: 1; }
+}
+.bbc-activity-chip { animation: bbc-chip-drift 4.5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .bbc-activity-chip { animation: none; } }
+
 .bbc-blob {
   position: absolute; pointer-events: none; z-index: 0;
   border-radius: 50%;
@@ -442,6 +542,10 @@ input, textarea, [contenteditable="true"] {
   background: linear-gradient(135deg, var(--color-paper-card) 0%, rgba(237,239,251,.3) 100%);
   box-shadow: inset 0 2px 8px rgba(20,30,55,.04), 0 1px 3px rgba(20,30,55,.06);
 }
+.dark .bbc-step-art {
+  background: linear-gradient(135deg, #1A1C23 0%, #1B2135 100%);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.4);
+}
 
 .bbc-closing-bg {
   background: linear-gradient(135deg, #152ea8 0%, #1B3FCB 40%, #2a4fd6 100%) !important;
@@ -475,5 +579,11 @@ input, textarea, [contenteditable="true"] {
 }
 .bbc-lane-institute {
   background: linear-gradient(145deg, #ffffff 0%, rgba(237,239,251,.5) 100%);
+}
+.dark .bbc-lane-student {
+  background: linear-gradient(145deg, #1A1C23 0%, #171A26 100%);
+}
+.dark .bbc-lane-institute {
+  background: linear-gradient(145deg, #1B1E2A 0%, #182036 100%);
 }
 

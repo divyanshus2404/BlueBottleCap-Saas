@@ -24,7 +24,7 @@ export const LanguageSwitcher: React.FC<{ compact?: boolean }> = ({ compact }) =
       <button
         onClick={() => setOpen((o) => !o)}
         aria-label={t("lang.label")}
-        className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-line)] bg-white/60 px-2.5 py-1.5 text-[13px] font-semibold text-[var(--color-ink-soft)] transition hover:border-[var(--color-line-strong)] hover:text-[var(--color-ink)]"
+        className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-line)] bg-[var(--color-paper-card)] px-2.5 py-1.5 text-[13px] font-semibold text-[var(--color-ink-soft)] transition hover:border-[var(--color-line-strong)] hover:text-[var(--color-ink)]"
       >
         <Globe className="h-3.5 w-3.5" />
         {!compact && <span>{current.native}</span>}

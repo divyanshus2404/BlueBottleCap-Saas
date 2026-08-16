@@ -1,11 +1,7 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import { ArrowLeft, Heart } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ActiveView } from "../types";
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface AboutPageProps {
   onNavigate: (view: ActiveView) => void;
@@ -26,33 +22,23 @@ const FAQS: { q: string; a: string }[] = [
   },
 ];
 
+const FAQ_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQS.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
 export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".about-content", {
-        y: 24,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.12,
-        ease: "power3.out",
-        delay: 0.2,
-      });
-      gsap.from(".faq-item", {
-        y: 20,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.12,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".faq-section", start: "top 85%" },
-      });
-    }, containerRef);
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <div ref={containerRef} className="bbc relative min-h-screen overflow-hidden">
+    <div className="bbc relative min-h-screen overflow-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
+      />
       <div className="bbc-grid" aria-hidden="true" />
 
       <div className="relative z-[2] mx-auto max-w-[1180px] px-7 pt-20 pb-28">
