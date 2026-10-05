@@ -13,7 +13,7 @@ function generateOtp(): string {
 }
 
 export async function POST(req: Request) {
-  const limited = enforceRateLimit(req, { limit: 5, windowMs: 300_000, prefix: "otp-send" });
+  const limited = await enforceRateLimit(req, { limit: 5, windowMs: 300_000, prefix: "otp-send" });
   if (limited) return limited;
 
   let body: unknown;

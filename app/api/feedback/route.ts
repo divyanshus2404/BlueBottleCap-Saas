@@ -49,7 +49,7 @@ function buildTransport() {
 }
 
 export async function POST(req: Request) {
-  const limited = enforceRateLimit(req, { limit: 5, windowMs: 60_000, prefix: "feedback" });
+  const limited = await enforceRateLimit(req, { limit: 5, windowMs: 60_000, prefix: "feedback" });
   if (limited) return limited;
 
   let body: FeedbackBody;

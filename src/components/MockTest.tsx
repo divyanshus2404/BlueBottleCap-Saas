@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { MOCK_TESTS, scoreMockTest, saveMockResult, type MockTestConfig, type MockTestResult } from "@/src/lib/mockTest";
-import { Clock, ChevronLeft, ChevronRight, Flag, CheckCircle, XCircle, Minus, BarChart3, Share2, Lock, Sparkles } from "lucide-react";
+import { MOCK_TESTS, scoreMockTest, saveMockResult, getExamPattern, sectionsOf, EXAM_PATTERNS, type MockTestConfig, type MockTestResult, type MockQuestion } from "@/src/lib/mockTest";
+import { Clock, ChevronLeft, ChevronRight, Flag, CheckCircle, XCircle, Minus, BarChart3, Share2, Lock, Sparkles, Info } from "lucide-react";
 import { Confetti } from "./Confetti";
 import { WhatsAppShare } from "./WhatsAppShare";
 import { useCountUp } from "@/src/hooks/useCountUp";
@@ -27,6 +27,9 @@ export function MockTest() {
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number | null>>({});
   const [marked, setMarked] = useState<Set<string>>(new Set());
+  // The real NTA interface distinguishes "not visited" (grey) from "visited
+  // but not answered" (red). Without this set both look identical.
+  const [visited, setVisited] = useState<Set<string>>(new Set());
   const [timeLeft, setTimeLeft] = useState(0);
   const [startTime, setStartTime] = useState(0);
   const [result, setResult] = useState<MockTestResult | null>(null);
@@ -215,8 +218,20 @@ export function MockTest() {
           Test yourself under real conditions
         </h1>
         <p className="mt-4 max-w-[50ch] text-[15px] text-[var(--color-ink-soft)]">
-          Timed tests with JEE marking scheme (+4, -1). Pick a set and start — no pausing allowed.
+          Timed practice papers that follow the real JEE Main and NEET UG interface —
+          section-wise navigation, colour-coded question palette, and official marking.
         </p>
+
+        {/* Unambiguous, before a student ever sees a score. */}
+        <div className="mt-5 flex max-w-[62ch] items-start gap-3 rounded-xl border border-[var(--color-line-strong)] bg-[var(--color-paper-card)] px-4 py-3">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-ink-soft)]" />
+          <p className="text-[13px] leading-[1.6] text-[var(--color-ink-soft)]">
+            <strong className="text-[var(--color-ink)]">Practice only.</strong> These are
+            unofficial mock papers made for self-study. They are not real JEE or NEET papers,
+            are not affiliated with or endorsed by NTA, and your score here does not predict
+            or affect your actual exam result, rank, or percentile.
+          </p>
+        </div>
 
         {/* Resume banner — an unfinished test on this device. Restores
             answers, marked, timer, and current question exactly where the
@@ -361,12 +376,51 @@ export function MockTest() {
     const isUrgent = timeLeft < 120;
     const answered = Object.values(answers).filter((a) => a !== null && a !== undefined).length;
 
+    // NTA status model — drives both the palette colours and the legend counts.
+    const statusOf = (tq: MockQuestion): "answered" | "answeredMarked" | "marked" | "notAnswered" | "notVisited" => {
+      const hasAns = answers[tq.id] !== null && answers[tq.id] !== undefined;
+      const isMarked = marked.has(tq.id);
+      if (hasAns && isMarked) return "answeredMarked";
+      if (hasAns) return "answered";
+      if (isMarked) return "marked";
+      return visited.has(tq.id) ? "notAnswered" : "notVisited";
+    };
+    const counts = test.questions.reduce(
+      (acc, tq) => { acc[statusOf(tq)]++; return acc; },
+      { answered: 0, answeredMarked: 0, marked: 0, notAnswered: 0, notVisited: 0 } as Record<string, number>,
+    );
+    const PALETTE: Record<string, string> = {
+      answered: "bg-green-600 text-white border-green-600",
+      answeredMarked: "bg-purple-600 text-white border-purple-600",
+      marked: "bg-purple-600 text-white border-purple-600",
+      notAnswered: "bg-red-500 text-white border-red-500",
+      notVisited: "bg-[var(--color-paper-card)] text-[var(--color-ink-soft)] border-[var(--color-line-strong)]",
+    };
+    const goTo = (i: number) => {
+      const target = test.questions[i];
+      if (target) setVisited((prev) => new Set(prev).add(target.id));
+      setIdx(i);
+    };
+    const saveAndNext = () => goTo(Math.min(test.questions.length - 1, idx + 1));
+    const clearResponse = () => setAnswers((prev) => ({ ...prev, [q.id]: null }));
+    const markAndNext = () => {
+      setMarked((prev) => { const s = new Set(prev); s.add(q.id); return s; });
+      saveAndNext();
+    };
+    const sections = sectionsOf(test);
+    const pattern = EXAM_PATTERNS[getExamPattern(test)];
+
     return (
       <div className="bbc min-h-screen">
         {/* Top bar */}
         <div className="sticky top-0 z-40 border-b border-[var(--color-line)] bg-[var(--color-paper)] px-4 py-3">
           <div className="mx-auto flex max-w-[900px] items-center justify-between">
-            <p className="text-[13px] font-bold text-[var(--color-ink)]">{test.name}</p>
+            <div className="min-w-0">
+              <p className="truncate text-[13px] font-bold text-[var(--color-ink)]">{test.name}</p>
+              <p className="text-[10.5px] text-[var(--color-ink-faint)]">
+                {pattern.label} pattern · +{test.marking.correct} / {test.marking.incorrect} · Practice mock, not an official exam
+              </p>
+            </div>
             <div className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[13px] font-bold ${isUrgent ? "bg-red-100 text-red-600 animate-pulse" : "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]"}`}>
               <Clock className="h-3.5 w-3.5" />
               {formatTime(timeLeft)}
@@ -417,7 +471,7 @@ export function MockTest() {
 
               <div className="mt-6 flex items-center justify-between">
                 <button
-                  onClick={() => setIdx((i) => Math.max(0, i - 1))}
+                  onClick={() => goTo(Math.max(0, idx - 1))}
                   disabled={idx === 0}
                   className="flex items-center gap-1 text-[13px] font-semibold text-[var(--color-ink-soft)] disabled:opacity-30"
                 >
@@ -430,7 +484,21 @@ export function MockTest() {
                   <Flag className="h-3.5 w-3.5" /> {marked.has(q.id) ? "Marked" : "Mark for review"}
                 </button>
                 <button
-                  onClick={() => setIdx((i) => Math.min(test.questions.length - 1, i + 1))}
+                  onClick={clearResponse}
+                  disabled={answers[q.id] === null || answers[q.id] === undefined}
+                  className="rounded-lg px-3 py-1.5 text-[12px] font-semibold text-[var(--color-ink-faint)] transition hover:bg-[var(--color-paper-card)] hover:text-[var(--color-ink)] disabled:opacity-30"
+                >
+                  Clear response
+                </button>
+                <button
+                  onClick={markAndNext}
+                  disabled={idx === test.questions.length - 1}
+                  className="rounded-lg bg-purple-600 px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-purple-700 disabled:opacity-30"
+                >
+                  Mark &amp; next
+                </button>
+                <button
+                  onClick={saveAndNext}
                   disabled={idx === test.questions.length - 1}
                   className="flex items-center gap-1 text-[13px] font-semibold text-[var(--color-ink-soft)] disabled:opacity-30"
                 >
@@ -439,35 +507,74 @@ export function MockTest() {
               </div>
             </div>
 
-            {/* Question palette - desktop only */}
-            <div className="hidden w-[200px] shrink-0 md:block">
-              <p className="mb-3 text-[11px] font-bold uppercase tracking-[.14em] text-[var(--color-ink-faint)]">Questions</p>
-              <div className="grid grid-cols-5 gap-1.5">
+            {/* Question palette — NTA-style status colours */}
+            <div className="hidden w-[240px] shrink-0 md:block">
+              {/* Section jump, in real-paper order */}
+              {sections.length > 1 && (
+                <div className="mb-4">
+                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[.14em] text-[var(--color-ink-faint)]">Sections</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {sections.map((s) => {
+                      const active = q.subject === s.subject;
+                      return (
+                        <button
+                          key={s.subject}
+                          onClick={() => goTo(s.from)}
+                          className={`rounded-lg border px-2.5 py-1 text-[11px] font-bold transition ${
+                            active
+                              ? "border-[var(--color-blue-ink)] bg-[var(--color-blue-ink)] text-white"
+                              : "border-[var(--color-line)] bg-[var(--color-paper-card)] text-[var(--color-ink-soft)] hover:border-[var(--color-line-strong)]"
+                          }`}
+                        >
+                          {s.subject} <span className="opacity-70">({s.count})</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Legend with live counts — mirrors the NTA sidebar */}
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-[.14em] text-[var(--color-ink-faint)]">Status</p>
+              <div className="mb-4 space-y-1.5 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-2.5">
+                {([
+                  ["answered", "Answered", "bg-green-600"],
+                  ["notAnswered", "Not answered", "bg-red-500"],
+                  ["notVisited", "Not visited", "bg-[var(--color-paper)] border border-[var(--color-line-strong)]"],
+                  ["marked", "Marked for review", "bg-purple-600"],
+                  ["answeredMarked", "Answered & marked", "bg-purple-600"],
+                ] as const).map(([key, label, cls]) => (
+                  <div key={key} className="flex items-center gap-2 text-[11.5px] text-[var(--color-ink-soft)]">
+                    <span className={`inline-flex h-4 w-4 shrink-0 items-center justify-center rounded ${cls}`}>
+                      {key === "answeredMarked" && <span className="h-1.5 w-1.5 rounded-full bg-green-400" />}
+                    </span>
+                    <span className="grow">{label}</span>
+                    <span className="font-bold text-[var(--color-ink)]">{counts[key]}</span>
+                  </div>
+                ))}
+              </div>
+
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-[.14em] text-[var(--color-ink-faint)]">Questions</p>
+              <div className="grid grid-cols-6 gap-1.5">
                 {test.questions.map((tq, i) => {
-                  const isAnswered = answers[tq.id] !== null && answers[tq.id] !== undefined;
-                  const isMarked = marked.has(tq.id);
+                  const st = statusOf(tq);
                   const isCurrent = i === idx;
                   return (
                     <button
                       key={tq.id}
-                      onClick={() => setIdx(i)}
-                      className={`flex h-8 w-8 items-center justify-center rounded-lg text-[11px] font-bold transition ${
-                        isCurrent ? "ring-2 ring-[var(--color-blue-ink)]" : ""
-                      } ${
-                        isMarked ? "bg-amber-100 text-amber-700" :
-                        isAnswered ? "bg-[var(--color-blue-ink)] text-white" :
-                        "bg-[var(--color-paper-card)] text-[var(--color-ink-faint)] border border-[var(--color-line)]"
+                      onClick={() => goTo(i)}
+                      title={`Q${i + 1} — ${st.replace(/([A-Z])/g, " $1").toLowerCase()}`}
+                      className={`relative flex h-8 w-8 items-center justify-center rounded-lg border text-[11px] font-bold transition ${PALETTE[st]} ${
+                        isCurrent ? "ring-2 ring-offset-1 ring-[var(--color-ink)]" : ""
                       }`}
                     >
                       {i + 1}
+                      {st === "answeredMarked" && (
+                        <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border border-white bg-green-400" />
+                      )}
                     </button>
                   );
                 })}
-              </div>
-              <div className="mt-4 space-y-1.5 text-[10px] text-[var(--color-ink-faint)]">
-                <div className="flex items-center gap-2"><div className="h-3 w-3 rounded bg-[var(--color-blue-ink)]" /> Answered ({answered})</div>
-                <div className="flex items-center gap-2"><div className="h-3 w-3 rounded bg-amber-100" /> Marked ({marked.size})</div>
-                <div className="flex items-center gap-2"><div className="h-3 w-3 rounded border border-[var(--color-line)] bg-[var(--color-paper-card)]" /> Not visited</div>
               </div>
             </div>
           </div>
@@ -488,6 +595,16 @@ export function MockTest() {
         <p className="mt-2 text-[15px] text-[var(--color-ink-soft)]">
           {result.testName} · Completed in {formatTime(result.timeTaken)}
         </p>
+
+        {/* Repeated here on purpose: this is the one screen where a number
+            could be mistaken for an official result. */}
+        <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-[var(--color-line-strong)] bg-[var(--color-paper-card)] px-3.5 py-2.5">
+          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--color-ink-faint)]" />
+          <p className="text-[12px] leading-[1.55] text-[var(--color-ink-soft)]">
+            This is a practice mock score only — unofficial, not affiliated with NTA, and
+            no indication of your actual JEE or NEET result, rank, or percentile.
+          </p>
+        </div>
 
         {/* Score summary cards */}
         <div className="mt-8 grid grid-cols-3 gap-3">

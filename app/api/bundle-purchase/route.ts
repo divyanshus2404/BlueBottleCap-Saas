@@ -47,7 +47,7 @@ function buildTransport() {
 }
 
 export async function POST(req: Request) {
-  const limited = enforceRateLimit(req, { limit: 5, windowMs: 60_000, prefix: "bundle-purchase" });
+  const limited = await enforceRateLimit(req, { limit: 5, windowMs: 60_000, prefix: "bundle-purchase" });
   if (limited) return limited;
 
   let body: BundlePurchaseBody;

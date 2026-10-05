@@ -1,3 +1,4 @@
+import { checkRedisLimit } from './redisRateLimit';
 /**
  * Simple in-memory rate limiter for Next.js API routes.
  *
@@ -70,15 +71,44 @@ export function getClientIp(req: Request): string {
 }
 
 /** Legacy compat for user routes */
-export function enforceRateLimit(req: Request, options?: { limit?: number, windowMs?: number, prefix?: string }) {
+/**
+ * Enforce a rate limit for a request. Returns a 429 Response when the caller
+ * is over the limit, or null to continue.
+ *
+ * ASYNC as of the Upstash change: it checks the distributed limiter first
+ * (authoritative across serverless instances) and keeps the in-memory limiter
+ * as a backstop for when Redis is unconfigured or down. Call sites must await
+ * it — a bare Promise is always truthy and would 429 every request.
+ */
+export async function enforceRateLimit(
+  req: Request,
+  options?: { limit?: number; windowMs?: number; prefix?: string },
+): Promise<Response | null> {
   const ip = getClientIp(req);
   const limit = options?.limit ?? 20;
   const windowMs = options?.windowMs ?? 60_000;
   const prefix = options?.prefix ?? "default";
-  
-  const limiter = getRateLimiter({ limit, windowMs });
-  if (!limiter.check(`${prefix}:${ip}`)) {
-    return new Response(JSON.stringify({ error: "Too many requests" }), { status: 429 });
+  const identifier = `${prefix}:${ip}`;
+
+  const redis = await checkRedisLimit(identifier, limit, windowMs);
+  if (!redis.allowed) {
+    return new Response(JSON.stringify({ error: "Too many requests" }), {
+      status: 429,
+      headers: { "Content-Type": "application/json", "Retry-After": String(redis.retryAfter) },
+    });
   }
+
+  // In-memory backstop. Skipped when Redis answered, so a request is never
+  // counted twice against two different limiters.
+  if (!redis.counted) {
+    const limiter = getRateLimiter({ limit, windowMs });
+    if (!limiter.check(identifier)) {
+      return new Response(JSON.stringify({ error: "Too many requests" }), {
+        status: 429,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }
+
   return null;
 }

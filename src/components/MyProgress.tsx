@@ -482,7 +482,12 @@ export function MyProgress() {
 
   const strengths = topicStats.filter((t) => t.accuracy >= 70).reverse().slice(0, 5);
   const weaknesses = topicStats.filter((t) => t.accuracy < 50).slice(0, 5);
-  const activeDays = history.filter((e) => e.studyMinutes > 0).length;
+  // A day counts as active on any logged activity, not just timer minutes —
+  // reviewing flashcards is studying too. This also feeds computeReadiness(),
+  // which was under-reporting readiness for anyone who never used the timer.
+  const activeDays = history.filter(
+    (e) => e.studyMinutes > 0 || e.cardsReviewed > 0 || e.aiQueries > 0,
+  ).length;
 
   const animAvg = useCountUp(avgScore, 1200);
   const animBest = useCountUp(bestScore, 1200);

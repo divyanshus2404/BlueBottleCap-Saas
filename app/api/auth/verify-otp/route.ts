@@ -8,7 +8,7 @@ export const runtime = "nodejs";
 const MAX_ATTEMPTS = 5;
 
 export async function POST(req: Request) {
-  const limited = enforceRateLimit(req, { limit: 10, windowMs: 300_000, prefix: "otp-verify" });
+  const limited = await enforceRateLimit(req, { limit: 10, windowMs: 300_000, prefix: "otp-verify" });
   if (limited) return limited;
 
   let body: unknown;

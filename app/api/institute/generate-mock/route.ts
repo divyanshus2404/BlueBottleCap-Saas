@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 import { enforceRateLimit } from "@/src/lib/rateLimit";
+import { requireAuth } from "@/src/lib/authGuard";
+import { enforceUserQuota } from "@/src/lib/userQuota";
+import { parseBody, GenerateMockSchema } from "@/src/lib/validate";
 import { renderMockPaper, type MockQuestion, type MockPaperMeta } from "@/src/lib/mockPaper";
 
 // White-label mock generator — the B2B keystone. Institutes pick exam +
@@ -22,9 +25,6 @@ function clampInt(v: unknown, min: number, max: number, dflt: number): number {
   return Math.max(min, Math.min(max, Math.round(n)));
 }
 
-function str(v: unknown, max: number): string {
-  return typeof v === "string" ? v.trim().slice(0, max) : "";
-}
 
 /** Decode a "data:image/png;base64,..." URL into typed bytes for pdf-lib. */
 function decodeLogo(dataUrl: unknown): { png?: Uint8Array; jpg?: Uint8Array } {
@@ -41,29 +41,26 @@ function decodeLogo(dataUrl: unknown): { png?: Uint8Array; jpg?: Uint8Array } {
 }
 
 export async function POST(req: Request) {
-  const limited = enforceRateLimit(req, { limit: 8, windowMs: 60_000, prefix: "gen-mock" });
+  const limited = await enforceRateLimit(req, { limit: 8, windowMs: 60_000, prefix: "gen-mock" });
   if (limited) return limited;
 
-  let body: any;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
+  // This route was previously public. An IP cap alone does not protect the
+  // Gemini bill — a generated paper is the single most expensive call in the
+  // app, and rotating IPs defeats the limiter entirely.
+  const auth = await requireAuth(req);
+  if (auth.error) return auth.error;
 
-  const instituteName = str(body.instituteName, 120);
-  const exam = str(body.exam, 80) || "JEE Main 2026";
-  const subject = str(body.subject, 60) || "Physics";
-  const chapters = str(body.chapters, 400);
-  const difficulty = ["easy", "medium", "hard", "mixed"].includes(body.difficulty) ? body.difficulty : "mixed";
-  const count = clampInt(body.count, 3, 30, 10);
+  const quota = await enforceUserQuota(auth.userId, "institute_generate_mock");
+  if (!quota.ok && quota.error) return quota.error;
 
-  if (!instituteName) {
-    return NextResponse.json({ error: "Institute name is required." }, { status: 400 });
-  }
-  if (!chapters) {
-    return NextResponse.json({ error: "At least one chapter/topic is required." }, { status: 400 });
-  }
+  // Schema-validated: bounds and types are enforced in one place instead of
+  // via per-field helpers, and a bad logo is now reported rather than dropped.
+  const parsed = await parseBody(req, GenerateMockSchema);
+  if (!parsed.ok) return parsed.error;
+  const {
+    instituteName, exam, subject, chapters, difficulty, count, brandHex, logoDataUrl,
+    durationMins, marksPerQuestion, negativeMarking,
+  } = parsed.data;
 
   const ai = getAIClient();
   if (!ai) {
@@ -102,15 +99,15 @@ Rules:
     return NextResponse.json({ error: "No valid questions were generated — try different topics." }, { status: 502 });
   }
 
-  const logo = decodeLogo(body.logoDataUrl);
+  const logo = decodeLogo(logoDataUrl);
   const meta: MockPaperMeta = {
     instituteName,
     exam,
     subject,
-    durationMins: clampInt(body.durationMins, 0, 360, 0) || undefined,
-    marksPerQuestion: clampInt(body.marksPerQuestion, 0, 10, 4) || undefined,
-    negativeMarking: clampInt(body.negativeMarking, 0, 5, 1) || undefined,
-    brandHex: str(body.brandHex, 7) || undefined,
+    durationMins: durationMins || undefined,
+    marksPerQuestion: marksPerQuestion ?? 4,
+    negativeMarking: negativeMarking ?? 1,
+    brandHex: brandHex || undefined,
     logoPng: logo.png,
     logoJpg: logo.jpg,
   };

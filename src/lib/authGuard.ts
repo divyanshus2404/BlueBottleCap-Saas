@@ -69,7 +69,28 @@ export async function requireAuth(req: Request): Promise<AuthResult | AuthError>
     }
   }
 
-  // 3. Fallback for local dev without Admin SDK: Soft decode the JWT payload
+  // 3. Fallback for local dev without Admin SDK: soft-decode the JWT payload.
+  //
+  // This path trusts `user_id` from an UNVERIFIED token — anyone can forge one
+  // by base64-encoding a payload. That is acceptable on a dev machine with no
+  // service account, and unacceptable in production, where it would mean no
+  // identity check at all on every AI route (and, because enforceUserQuota
+  // also no-ops without the Admin SDK, no spend limit either). So in
+  // production we refuse rather than degrade.
+  if (process.env.NODE_ENV === "production") {
+    console.error(
+      "[authGuard] Admin SDK unavailable in production — refusing request. " +
+      "Set FIREBASE_SERVICE_ACCOUNT_JSON so tokens can be verified."
+    );
+    return {
+      userId: null,
+      error: NextResponse.json(
+        { error: "Authentication is temporarily unavailable. Please try again shortly." },
+        { status: 503 }
+      ),
+    };
+  }
+
   try {
     const base64Url = token.split('.')[1];
     if (!base64Url) throw new Error('Invalid JWT');

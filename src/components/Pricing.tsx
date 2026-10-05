@@ -466,6 +466,26 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
           </div>
         </div>
       )}
+
+      {/* One-off packs live at /bundles. Surfaced here because someone
+          comparing subscription tiers is exactly who wants a no-subscription
+          option — and previously nothing in the app linked to them at all. */}
+      <div className="relative z-[2] mx-auto max-w-[760px] px-6 pb-16">
+        <div className="flex flex-col items-start gap-4 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-[15px] font-bold text-[var(--color-ink)]">Don&apos;t want a subscription?</p>
+            <p className="mt-1 text-[13.5px] text-[var(--color-ink-soft)]">
+              Buy a one-off exam pack instead — mocks, worked solutions and a weak-topic map, delivered once.
+            </p>
+          </div>
+          <a
+            href="/bundles"
+            className="shrink-0 rounded-full bg-[var(--color-blue-ink)] px-5 py-2.5 text-[14px] font-semibold text-white transition hover:bg-[var(--color-blue-deep)]"
+          >
+            See exam packs →
+          </a>
+        </div>
+      </div>
     </div>
   );
 };

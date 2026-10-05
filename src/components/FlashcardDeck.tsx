@@ -6,6 +6,7 @@ import { type SRCard, type Grade, initSRCard, reviewCard, getDueCards } from "@/
 import { flashcardsData } from "@/src/data/flashcardsData";
 import { useAuth } from "@/src/context/AuthContext";
 import { trackEvent } from "@/src/lib/analytics";
+import { logProgress } from "@/src/lib/progressTracker";
 import { StreakChip } from "./StreakChip";
 
 const STORAGE_KEY = "bbc_sr_cards";
@@ -93,6 +94,9 @@ export function FlashcardDeck() {
       import("@/src/lib/firestoreSync").then((m) => m.syncFlashcardsToFirestore(currentUser.uid, newAll)).catch(() => {});
     }
     trackEvent("flashcard_reviewed", { cardId: card.id, grade, category: card.category });
+    // Feeds the canonical day-entry history that My Progress and the readiness
+    // score read. Without this, "cards reviewed" stayed at zero forever.
+    logProgress({ cardsReviewed: 1 });
     const newDue = getDueCards(newAll);
     setDueCards(newDue);
     setReviewed((r) => r + 1);

@@ -9,7 +9,7 @@ import { aggregateBatch, normalizeInstCode, type DiagnosticSubmission } from "@/
 // the UI can explain rather than show an empty report.
 
 export async function GET(req: Request) {
-  const limited = enforceRateLimit(req, { limit: 30, windowMs: 60_000, prefix: "batch-report" });
+  const limited = await enforceRateLimit(req, { limit: 30, windowMs: 60_000, prefix: "batch-report" });
   if (limited) return limited;
 
   const inst = normalizeInstCode(new URL(req.url).searchParams.get("inst"));

@@ -47,6 +47,12 @@ export function Footer() {
                 <Link href="/tools" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">File Tools</Link>
               </li>
               <li>
+                <Link href="/formula-sheet" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Formula Sheets</Link>
+              </li>
+              <li>
+                <Link href="/scan-notes" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">Scan Notes</Link>
+              </li>
+              <li>
                 <Link href="/for-institutes" className="text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]">For institutes →</Link>
               </li>
               <li>

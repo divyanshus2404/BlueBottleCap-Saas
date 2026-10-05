@@ -3,6 +3,8 @@ import { GoogleGenAI } from "@google/genai";
 import { enforceRateLimit } from "@/src/lib/rateLimit";
 import { TOOLS } from "@/src/lib/tools";
 import { requireAuth } from '@/src/lib/authGuard';
+import { parseBody, RecommendToolSchema } from '@/src/lib/validate';
+import { enforceUserQuota } from '@/src/lib/userQuota';
 
 function getAIClient() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -33,17 +35,19 @@ function keywordMatch(query: string): string[] {
 }
 
 export async function POST(req: Request) {
-  const limited = enforceRateLimit(req, { limit: 30, windowMs: 60_000, prefix: "tool-recommend" });
+  const limited = await enforceRateLimit(req, { limit: 30, windowMs: 60_000, prefix: "tool-recommend" });
   if (limited) return limited;
 
   const auth = await requireAuth(req);
   if (auth.error) return auth.error;
 
+  const quota = await enforceUserQuota(auth.userId, "recommend_tool");
+  if (!quota.ok && quota.error) return quota.error;
+
   try {
-    const { query } = (await req.json().catch(() => ({}))) as { query?: string };
-    if (!query || query.trim().length < 2) {
-      return NextResponse.json({ error: "Query is required." }, { status: 400 });
-    }
+    const parsed = await parseBody(req, RecommendToolSchema);
+    if (!parsed.ok) return parsed.error;
+    const { query } = parsed.data;
 
     const catalog = TOOLS.map((t) => `- ${t.id}: ${t.name} — ${t.desc} [${t.keywords.join(", ")}]`).join("\n");
     const allowed = TOOLS.map((t) => t.id);

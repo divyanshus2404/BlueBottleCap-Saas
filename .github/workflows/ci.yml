@@ -19,6 +19,8 @@ jobs:
         run: npx tsc --noEmit
       - name: Lint
         run: npx next lint
+      - name: Test
+        run: npm test
       - name: Build
         run: npm run build
         env:

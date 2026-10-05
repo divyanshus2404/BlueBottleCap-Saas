@@ -58,7 +58,7 @@ function buildTransport() {
 export async function POST(req: Request) {
   // Lower limit than feedback — institute leads are higher-value and shouldn't
   // fire more than a handful of times per minute per IP.
-  const limited = enforceRateLimit(req, { limit: 3, windowMs: 60_000, prefix: "institute-lead" });
+  const limited = await enforceRateLimit(req, { limit: 3, windowMs: 60_000, prefix: "institute-lead" });
   if (limited) return limited;
 
   let body: LeadBody;

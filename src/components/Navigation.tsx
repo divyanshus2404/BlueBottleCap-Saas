@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { Zap, BookOpen, Layers, Menu, X, Map, Home, ChevronLeft, FileText, BarChart3, Brain, Clock, Newspaper, ScrollText, Download } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Zap, BookOpen, Layers, Menu, X, Map, Home, FileText, BarChart3, Brain, Clock, Newspaper, ScrollText, Download, FlaskConical, Camera, Target, Sparkles, ChevronDown, ClipboardCheck, type LucideIcon } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useGlobalState } from "../context/GlobalStateContext";
 import { MagneticWrapper } from "./MagneticWrapper";
@@ -16,12 +16,129 @@ const Seal = ({ size = 24 }: { size?: number }) => (
   </svg>
 );
 
-const topLinks = [
-  { href: "/", label: "Home", icon: <Home className="w-4 h-4" /> },
-  { href: "/tools", label: "Tools", icon: <Layers className="w-4 h-4" /> },
-  { href: "/mock-test", label: "Mocks", icon: <FileText className="w-4 h-4" /> },
-  { href: "/dashboard", label: "Dashboard", icon: <Map className="w-4 h-4" /> },
+interface NavItem {
+  href: string;
+  label: string;
+  desc: string;
+  Icon: LucideIcon;
+}
+
+/**
+ * Desktop nav model. Previously only four links sat in the bar and everything
+ * else — flashcards, question bank, formula sheets, scan notes — was reachable
+ * only by opening the hamburger drawer, even on a 1400px screen. These grouped
+ * menus surface every destination in one click. `sidebarGroups` below still
+ * drives the mobile drawer.
+ */
+const navMenus: { label: string; items: NavItem[] }[] = [
+  {
+    label: "Study",
+    items: [
+      { href: "/mock-test", label: "Mock Tests", desc: "Timed papers, real marking", Icon: FileText },
+      { href: "/question-bank", label: "Question Bank", desc: "Practice by topic", Icon: BookOpen },
+      { href: "/flashcards", label: "Flashcards", desc: "Spaced repetition decks", Icon: Brain },
+      { href: "/previous-year-papers", label: "Past Papers", desc: "Previous year sets", Icon: ScrollText },
+      { href: "/diagnostic", label: "Diagnostic", desc: "Find your weak topics", Icon: Target },
+    ],
+  },
+  {
+    label: "Tools",
+    items: [
+      { href: "/pdf-editor", label: "PDF Copilot", desc: "Chat with your PDFs", Icon: Sparkles },
+      { href: "/formula-sheet", label: "Formula Sheets", desc: "One-page cheat sheets", Icon: FlaskConical },
+      { href: "/scan-notes", label: "Scan Notes", desc: "Handwriting to text", Icon: Camera },
+      { href: "/tools", label: "File Tools", desc: "Convert, merge, compress", Icon: Layers },
+      { href: "/planner", label: "Study Planner", desc: "Track the whole syllabus", Icon: ClipboardCheck },
+      { href: "/study-timer", label: "Study Timer", desc: "Focused study sessions", Icon: Clock },
+    ],
+  },
 ];
+
+/**
+ * Click-activated dropdown. Deliberately not hover-only: the previous account
+ * menu used `group-hover`, which is unreachable by keyboard and unusable on
+ * touch. Closes on Escape, outside click, and route change.
+ */
+const NavMenu: React.FC<{ label: string; items: NavItem[]; pathname: string }> = ({ label, items, pathname }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const groupActive = items.some((i) => i.href === pathname);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { setOpen(false); btnRef.current?.focus(); }
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        ref={btnRef}
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="true"
+        className={`flex cursor-pointer items-center gap-1 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-200 ${
+          groupActive || open
+            ? "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]"
+            : "text-[var(--color-ink-soft)] hover:bg-[var(--color-paper-card)] hover:text-[var(--color-ink)]"
+        }`}
+      >
+        {label}
+        <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <div className="absolute left-0 top-full z-50 mt-2 w-[280px] origin-top-left rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-2 shadow-xl">
+          {items.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                aria-current={isActive ? "page" : undefined}
+                className={`flex items-start gap-3 rounded-xl px-3 py-2.5 transition ${
+                  isActive ? "bg-[var(--color-blue-wash)]" : "hover:bg-[var(--color-paper)]"
+                }`}
+              >
+                <span
+                  className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
+                    isActive
+                      ? "bg-[var(--color-blue-ink)] text-white"
+                      : "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]"
+                  }`}
+                >
+                  <item.Icon className="h-[15px] w-[15px]" strokeWidth={1.8} />
+                </span>
+                <span className="min-w-0">
+                  <span
+                    className={`block text-[13px] font-bold ${
+                      isActive ? "text-[var(--color-blue-ink)]" : "text-[var(--color-ink)]"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                  <span className="block text-[11.5px] text-[var(--color-ink-faint)]">{item.desc}</span>
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const sidebarGroups = [
   {
@@ -37,6 +154,8 @@ const sidebarGroups = [
     label: "Tools & Resources",
     links: [
       { href: "/tools", label: "AI Tools", icon: <Layers className="w-4 h-4" /> },
+      { href: "/formula-sheet", label: "Formula Sheets", icon: <FlaskConical className="w-4 h-4" /> },
+      { href: "/scan-notes", label: "Scan Notes", icon: <Camera className="w-4 h-4" /> },
       { href: "/study-timer", label: "Study Timer", icon: <Clock className="w-4 h-4" /> },
       { href: "/blog", label: "Blog & Tips", icon: <Newspaper className="w-4 h-4" /> },
     ],
@@ -59,8 +178,27 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
   const { currentUser, userProfile, signOutUser } = useAuth();
   const { userStats } = useGlobalState();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const accountRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const router = useRouter();
+
+  // Dismiss the account menu on outside click / Escape — it used to be
+  // hover-only, so it had no dismiss path at all on touch devices.
+  useEffect(() => {
+    if (!accountOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (accountRef.current && !accountRef.current.contains(e.target as Node)) setAccountOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setAccountOpen(false); };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [accountOpen]);
+
+  useEffect(() => { setAccountOpen(false); }, [pathname]);
 
   useEffect(() => {
     setSidebarOpen(false);
@@ -82,22 +220,15 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
 
           {/* Left: Menu + Logo */}
           <div className="flex items-center gap-3">
+            {/* Drawer is the mobile affordance only — on desktop every
+                destination is reachable from the menus below. */}
             <button
               onClick={() => setSidebarOpen(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-full border border-[var(--color-line)] bg-[var(--color-paper-card)] hover:bg-[var(--color-paper)] text-[var(--color-ink-soft)] transition-colors shadow-xs cursor-pointer"
+              className="flex md:hidden items-center justify-center w-9 h-9 rounded-full border border-[var(--color-line)] bg-[var(--color-paper-card)] hover:bg-[var(--color-paper)] text-[var(--color-ink-soft)] transition-colors shadow-xs cursor-pointer"
               aria-label="Open menu"
             >
               <Menu className="w-4 h-4" />
             </button>
-            {pathname !== "/" && pathname !== "/dashboard" && (
-              <button
-                onClick={() => router.back()}
-                className="flex items-center justify-center w-8 h-8 rounded-full border border-[var(--color-line)] bg-[var(--color-paper-card)] hover:bg-[var(--color-paper)] text-[var(--color-ink-soft)] transition-colors shadow-xs cursor-pointer group"
-                title="Go Back"
-              >
-                <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
-              </button>
-            )}
             <MagneticWrapper strength={30}>
               <Link
                 href="/"
@@ -113,37 +244,61 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
           </div>
 
           {/* Center: Primary nav (desktop) */}
-          <nav className="hidden md:flex items-center gap-1">
-            {topLinks.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`bbc-underline-fx flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-200 ${
-                    isActive
-                      ? "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]"
-                      : "text-[var(--color-ink-soft)] hover:bg-[var(--color-paper-card)] hover:text-[var(--color-ink)]"
-                  }`}
-                >
-                  {link.icon}
-                  <span>{link.label}</span>
-                </Link>
-              );
-            })}
+          <nav className="hidden md:flex items-center gap-1" aria-label="Main">
+            <Link
+              href="/"
+              aria-current={pathname === "/" ? "page" : undefined}
+              className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-200 ${
+                pathname === "/"
+                  ? "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]"
+                  : "text-[var(--color-ink-soft)] hover:bg-[var(--color-paper-card)] hover:text-[var(--color-ink)]"
+              }`}
+            >
+              <Home className="w-4 h-4" />
+              <span>Home</span>
+            </Link>
+
+            {navMenus.map((m) => (
+              <NavMenu key={m.label} label={m.label} items={m.items} pathname={pathname} />
+            ))}
+
+            <Link
+              href="/dashboard"
+              aria-current={pathname === "/dashboard" ? "page" : undefined}
+              className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-200 ${
+                pathname === "/dashboard"
+                  ? "bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]"
+                  : "text-[var(--color-ink-soft)] hover:bg-[var(--color-paper-card)] hover:text-[var(--color-ink)]"
+              }`}
+            >
+              <Map className="w-4 h-4" />
+              <span>Dashboard</span>
+            </Link>
           </nav>
 
           {/* Right: Auth + streak */}
           <div className="flex items-center gap-3">
             {/* Streak badge */}
-            <div className="flex items-center gap-1 rounded-full bg-[var(--color-blue-wash)] px-2.5 py-1 text-[11px] font-bold text-[var(--color-blue-ink)]">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c.8 3.2-.6 5-2 6.5C8.6 10 7 11.6 7 14a5 5 0 0 0 10 0c0-1.1-.3-2.1-.8-3-.5 1-1.3 1.6-2.2 1.8.6-2.6.2-5.5-2-8.3A11 11 0 0 0 12 2z"/></svg>
-              {userStats.streakDays}
-            </div>
+            {/* A bare "0" next to a flame read as a broken counter to signed-out
+                visitors. Show the badge only once there's a streak to show. */}
+            {userStats.streakDays > 0 && (
+              <div
+                className="flex items-center gap-1 rounded-full bg-[var(--color-blue-wash)] px-2.5 py-1 text-[11px] font-bold text-[var(--color-blue-ink)]"
+                title={`${userStats.streakDays}-day study streak`}
+                aria-label={`${userStats.streakDays} day study streak`}
+              >
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c.8 3.2-.6 5-2 6.5C8.6 10 7 11.6 7 14a5 5 0 0 0 10 0c0-1.1-.3-2.1-.8-3-.5 1-1.3 1.6-2.2 1.8.6-2.6.2-5.5-2-8.3A11 11 0 0 0 12 2z"/></svg>
+                {userStats.streakDays}
+              </div>
+            )}
 
             {currentUser ? (
-              <div className="hidden md:block relative group">
-                <button className="flex items-center gap-2 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)]/50 hover:bg-[var(--color-paper)]/50 px-3 h-9 text-xs font-bold text-brand-navy transition cursor-pointer">
+              <div ref={accountRef} className="hidden md:block relative">
+                <button
+                  onClick={() => setAccountOpen((v) => !v)}
+                  aria-expanded={accountOpen}
+                  aria-haspopup="true"
+                  className="flex items-center gap-2 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)]/50 hover:bg-[var(--color-paper)] px-3 h-9 text-xs font-bold text-brand-navy transition cursor-pointer">
                   {userProfile?.avatarSvg ? (
                     <div className="w-5 h-5 rounded-full shrink-0 overflow-hidden bg-brand-cobalt/10 flex items-center justify-center" dangerouslySetInnerHTML={{ __html: userProfile.avatarSvg }} />
                   ) : currentUser.photoURL ? (
@@ -155,7 +310,9 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
                   )}
                   <span className="max-w-24 truncate text-[var(--color-ink)]">{currentUser.displayName || currentUser.email}</span>
                 </button>
-                <div className="absolute right-0 top-[80%] pt-3.5 w-48 origin-top-right rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className={`absolute right-0 top-full mt-2 w-52 origin-top-right rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-2 shadow-xl transition-all duration-150 z-50 ${
+                  accountOpen ? "opacity-100 visible" : "pointer-events-none invisible opacity-0"
+                }`}>
                   <div className="px-3 py-2.5 border-b border-[var(--color-line)] mb-1">
                     <p className="text-[9px] font-extrabold uppercase tracking-wider text-[var(--color-ink-faint)] font-mono">Signed in as</p>
                     <p className="text-[11px] font-bold text-brand-navy truncate mt-0.5">{currentUser.email}</p>
@@ -169,9 +326,11 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
                 </div>
               </div>
             ) : (
+              /* Was the lowest-contrast element in the bar despite being the
+                 primary action for signed-out visitors. */
               <button
                 onClick={onLoginClick}
-                className="hidden md:flex items-center gap-1.5 px-2 h-9 text-[13px] font-medium text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition cursor-pointer"
+                className="hidden md:flex items-center gap-1.5 rounded-xl bg-[var(--color-blue-ink)] px-4 h-9 text-[13px] font-semibold text-white transition hover:bg-[var(--color-blue-deep)] cursor-pointer"
               >
                 Sign In
               </button>
@@ -293,13 +452,14 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
           )}
 
           {userStats.activePlan === "Free" && (
-            <button
-              onClick={() => { router.push("/pricing"); setSidebarOpen(false); }}
+            <Link
+              href="/pricing"
+              onClick={() => setSidebarOpen(false)}
               className="bbc-btn bbc-btn-primary flex w-full items-center justify-center gap-1.5 py-2.5 text-[13px] cursor-pointer"
             >
               <Zap className="h-4 w-4 fill-amber-300 text-amber-300" />
               Upgrade Plan
-            </button>
+            </Link>
           )}
         </div>
       </aside>

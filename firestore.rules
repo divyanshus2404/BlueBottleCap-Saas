@@ -55,6 +55,41 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // ── JEE content (public read, Admin-only write) ──
+    // Read by the client via useFirebaseJEE (getDocs). Content is authored
+    // server-side / in the console, never by clients.
+    match /jee_mock_tests/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /jee_subjects/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ── Analytics events (append-only from the client) ──
+    // analytics.ts addDoc()s here; the abandoned-checkout cron reads them via
+    // Admin SDK. Clients may only CREATE, and may not read back, edit, or
+    // delete — so one user can't mine another's activity, and events are
+    // tamper-proof once written. A signed-in uid is required so the firehose
+    // isn't open to anonymous spam.
+    match /events/{docId} {
+      allow create: if request.auth != null;
+      allow read, update, delete: if false;
+    }
+
+    // ── Mock test results (owner-scoped) ──
+    // VirtualTestMode addDoc()s a result tagged with the user's uid. Readable
+    // and writable only by that owner; no entitlement state lives here, so no
+    // field restriction is needed — but the doc MUST carry the writer's own
+    // uid so it can't be filed under someone else.
+    match /test_results/{docId} {
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid;
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
     // ── Default: deny all ──
     match /{document=**} {
       allow read, write: if false;
@@ -70,7 +105,8 @@ service cloud.firestore {
       "activePlan", "plan", "creditsRemaining", "creditsLeft",
       "purchasedTests", "purchasedMaterial", "studyMaterialUnlocked",
       "lastPaymentId", "lastOrderId", "streakSaved", "lastStreakSaveAt",
-      "emailVerified", "role"
+      "emailVerified", "role",
+      "dailyCredits", "creditRefillDay", "purchasedCredits"
     ];
   }
 
