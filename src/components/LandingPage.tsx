@@ -302,7 +302,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         <div className="mx-auto flex h-[72px] max-w-[1200px] items-center justify-between px-6">
           <button onClick={() => scrollTo("top")} className="flex items-center gap-2.5" aria-label="BlueBottleCap home">
             <Seal />
-            <span className="text-[19px] font-bold tracking-[-.02em] text-[var(--color-ink)]">Blue Bottle Cap</span>
+            <span className="hidden whitespace-nowrap text-[19px] font-bold tracking-[-.02em] text-[var(--color-ink)] sm:inline">Blue Bottle Cap</span>
           </button>
 
           <nav className="hidden items-center gap-7 lg:flex" aria-label="Main">
@@ -319,8 +319,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               {t("nav.signin")}
             </button>
             <button onClick={() => onNavigate("tools")}
-                    className="inline-flex items-center gap-2 rounded-full bg-[var(--color-blue-ink)] px-5 py-2.5 text-[14.5px] font-semibold text-white transition hover:bg-[var(--color-blue-deep)]">
-              {t("nav.startFree")} <ArrowRight className="h-4 w-4" />
+                    className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-[var(--color-blue-ink)] px-4 py-2.5 text-[14.5px] font-semibold text-white transition hover:bg-[var(--color-blue-deep)] sm:px-5">
+              {t("nav.startFree")} <ArrowRight className="hidden h-4 w-4 sm:inline" />
             </button>
             <button onClick={() => setMobileOpen((v) => !v)} aria-label="Menu" aria-expanded={mobileOpen} className="text-[var(--color-ink-soft)] lg:hidden">
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
