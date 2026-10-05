@@ -169,7 +169,17 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
           const planVal = data.plan || data.activePlan || "Free";
-          const creditsVal = typeof data.creditsRemaining === "number" ? data.creditsRemaining : (typeof data.creditsLeft === "number" ? data.creditsLeft : (planVal.toLowerCase().includes("free") ? 5 : 99999));
+          // Credit wallet is the source of truth: display = daily refill bucket
+          // + persistent purchased credits. Both are server-written (the client
+          // can't edit them — see firestore.rules). Legacy creditsRemaining is a
+          // fallback for docs created before the wallet migration.
+          const isFreePlan = planVal.toLowerCase().includes("free");
+          const dailyC = typeof data.dailyCredits === "number" ? data.dailyCredits : (isFreePlan ? 25 : 1000);
+          const purchasedC = typeof data.purchasedCredits === "number" ? data.purchasedCredits : 0;
+          const hasWallet = typeof data.dailyCredits === "number" || typeof data.purchasedCredits === "number";
+          const creditsVal = hasWallet
+            ? dailyC + purchasedC
+            : (typeof data.creditsRemaining === "number" ? data.creditsRemaining : (typeof data.creditsLeft === "number" ? data.creditsLeft : (isFreePlan ? 25 : 99999)));
           const streakVal = typeof data.streak === "number" ? data.streak : (typeof data.streakDays === "number" ? data.streakDays : 0);
           const hoursVal = typeof data.hoursSaved === "number" ? data.hoursSaved : 0.0;
           const cleanPlan = planVal.replace(/\s*plan$/i, '');
@@ -366,10 +376,9 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
       logStudyActivity();
       const nextCount = toolCreditsLeft - 1;
       setToolCreditsLeft(nextCount);
-      if (currentUser && db) {
-        const userDocRef = doc(db, "users", currentUser.uid);
-        updateDoc(userDocRef, { toolCreditsLeft: nextCount }).catch(err => console.error(err));
-      }
+      // Tool credits are deducted from the wallet server-side (enforceUserQuota).
+      // The client updates optimistically and lets the Firestore snapshot
+      // reconcile — it must not write credit fields (rules reject them).
       return true;
     }
     return false;
@@ -423,10 +432,9 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
       const newCreditsLeft = userStats.creditsLeft - 1;
       setUserStats((prev) => ({ ...prev, creditsLeft: newCreditsLeft }));
       recordActivity("query");
-      if (currentUser && db) {
-        const userDocRef = doc(db, "users", currentUser.uid);
-        updateDoc(userDocRef, { creditsLeft: newCreditsLeft, creditsRemaining: newCreditsLeft }).catch((err) => console.error(err));
-      }
+      // Wallet deduction is server-side now; no client write (rules reject it).
+      // Optimistic setUserStats above keeps the number moving; the snapshot
+      // corrects it to the true wallet balance moments later.
       if (newCreditsLeft <= 5 && newCreditsLeft > 0) {
         showToast(`⚠️ Only ${newCreditsLeft} AI credits left — consider upgrading!`, "warning");
       } else if (newCreditsLeft === 0) {
@@ -459,10 +467,8 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
       const currentPurchased = prev.purchasedTests || [];
       if (currentPurchased.includes(testId)) return prev;
       const next = [...currentPurchased, testId];
-      if (currentUser && db) {
-        const userDocRef = doc(db, "users", currentUser.uid);
-        updateDoc(userDocRef, { purchasedTests: next, updatedAt: new Date().toISOString() }).catch(err => console.error(err));
-      }
+      // Entitlement — granted server-side by the Razorpay grant path, never the
+      // client (rules reject it). Optimistic only; the snapshot is the truth.
       return { ...prev, purchasedTests: next };
     });
   };
@@ -493,18 +499,21 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("bluebottlecap_credits_left", String(nextCredits));
     }
-    showToast(`+${bonus} AI queries added — thanks for the referrals.`, "success");
+    showToast(`+${bonus} credits added — thanks for the referrals.`, "success");
 
-    if (currentUser && db) {
-      const userDocRef = doc(db, "users", currentUser.uid);
+    // Credits are granted server-side (the client can't write credit fields).
+    // The server recomputes eligibility from the stored referral count, so the
+    // optimistic numbers above are just for instant feedback — the Firestore
+    // snapshot reconciles to the true wallet balance.
+    if (currentUser) {
       try {
-        await updateDoc(userDocRef, {
-          referralRewardsClaimed: nextClaimed,
-          creditsLeft: nextCredits,
-          updatedAt: new Date().toISOString(),
+        const idToken = await currentUser.getIdToken().catch(() => null);
+        await fetch("/api/user/claim-referral", {
+          method: "POST",
+          headers: idToken ? { Authorization: `Bearer ${idToken}` } : {},
         });
       } catch (err) {
-        console.error("Failed to persist referral reward:", err);
+        console.error("Failed to claim referral reward:", err);
       }
     }
   };
@@ -537,11 +546,9 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const handleUnlockStudyMaterial = () => {
+    // Entitlement — unlocked server-side by the purchase grant path, not the
+    // client (rules reject a client write). Optimistic local update only.
     setUserStats(prev => ({ ...prev, studyMaterialUnlocked: true }));
-    if (currentUser && db) {
-      const userDocRef = doc(db, "users", currentUser.uid);
-      updateDoc(userDocRef, { studyMaterialUnlocked: true, updatedAt: new Date().toISOString() }).catch(err => console.error(err));
-    }
   };
 
   const value: GlobalState = {
