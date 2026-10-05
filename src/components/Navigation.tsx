@@ -235,7 +235,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
                 className="flex cursor-pointer items-center gap-[11px] transition-opacity hover:opacity-90"
                 aria-label="BlueBottleCap home"
               >
-                <span className="bbc-breathe inline-flex"><Seal size={28} /></span>
+                <span className="inline-flex"><Seal size={28} /></span>
                 <span className="text-[17px] font-semibold tracking-[-.01em] text-[var(--color-ink)]">
                   BlueBottleCap
                 </span>
