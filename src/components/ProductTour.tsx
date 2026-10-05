@@ -260,7 +260,7 @@ export function ProductTour() {
           <h2 className="bbc-serif text-center text-[clamp(22px,3.5vw,30px)] leading-[1.1] tracking-[-0.02em] mb-1">
             📋 Previous Year <span className="text-[var(--color-blue-ink)]">Papers</span>
           </h2>
-          <p className="text-[13px] text-[var(--color-ink-soft)] text-center mb-5">Practice with actual JEE Mains & NEET papers</p>
+          <p className="text-[13px] text-[var(--color-ink-soft)] text-center mb-5">Practice with exam-pattern JEE Mains & NEET papers</p>
           <div className="flex gap-3 flex-wrap justify-center">
             {[
               { icon: "📝", label: "JEE Mains 2025", sub: "15 questions" },
