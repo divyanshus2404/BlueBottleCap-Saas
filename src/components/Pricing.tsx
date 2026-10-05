@@ -197,6 +197,66 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
     }
   };
 
+  // Credit packs top up the persistent wallet balance (resourceCredits.ts /
+  // userQuota.ts). Self-contained checkout so it never interferes with the
+  // subscription flow above; the server grants purchasedCredits from the order
+  // notes on verify (and again, idempotently, via the Razorpay webhook).
+  const [buyingPack, setBuyingPack] = useState<string | null>(null);
+  const buyCredits = async (product: string, label: string) => {
+    if (!auth?.currentUser) {
+      alert("Please sign in to buy credits.");
+      return;
+    }
+    setBuyingPack(product);
+    trackEvent("checkout_opened", { product });
+    try {
+      const resp = await fetch("/api/razorpay/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: product, userId: auth?.currentUser?.uid }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || "Failed to create order");
+      const ok = await loadRazorpayScript();
+      if (!ok) throw new Error("Failed to load Razorpay checkout script");
+      const options: any = {
+        key: data.key_id,
+        amount: data.order.amount,
+        currency: data.order.currency,
+        name: "BlueBottleCap",
+        description: label,
+        order_id: data.order.id,
+        handler: async function (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) {
+          const verifyResp = await fetch("/api/razorpay/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...response, userId: auth?.currentUser?.uid }),
+          });
+          const verifyData = await verifyResp.json();
+          if (verifyResp.ok && verifyData.ok) {
+            trackEvent("payment_success", { product, paymentId: response.razorpay_payment_id });
+            // Balance updates via the Firestore snapshot; send them somewhere
+            // they'll see it refreshed.
+            router.push("/dashboard");
+          } else {
+            alert("Payment verification failed. Please contact support.");
+          }
+          setBuyingPack(null);
+        },
+        prefill: { name: "", email: "" },
+        theme: { color: "#1B3FCB" },
+        modal: { ondismiss: () => { trackEvent("checkout_dismissed", { product }); setBuyingPack(null); } },
+      };
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err: any) {
+      console.error(err);
+      trackEvent("payment_failed", { product, reason: "checkout_init" });
+      alert(err.message || "Payment failed to start");
+      setBuyingPack(null);
+    }
+  };
+
   const handleFinalizeUpgrade = () => {
     onUpgradeApproved(selectedPlan);
     setLoadingStep(-1);
@@ -315,6 +375,48 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
               </div>
             );
           })}
+        </div>
+
+        {/* Credit packs — pay-as-you-go top-ups for the wallet. For students who
+            want more AI usage without a subscription. */}
+        <div className="mt-16">
+          <div className="text-center mb-8">
+            <h3 className="bbc-serif text-2xl text-[var(--color-ink)]">Need more AI credits?</h3>
+            <p className="text-[15px] text-[var(--color-ink-soft)] mt-2 max-w-xl mx-auto">
+              Credits power the AI tools (a chat costs 1, a mock paper 5). The question bank,
+              past papers, planner and timer are always free. Top up any time — purchased
+              credits never expire.
+            </p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-3 max-w-3xl mx-auto">
+            {[
+              { product: "credits_100", credits: 100, price: "₹49", note: "Good for a week of AI practice" },
+              { product: "credits_350", credits: 350, price: "₹149", note: "Most popular — 17% more credits", highlight: true },
+              { product: "credits_1000", credits: 1000, price: "₹399", note: "Best value for serious prep" },
+            ].map((pack) => (
+              <div
+                key={pack.product}
+                className={`rounded-2xl border p-6 flex flex-col ${pack.highlight ? "border-[var(--color-blue-ink)] ring-1 ring-[var(--color-blue-ink)]" : "border-[var(--color-line)]"}`}
+              >
+                {pack.highlight && (
+                  <span className="self-start text-[11px] font-semibold uppercase tracking-wide text-[var(--color-blue-ink)] mb-2">
+                    Popular
+                  </span>
+                )}
+                <div className="text-3xl font-bold text-[var(--color-ink)]">{pack.credits}</div>
+                <div className="text-[13px] text-[var(--color-ink-soft)] mb-4">credits</div>
+                <div className="text-xl font-semibold text-[var(--color-ink)] mb-1">{pack.price}</div>
+                <p className="text-[13px] text-[var(--color-ink-soft)] mb-5 flex-1">{pack.note}</p>
+                <button
+                  onClick={() => buyCredits(pack.product, `${pack.credits} credits`)}
+                  disabled={buyingPack !== null}
+                  className="w-full rounded-xl bg-[var(--color-blue-ink)] text-white py-2.5 text-[14px] font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity"
+                >
+                  {buyingPack === pack.product ? "Opening…" : "Buy credits"}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Discovery strip for coaching-center owners. The student plans
