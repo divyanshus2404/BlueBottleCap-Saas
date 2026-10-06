@@ -165,7 +165,7 @@ export function PreviousYearPapers() {
         ))}
       </div>
 
-      <div className="mt-6 space-y-4">
+      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {filtered.map((paper) => (
           <PaperCard key={paper.id} paper={paper} />
         ))}
