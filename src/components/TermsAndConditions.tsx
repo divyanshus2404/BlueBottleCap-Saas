@@ -6,7 +6,7 @@ export function TermsAndConditions({ onBack }: { onBack: () => void }) {
     <div className="bbc relative min-h-screen overflow-hidden">
       <div className="bbc-grid" aria-hidden="true" />
 
-      <div className="relative z-[2] mx-auto max-w-[860px] px-7 pt-16 pb-28">
+      <div className="relative z-[2] mx-auto max-w-[1120px] px-7 pt-16 pb-28">
         <button
           onClick={onBack}
           className="group mb-10 inline-flex items-center gap-2 text-[14px] text-[var(--color-ink-soft)] transition hover:text-[var(--color-ink)]"

@@ -132,7 +132,7 @@ export function BlogPostView({ post }: { post: BlogPost }) {
   const shareText = `📚 ${post.title}\n\n${post.description}\n\nRead more 👉 https://bluebottlecap.com/blog/${post.slug}`;
 
   return (
-    <article className="bbc mx-auto max-w-[720px] px-7 py-12">
+    <article className="bbc mx-auto max-w-[1120px] px-7 py-12">
       <Link href="/blog" className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--color-ink-soft)] hover:text-[var(--color-blue-ink)] transition mb-6">
         <ArrowLeft className="h-4 w-4" /> All posts
       </Link>

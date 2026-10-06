@@ -132,7 +132,7 @@ export function QuestionBank() {
   }, [subject, difficulty, selectedTopic, search]);
 
   return (
-    <div className="bbc mx-auto max-w-[820px] px-7 py-12">
+    <div className="bbc mx-auto max-w-[1120px] px-7 py-12">
       <PageHeader
         eyebrow="Question Bank"
         title="Browse questions by topic"

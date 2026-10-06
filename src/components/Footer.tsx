@@ -7,7 +7,7 @@ import { Sparkles, Shield, Mail, Download } from "lucide-react";
 export function Footer() {
   return (
     <footer className="bbc border-t border-[var(--color-line)] bg-[var(--color-paper)] px-6 py-16 md:px-12 lg:px-20">
-      <div className="mx-auto max-w-[1180px]">
+      <div className="mx-auto max-w-[1120px]">
         <div className="mb-14 grid grid-cols-1 gap-10 md:grid-cols-4 md:gap-12">
           {/* Brand */}
           <div className="max-w-sm space-y-4 md:col-span-2">

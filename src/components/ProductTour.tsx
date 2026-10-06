@@ -89,7 +89,7 @@ export function ProductTour() {
   })), []);
 
   return (
-    <div className="bbc mx-auto max-w-[820px] px-4 py-8 sm:py-12">
+    <div className="bbc mx-auto max-w-[1120px] px-4 py-8 sm:py-12">
       <div className="relative overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] shadow-xl" style={{ minHeight: 500 }}>
         {/* Decorative dots */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
