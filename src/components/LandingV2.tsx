@@ -13,6 +13,7 @@
 
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
+import { Card, StatTile, SectionHeading } from "./ui";
 import {
   ArrowRight,
   Check,
@@ -286,12 +287,7 @@ export const LandingV2: React.FC<Props> = ({ onNavigate }) => {
         <div className="relative mx-auto max-w-[1180px] px-5 pb-14">
           <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-line)] sm:grid-cols-3 lg:grid-cols-5">
             {STATS.map((s) => (
-              <div key={s.l} className="bg-white px-5 py-6 text-center">
-                <p className="text-[clamp(26px,3.4vw,38px)] font-extrabold leading-none tracking-[-.02em] text-[var(--color-blue-ink)]">
-                  {s.n}
-                </p>
-                <p className="mt-2 text-[12.5px] font-medium text-[var(--color-ink-soft)]">{s.l}</p>
-              </div>
+              <StatTile key={s.l} value={s.n} label={s.l} className="bg-white px-5 py-6" />
             ))}
           </div>
         </div>
@@ -299,29 +295,25 @@ export const LandingV2: React.FC<Props> = ({ onNavigate }) => {
 
       {/* ── THE LOOP ─────────────────────────────────────────────────── */}
       <section id="loop" className="mx-auto max-w-[1180px] px-5 py-20">
-        <div className="max-w-[46ch]">
-          <p className="text-[12px] font-bold uppercase tracking-[.16em] text-[var(--color-blue-ink)]">How it works</p>
-          <h2 className="mt-3 text-[clamp(28px,3.6vw,44px)] font-extrabold leading-[1.08] tracking-[-.03em]">
-            Plan it. Practise it. Watch it move.
-          </h2>
-          <p className="mt-4 text-[16px] leading-[1.6] text-[var(--color-ink-soft)]">
-            Three steps that feed each other — the whole reason the app exists.
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="How it works"
+          title="Plan it. Practise it. Watch it move."
+          subtitle="Three steps that feed each other — the whole reason the app exists."
+        />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {[
             { Icon: ClipboardList, tint: TINT.blue, step: "01", t: "Plan", d: "Your full JEE/NEET syllabus, 138 chapters. Tick learn → practise → revise and your progress bar moves." },
             { Icon: BookOpen, tint: TINT.violet, step: "02", t: "Practise", d: "A 290-question bank, past-paper sets and exam-pattern mocks that run like the real NTA interface." },
             { Icon: LineChart, tint: TINT.emerald, step: "03", t: "Track", d: "Scores, weak topics and streaks after every test — so you can see, not guess, if it's working." },
           ].map((s) => (
-            <div key={s.t} className="relative rounded-3xl border border-[var(--color-line)] bg-white p-7">
+            <Card key={s.t} pad="lg" className="relative">
               <span className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl ${s.tint}`}>
                 <s.Icon className="h-6 w-6" strokeWidth={1.8} />
               </span>
               <span className="absolute right-6 top-6 text-[13px] font-bold text-[var(--color-ink-faint)]">{s.step}</span>
               <h3 className="mt-5 text-[20px] font-bold tracking-[-.02em]">{s.t}</h3>
               <p className="mt-2 text-[14.5px] leading-[1.6] text-[var(--color-ink-soft)]">{s.d}</p>
-            </div>
+            </Card>
           ))}
         </div>
       </section>
@@ -329,12 +321,7 @@ export const LandingV2: React.FC<Props> = ({ onNavigate }) => {
       {/* ── BENTO FEATURES ───────────────────────────────────────────── */}
       <section id="features" className="border-y border-[var(--color-line)] bg-[var(--color-paper-card)] py-20">
         <div className="mx-auto max-w-[1180px] px-5">
-          <div className="max-w-[46ch]">
-            <p className="text-[12px] font-bold uppercase tracking-[.16em] text-[var(--color-blue-ink)]">Everything in one place</p>
-            <h2 className="mt-3 text-[clamp(28px,3.6vw,44px)] font-extrabold leading-[1.08] tracking-[-.03em]">
-              Your whole prep, one quiet tab.
-            </h2>
-          </div>
+          <SectionHeading eyebrow="Everything in one place" title="Your whole prep, one quiet tab." />
 
           <div className="mt-12 grid gap-4 md:grid-cols-6 md:grid-rows-2">
             {/* big cell */}
