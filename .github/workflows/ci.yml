@@ -18,7 +18,9 @@ jobs:
       - name: Type check
         run: npx tsc --noEmit
       - name: Lint
-        run: npx next lint
+        # Next 16 removed `next lint`; run ESLint directly (warnings don't fail,
+        # errors do).
+        run: npx eslint . --ext .ts,.tsx
       - name: Test
         run: npm test
       - name: Build
