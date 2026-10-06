@@ -13,6 +13,7 @@ import { getMockResults, MOCK_TESTS, type MockTestResult } from "../lib/mockTest
 import { ReadinessCard } from "./ReadinessCard";
 import { StreakSaveBanner } from "./StreakSaveBanner";
 import { evaluateStreak, isFreeSaveAvailable } from "../lib/streak";
+import { SkeletonCard, Skeleton } from "./ui";
 
 /* ── Sidebar ────────────────────────────────────────────────────────────
    Contextual study nav. Deliberately lists real routes only — the global
@@ -66,7 +67,7 @@ function subjectAccuracy(results: MockTestResult[]) {
 const StatCard: React.FC<{
   label: string; value: string; sub?: string; Icon: LucideIcon; tint: string; children?: React.ReactNode;
 }> = ({ label, value, sub, Icon, tint, children }) => (
-  <div className={`rounded-2xl border p-5 ${tint}`}>
+  <div className={`rounded-[var(--radius-xl)] border p-5 shadow-[var(--shadow-sm)] ${tint}`}>
     <div className="flex items-start justify-between">
       <p className="text-[13px] font-semibold text-[var(--color-ink-soft)]">{label}</p>
       <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/80">
@@ -94,12 +95,40 @@ const Panel: React.FC<{ title: string; action?: { href: string; label: string };
   </div>
 );
 
+const DashboardSkeleton: React.FC = () => (
+  <div className="bbc min-h-screen bg-[var(--color-paper-card)]">
+    <div className="mx-auto flex max-w-[1400px] gap-6 px-4 py-6 lg:px-6">
+      <aside className="hidden w-[228px] shrink-0 lg:block">
+        <div className="sticky top-24 space-y-2 rounded-2xl border border-[var(--color-line)] bg-white p-3">
+          {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-9 w-full" />)}
+        </div>
+      </aside>
+      <div className="min-w-0 flex-1">
+        <Skeleton className="h-9 w-64" />
+        <Skeleton className="mt-2 h-4 w-80" />
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
+        </div>
+        <div className="mt-4 grid gap-4 lg:grid-cols-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="rounded-[var(--radius-xl)] border border-[var(--color-line)] bg-white p-5">
+              <Skeleton className="h-4 w-28" />
+              {Array.from({ length: 4 }).map((_, j) => <Skeleton key={j} className="mt-3 h-5 w-full" />)}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 export const Dashboard: React.FC = () => {
   const { userStats, recentActivities, todayReviewsCount, lastLoggedDate, saveStreakToday, freeStreakSaveMonth, showToast } = useGlobalState();
   const { currentUser, userProfile } = useAuth();
   const [results, setResults] = useState<MockTestResult[]>([]);
+  const [ready, setReady] = useState(false);
 
-  useEffect(() => { setResults(getMockResults()); }, []);
+  useEffect(() => { setResults(getMockResults()); setReady(true); }, []);
 
   const name = (userProfile?.name || currentUser?.displayName || "").split(" ")[0] || "there";
   const initials = (userProfile?.name || currentUser?.email || "S").slice(0, 2).toUpperCase();
@@ -136,6 +165,8 @@ export const Dashboard: React.FC = () => {
     [userStats.streakDays, lastLoggedDate],
   );
   const canSave = isFreeSaveAvailable(freeStreakSaveMonth ?? null);
+
+  if (!ready) return <DashboardSkeleton />;
 
   return (
     <div className="bbc min-h-screen bg-[var(--color-paper-card)]">

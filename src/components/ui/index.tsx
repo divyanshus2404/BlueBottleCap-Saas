@@ -185,3 +185,25 @@ export const Field: React.FC<{
     {hint && <span className="mt-1 block text-[12px] text-[var(--color-ink-faint)]">{hint}</span>}
   </label>
 );
+
+/* ── Skeleton ───────────────────────────────────────────────────────── */
+/**
+ * Loading placeholder. Use while async data hydrates so pages fade in instead
+ * of flashing empty/zeroed content (which reads as "broken" on slow mobile
+ * connections). Respects reduced-motion via the CSS (pulse only when allowed).
+ */
+export const Skeleton: React.FC<{ className?: string }> = ({ className }) => (
+  <div
+    aria-hidden
+    className={cx("animate-pulse rounded-[var(--radius-md)] bg-[var(--color-line)]/70", className)}
+  />
+);
+
+/** A ready-made card-shaped skeleton for stat tiles / panels. */
+export const SkeletonCard: React.FC<{ className?: string }> = ({ className }) => (
+  <div className={cx("rounded-[var(--radius-xl)] border border-[var(--color-line)] bg-white p-5", className)}>
+    <Skeleton className="h-3.5 w-24" />
+    <Skeleton className="mt-4 h-8 w-16" />
+    <Skeleton className="mt-4 h-2 w-full" />
+  </div>
+);
