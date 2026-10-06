@@ -126,7 +126,7 @@ export const LandingV3: React.FC<Props> = ({ onNavigate }) => {
               Sign in
             </button>
             <button
-              onClick={() => go("tools")}
+              onClick={() => go("planner")}
               className="inline-flex items-center gap-1.5 bg-[var(--color-ink)] px-4 py-2 text-[13.5px] font-semibold text-white transition hover:bg-[var(--color-blue-ink)]"
             >
               Start free
@@ -164,7 +164,7 @@ export const LandingV3: React.FC<Props> = ({ onNavigate }) => {
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-6">
               <button
-                onClick={() => go("tools")}
+                onClick={() => go("planner")}
                 className="inline-flex items-center gap-2 bg-[var(--color-ink)] px-7 py-4 text-[15px] font-semibold text-white transition hover:bg-[var(--color-blue-ink)]"
               >
                 Start studying free <ArrowRight className="h-4 w-4" />
@@ -269,7 +269,7 @@ export const LandingV3: React.FC<Props> = ({ onNavigate }) => {
             Stop guessing. Start knowing.
           </h2>
           <button
-            onClick={() => go("tools")}
+            onClick={() => go("planner")}
             className="mt-10 inline-flex items-center gap-2 bg-[var(--color-ink)] px-8 py-4 text-[16px] font-semibold text-white transition hover:bg-[var(--color-blue-ink)]"
           >
             Start studying free <ArrowRight className="h-4 w-4" />
