@@ -32,24 +32,31 @@ interface NavItem {
  */
 const navMenus: { label: string; items: NavItem[] }[] = [
   {
-    label: "Study",
+    label: "Practice",
     items: [
-      { href: "/mock-test", label: "Mock Tests", desc: "Timed papers, real marking", Icon: FileText },
-      { href: "/question-bank", label: "Question Bank", desc: "Practice by topic", Icon: BookOpen },
-      { href: "/flashcards", label: "Flashcards", desc: "Spaced repetition decks", Icon: Brain },
-      { href: "/previous-year-papers", label: "Past Papers", desc: "Previous year sets", Icon: ScrollText },
+      { href: "/mock-test", label: "Mock Tests", desc: "Full papers, real NTA marking", Icon: FileText },
+      { href: "/question-bank", label: "Question Bank", desc: "290 questions by topic", Icon: BookOpen },
+      { href: "/previous-year-papers", label: "Past Papers", desc: "Previous-year sets, solved", Icon: ScrollText },
       { href: "/diagnostic", label: "Diagnostic", desc: "Find your weak topics", Icon: Target },
+      { href: "/flashcards", label: "Flashcards", desc: "Spaced repetition decks", Icon: Brain },
     ],
   },
   {
-    label: "Tools",
+    label: "Create",
     items: [
-      { href: "/pdf-editor", label: "PDF Copilot", desc: "Chat with your PDFs", Icon: Sparkles },
+      { href: "/pdf-editor", label: "PDF Copilot", desc: "Chat with any PDF", Icon: Sparkles },
       { href: "/formula-sheet", label: "Formula Sheets", desc: "One-page cheat sheets", Icon: FlaskConical },
       { href: "/scan-notes", label: "Scan Notes", desc: "Handwriting to text", Icon: Camera },
       { href: "/tools", label: "File Tools", desc: "Convert, merge, compress", Icon: Layers },
-      { href: "/planner", label: "Study Planner", desc: "Track the whole syllabus", Icon: ClipboardCheck },
+    ],
+  },
+  {
+    label: "Track",
+    items: [
+      { href: "/planner", label: "Study Planner", desc: "The whole syllabus, chapter by chapter", Icon: ClipboardCheck },
       { href: "/study-timer", label: "Study Timer", desc: "Focused study sessions", Icon: Clock },
+      { href: "/my-progress", label: "My Progress", desc: "Scores over time", Icon: BarChart3 },
+      { href: "/dashboard", label: "Dashboard", desc: "Everything in one place", Icon: Map },
     ],
   },
 ];
@@ -142,29 +149,37 @@ const NavMenu: React.FC<{ label: string; items: NavItem[]; pathname: string }> =
 
 const sidebarGroups = [
   {
-    label: "Study",
+    label: "Practice",
     links: [
       { href: "/mock-test", label: "Mock Tests", icon: <FileText className="w-4 h-4" /> },
       { href: "/question-bank", label: "Question Bank", icon: <BookOpen className="w-4 h-4" /> },
-      { href: "/flashcards", label: "Flashcards", icon: <Brain className="w-4 h-4" /> },
       { href: "/previous-year-papers", label: "Past Papers", icon: <ScrollText className="w-4 h-4" /> },
+      { href: "/diagnostic", label: "Diagnostic", icon: <Target className="w-4 h-4" /> },
+      { href: "/flashcards", label: "Flashcards", icon: <Brain className="w-4 h-4" /> },
     ],
   },
   {
-    label: "Tools & Resources",
+    label: "Create",
     links: [
-      { href: "/tools", label: "AI Tools", icon: <Layers className="w-4 h-4" /> },
+      { href: "/pdf-editor", label: "PDF Copilot", icon: <Sparkles className="w-4 h-4" /> },
       { href: "/formula-sheet", label: "Formula Sheets", icon: <FlaskConical className="w-4 h-4" /> },
       { href: "/scan-notes", label: "Scan Notes", icon: <Camera className="w-4 h-4" /> },
-      { href: "/study-timer", label: "Study Timer", icon: <Clock className="w-4 h-4" /> },
-      { href: "/blog", label: "Blog & Tips", icon: <Newspaper className="w-4 h-4" /> },
+      { href: "/tools", label: "File Tools", icon: <Layers className="w-4 h-4" /> },
     ],
   },
   {
-    label: "Account",
+    label: "Track",
     links: [
+      { href: "/planner", label: "Study Planner", icon: <ClipboardCheck className="w-4 h-4" /> },
+      { href: "/study-timer", label: "Study Timer", icon: <Clock className="w-4 h-4" /> },
       { href: "/my-progress", label: "My Progress", icon: <BarChart3 className="w-4 h-4" /> },
       { href: "/dashboard", label: "Dashboard", icon: <Map className="w-4 h-4" /> },
+    ],
+  },
+  {
+    label: "More",
+    links: [
+      { href: "/blog", label: "Blog & Tips", icon: <Newspaper className="w-4 h-4" /> },
       { href: "/install", label: "Install App", icon: <Download className="w-4 h-4" /> },
     ],
   },
