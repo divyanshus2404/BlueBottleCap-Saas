@@ -104,14 +104,14 @@ export default function NeuralBrainIntro() {
       }
     }
 
-    let mouse = { x: -1000, y: -1000 };
+    const mouse = { x: -1000, y: -1000 };
     const handleMouse = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
     };
     window.addEventListener("mousemove", handleMouse, { passive: true });
 
-    let globalScale = { val: 1 };
+    const globalScale = { val: 1 };
     let brainIsFullyFormed = false;
 
     (window as any).triggerBrainForm = () => {

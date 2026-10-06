@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 import { Sparkles, Search, X, Lock, Image as ImageIcon, Images, Feather, Archive, Scaling, Layers, Scissors, Printer, type LucideIcon } from "lucide-react";
 import { useReveal } from "@/src/lib/useReveal";
 import { TOOLS, ToolDef, ToolCategory, FREE_DAILY_RUNS, PRO_MAX_BYTES } from "@/src/lib/tools";
+import { CreditCostBadge } from "./CreditCostBadge";
 import { useGlobalState } from "@/src/context/GlobalStateContext";
 import { useRouter } from "next/navigation";
 import { getToolRunsToday, recordToolRun } from "@/src/lib/toolUsage";
@@ -223,7 +224,10 @@ export const ToolsHub: React.FC = () => {
                     )}
                   </div>
                   <div>
-                    <h3 className="text-[15px] font-bold text-[var(--color-ink)] group-hover:text-[var(--color-blue-ink)]">{tool.name}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-[15px] font-bold text-[var(--color-ink)] group-hover:text-[var(--color-blue-ink)]">{tool.name}</h3>
+                      <CreditCostBadge resourceId={tool.id} />
+                    </div>
                     <p className="mt-1 text-[12.5px] text-[var(--color-ink-soft)]">{tool.desc}</p>
                   </div>
                 </button>

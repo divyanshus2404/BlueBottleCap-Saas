@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
-import { aiRateLimiter, getClientIp } from '@/src/lib/rateLimit';
+import { enforceRateLimit } from '@/src/lib/rateLimit';
 import { requireAuth } from '@/src/lib/authGuard';
 import { enforceUserQuota } from '@/src/lib/userQuota';
 
@@ -14,13 +14,10 @@ function getAIClient() {
 
 export async function POST(req: Request) {
   // Rate limiting — shared 20 req/min limit with chat endpoint
-  const ip = getClientIp(req);
-  if (!aiRateLimiter.check(ip)) {
-    return NextResponse.json(
-      { error: 'Too many requests. Please wait a moment before summarizing again.' },
-      { status: 429 }
-    );
-  }
+  // Distributed 20 req/min cap. Goes through enforceRateLimit so the
+  // Upstash-backed limiter applies; the in-memory one is only a fallback.
+  const limited = await enforceRateLimit(req, { limit: 20, windowMs: 60_000, prefix: "gemini-summarize" });
+  if (limited) return limited;
 
   const auth = await requireAuth(req);
   if (auth.error) return auth.error;

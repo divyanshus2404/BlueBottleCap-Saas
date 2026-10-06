@@ -125,10 +125,10 @@ export function PreviousYearPapers() {
     <div className="bbc mx-auto max-w-[820px] px-7 py-12">
       <p className="bbc-eyebrow">Previous Year Papers</p>
       <h1 className="bbc-serif mt-3 text-[clamp(28px,4vw,42px)] leading-[1.08] tracking-[-.02em]">
-        Solve real exam questions
+        Solve exam-pattern questions
       </h1>
       <p className="mt-3 max-w-[55ch] text-[15px] text-[var(--color-ink-soft)]">
-        Practice with actual JEE & NEET questions from previous years. {totalQuestions} questions with detailed solutions.
+        Practice {totalQuestions} exam-pattern JEE & NEET questions modelled on previous years, each with a detailed solution.
       </p>
 
       <div className="mt-6 grid grid-cols-3 gap-3">

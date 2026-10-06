@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import Link from "next/link";
 import { RotateCw, Home } from "lucide-react";
 
 // Branded error boundary for route segments. Replaces the raw Next.js error
@@ -27,9 +28,9 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
           <button onClick={reset} className="bbc-btn bbc-btn-primary inline-flex items-center gap-2 px-6 py-3 text-[15px]">
             <RotateCw className="h-4 w-4" /> Try again
           </button>
-          <a href="/" className="bbc-btn bbc-btn-ghost inline-flex items-center gap-2 px-6 py-3 text-[15px]">
+          <Link href="/" className="bbc-btn bbc-btn-ghost inline-flex items-center gap-2 px-6 py-3 text-[15px]">
             <Home className="h-4 w-4" /> Back home
-          </a>
+          </Link>
         </div>
       </div>
     </div>

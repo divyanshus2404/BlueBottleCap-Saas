@@ -20,6 +20,13 @@ export const PRODUCTS = {
   // threshold where a student thinks twice about tapping "Pay". Duolingo
   // proved the mechanic works — panic + tiny price + one tap = pure margin.
   streak_save: { amount: 1900, label: "Save your study streak" }, // ₹19
+  // Credit packs — the core monetisation for the wallet. Credits are spent on
+  // metered resources (see resourceCredits.ts); packs top up the PERSISTENT
+  // purchased balance, which never expires with the daily free refill. Priced
+  // so a casual top-up is an impulse buy and the big pack is clear best value.
+  credits_100: { amount: 4900, label: "100 credits" }, // ₹49
+  credits_350: { amount: 14900, label: "350 credits (+17% bonus)" }, // ₹149
+  credits_1000: { amount: 39900, label: "1000 credits (best value)" }, // ₹399
 } as const;
 
 export type ProductId = keyof typeof PRODUCTS;
@@ -42,8 +49,25 @@ export function productToPlan(product: ProductId): "Pro" | null {
     case "study_material":
     case "jee_bundle_2026":
     case "streak_save":
+    case "credits_100":
+    case "credits_350":
+    case "credits_1000":
       return null;
   }
+}
+
+/**
+ * Credits granted by a product, or 0 if it isn't a credit pack. Used by the
+ * grant path to top up the student's persistent purchased balance.
+ */
+export const CREDIT_PACKS: Partial<Record<ProductId, number>> = {
+  credits_100: 100,
+  credits_350: 350,
+  credits_1000: 1000,
+};
+
+export function creditsForProduct(product: ProductId): number {
+  return CREDIT_PACKS[product] ?? 0;
 }
 
 export function getRazorpayKeys() {
@@ -101,6 +125,26 @@ export function verifyPaymentSignature(params: {
 
   const expectedBuf = Buffer.from(expected);
   const actualBuf = Buffer.from(razorpay_signature);
+  if (expectedBuf.length !== actualBuf.length) return false;
+  return crypto.timingSafeEqual(expectedBuf, actualBuf);
+}
+
+/**
+ * Verify a Razorpay *webhook* signature.
+ *
+ * Different scheme from checkout: HMAC-SHA256 over the RAW request body,
+ * keyed on RAZORPAY_WEBHOOK_SECRET (a separate secret from the API key, set
+ * in the Razorpay dashboard when the webhook is created). The body must be
+ * the exact bytes received — re-serialising parsed JSON changes key order and
+ * whitespace, and the signature will never match.
+ */
+export function verifyWebhookSignature(rawBody: string, signature: string | null): boolean {
+  const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
+  if (!secret || !signature) return false;
+
+  const expected = crypto.createHmac("sha256", secret).update(rawBody).digest("hex");
+  const expectedBuf = Buffer.from(expected);
+  const actualBuf = Buffer.from(signature);
   if (expectedBuf.length !== actualBuf.length) return false;
   return crypto.timingSafeEqual(expectedBuf, actualBuf);
 }

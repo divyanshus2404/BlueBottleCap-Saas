@@ -9,7 +9,7 @@ import { normalizeInstCode, type SubmittedTopic } from "@/src/lib/batchReport";
 // no-op "ok" when the service account isn't configured (like verify).
 
 export async function POST(req: Request) {
-  const limited = enforceRateLimit(req, { limit: 20, windowMs: 60_000, prefix: "diag-result" });
+  const limited = await enforceRateLimit(req, { limit: 20, windowMs: 60_000, prefix: "diag-result" });
   if (limited) return limited;
 
   let body: any;

@@ -1,14 +1,24 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { CreditCostBadge } from "./CreditCostBadge";
 import Link from "next/link";
-import { ArrowRight, Camera, Loader2, Printer, RotateCw, Sparkles, Upload } from "lucide-react";
+import {
+  ArrowRight,
+  Camera,
+  Check,
+  ClipboardCopy,
+  Download,
+  Loader2,
+  Printer,
+  RotateCw,
+  Sparkles,
+  Upload,
+} from "lucide-react";
 import { useAuth } from "@/src/context/AuthContext";
+import { preprocessForOcr } from "@/src/lib/imagePreprocess";
 
-// Free-tier quota lives entirely in localStorage. When auth+server quotas
-// land, this becomes a server-enforced rate limit; for now it's a soft
-// nudge that makes the free experience feel deliberately limited.
-const QUOTA_KEY = "bluebottlecap_scan_notes_log"; // ISO[] of recent scans
+const QUOTA_KEY = "bluebottlecap_scan_notes_log";
 const FREE_SCANS_PER_WEEK = 3;
 
 function loadLog(): string[] {
@@ -38,9 +48,6 @@ function recentScans(log: string[]): number {
   }).length;
 }
 
-// Light-touch markdown renderer — headings, bullets, bold, inline code,
-// plus pass-through for LaTeX delimiters so users can paste into editors.
-// Intentionally no full markdown lib (extra bytes for a single screen).
 function renderMarkdown(md: string): React.ReactNode {
   const blocks = md.split(/\n{2,}/);
   return blocks.map((block, i) => {
@@ -89,7 +96,6 @@ function renderMarkdown(md: string): React.ReactNode {
 }
 
 function renderInline(s: string): React.ReactNode {
-  // **bold** and `code` — keep tiny.
   const parts: React.ReactNode[] = [];
   const regex = /(\*\*[^*]+\*\*|`[^`]+`)/g;
   let last = 0;
@@ -101,7 +107,11 @@ function renderInline(s: string): React.ReactNode {
     if (tok.startsWith("**")) {
       parts.push(<strong key={idx++}>{tok.slice(2, -2)}</strong>);
     } else {
-      parts.push(<code key={idx++} className="rounded bg-[var(--color-paper-card)] px-1 text-[13px]">{tok.slice(1, -1)}</code>);
+      parts.push(
+        <code key={idx++} className="rounded bg-[var(--color-paper-card)] px-1 text-[13px]">
+          {tok.slice(1, -1)}
+        </code>,
+      );
     }
     last = m.index + tok.length;
   }
@@ -116,73 +126,152 @@ export const NotesScanner: React.FC = () => {
   const [status, setStatus] = useState<"idle" | "scanning" | "done" | "error">("idle");
   const [errMsg, setErrMsg] = useState<string | null>(null);
   const [log, setLog] = useState<string[]>([]);
+  const [copied, setCopied] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [scanProgress, setScanProgress] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const dropRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => setLog(loadLog()), []);
 
   const used = recentScans(log);
-  // Logged-in users are treated as Pro for this MVP — server-side gating
-  // wires in once we move plan state behind the API.
   const isPro = Boolean(currentUser);
   const remaining = isPro ? Infinity : Math.max(0, FREE_SCANS_PER_WEEK - used);
   const canScan = isPro || remaining > 0;
 
   const pickFile = () => fileInputRef.current?.click();
+  const openCamera = () => cameraInputRef.current?.click();
+
+  const processFile = useCallback(
+    async (file: File) => {
+      if (!canScan) {
+        setStatus("error");
+        setErrMsg("You've used your 3 free scans this week. Sign up to get unlimited.");
+        return;
+      }
+
+      const allowed = ["image/png", "image/jpeg", "image/webp", "image/heic"];
+      if (!allowed.includes(file.type)) {
+        setStatus("error");
+        setErrMsg("Use PNG, JPEG, WebP, or HEIC images only.");
+        return;
+      }
+
+      if (file.size > 6 * 1024 * 1024) {
+        setStatus("error");
+        setErrMsg("Image is larger than 6 MB. Compress or crop and try again.");
+        return;
+      }
+
+      const url = URL.createObjectURL(file);
+      setPreview(url);
+      setMarkdown(null);
+      setErrMsg(null);
+      setStatus("scanning");
+      setScanProgress("Enhancing image for OCR…");
+
+      try {
+        const processed = await preprocessForOcr(file);
+
+        const fd = new FormData();
+        fd.append("image", processed);
+
+        setScanProgress("Reading handwriting…");
+        const res = await fetch("/api/scan-notes", { method: "POST", body: fd });
+        const data = (await res.json()) as { markdown?: string; error?: string };
+
+        if (!res.ok || !data.markdown) {
+          throw new Error(data.error || `Request failed (${res.status})`);
+        }
+
+        setScanProgress("Formatting notes…");
+        await new Promise((r) => setTimeout(r, 300));
+
+        setMarkdown(data.markdown);
+        setStatus("done");
+
+        if (!isPro) {
+          const updated = [...log, new Date().toISOString()];
+          setLog(updated);
+          saveLog(updated);
+        }
+      } catch (err) {
+        console.error("[scan-notes] error:", err);
+        setStatus("error");
+        setErrMsg(err instanceof Error ? err.message : "Could not scan that image.");
+      }
+    },
+    [canScan, isPro, log],
+  );
 
   const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target;
     const file = input.files?.[0];
-    input.value = ""; // allow re-picking the same file
+    input.value = "";
     if (!file) return;
-
-    if (!canScan) {
-      setStatus("error");
-      setErrMsg("You've used your 3 free scans this week. Sign up to get unlimited.");
-      return;
-    }
-
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-    setMarkdown(null);
-    setErrMsg(null);
-    setStatus("scanning");
-
-    try {
-      const fd = new FormData();
-      fd.append("image", file);
-      const res = await fetch("/api/scan-notes", { method: "POST", body: fd });
-      const data = (await res.json()) as { markdown?: string; error?: string };
-      if (!res.ok || !data.markdown) {
-        throw new Error(data.error || `Request failed (${res.status})`);
-      }
-      setMarkdown(data.markdown);
-      setStatus("done");
-
-      // Only deduct quota on a successful free-tier scan.
-      if (!isPro) {
-        const updated = [...log, new Date().toISOString()];
-        setLog(updated);
-        saveLog(updated);
-      }
-    } catch (err) {
-      console.error("[scan-notes] error:", err);
-      setStatus("error");
-      setErrMsg(err instanceof Error ? err.message : "Could not scan that image.");
-    }
+    processFile(file);
   };
+
+  const onDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setDragging(false);
+      const file = e.dataTransfer.files?.[0];
+      if (file) processFile(file);
+    },
+    [processFile],
+  );
+
+  const onDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragging(true);
+  }, []);
+
+  const onDragLeave = useCallback((e: React.DragEvent) => {
+    if (dropRef.current && !dropRef.current.contains(e.relatedTarget as Node)) {
+      setDragging(false);
+    }
+  }, []);
 
   const reset = () => {
     setPreview(null);
     setMarkdown(null);
     setStatus("idle");
     setErrMsg(null);
+    setCopied(false);
+    setScanProgress("");
   };
 
+  const copyMarkdown = async () => {
+    if (!markdown) return;
+    try {
+      await navigator.clipboard.writeText(markdown);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard may not be available */
+    }
+  };
+
+  // Declared before the handler that closes over it — defining it after
+  // stops the React Compiler from memoizing this component.
   const heading = useMemo(() => {
     if (!markdown) return "Scanned notes";
     const m = markdown.match(/^#\s+(.+)$/m);
     return m ? m[1] : "Scanned notes";
   }, [markdown]);
+
+  const downloadMarkdown = () => {
+    if (!markdown) return;
+    const blob = new Blob([markdown], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${heading.replace(/[^a-zA-Z0-9 ]/g, "").trim().replace(/\s+/g, "-").toLowerCase() || "notes"}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="bbc mx-auto max-w-[920px] px-7 py-10 md:py-14">
@@ -193,34 +282,59 @@ export const NotesScanner: React.FC = () => {
           Photo of handwritten notes → typed, searchable, study-ready.
         </h1>
         <p className="mt-3 max-w-[60ch] text-[15px] text-[var(--color-ink-soft)]">
-          Snap a page of your friend's notes or your own. The AI reads the handwriting,
+          Snap a page of your friend&apos;s notes or your own. The AI reads the handwriting,
           types it out, and keeps equations and headings intact. Free users get 3 scans a week.
         </p>
       </div>
 
       {/* Empty state — drop zone */}
       {!preview && (
-        <div className="print:hidden mt-8 rounded-2xl border-2 border-dashed border-[var(--color-line-strong)] bg-[var(--color-paper-card)] p-10 text-center">
+        <div
+          ref={dropRef}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          className={`print:hidden mt-8 rounded-2xl border-2 border-dashed p-10 text-center transition-colors ${
+            dragging
+              ? "border-[var(--color-blue-ink)] bg-[var(--color-blue-wash)]"
+              : "border-[var(--color-line-strong)] bg-[var(--color-paper-card)]"
+          }`}
+        >
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]">
             <Camera className="h-7 w-7" />
           </div>
-          <h2 className="bbc-serif mt-5 text-[20px]">Drop a photo to begin</h2>
+          <h2 className="bbc-serif mt-5 text-[20px]">
+            {dragging ? "Drop your image here" : "Drop a photo or tap to upload"}
+          </h2>
           <p className="mt-1 text-[13px] text-[var(--color-ink-soft)]">PNG, JPEG, WebP, or HEIC · up to 6 MB</p>
 
-          <button
-            onClick={pickFile}
-            disabled={!canScan}
-            className="bbc-btn bbc-btn-primary mx-auto mt-5 inline-flex items-center gap-2 px-6 py-2.5 text-[14px] disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <Upload className="h-4 w-4" />
-            Upload notes photo
-          </button>
+          <div className="mx-auto mt-5 flex flex-wrap items-center justify-center gap-3">
+            <button
+              onClick={pickFile}
+              disabled={!canScan}
+              className="bbc-btn bbc-btn-primary inline-flex items-center gap-2 px-6 py-2.5 text-[14px] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Upload className="h-4 w-4" />
+              Upload photo
+            </button>
+            <button
+              onClick={openCamera}
+              disabled={!canScan}
+              className="bbc-btn bbc-btn-ghost inline-flex items-center gap-2 px-5 py-2.5 text-[14px] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Camera className="h-4 w-4" />
+              Take photo
+            </button>
+          </div>
 
-          <p className="mt-4 text-[11.5px] text-[var(--color-ink-faint)]">
-            {isPro
-              ? "Unlimited scans on your plan."
-              : `${remaining} / ${FREE_SCANS_PER_WEEK} free scans left this week.`}
-          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-[11.5px] text-[var(--color-ink-faint)]">
+            <CreditCostBadge resourceId="scan_notes" />
+            <span>
+              {isPro
+                ? "Unlimited scans on your plan."
+                : `${remaining} / ${FREE_SCANS_PER_WEEK} free scans left this week.`}
+            </span>
+          </div>
 
           {!canScan && (
             <Link
@@ -236,6 +350,14 @@ export const NotesScanner: React.FC = () => {
             ref={fileInputRef}
             type="file"
             accept="image/png,image/jpeg,image/webp,image/heic"
+            className="hidden"
+            onChange={onFile}
+          />
+          <input
+            ref={cameraInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
             className="hidden"
             onChange={onFile}
           />
@@ -262,19 +384,39 @@ export const NotesScanner: React.FC = () => {
             <div className="mt-2 overflow-hidden rounded-xl border border-[var(--color-line)] bg-white">
               <img src={preview} alt="Uploaded notes" className="block w-full" />
             </div>
-            <div className="mt-3 flex gap-2">
+            <div className="mt-3 flex flex-wrap gap-2">
               <button onClick={reset} className="bbc-btn bbc-btn-ghost px-3 py-1.5 text-[12px]">
                 <RotateCw className="h-3.5 w-3.5" />
                 Scan another
               </button>
               {status === "done" && (
-                <button
-                  onClick={() => window.print()}
-                  className="bbc-btn bbc-btn-primary px-3 py-1.5 text-[12px]"
-                >
-                  <Printer className="h-3.5 w-3.5" />
-                  Save as PDF
-                </button>
+                <>
+                  <button
+                    onClick={copyMarkdown}
+                    className="bbc-btn bbc-btn-ghost px-3 py-1.5 text-[12px]"
+                  >
+                    {copied ? (
+                      <Check className="h-3.5 w-3.5 text-green-600" />
+                    ) : (
+                      <ClipboardCopy className="h-3.5 w-3.5" />
+                    )}
+                    {copied ? "Copied!" : "Copy text"}
+                  </button>
+                  <button
+                    onClick={downloadMarkdown}
+                    className="bbc-btn bbc-btn-ghost px-3 py-1.5 text-[12px]"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    Download .md
+                  </button>
+                  <button
+                    onClick={() => window.print()}
+                    className="bbc-btn bbc-btn-primary px-3 py-1.5 text-[12px]"
+                  >
+                    <Printer className="h-3.5 w-3.5" />
+                    Save as PDF
+                  </button>
+                </>
               )}
             </div>
           </div>
@@ -289,9 +431,12 @@ export const NotesScanner: React.FC = () => {
               className="mt-2 rounded-xl border border-[var(--color-line)] bg-white p-6"
             >
               {status === "scanning" && (
-                <div className="flex items-center gap-3 text-[var(--color-ink-soft)]">
-                  <Loader2 className="h-4 w-4 animate-spin text-[var(--color-blue-ink)]" />
-                  <span className="text-[14px]">Reading the page — usually ~6 seconds…</span>
+                <div className="flex flex-col items-center gap-3 py-8 text-center text-[var(--color-ink-soft)]">
+                  <Loader2 className="h-6 w-6 animate-spin text-[var(--color-blue-ink)]" />
+                  <span className="text-[14px]">{scanProgress}</span>
+                  <div className="mt-2 h-1 w-48 overflow-hidden rounded-full bg-[var(--color-line)]">
+                    <div className="h-full animate-pulse rounded-full bg-[var(--color-blue-ink)]" style={{ width: "60%" }} />
+                  </div>
                 </div>
               )}
               {status === "done" && markdown && (
@@ -306,7 +451,7 @@ export const NotesScanner: React.FC = () => {
               )}
               {status === "error" && (
                 <p className="text-[13.5px] text-[var(--color-ink-soft)]">
-                  Couldn't read this image. Try a sharper, well-lit photo.
+                  Couldn&apos;t read this image. Try a sharper, well-lit photo.
                 </p>
               )}
             </div>
@@ -314,7 +459,7 @@ export const NotesScanner: React.FC = () => {
         </div>
       )}
 
-      {/* Print styles — only render the typed result on the printed page. */}
+      {/* Print styles */}
       <style>{`
         @media print {
           body { background: white; }

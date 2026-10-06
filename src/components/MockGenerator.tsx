@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FileText, Loader2, Upload, Download, CheckCircle2, Sparkles } from "lucide-react";
 import { trackEvent } from "../lib/analytics";
 import { WhatsAppShare } from "./WhatsAppShare";
+import { useAuth } from "@/src/context/AuthContext";
 
 const shareOrigin = typeof window !== "undefined" ? window.location.origin : "https://bluebottlecap.com";
 
@@ -16,6 +17,7 @@ const SUBJECTS = ["Physics", "Chemistry", "Mathematics", "Biology"];
 const DIFFICULTIES = ["easy", "medium", "hard", "mixed"] as const;
 
 export const MockGenerator: React.FC = () => {
+  const { currentUser } = useAuth();
   const [instituteName, setInstituteName] = useState("");
   const [exam, setExam] = useState(EXAMS[0]);
   const [subject, setSubject] = useState(SUBJECTS[0]);
@@ -45,13 +47,20 @@ export const MockGenerator: React.FC = () => {
     setError(null);
     if (!instituteName.trim()) { setError("Enter your institute's name — it goes on the paper."); return; }
     if (!chapters.trim()) { setError("List at least one chapter or topic."); return; }
+    if (!currentUser) { setError("Please sign in to generate a paper — generation is metered per account."); return; }
     setBusy(true);
     setDone(null);
     trackEvent("mock_generate_started", { exam, subject, count });
     try {
+      // The route is authenticated and quota-metered, so the ID token is
+      // required — without it the request comes back 401.
+      const idToken = await currentUser.getIdToken().catch(() => null);
       const resp = await fetch("/api/institute/generate-mock", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(idToken ? { Authorization: `Bearer ${idToken}` } : {}),
+        },
         body: JSON.stringify({ instituteName, exam, subject, chapters, difficulty, count, brandHex, logoDataUrl }),
       });
       if (!resp.ok) {

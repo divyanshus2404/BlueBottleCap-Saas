@@ -41,7 +41,7 @@ export const BatchReport: React.FC = () => {
   useEffect(() => {
     const inst = new URLSearchParams(window.location.search).get("inst");
     if (inst) { setCode(inst); load(inst); }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   const copy = () => {

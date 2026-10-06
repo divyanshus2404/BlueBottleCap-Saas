@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Play, Pause, RotateCcw, Coffee, Brain, Timer } from "lucide-react";
+import { logProgress } from "@/src/lib/progressTracker";
 import { useAuth } from "@/src/context/AuthContext";
 import { trackEvent } from "@/src/lib/analytics";
 
@@ -15,6 +16,16 @@ const PRESETS = [
 
 const STUDY_LOG_KEY = "bbc_study_log";
 
+/**
+ * Record a completed focus session.
+ *
+ * Writes to BOTH stores on purpose. `bbc_study_log` is this component's own
+ * date->minutes map and is what syncs to Firestore. `logProgress()` writes the
+ * canonical day-entry history that My Progress, the readiness score and the
+ * weekly chart all read from — previously nothing ever called it, so study
+ * time, active days and every metric derived from them sat permanently at zero
+ * no matter how many sessions a student actually completed.
+ */
 function logStudyMinutes(minutes: number, uid?: string | null) {
   if (typeof window === "undefined" || minutes < 1) return;
   const now = new Date();
@@ -22,6 +33,7 @@ function logStudyMinutes(minutes: number, uid?: string | null) {
   const log: Record<string, number> = JSON.parse(localStorage.getItem(STUDY_LOG_KEY) || "{}");
   log[today] = (log[today] || 0) + minutes;
   localStorage.setItem(STUDY_LOG_KEY, JSON.stringify(log));
+  logProgress({ studyMinutes: minutes });
   if (uid) {
     import("@/src/lib/firestoreSync").then((m) => m.syncStudyLogToFirestore(uid, log)).catch(() => {});
   }
@@ -130,7 +142,7 @@ export function StudyTimer() {
           <button
             key={p.label}
             onClick={() => switchPreset(i)}
-            className={`rounded-full px-4 py-1.5 text-[12px] font-semibold transition ${
+            className={`inline-flex min-h-[44px] items-center rounded-full px-4 py-1.5 text-[12px] font-semibold transition ${
               preset === i
                 ? "bg-[var(--color-blue-ink)] text-white"
                 : "border border-[var(--color-line)] text-[var(--color-ink-soft)] hover:border-[var(--color-blue-ink)]"

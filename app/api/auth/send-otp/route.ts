@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { getAdmin } from "@/src/lib/firebaseAdmin";
 import { sendEmail, validEmail, emailShell } from "@/src/lib/email";
@@ -7,12 +8,12 @@ export const runtime = "nodejs";
 
 function generateOtp(): string {
   const buf = new Uint32Array(1);
-  require("crypto").getRandomValues(buf);
+  crypto.getRandomValues(buf);
   return String(buf[0] % 1_000_000).padStart(6, "0");
 }
 
 export async function POST(req: Request) {
-  const limited = enforceRateLimit(req, { limit: 5, windowMs: 300_000, prefix: "otp-send" });
+  const limited = await enforceRateLimit(req, { limit: 5, windowMs: 300_000, prefix: "otp-send" });
   if (limited) return limited;
 
   let body: unknown;

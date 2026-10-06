@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { verifyPaymentSignature, isProductId, productToPlan, PRODUCTS, getRazorpayKeys } from '@/src/lib/razorpay';
-import { getAdmin } from '@/src/lib/firebaseAdmin';
+import { grantEntitlement } from '@/src/lib/grantEntitlement';
+import { verifyPaymentSignature, getRazorpayKeys } from '@/src/lib/razorpay';
 import { getRateLimiter, getClientIp } from '@/src/lib/rateLimit';
-import { FieldValue } from 'firebase-admin/firestore';
 
 // Rate limit: 10 verify attempts per minute per IP
 const verifyRateLimiter = getRateLimiter({ limit: 10, windowMs: 60_000 });
@@ -66,44 +65,23 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, warning: 'Payment verified but no user to update.' });
     }
 
-    const admin = getAdmin();
-    if (!admin) {
+    // Shared with /api/razorpay/webhook. Both paths run for the same payment
+    // in normal operation, so the grant must be idempotent — see
+    // src/lib/grantEntitlement.ts.
+    const result = await grantEntitlement({
+      userId,
+      paymentId: razorpay_payment_id,
+      orderId: razorpay_order_id,
+      productId,
+      source: 'verify',
+    });
+
+    if (!result.ok) {
       console.warn('[Razorpay verify] Firebase Admin not configured — Firestore update skipped.');
       return NextResponse.json({ ok: true, warning: 'Payment verified but server update skipped.' });
     }
 
-    const updates: Record<string, any> = {
-      updatedAt: new Date().toISOString(),
-      lastPaymentId: razorpay_payment_id,
-      lastOrderId: razorpay_order_id,
-    };
-
-    // Derive plan from productId — the server decides what the user gets
-    if (productId && isProductId(productId)) {
-      const plan = productToPlan(productId);
-      if (plan) {
-        const creditsMap: Record<string, number> = { Pro: 99999 };
-        updates.activePlan = plan;
-        updates.plan = plan;
-        updates.creditsRemaining = creditsMap[plan] ?? 99999;
-      }
-
-      // Handle one-shot purchases
-      if (productId === 'chapter_test' || productId === 'jee_bundle_2026') {
-        updates.purchasedTests = FieldValue.arrayUnion(productId);
-      }
-      if (productId === 'study_material') {
-        updates.purchasedMaterial = true;
-      }
-      if (productId === 'streak_save') {
-        updates.streakSaved = true;
-        updates.lastStreakSaveAt = new Date().toISOString();
-      }
-    }
-
-    await admin.db.collection('users').doc(userId).set(updates, { merge: true });
-
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, alreadyGranted: result.alreadyGranted });
   } catch (err: unknown) {
     console.error('[/api/razorpay/verify]', err);
     return NextResponse.json({ error: 'Verification error. Please contact support.' }, { status: 500 });

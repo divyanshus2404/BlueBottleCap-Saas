@@ -8,6 +8,7 @@ import { ToastContainer } from "@/src/components/ToastContainer";
 import { ErrorBoundary } from "@/src/components/ErrorBoundary";
 import { SmoothScroll } from "@/src/components/SmoothScroll";
 import { Footer } from "@/src/components/Footer";
+import { HelpBot } from "@/src/components/HelpBot";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
 import { OnboardingTutorial } from "@/src/components/OnboardingTutorial";
@@ -54,6 +55,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {pathname !== "/" && pathname !== "/for-institutes" && pathname !== "/virtual-test" && pathname !== "/pdf-editor" && (
             <Footer />
           )}
+          {/* Outside the footer condition on purpose: help should be reachable
+              everywhere, including the landing page and full-screen routes. */}
+          <HelpBot />
           {currentUser && <OnboardingTutorial />}
           {currentUser && <NotificationPrompt />}
           <ContentProtection />

@@ -11,7 +11,7 @@ import { welcomeEmail } from "@/src/lib/emailTemplates";
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
-  const limited = enforceRateLimit(req, { limit: 5, windowMs: 60_000, prefix: "email-welcome" });
+  const limited = await enforceRateLimit(req, { limit: 5, windowMs: 60_000, prefix: "email-welcome" });
   if (limited) return limited;
 
   let body: any;

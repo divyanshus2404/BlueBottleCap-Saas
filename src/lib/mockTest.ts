@@ -9,12 +9,20 @@ export interface MockQuestion {
   difficulty: "easy" | "medium" | "hard";
 }
 
+export type ExamPattern = "JEE" | "NEET" | "Practice";
+
 export interface MockTestConfig {
   id: string;
   name: string;
   duration: number; // minutes
   questions: MockQuestion[];
   marking: { correct: number; incorrect: number; unanswered: number };
+  /** Which real exam this imitates. Drives the section order and the
+   *  pattern note shown before the test starts. "Practice" = short set
+   *  that deliberately does not follow a full official pattern. */
+  exam?: ExamPattern;
+  /** One-line description of the real pattern being imitated. */
+  patternNote?: string;
 }
 
 export interface MockTestResult {
@@ -134,6 +142,8 @@ const ALL_BIOLOGY = [...BIOLOGY_QUESTIONS, ...BIOLOGY_BULK];
 export const MOCK_TESTS: MockTestConfig[] = [
   {
     id: "jee-mini-1",
+    exam: "Practice",
+    patternNote: "Short practice set — not a full JEE paper.",
     name: "JEE Mini Mock — Set 1",
     duration: 30,
     marking: { correct: 4, incorrect: -1, unanswered: 0 },
@@ -148,6 +158,8 @@ export const MOCK_TESTS: MockTestConfig[] = [
   },
   {
     id: "jee-full-1",
+    exam: "JEE",
+    patternNote: "JEE Main pattern — 3 sections (Physics, Chemistry, Maths), +4 / −1, no pausing.",
     name: "JEE Full Mock — Paper 1",
     duration: 60,
     marking: { correct: 4, incorrect: -1, unanswered: 0 },
@@ -327,6 +339,52 @@ export const MOCK_TESTS: MockTestConfig[] = [
 ];
 
 export { ALL_PHYSICS, ALL_CHEMISTRY, ALL_MATHS, ALL_BIOLOGY };
+
+/**
+ * Classify a test by id so every current and future entry is grouped without
+ * hand-tagging each literal. An explicit `exam` on the config always wins.
+ */
+export function getExamPattern(t: MockTestConfig): ExamPattern {
+  if (t.exam) return t.exam;
+  if (t.id.startsWith("neet")) return "NEET";
+  if (t.id.startsWith("jee")) return "JEE";
+  return "Practice";
+}
+
+/** Real-world pattern each exam imitates — shown on the pre-test brief. */
+export const EXAM_PATTERNS: Record<ExamPattern, { label: string; sections: string[]; blurb: string }> = {
+  JEE: {
+    label: "JEE Main",
+    sections: ["Physics", "Chemistry", "Maths"],
+    blurb: "Real JEE Main: 75 questions, 300 marks, 3 hours, +4 / −1. This mock is a shorter set using the same sections and marking.",
+  },
+  NEET: {
+    label: "NEET UG",
+    sections: ["Biology", "Physics", "Chemistry"],
+    blurb: "Real NEET UG: 180 questions, 720 marks, 3h 20m, +4 / −1, Biology weighted 2×. This mock keeps that ratio and marking on a shorter set.",
+  },
+  Practice: {
+    label: "Practice",
+    sections: [],
+    blurb: "A short practice set. It does not follow a full official paper pattern.",
+  },
+};
+
+/** Section-wise counts, in the order the real paper presents them. */
+export function sectionsOf(test: MockTestConfig): { subject: string; count: number; from: number }[] {
+  const order = EXAM_PATTERNS[getExamPattern(test)].sections;
+  const seen: { subject: string; count: number; from: number }[] = [];
+  test.questions.forEach((q, i) => {
+    const found = seen.find((s) => s.subject === q.subject);
+    if (found) found.count++;
+    else seen.push({ subject: q.subject, count: 1, from: i });
+  });
+  if (!order.length) return seen;
+  return seen.sort((a, b) => {
+    const ai = order.indexOf(a.subject), bi = order.indexOf(b.subject);
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  });
+}
 
 export function scoreMockTest(test: MockTestConfig, answers: Record<string, number | null>, timeTaken: number): MockTestResult {
   let correct = 0, incorrect = 0, unanswered = 0, score = 0;

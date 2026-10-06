@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { CreditCostBadge } from "./CreditCostBadge";
 import { MOCK_ACADEMIC_PAPER } from "../data/mockPaper";
 import { ChatMessage, PaperHighlight, Flashcard, UserStats } from "../types";
 import { Sparkles, MessageSquare, Globe, PlusSquare, BookOpen, AlertCircle, Play, ChevronLeft, ChevronRight, CornerDownLeft, Loader2, Sparkle, Trash2, Download } from "lucide-react";
@@ -872,7 +873,7 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
                       
                       const pageHls = highlights.filter(hl => hl.pageIndex === currentPage);
                       if (pageHls.length > 0) {
-                        let paragraphElements: React.ReactNode[] = [];
+                        const paragraphElements: React.ReactNode[] = [];
                         let currentText = par;
 
                         pageHls.forEach((hl) => {
@@ -1082,6 +1083,9 @@ I have analyzed this regarding Chapter ${currentPage}. Transformers enable quick
               <CornerDownLeft className="h-3.5 w-3.5" />
             </button>
           </form>
+          <div className="mt-1.5 flex items-center gap-1.5 text-[10.5px] text-[var(--color-ink-faint)]">
+            <CreditCostBadge resourceId="chat" /> per message
+          </div>
 
         </div>
 

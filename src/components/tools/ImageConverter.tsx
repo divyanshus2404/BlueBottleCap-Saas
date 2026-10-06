@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
+import { UploadCloud } from "lucide-react";
 import { ImageFormat, convertImage, downloadBlob, extensionFor } from "@/src/lib/converters/image";
 import { ToolDef } from "@/src/lib/tools";
 
@@ -208,7 +209,9 @@ export const FilePicker: React.FC<FilePickerProps> = ({ onPick, accept, hint, mu
         onChange={(e) => handle(e.target.files)}
         className="sr-only"
       />
-      <span className="text-3xl">📤</span>
+      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]">
+        <UploadCloud className="h-5 w-5" strokeWidth={1.7} />
+      </span>
       <span className="text-[14px] font-bold text-[var(--color-ink)]">Drop a file or click to upload</span>
       <span className="text-[11px] text-[var(--color-ink-faint)]">{hint}</span>
     </label>
