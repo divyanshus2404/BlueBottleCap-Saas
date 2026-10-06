@@ -56,7 +56,8 @@ export function trackEvent(name: FunnelEvent, props: Record<string, string | num
 
     // Local event log for debugging and on-device analytics
     const key = "bbc_events";
-    const events = JSON.parse(localStorage.getItem(key) || "[]");
+    let events: unknown[] = [];
+    try { events = JSON.parse(localStorage.getItem(key) || "[]"); } catch { events = []; }
     events.push({ name, ts: new Date().toISOString(), props });
     if (events.length > 500) events.splice(0, events.length - 500);
     localStorage.setItem(key, JSON.stringify(events));

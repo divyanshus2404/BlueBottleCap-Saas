@@ -30,7 +30,8 @@ function logStudyMinutes(minutes: number, uid?: string | null) {
   if (typeof window === "undefined" || minutes < 1) return;
   const now = new Date();
   const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-  const log: Record<string, number> = JSON.parse(localStorage.getItem(STUDY_LOG_KEY) || "{}");
+  let log: Record<string, number> = {};
+  try { log = JSON.parse(localStorage.getItem(STUDY_LOG_KEY) || "{}"); } catch { log = {}; }
   log[today] = (log[today] || 0) + minutes;
   localStorage.setItem(STUDY_LOG_KEY, JSON.stringify(log));
   logProgress({ studyMinutes: minutes });
