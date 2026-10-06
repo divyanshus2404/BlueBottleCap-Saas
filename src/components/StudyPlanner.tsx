@@ -122,7 +122,7 @@ export const StudyPlanner: React.FC = () => {
                 key={t}
                 onClick={() => setTrack(t)}
                 aria-pressed={state.track === t}
-                className={`rounded-full px-4 py-1.5 text-[13.5px] font-semibold transition ${
+                className={`inline-flex min-h-[44px] items-center justify-center rounded-full px-4 py-1.5 text-[13.5px] font-semibold transition ${
                   state.track === t ? "bg-[var(--color-blue-ink)] text-white" : "text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
                 }`}
               >
@@ -228,7 +228,7 @@ export const StudyPlanner: React.FC = () => {
                                   aria-label={`${st.label} — ${c.name}`}
                                   aria-pressed={on}
                                   title={st.hint}
-                                  className="flex w-[76px] justify-center"
+                                  className="flex min-h-[44px] w-[76px] items-center justify-center"
                                 >
                                   <span className={`flex h-6 w-6 items-center justify-center rounded-md border transition ${
                                     on
@@ -256,7 +256,7 @@ export const StudyPlanner: React.FC = () => {
           <button
             onClick={() => setShowPrivacy((v) => !v)}
             aria-expanded={showPrivacy}
-            className="flex w-full items-center gap-2 text-left"
+            className="flex min-h-[44px] w-full items-center gap-2 text-left"
           >
             <Shield className="h-4 w-4 shrink-0 text-[var(--color-blue-ink)]" />
             <span className="text-[14px] font-bold text-[var(--color-ink)]">How your progress is tracked</span>
@@ -292,14 +292,14 @@ export const StudyPlanner: React.FC = () => {
           )}
 
           <div className="mt-4 flex flex-wrap gap-2">
-            <button onClick={onExport} className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-line-strong)] bg-white px-3.5 py-2 text-[12.5px] font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-blue-ink)] hover:text-[var(--color-blue-ink)]">
+            <button onClick={onExport} className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-line-strong)] bg-white min-h-[44px] px-3.5 py-2 text-[12.5px] font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-blue-ink)] hover:text-[var(--color-blue-ink)]">
               <Download className="h-3.5 w-3.5" /> Save a backup
             </button>
-            <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[var(--color-line-strong)] bg-white px-3.5 py-2 text-[12.5px] font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-blue-ink)] hover:text-[var(--color-blue-ink)]">
+            <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[var(--color-line-strong)] bg-white min-h-[44px] px-3.5 py-2 text-[12.5px] font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-blue-ink)] hover:text-[var(--color-blue-ink)]">
               <Upload className="h-3.5 w-3.5" /> Restore
               <input type="file" accept="application/json" className="sr-only" onChange={onImport} />
             </label>
-            <button onClick={onReset} className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-line-strong)] bg-white px-3.5 py-2 text-[12.5px] font-semibold text-[var(--color-ink-soft)] transition hover:border-red-400 hover:text-red-600">
+            <button onClick={onReset} className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-line-strong)] bg-white min-h-[44px] px-3.5 py-2 text-[12.5px] font-semibold text-[var(--color-ink-soft)] transition hover:border-red-400 hover:text-red-600">
               <RotateCcw className="h-3.5 w-3.5" /> Clear all
             </button>
           </div>

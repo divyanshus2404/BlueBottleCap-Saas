@@ -224,7 +224,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
                 destination is reachable from the menus below. */}
             <button
               onClick={() => setSidebarOpen(true)}
-              className="flex md:hidden items-center justify-center w-9 h-9 rounded-full border border-[var(--color-line)] bg-[var(--color-paper-card)] hover:bg-[var(--color-paper)] text-[var(--color-ink-soft)] transition-colors shadow-xs cursor-pointer"
+              className="flex md:hidden items-center justify-center w-11 h-11 rounded-full border border-[var(--color-line)] bg-[var(--color-paper-card)] hover:bg-[var(--color-paper)] text-[var(--color-ink-soft)] transition-colors shadow-xs cursor-pointer"
               aria-label="Open menu"
             >
               <Menu className="w-4 h-4" />
@@ -360,7 +360,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--color-ink-faint)] hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)] transition cursor-pointer"
+            className="flex h-11 w-11 items-center justify-center rounded-lg text-[var(--color-ink-faint)] hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)] transition cursor-pointer"
             aria-label="Close menu"
           >
             <X className="w-5 h-5" />
@@ -411,6 +411,23 @@ export const Navigation: React.FC<NavigationProps> = ({ onLoginClick }) => {
               {userStats.activePlan}
             </span>
           </div>
+
+          {/* Credit balance — the wallet number students spend on AI tools.
+              Free resources (question bank, papers, planner, timer) don't touch
+              it. Tappable to top up. */}
+          <Link
+            href="/pricing"
+            onClick={() => setSidebarOpen(false)}
+            className="flex items-center justify-between rounded-lg px-1 py-1 -mx-1 hover:bg-[var(--color-paper)] transition"
+            title="Credits power the AI tools. Tap to top up."
+          >
+            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[var(--color-ink-faint)]">
+              <Zap className="h-3.5 w-3.5 text-[var(--color-blue-ink)]" /> Credits
+            </span>
+            <span className="text-[12px] font-bold text-[var(--color-ink)]">
+              {userStats.activePlan === "Pro" ? "Unlimited" : userStats.creditsLeft}
+            </span>
+          </Link>
 
           {currentUser ? (
             <div className="rounded-xl bg-[var(--color-paper)] p-3 space-y-2.5">
