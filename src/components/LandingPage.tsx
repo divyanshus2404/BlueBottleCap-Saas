@@ -66,11 +66,11 @@ const TINTS: Record<string, string> = {
 
 /* Value props — the icon strip under the hero. */
 const VALUE_PROPS = [
-  { Icon: ClipboardCheck, title: "Practise like the real thing", desc: "Mocks that mirror the NTA interface and marking." },
-  { Icon: GraduationCap, title: "Understand faster", desc: "Ask any PDF or photo of notes and get real answers." },
-  { Icon: TrendingUp, title: "See what's weak", desc: "Topic-level accuracy after every single test." },
-  { Icon: Zap, title: "Works in your browser", desc: "File tools run on your device — nothing uploaded." },
-  { Icon: ShieldCheck, title: "Free to start", desc: "No card, no trial timer. Sign up only when you want to." },
+  { stat: "138", label: "Syllabus chapters mapped" },
+  { stat: "290+", label: "Practice questions" },
+  { stat: "70", label: "Past-paper questions" },
+  { stat: "80", label: "Flashcards to revise" },
+  { stat: "₹0", label: "To start — no card" },
 ];
 
 const plans = [
@@ -238,9 +238,9 @@ const DashboardMock: React.FC = () => (
           <div className="col-span-3 rounded-xl border border-[var(--color-line)] p-3">
             <p className="text-[11px] font-bold text-[var(--color-ink)]">Weakest topics</p>
             {[
-              { t: "Organic Chemistry", v: 0 },
-              { t: "Calculus", v: 0 },
-              { t: "Rotational Motion", v: 40 },
+              { t: "Organic Chemistry", v: 34 },
+              { t: "Calculus", v: 41 },
+              { t: "Rotational Motion", v: 52 },
             ].map((r) => (
               <div key={r.t} className="mt-2 flex items-center gap-2">
                 <span className="w-[92px] shrink-0 truncate text-[10.5px] text-[var(--color-ink-soft)]">{r.t}</span>
@@ -396,12 +396,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       <section className="mx-auto max-w-[1200px] px-6">
         <div className="bbc-reveal bbc-stagger grid divide-y divide-[var(--color-line)] rounded-2xl border border-[var(--color-line)] bg-white shadow-[0_18px_44px_-30px_rgba(12,21,36,.3)] sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-5 lg:divide-x">
           {VALUE_PROPS.map((v) => (
-            <div key={v.title} className="px-5 py-6 text-center">
-              <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-blue-wash)] text-[var(--color-blue-ink)]">
-                <v.Icon className="h-5 w-5" strokeWidth={1.8} />
-              </span>
-              <p className="mt-3 text-[14px] font-bold text-[var(--color-ink)]">{v.title}</p>
-              <p className="mt-1.5 text-[12.5px] leading-[1.5] text-[var(--color-ink-faint)]">{v.desc}</p>
+            <div key={v.label} className="px-5 py-7 text-center">
+              <p className="bbc-serif text-[clamp(28px,4vw,40px)] font-bold leading-none tracking-[-.02em] text-[var(--color-blue-ink)]">{v.stat}</p>
+              <p className="mt-2 text-[12.5px] font-medium leading-[1.4] text-[var(--color-ink-soft)]">{v.label}</p>
             </div>
           ))}
         </div>
