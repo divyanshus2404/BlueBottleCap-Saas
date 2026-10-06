@@ -166,7 +166,7 @@ export function FlashcardDeck() {
           <button
             key={cat}
             onClick={() => { setCategory(cat); setIdx(0); setFlipped(false); }}
-            className={`rounded-full px-3 py-1 text-[12px] font-semibold transition ${
+            className={`inline-flex min-h-[40px] items-center rounded-full px-3.5 py-1.5 text-[12px] font-semibold transition ${
               category === cat
                 ? "bg-[var(--color-blue-ink)] text-white"
                 : "bg-[var(--color-paper-card)] border border-[var(--color-line)] text-[var(--color-ink-soft)] hover:border-[var(--color-blue-ink)]"
@@ -247,20 +247,20 @@ export function FlashcardDeck() {
           <button
             onClick={() => { setIdx((i) => Math.max(0, i - 1)); setFlipped(false); }}
             disabled={idx === 0}
-            className="flex items-center gap-1 text-[13px] font-semibold text-[var(--color-ink-soft)] disabled:opacity-30"
+            className="flex min-h-[44px] items-center gap-1 text-[13px] font-semibold text-[var(--color-ink-soft)] disabled:opacity-30"
           >
             <ChevronLeft className="h-4 w-4" /> Previous
           </button>
           <button
             onClick={() => setFlipped(false)}
-            className="flex items-center gap-1 text-[12px] font-semibold text-[var(--color-ink-faint)] hover:text-[var(--color-ink)]"
+            className="flex min-h-[44px] items-center gap-1 text-[12px] font-semibold text-[var(--color-ink-faint)] hover:text-[var(--color-ink)]"
           >
             <RotateCcw className="h-3.5 w-3.5" /> Reset
           </button>
           <button
             onClick={() => { setIdx((i) => Math.min(filteredDue.length - 1, i + 1)); setFlipped(false); }}
             disabled={idx === filteredDue.length - 1}
-            className="flex items-center gap-1 text-[13px] font-semibold text-[var(--color-ink-soft)] disabled:opacity-30"
+            className="flex min-h-[44px] items-center gap-1 text-[13px] font-semibold text-[var(--color-ink-soft)] disabled:opacity-30"
           >
             Next <ChevronRight className="h-4 w-4" />
           </button>

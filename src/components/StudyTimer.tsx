@@ -142,7 +142,7 @@ export function StudyTimer() {
           <button
             key={p.label}
             onClick={() => switchPreset(i)}
-            className={`rounded-full px-4 py-1.5 text-[12px] font-semibold transition ${
+            className={`inline-flex min-h-[44px] items-center rounded-full px-4 py-1.5 text-[12px] font-semibold transition ${
               preset === i
                 ? "bg-[var(--color-blue-ink)] text-white"
                 : "border border-[var(--color-line)] text-[var(--color-ink-soft)] hover:border-[var(--color-blue-ink)]"
