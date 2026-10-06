@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { CreditCostBadge } from "./CreditCostBadge";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -326,11 +327,14 @@ export const NotesScanner: React.FC = () => {
             </button>
           </div>
 
-          <p className="mt-4 text-[11.5px] text-[var(--color-ink-faint)]">
-            {isPro
-              ? "Unlimited scans on your plan."
-              : `${remaining} / ${FREE_SCANS_PER_WEEK} free scans left this week.`}
-          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-[11.5px] text-[var(--color-ink-faint)]">
+            <CreditCostBadge resourceId="scan_notes" />
+            <span>
+              {isPro
+                ? "Unlimited scans on your plan."
+                : `${remaining} / ${FREE_SCANS_PER_WEEK} free scans left this week.`}
+            </span>
+          </div>
 
           {!canScan && (
             <Link

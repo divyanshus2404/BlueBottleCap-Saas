@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo, useRef, useState } from "react";
+import { CreditCostBadge } from "./CreditCostBadge";
 import {
   Check,
   ClipboardCopy,
@@ -263,6 +264,9 @@ export const FormulaSheet: React.FC = () => {
                 )}
                 {status === "generating" ? "Generating…" : "Generate"}
               </button>
+            </div>
+            <div className="mt-2 flex items-center gap-1.5 text-[12px] text-[var(--color-ink-soft)]">
+              <CreditCostBadge resourceId="formula_sheet" /> per sheet
             </div>
 
             {/* Exam selector */}
