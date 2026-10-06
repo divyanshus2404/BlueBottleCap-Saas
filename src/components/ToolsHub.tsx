@@ -5,6 +5,7 @@ import { Sparkles, Search, X, Lock, Image as ImageIcon, Images, Feather, Archive
 import { useReveal } from "@/src/lib/useReveal";
 import { TOOLS, ToolDef, ToolCategory, FREE_DAILY_RUNS, PRO_MAX_BYTES } from "@/src/lib/tools";
 import { CreditCostBadge } from "./CreditCostBadge";
+import { PageHeader } from "./ui";
 import { useGlobalState } from "@/src/context/GlobalStateContext";
 import { useRouter } from "next/navigation";
 import { getToolRunsToday, recordToolRun } from "@/src/lib/toolUsage";
@@ -120,14 +121,12 @@ export const ToolsHub: React.FC = () => {
     <div ref={rootRef} className="bbc relative min-h-screen overflow-hidden">
       <div className="bbc-grid" aria-hidden="true" />
       <div className="relative z-[2] mx-auto max-w-[1120px] px-7 py-16">
-        <div className="bbc-reveal mb-10 text-center">
-          <p className="bbc-eyebrow">Tools</p>
-          <h1 className="bbc-serif mx-auto mt-3 max-w-[20ch] text-[clamp(32px,4.4vw,52px)] leading-[1.06] tracking-[-.02em]">
-            Every file tool, in one place.
-          </h1>
-          <p className="mx-auto mt-4 max-w-md text-[15px] text-[var(--color-ink-soft)]">
-            Convert, compress, merge, split. All in your browser — your files never leave your device.
-          </p>
+        <div className="bbc-reveal mb-10">
+          <PageHeader
+            eyebrow="Tools"
+            title="Every file tool, in one place."
+            subtitle="Convert, compress, merge, split. All in your browser — your files never leave your device."
+          />
         </div>
 
         {/* AI search + filters */}
