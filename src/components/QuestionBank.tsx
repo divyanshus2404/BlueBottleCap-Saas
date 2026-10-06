@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { PageHeader } from "./ui";
 import { Search, ChevronDown, ChevronUp, CheckCircle, XCircle, Filter, BookOpen } from "lucide-react";
 import { PHYSICS_QUESTIONS, CHEMISTRY_QUESTIONS, MATHS_QUESTIONS, BIOLOGY_QUESTIONS, type MockQuestion } from "@/src/lib/questionExports";
 
@@ -132,13 +133,11 @@ export function QuestionBank() {
 
   return (
     <div className="bbc mx-auto max-w-[820px] px-7 py-12">
-      <p className="bbc-eyebrow">Question Bank</p>
-      <h1 className="bbc-serif mt-3 text-[clamp(28px,4vw,42px)] leading-[1.08] tracking-[-.02em]">
-        Browse questions by topic
-      </h1>
-      <p className="mt-3 max-w-[50ch] text-[15px] text-[var(--color-ink-soft)]">
-        {ALL_QUESTIONS.length} questions across Physics, Chemistry, Maths & Biology. Click any question to practice.
-      </p>
+      <PageHeader
+        eyebrow="Question Bank"
+        title="Browse questions by topic"
+        subtitle={`${ALL_QUESTIONS.length} questions across Physics, Chemistry, Maths & Biology. Click any question to practice.`}
+      />
 
       <div className="mt-6 flex items-center gap-3">
         <div className="relative flex-1">
