@@ -63,25 +63,46 @@ export const DiagnosticTest: React.FC = () => {
   };
 
   return (
-    <div className="bbc mx-auto max-w-[720px] px-7 py-12 md:py-16">
+    <div className="bbc mx-auto max-w-[1120px] px-7 py-12 md:py-16">
       {phase === "intro" && (
-        <div className="text-center">
-          <p className="bbc-eyebrow">Diagnostic · 2 minutes</p>
-          <h1 className="bbc-serif mt-3 text-[clamp(28px,4vw,42px)] leading-[1.08] tracking-[-.02em]">
-            Where do you actually stand?
-          </h1>
-          <p className="mx-auto mt-4 max-w-[44ch] text-[16px] text-[var(--color-ink-soft)]">
-            5 questions across Physics, Chemistry, and Maths. No login. We use it to
-            personalize your daily plan and show how close you are to exam-ready.
-          </p>
-          <button
-            onClick={() => setPhase("question")}
-            className="bbc-btn bbc-btn-primary mt-7 px-7 py-3 text-[15px]"
-          >
-            Start diagnostic
-          </button>
-          <p className="mt-3 text-[12.5px] text-[var(--color-ink-faint)]">
-            Honest answers only — wrong answers help us help you more.
+        <div>
+          <div className="mx-auto max-w-[640px] text-center">
+            <p className="bbc-eyebrow">Diagnostic · 2 minutes</p>
+            <h1 className="bbc-serif mt-5 text-[clamp(34px,5.5vw,60px)] leading-[1.0] tracking-[-.04em]">
+              Where do you actually stand?
+            </h1>
+            <p className="mx-auto mt-6 max-w-[46ch] text-[17px] leading-[1.6] text-[var(--color-ink-soft)]">
+              Five quick questions across Physics, Chemistry and Maths — no login. We use them
+              to personalise your daily plan and show how close you are to exam-ready.
+            </p>
+            <button
+              onClick={() => setPhase("question")}
+              className="bbc-btn bbc-btn-primary mt-8 px-8 py-3.5 text-[15px]"
+            >
+              Start diagnostic
+            </button>
+            <p className="mt-3 text-[12.5px] text-[var(--color-ink-faint)]">
+              Honest answers only — wrong answers help us help you more.
+            </p>
+          </div>
+
+          {/* Editorial facts row — fills the space with what to expect. */}
+          <div className="mx-auto mt-16 grid max-w-[600px] grid-cols-3 border-y border-[var(--color-ink)]/10 text-center">
+            {[
+              { n: "5", l: "questions" },
+              { n: "3", l: "subjects" },
+              { n: "2 min", l: "to finish" },
+            ].map((f, i) => (
+              <div key={f.l} className={`py-7 ${i !== 2 ? "border-r border-[var(--color-ink)]/10" : ""}`}>
+                <p className="text-[clamp(26px,3.4vw,36px)] font-extrabold leading-none tracking-[-.03em]">{f.n}</p>
+                <p className="mt-2 text-[11.5px] uppercase tracking-[.16em] text-[var(--color-ink-faint)]">{f.l}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="mx-auto mt-10 max-w-[44ch] text-center text-[13px] leading-[1.6] text-[var(--color-ink-faint)]">
+            No sign-up, nothing saved to an account. Your answers stay on this device and only
+            shape what the planner suggests next.
           </p>
         </div>
       )}

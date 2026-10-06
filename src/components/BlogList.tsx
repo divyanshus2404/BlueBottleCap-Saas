@@ -88,7 +88,7 @@ export function BlogList() {
   const filtered = category === "all" ? BLOG_POSTS : BLOG_POSTS.filter((p) => p.category === category);
 
   return (
-    <div className="bbc mx-auto max-w-[820px] px-7 py-12">
+    <div className="bbc mx-auto max-w-[1120px] px-7 py-12">
       <p className="bbc-eyebrow">Blog</p>
       <h1 className="bbc-serif mt-3 text-[clamp(28px,4vw,42px)] leading-[1.08] tracking-[-.02em]">
         Study tips & exam strategy

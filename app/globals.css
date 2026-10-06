@@ -130,7 +130,7 @@ input, textarea, [contenteditable="true"] {
           mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, #000 30%, transparent 78%);
 }
 
-.bbc-eyebrow { font-family: var(--font-plex); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; color: var(--color-ink-faint); }
+.bbc-eyebrow { font-family: var(--font-sans); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; font-weight: 600; color: var(--color-ink-faint); }
 
 /* Headings are a tightly-tracked grotesque, not a serif. The Fraunces display
    face read as editorial but softened every heading at the sizes actually used
@@ -138,7 +138,7 @@ input, textarea, [contenteditable="true"] {
    at small sizes in the app UI, where most headings live. The class name stays
    `.bbc-serif` because ~200 call sites use it — renaming is mechanical churn
    with no visual payoff. */
-.bbc-serif  { font-family: var(--font-sans); font-weight: 700; letter-spacing: -.028em; }
+.bbc-serif  { font-family: var(--font-sans); font-weight: 800; letter-spacing: -.038em; }
 .bbc-mono   { font-family: var(--font-plex); }
 
 /* Flat by default. The previous version lifted, glowed, and cast a coloured

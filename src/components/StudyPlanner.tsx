@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { PageHeader } from "./ui";
 import Link from "next/link";
 import {
   Check, ChevronDown, Download, Upload, RotateCcw, Info, ArrowRight,
@@ -51,7 +52,7 @@ export const StudyPlanner: React.FC = () => {
   if (!state) {
     return (
       <div className="bbc min-h-screen bg-white">
-        <div className="mx-auto max-w-[1000px] px-6 py-16">
+        <div className="mx-auto max-w-[1120px] px-6 py-16">
           <div className="h-8 w-56 animate-pulse rounded bg-[var(--color-line)]" />
           <div className="mt-4 h-4 w-80 animate-pulse rounded bg-[var(--color-line)]" />
         </div>
@@ -100,20 +101,16 @@ export const StudyPlanner: React.FC = () => {
 
   return (
     <div className="bbc min-h-screen bg-white">
-      <div className="mx-auto max-w-[1000px] px-6 py-12">
+      <div className="mx-auto max-w-[1120px] px-6 py-12">
         {/* Header */}
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <span className="inline-flex rounded-full bg-[var(--color-blue-wash)] px-3 py-1 text-[11.5px] font-bold uppercase tracking-[.12em] text-[var(--color-blue-ink)]">
-              Planner
-            </span>
-            <h1 className="mt-3 text-[clamp(26px,3.4vw,38px)] font-bold leading-[1.1] tracking-[-.03em] text-[var(--color-ink)]">
-              Your syllabus, chapter by chapter.
-            </h1>
-            <p className="mt-2 max-w-[54ch] text-[15px] leading-[1.6] text-[var(--color-ink-soft)]">
-              Tick what you have learnt, practised and revised. Progress saves on this device
-              as you go — no sign-in needed.
-            </p>
+          <div className="min-w-0 flex-1">
+            <PageHeader
+              eyebrow="Planner"
+              title="Your syllabus, chapter by chapter."
+              subtitle="Tick what you have learnt, practised and revised. Progress saves on this device as you go — no sign-in needed."
+              className="border-0 pb-0"
+            />
           </div>
 
           <div className="flex rounded-full border border-[var(--color-line)] p-1">
