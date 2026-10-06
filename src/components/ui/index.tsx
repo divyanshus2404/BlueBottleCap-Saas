@@ -207,3 +207,37 @@ export const SkeletonCard: React.FC<{ className?: string }> = ({ className }) =>
     <Skeleton className="mt-4 h-2 w-full" />
   </div>
 );
+
+/* ── PageHeader (editorial) ─────────────────────────────────────────── */
+/**
+ * Standard editorial page header used across the app: a tiny tracked uppercase
+ * label, a big tight headline, one line of support text, and a hairline rule.
+ * This is the backbone of the "editorial big-type minimal" look — use it at the
+ * top of every page so the whole frontend reads as one system.
+ */
+export const PageHeader: React.FC<{
+  eyebrow?: string;
+  title: React.ReactNode;
+  subtitle?: React.ReactNode;
+  actions?: React.ReactNode;
+  className?: string;
+}> = ({ eyebrow, title, subtitle, actions, className }) => (
+  <header className={cx("border-b border-[var(--color-ink)]/10 pb-8", className)}>
+    <div className="flex flex-wrap items-end justify-between gap-5">
+      <div className="min-w-0">
+        {eyebrow && (
+          <p className="text-[12px] font-semibold uppercase tracking-[.2em] text-[var(--color-ink-faint)]">
+            {eyebrow}
+          </p>
+        )}
+        <h1 className="mt-4 text-[clamp(30px,4.6vw,52px)] font-extrabold leading-[1.03] tracking-[-.04em] text-[var(--color-ink)]">
+          {title}
+        </h1>
+        {subtitle && (
+          <p className="mt-4 max-w-[54ch] text-[16px] leading-[1.6] text-[var(--color-ink-soft)]">{subtitle}</p>
+        )}
+      </div>
+      {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
+    </div>
+  </header>
+);
