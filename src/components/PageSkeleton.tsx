@@ -19,7 +19,7 @@ export function PageSkeleton({
 }) {
   const colClass = cols === 1 ? "grid-cols-1" : cols === 3 ? "grid-cols-3" : "grid-cols-2";
   return (
-    <div className={`bbc mx-auto max-w-[1120px] px-7 py-12 ${className}`} aria-busy="true" aria-live="polite">
+    <div className={`bbc mx-auto w-full max-w-none px-7 py-12 ${className}`} aria-busy="true" aria-live="polite">
       <div className="animate-pulse space-y-6">
         {title && (
           <div>

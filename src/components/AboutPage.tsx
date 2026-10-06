@@ -55,7 +55,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
     <div ref={containerRef} className="bbc relative min-h-screen overflow-hidden">
       <div className="bbc-grid" aria-hidden="true" />
 
-      <div className="relative z-[2] mx-auto max-w-[1120px] px-7 pt-20 pb-28">
+      <div className="relative z-[2] mx-auto w-full max-w-none px-7 pt-20 pb-28">
         {/* Back */}
         <div className="about-content mb-12">
           <button

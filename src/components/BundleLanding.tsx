@@ -147,7 +147,7 @@ export const BundleLanding: React.FC<BundleLandingProps> = ({
     return (
       <div className="bbc relative min-h-screen overflow-hidden">
         <div className="bbc-grid" aria-hidden="true" />
-        <div className="relative z-[2] mx-auto max-w-[1120px] px-7 py-24 text-center">
+        <div className="relative z-[2] mx-auto w-full max-w-none px-7 py-24 text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-blue-ink)] text-white">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </div>
@@ -177,7 +177,7 @@ export const BundleLanding: React.FC<BundleLandingProps> = ({
       <div className="bbc-grid" aria-hidden="true" />
 
       {/* Hero */}
-      <section className="relative z-[2] mx-auto max-w-[1120px] px-7 py-[72px]">
+      <section className="relative z-[2] mx-auto w-full max-w-none px-7 py-[72px]">
         <div className="grid gap-10 md:grid-cols-[1.15fr_1fr] md:items-center">
           <div>
             <p className="bbc-eyebrow">{eyebrow}</p>
@@ -258,7 +258,7 @@ export const BundleLanding: React.FC<BundleLandingProps> = ({
 
       {/* What's included */}
       <section className="relative z-[2] border-t border-[var(--color-line)] bg-[var(--color-paper-card)]">
-        <div className="mx-auto max-w-[1120px] px-7 py-[72px]">
+        <div className="mx-auto w-full max-w-none px-7 py-[72px]">
           <div className="mx-auto mb-10 max-w-[42em] text-center">
             <p className="bbc-eyebrow">What lands in your inbox</p>
             <h2 className="bbc-serif mt-3 text-[clamp(24px,3.2vw,36px)] leading-[1.12] tracking-[-.02em]">
@@ -277,7 +277,7 @@ export const BundleLanding: React.FC<BundleLandingProps> = ({
       </section>
 
       {/* FAQ */}
-      <section className="relative z-[2] mx-auto max-w-[1120px] px-7 py-[72px]">
+      <section className="relative z-[2] mx-auto w-full max-w-none px-7 py-[72px]">
         <div className="mb-10 text-center">
           <p className="bbc-eyebrow">Fair questions</p>
           <h2 className="bbc-serif mt-3 text-[clamp(22px,3vw,32px)] tracking-[-.02em]">Before you tap Buy</h2>

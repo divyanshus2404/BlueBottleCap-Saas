@@ -122,7 +122,7 @@ export function PreviousYearPapers() {
   const totalQuestions = PYQ_PAPERS.reduce((sum, p) => sum + p.questions.length, 0);
 
   return (
-    <div className="bbc mx-auto max-w-[1120px] px-7 py-12">
+    <div className="bbc mx-auto w-full max-w-none px-7 py-12">
       <p className="bbc-eyebrow">Previous Year Papers</p>
       <h1 className="bbc-serif mt-3 text-[clamp(28px,4vw,42px)] leading-[1.08] tracking-[-.02em]">
         Solve exam-pattern questions
@@ -165,7 +165,7 @@ export function PreviousYearPapers() {
         ))}
       </div>
 
-      <div className="mt-6 space-y-4">
+      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {filtered.map((paper) => (
           <PaperCard key={paper.id} paper={paper} />
         ))}

@@ -52,7 +52,7 @@ export const StudyPlanner: React.FC = () => {
   if (!state) {
     return (
       <div className="bbc min-h-screen bg-white">
-        <div className="mx-auto max-w-[1120px] px-6 py-16">
+        <div className="mx-auto w-full max-w-none px-6 py-16">
           <div className="h-8 w-56 animate-pulse rounded bg-[var(--color-line)]" />
           <div className="mt-4 h-4 w-80 animate-pulse rounded bg-[var(--color-line)]" />
         </div>
@@ -101,7 +101,7 @@ export const StudyPlanner: React.FC = () => {
 
   return (
     <div className="bbc min-h-screen bg-white">
-      <div className="mx-auto max-w-[1120px] px-6 py-12">
+      <div className="mx-auto w-full max-w-none px-6 py-12">
         {/* Header */}
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
