@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { LandingPage } from "@/src/components/LandingPage";
+import { LandingV2 } from "@/src/components/LandingV2";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -12,5 +12,5 @@ export default function Home() {
     else window.location.href = "/" + view;
   };
 
-  return <LandingPage onNavigate={handleNavigate} />;
+  return <LandingV2 onNavigate={handleNavigate} />;
 }
