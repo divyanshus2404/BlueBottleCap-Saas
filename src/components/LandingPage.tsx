@@ -355,7 +355,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       <section className="relative overflow-hidden">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0"
              style={{ background: "linear-gradient(180deg, var(--color-blue-wash) 0%, rgba(255,255,255,0) 62%)" }} />
-        <div className="relative mx-auto max-w-[1120px] px-6 py-14 md:py-20">
+        <div className="relative mx-auto max-w-[1280px] px-6 py-14 md:py-20">
           <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,44%)_minmax(0,56%)]">
             {/* Copy */}
             <div className="bbc-reveal">
@@ -393,7 +393,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── VALUE STRIP ────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-[1120px] px-6">
+      <section className="mx-auto max-w-[1280px] px-6">
         <div className="bbc-reveal bbc-stagger grid divide-y divide-[var(--color-line)] rounded-2xl border border-[var(--color-line)] bg-white shadow-[0_18px_44px_-30px_rgba(12,21,36,.3)] sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-5 lg:divide-x">
           {VALUE_PROPS.map((v) => (
             <div key={v.label} className="px-5 py-7 text-center">
@@ -405,7 +405,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* ── EXAMS COVERED ──────────────────────────────────────────── */}
-      <section className="mx-auto max-w-[1120px] px-6 py-14">
+      <section className="mx-auto max-w-[1280px] px-6 py-14">
         <p className="bbc-reveal text-center text-[11.5px] font-semibold uppercase tracking-[.18em] text-[var(--color-ink-faint)]">
           Built for the exams Indian students actually sit
         </p>
@@ -418,7 +418,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
       {/* ── FEATURES ───────────────────────────────────────────────── */}
       <section id="features" className="border-y border-[var(--color-line)] bg-[var(--color-paper-card)] py-20">
-        <div className="mx-auto max-w-[1120px] px-6">
+        <div className="mx-auto max-w-[1280px] px-6">
           <div className="bbc-reveal mx-auto max-w-[40em] text-center">
             <span className="inline-flex rounded-full bg-[var(--color-blue-wash)] px-3 py-1 text-[11.5px] font-bold uppercase tracking-[.12em] text-[var(--color-blue-ink)]">
               {t("suite.eyebrow")}
@@ -452,7 +452,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
       {/* ── HOW IT WORKS ───────────────────────────────────────────── */}
       <section id="how" className="py-20">
-        <div className="mx-auto max-w-[1120px] px-6">
+        <div className="mx-auto max-w-[1280px] px-6">
           <div className="bbc-reveal mx-auto max-w-[40em] text-center">
             <span className="inline-flex rounded-full bg-[var(--color-blue-wash)] px-3 py-1 text-[11.5px] font-bold uppercase tracking-[.12em] text-[var(--color-blue-ink)]">
               {t("how.eyebrow")}
@@ -475,7 +475,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
       {/* ── PRICING ────────────────────────────────────────────────── */}
       <section id="pricing" className="border-y border-[var(--color-line)] bg-[var(--color-paper-card)] py-20">
-        <div className="mx-auto max-w-[1120px] px-6">
+        <div className="mx-auto max-w-[1280px] px-6">
           <div className="bbc-reveal mx-auto max-w-[40em] text-center">
             <span className="inline-flex rounded-full bg-[var(--color-blue-wash)] px-3 py-1 text-[11.5px] font-bold uppercase tracking-[.12em] text-[var(--color-blue-ink)]">
               {t("pricing.eyebrow")}
@@ -525,7 +525,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
       {/* ── CLOSING CTA ────────────────────────────────────────────── */}
       <section className="py-20">
-        <div className="mx-auto max-w-[1120px] px-6">
+        <div className="mx-auto max-w-[1280px] px-6">
           <div className="bbc-reveal relative overflow-hidden rounded-3xl bg-[var(--color-blue-ink)] px-8 py-16 text-center text-white">
             <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-16 h-64 w-64 rounded-full bg-white/10" />
             <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -left-10 h-72 w-72 rounded-full bg-white/[.07]" />
@@ -543,7 +543,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
       {/* ── FOOTER ─────────────────────────────────────────────────── */}
       <footer className="border-t border-[var(--color-line)] py-14">
-        <div className="mx-auto max-w-[1120px] px-6">
+        <div className="mx-auto max-w-[1280px] px-6">
           <div className="grid gap-10 md:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))]">
             <div className="max-w-[32ch]">
               <div className="flex items-center gap-2.5">

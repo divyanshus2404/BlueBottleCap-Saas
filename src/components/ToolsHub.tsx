@@ -120,7 +120,7 @@ export const ToolsHub: React.FC = () => {
   return (
     <div ref={rootRef} className="bbc relative min-h-screen overflow-hidden">
       <div className="bbc-grid" aria-hidden="true" />
-      <div className="relative z-[2] mx-auto max-w-[1120px] px-7 py-16">
+      <div className="relative z-[2] mx-auto max-w-[1280px] px-7 py-16">
         <div className="bbc-reveal mb-10">
           <PageHeader
             eyebrow="Tools"

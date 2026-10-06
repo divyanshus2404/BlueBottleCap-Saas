@@ -89,7 +89,7 @@ export const MockGenerator: React.FC = () => {
   return (
     <div className="bbc relative min-h-screen overflow-hidden">
       <div className="bbc-grid" aria-hidden="true" />
-      <div className="relative z-[2] mx-auto max-w-[1120px] px-7 py-16">
+      <div className="relative z-[2] mx-auto max-w-[1280px] px-7 py-16">
         <div className="text-center">
           <p className="bbc-eyebrow">For institutes · White-label</p>
           <h1 className="bbc-serif mx-auto mt-3 max-w-[18ch] text-[clamp(30px,4.2vw,48px)] leading-[1.06] tracking-[-.02em]">

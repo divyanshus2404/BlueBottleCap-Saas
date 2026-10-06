@@ -209,7 +209,7 @@ export function MockTest() {
 
   if (phase === "select") {
     return (
-      <div className="bbc mx-auto max-w-[1120px] px-7 py-12">
+      <div className="bbc mx-auto max-w-[1280px] px-7 py-12">
         <div className="flex items-center justify-between gap-3">
           <p className="bbc-eyebrow">Mock Tests</p>
           <StreakChip />
@@ -294,7 +294,7 @@ export function MockTest() {
           </div>
         )}
 
-        <div className="mt-8 space-y-4">
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
           {MOCK_TESTS.map((t) => {
             const isLocked = !currentUser && freeTestsUsed >= FREE_TEST_LIMIT;
             return (
@@ -434,7 +434,7 @@ export function MockTest() {
           </div>
         </div>
 
-        <div className="mx-auto max-w-[1120px] px-4 py-6">
+        <div className="mx-auto max-w-[1280px] px-4 py-6">
           <div className="flex gap-6">
             {/* Question panel */}
             <div className="flex-1">
@@ -586,7 +586,7 @@ export function MockTest() {
   if (phase === "result" && result && test) {
     const pct = Math.round((result.score / result.maxScore) * 100);
     return (
-      <div className="bbc mx-auto max-w-[1120px] px-7 py-12">
+      <div className="bbc mx-auto max-w-[1280px] px-7 py-12">
         <Confetti active={phase === "result" && pct >= 40} />
         <p className="bbc-eyebrow">Test Complete</p>
         <h1 className="bbc-serif mt-3 text-[clamp(28px,4vw,40px)] leading-[1.1] tracking-[-.02em]">
