@@ -41,7 +41,7 @@ export function MockTest() {
   const [reviewFilter, setReviewFilter] = useState<"incorrect" | "skipped" | "all">("incorrect");
 
   useEffect(() => {
-    setFreeTestsUsed(JSON.parse(localStorage.getItem(FREE_TESTS_KEY) || "0"));
+    try { setFreeTestsUsed(JSON.parse(localStorage.getItem(FREE_TESTS_KEY) || "0")); } catch { setFreeTestsUsed(0); }
     // Detect an unfinished test on this device.
     try {
       const raw = localStorage.getItem(INPROGRESS_KEY);

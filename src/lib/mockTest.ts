@@ -429,7 +429,8 @@ const RESULTS_KEY = "bluebottlecap_mock_results";
 
 export function saveMockResult(result: MockTestResult, uid?: string | null) {
   if (typeof window === "undefined") return;
-  const existing = JSON.parse(localStorage.getItem(RESULTS_KEY) || "[]");
+  let existing: MockTestResult[] = [];
+  try { existing = JSON.parse(localStorage.getItem(RESULTS_KEY) || "[]"); } catch { existing = []; }
   existing.push(result);
   localStorage.setItem(RESULTS_KEY, JSON.stringify(existing.slice(-50)));
   if (uid) {
@@ -439,7 +440,11 @@ export function saveMockResult(result: MockTestResult, uid?: string | null) {
 
 export function getMockResults(): MockTestResult[] {
   if (typeof window === "undefined") return [];
-  return JSON.parse(localStorage.getItem(RESULTS_KEY) || "[]");
+  try {
+    return JSON.parse(localStorage.getItem(RESULTS_KEY) || "[]");
+  } catch {
+    return [];
+  }
 }
 
 export async function getMockResultsWithSync(uid: string): Promise<MockTestResult[]> {
