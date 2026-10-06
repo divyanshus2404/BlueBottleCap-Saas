@@ -122,7 +122,7 @@ export function FlashcardDeck() {
 
   if (allCards.length === 0) {
     return (
-      <div className="bbc mx-auto max-w-[1120px] px-7 py-12 text-center">
+      <div className="bbc mx-auto max-w-[1280px] px-7 py-12 text-center">
         <Brain className="mx-auto h-12 w-12 text-[var(--color-ink-faint)]" />
         <h2 className="bbc-serif mt-4 text-[24px]">Loading flashcards...</h2>
       </div>
@@ -131,7 +131,7 @@ export function FlashcardDeck() {
 
   if (filteredDue.length === 0) {
     return (
-      <div className="bbc mx-auto max-w-[1120px] px-7 py-12">
+      <div className="bbc mx-auto max-w-[1280px] px-7 py-12">
         <div className="rounded-2xl border border-green-200 bg-green-50 p-8 text-center">
           <CheckCircle className="mx-auto h-12 w-12 text-green-500" />
           <h2 className="bbc-serif mt-4 text-[24px] text-green-800">All caught up!</h2>
@@ -149,7 +149,7 @@ export function FlashcardDeck() {
   }
 
   return (
-    <div className="bbc mx-auto max-w-[1120px] px-7 py-12">
+    <div className="bbc mx-auto max-w-[1280px] px-7 py-12">
       <div className="flex items-center justify-between gap-3">
         <p className="bbc-eyebrow">Flashcards</p>
         <StreakChip />

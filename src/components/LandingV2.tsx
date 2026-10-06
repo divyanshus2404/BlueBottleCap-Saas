@@ -284,7 +284,7 @@ export const LandingV2: React.FC<Props> = ({ onNavigate }) => {
         </div>
 
         {/* stats band */}
-        <div className="relative mx-auto max-w-[1120px] px-5 pb-14">
+        <div className="relative mx-auto max-w-[1280px] px-5 pb-14">
           <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-line)] sm:grid-cols-3 lg:grid-cols-5">
             {STATS.map((s) => (
               <StatTile key={s.l} value={s.n} label={s.l} className="bg-white px-5 py-6" />
@@ -294,7 +294,7 @@ export const LandingV2: React.FC<Props> = ({ onNavigate }) => {
       </section>
 
       {/* ── THE LOOP ─────────────────────────────────────────────────── */}
-      <section id="loop" className="mx-auto max-w-[1120px] px-5 py-20">
+      <section id="loop" className="mx-auto max-w-[1280px] px-5 py-20">
         <SectionHeading
           eyebrow="How it works"
           title="Plan it. Practise it. Watch it move."
@@ -320,7 +320,7 @@ export const LandingV2: React.FC<Props> = ({ onNavigate }) => {
 
       {/* ── BENTO FEATURES ───────────────────────────────────────────── */}
       <section id="features" className="border-y border-[var(--color-line)] bg-[var(--color-paper-card)] py-20">
-        <div className="mx-auto max-w-[1120px] px-5">
+        <div className="mx-auto max-w-[1280px] px-5">
           <SectionHeading eyebrow="Everything in one place" title="Your whole prep, one quiet tab." />
 
           <div className="mt-12 grid gap-4 md:grid-cols-6 md:grid-rows-2">
@@ -367,7 +367,7 @@ export const LandingV2: React.FC<Props> = ({ onNavigate }) => {
       </section>
 
       {/* ── CREDITS, SIMPLE ──────────────────────────────────────────── */}
-      <section className="mx-auto max-w-[1120px] px-5 py-20">
+      <section className="mx-auto max-w-[1280px] px-5 py-20">
         <div className="grid items-center gap-10 rounded-[32px] border border-[var(--color-line)] bg-gradient-to-br from-white to-[var(--color-blue-wash)] p-8 md:grid-cols-2 md:p-12">
           <div>
             <p className="text-[12px] font-bold uppercase tracking-[.16em] text-[var(--color-blue-ink)]">Honest pricing</p>
@@ -404,7 +404,7 @@ export const LandingV2: React.FC<Props> = ({ onNavigate }) => {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-[1120px] px-5 pb-20">
+      <section className="mx-auto max-w-[1280px] px-5 pb-20">
         <h2 className="text-center text-[clamp(26px,3.3vw,40px)] font-extrabold tracking-[-.03em]">Questions, answered.</h2>
         <div className="mt-10 divide-y divide-[var(--color-line)] rounded-3xl border border-[var(--color-line)] bg-white">
           {faqs.map((f, i) => {
@@ -427,7 +427,7 @@ export const LandingV2: React.FC<Props> = ({ onNavigate }) => {
       </section>
 
       {/* ── FINAL CTA ────────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-[1120px] px-5 pb-24">
+      <section className="mx-auto max-w-[1280px] px-5 pb-24">
         <div className="relative overflow-hidden rounded-[32px] bg-[var(--color-ink)] px-8 py-16 text-center md:py-20">
           <div
             aria-hidden

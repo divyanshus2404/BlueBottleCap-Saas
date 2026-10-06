@@ -147,7 +147,7 @@ export const LandingV3: React.FC<Props> = ({ onNavigate }) => {
       </header>
 
       {/* ── HERO ─────────────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-[1120px] px-6">
+      <section className="mx-auto max-w-[1280px] px-6">
         <div className="grid items-end gap-12 py-20 md:py-28 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <p className="text-[12px] font-semibold uppercase tracking-[.22em] text-[var(--color-ink-faint)]">
@@ -200,7 +200,7 @@ export const LandingV3: React.FC<Props> = ({ onNavigate }) => {
       </section>
 
       {/* ── HOW — editorial three-part statement ─────────────────────── */}
-      <section id="how" className="mx-auto max-w-[1120px] px-6 py-24">
+      <section id="how" className="mx-auto max-w-[1280px] px-6 py-24">
         <h2 className="max-w-[16ch] text-[clamp(30px,4.5vw,56px)] font-extrabold leading-[1.02] tracking-[-.035em]">
           Plan it. Practise it. Watch it move.
         </h2>
@@ -217,7 +217,7 @@ export const LandingV3: React.FC<Props> = ({ onNavigate }) => {
 
       {/* ── FEATURES — clean hairline list ───────────────────────────── */}
       <section id="features" className="border-t border-[var(--color-ink)]/10">
-        <div className="mx-auto max-w-[1120px] px-6 py-24">
+        <div className="mx-auto max-w-[1280px] px-6 py-24">
           <div className="flex items-end justify-between gap-6">
             <h2 className="max-w-[14ch] text-[clamp(30px,4.5vw,56px)] font-extrabold leading-[1.02] tracking-[-.035em]">
               Everything your syllabus needs.
@@ -247,7 +247,7 @@ export const LandingV3: React.FC<Props> = ({ onNavigate }) => {
 
       {/* ── PRICING LINE — one honest sentence ───────────────────────── */}
       <section className="border-t border-[var(--color-ink)]/10">
-        <div className="mx-auto max-w-[1120px] px-6 py-24">
+        <div className="mx-auto max-w-[1280px] px-6 py-24">
           <p className="text-[12px] font-semibold uppercase tracking-[.22em] text-[var(--color-ink-faint)]">Pricing</p>
           <p className="mt-6 max-w-[20ch] text-[clamp(26px,3.6vw,42px)] font-extrabold leading-[1.1] tracking-[-.03em]">
             Free every day. Pay only for AI.
@@ -264,7 +264,7 @@ export const LandingV3: React.FC<Props> = ({ onNavigate }) => {
 
       {/* ── CLOSING — big type ───────────────────────────────────────── */}
       <section className="border-t border-[var(--color-ink)]/10">
-        <div className="mx-auto max-w-[1120px] px-6 py-28 text-center">
+        <div className="mx-auto max-w-[1280px] px-6 py-28 text-center">
           <h2 className="mx-auto max-w-[16ch] text-[clamp(36px,6vw,76px)] font-extrabold leading-[1.0] tracking-[-.04em]">
             Stop guessing. Start knowing.
           </h2>

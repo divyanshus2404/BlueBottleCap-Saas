@@ -221,7 +221,7 @@ export const FormulaSheet: React.FC = () => {
   };
 
   return (
-    <div className="bbc mx-auto max-w-[1120px] px-7 py-10 md:py-14">
+    <div className="bbc mx-auto max-w-[1280px] px-7 py-10 md:py-14">
       {/* Header */}
       <div className="print:hidden">
         <p className="bbc-eyebrow">Formula sheets</p>
