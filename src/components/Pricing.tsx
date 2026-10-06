@@ -270,7 +270,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
   return (
     <div className="bbc relative min-h-screen overflow-hidden">
       <div className="bbc-grid" aria-hidden="true" />
-      <div className="relative z-[2] mx-auto max-w-[1120px] px-7 py-16">
+      <div className="relative z-[2] mx-auto w-full max-w-none px-7 py-16">
         {/* Header */}
         <div className="mb-12 text-center">
           <p className="bbc-eyebrow">Simple, transparent pricing</p>
@@ -572,7 +572,7 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       {/* One-off packs live at /bundles. Surfaced here because someone
           comparing subscription tiers is exactly who wants a no-subscription
           option — and previously nothing in the app linked to them at all. */}
-      <div className="relative z-[2] mx-auto max-w-[1120px] px-6 pb-16">
+      <div className="relative z-[2] mx-auto w-full max-w-none px-6 pb-16">
         <div className="flex flex-col items-start gap-4 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-card)] p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-[15px] font-bold text-[var(--color-ink)]">Don&apos;t want a subscription?</p>

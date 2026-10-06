@@ -19,8 +19,8 @@ export function DailyQuote() {
   const s = secs % 60;
 
   return (
-    <div className="mx-auto max-w-[1120px] px-7 py-[80px]">
-      <div className="bbc-reveal relative mx-auto max-w-[1120px] overflow-hidden rounded-[20px] border border-[var(--color-line)] bg-[var(--color-paper-card)] px-8 py-12 text-center sm:px-14 sm:py-16">
+    <div className="mx-auto w-full max-w-none px-7 py-[80px]">
+      <div className="bbc-reveal relative mx-auto w-full max-w-none overflow-hidden rounded-[20px] border border-[var(--color-line)] bg-[var(--color-paper-card)] px-8 py-12 text-center sm:px-14 sm:py-16">
         {/* Decorative large quotation mark */}
         <div className="pointer-events-none absolute -top-2 left-6 select-none sm:left-10">
           <span className="bbc-serif text-[160px] leading-none text-[var(--color-blue-ink)] opacity-[.06]">&ldquo;</span>

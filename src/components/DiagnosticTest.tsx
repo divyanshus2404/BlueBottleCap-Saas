@@ -63,7 +63,7 @@ export const DiagnosticTest: React.FC = () => {
   };
 
   return (
-    <div className="bbc mx-auto max-w-[1120px] px-7 py-12 md:py-16">
+    <div className="bbc mx-auto w-full max-w-none px-7 py-12 md:py-16">
       {phase === "intro" && (
         <div>
           <div className="mx-auto max-w-[640px] text-center">

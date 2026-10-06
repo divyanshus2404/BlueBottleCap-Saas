@@ -68,7 +68,7 @@ export const InstituteLanding: React.FC = () => {
       <div className="bbc-grid" aria-hidden="true" />
 
       {/* HERO */}
-      <section className="relative z-[2] mx-auto max-w-[1120px] px-7 py-[72px] text-center">
+      <section className="relative z-[2] mx-auto w-full max-w-none px-7 py-[72px] text-center">
         <p className="bbc-eyebrow">For coaching centers · JEE · NEET · CUET</p>
         <h1 className="bbc-serif mx-auto mt-4 max-w-[18ch] text-[clamp(36px,5vw,60px)] leading-[1.05] tracking-[-.02em]">
           AI mock tests for your institute, <em className="not-italic italic font-medium text-[var(--color-blue-ink)]">your branding.</em>
@@ -108,7 +108,7 @@ export const InstituteLanding: React.FC = () => {
       </section>
 
       {/* PROBLEM */}
-      <section className="relative z-[2] mx-auto max-w-[1120px] px-7 py-[64px]">
+      <section className="relative z-[2] mx-auto w-full max-w-none px-7 py-[64px]">
         <div className="mx-auto mb-10 max-w-[46em] text-center">
           <p className="bbc-eyebrow">The uncomfortable truth</p>
           <h2 className="bbc-serif mt-3 text-[clamp(24px,3.2vw,36px)] leading-[1.12] tracking-[-.02em]">
@@ -137,7 +137,7 @@ export const InstituteLanding: React.FC = () => {
 
       {/* WHAT YOU GET */}
       <section className="relative z-[2] border-t border-[var(--color-line)] bg-[var(--color-paper-card)]">
-        <div className="mx-auto max-w-[1120px] px-7 py-[72px]">
+        <div className="mx-auto w-full max-w-none px-7 py-[72px]">
           <div className="mx-auto mb-10 max-w-[46em] text-center">
             <p className="bbc-eyebrow">What every seat unlocks</p>
             <h2 className="bbc-serif mt-3 text-[clamp(24px,3.2vw,36px)] leading-[1.12] tracking-[-.02em]">
@@ -164,7 +164,7 @@ export const InstituteLanding: React.FC = () => {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="relative z-[2] mx-auto max-w-[1120px] px-7 py-[72px]">
+      <section className="relative z-[2] mx-auto w-full max-w-none px-7 py-[72px]">
         <div className="mx-auto mb-10 max-w-[46em] text-center">
           <p className="bbc-eyebrow">Onboarding</p>
           <h2 className="bbc-serif mt-3 text-[clamp(24px,3.2vw,36px)] leading-[1.12] tracking-[-.02em]">
@@ -189,7 +189,7 @@ export const InstituteLanding: React.FC = () => {
 
       {/* PRICING */}
       <section className="relative z-[2] border-y border-[var(--color-line)] bg-[var(--color-paper-card)]">
-        <div className="mx-auto max-w-[1120px] px-7 py-[72px]">
+        <div className="mx-auto w-full max-w-none px-7 py-[72px]">
           <div className="mx-auto mb-10 max-w-[46em] text-center">
             <p className="bbc-eyebrow">Per-seat, transparent</p>
             <h2 className="bbc-serif mt-3 text-[clamp(24px,3.2vw,36px)] leading-[1.12] tracking-[-.02em]">
@@ -245,7 +245,7 @@ export const InstituteLanding: React.FC = () => {
 
       {/* PILOT OFFER */}
       <section className="relative z-[2] border-y border-[var(--color-blue-ink)]/15 bg-gradient-to-b from-[var(--color-blue-wash)] to-[var(--color-paper)]">
-        <div className="mx-auto max-w-[1120px] px-7 py-[72px] text-center">
+        <div className="mx-auto w-full max-w-none px-7 py-[72px] text-center">
           <p className="bbc-eyebrow text-[var(--color-blue-ink)]">Zero-risk pilot</p>
           <h2 className="bbc-serif mt-3 text-[clamp(26px,3.6vw,42px)] tracking-[-.02em]">
             50 seats free for 30 days.
@@ -284,7 +284,7 @@ export const InstituteLanding: React.FC = () => {
       </section>
 
       {/* FAQ */}
-      <section className="relative z-[2] mx-auto max-w-[1120px] px-7 py-[72px]">
+      <section className="relative z-[2] mx-auto w-full max-w-none px-7 py-[72px]">
         <div className="mb-10 text-center">
           <p className="bbc-eyebrow">FAQ</p>
           <h2 className="bbc-serif mt-3 text-[clamp(22px,3vw,32px)] tracking-[-.02em]">Common questions from institute owners</h2>
@@ -308,7 +308,7 @@ export const InstituteLanding: React.FC = () => {
 
       {/* BOOK DEMO */}
       <section id="book-demo" className="relative z-[2] border-t border-[var(--color-line)] bg-[var(--color-blue-wash)]">
-        <div className="mx-auto max-w-[1120px] px-7 py-[72px]">
+        <div className="mx-auto w-full max-w-none px-7 py-[72px]">
           <div className="mb-8 text-center">
             <p className="bbc-eyebrow">Book a demo</p>
             <h2 className="bbc-serif mt-3 text-[clamp(24px,3.4vw,38px)] tracking-[-.02em]">
