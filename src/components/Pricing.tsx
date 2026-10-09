@@ -45,11 +45,14 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       name: "Basic",
       desc: "For students who need a little more AI power",
       priceMonthly: 49,
-      priceAnnual: 39,
+      // Annual: display ~₹33/mo, but the ACTUAL one-shot charge is ₹399.
+      priceAnnual: 33,
+      priceAnnualTotal: 399,
       buttonText: "Get Basic",
       color: "border-blue-200 bg-blue-50/5",
       badgeColor: "bg-blue-600 text-white",
       icon: BookOpen,
+      product: { monthly: "basic_monthly", annual: "basic_annual" },
       features: [
         "Everything in Free",
         "100 AI credits per month",
@@ -110,14 +113,14 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
     trackEvent("checkout_opened", { product });
 
     try {
-      // Send productId + userId so the server can write both into the order
-      // notes. The verify endpoint reads from notes as the ONLY source of
-      // truth — if we don't send the uid here, the payment succeeds but no
-      // Pro entitlement gets written to Firestore.
+      // The server derives the buyer uid from this token and writes it into the
+      // order notes, which verify and the webhook then read as the only source
+      // of truth for who gets the entitlement.
+      const idToken = await auth?.currentUser?.getIdToken().catch(() => undefined);
       const resp = await fetch("/api/razorpay/create-order", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: product, userId: auth?.currentUser?.uid }),
+        headers: { "Content-Type": "application/json", ...(idToken ? { Authorization: `Bearer ${idToken}` } : {}) },
+        body: JSON.stringify({ productId: product }),
       });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "Failed to create order");
@@ -207,6 +210,22 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
   const getPlanPrice = (p: (typeof plans)[0]) =>
     billingCycle === "monthly" ? p.priceMonthly : p.priceAnnual;
 
+  // Annual savings vs paying monthly for a year, computed from each plan's own
+  // prices so the figure is always correct if a price changes. Returns null for
+  // plans without a real annual total (e.g. Free).
+  const getAnnualSavingsPct = (p: (typeof plans)[0]): number | null => {
+    const annualTotal = "priceAnnualTotal" in p ? p.priceAnnualTotal : undefined;
+    if (!p.priceMonthly || !annualTotal) return null;
+    const yearlyIfMonthly = p.priceMonthly * 12;
+    if (annualTotal >= yearlyIfMonthly) return null;
+    return Math.round(((yearlyIfMonthly - annualTotal) / yearlyIfMonthly) * 100);
+  };
+
+  const maxAnnualSavingsPct = Math.max(
+    0,
+    ...plans.map((p) => getAnnualSavingsPct(p) ?? 0)
+  );
+
   return (
     <div className="bbc relative min-h-screen overflow-hidden">
       <div className="bbc-grid" aria-hidden="true" />
@@ -238,9 +257,11 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
                 </button>
               ))}
             </div>
-            <span className="rounded-full border border-[var(--color-line)] bg-[var(--color-blue-wash)] px-3 py-1 text-[11px] font-semibold text-[var(--color-blue-ink)]">
-              Save 37% with annual billing
-            </span>
+            {billingCycle === "annual" && (
+              <span className="rounded-full border border-[var(--color-line)] bg-[var(--color-blue-wash)] px-3 py-1 text-[11px] font-semibold text-[var(--color-blue-ink)]">
+                Pay once a year, save up to {maxAnnualSavingsPct}%
+              </span>
+            )}
           </div>
         </div>
 
@@ -280,9 +301,16 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
                     </span>
                   </div>
                   {p.id !== "Free" && billingCycle === "annual" && "priceAnnualTotal" in p && (
-                    <p className="mt-1 text-[11.5px] text-[var(--color-ink-faint)]">
-                      ₹{p.priceAnnualTotal?.toLocaleString("en-IN")} charged once, then ₹{p.priceAnnualTotal?.toLocaleString("en-IN")}/year. Cancel anytime.
-                    </p>
+                    <>
+                      {getAnnualSavingsPct(p) !== null && (
+                        <span className="mt-2 inline-block rounded-full border border-[var(--color-line)] bg-[var(--color-blue-wash)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--color-blue-ink)]">
+                          Save {getAnnualSavingsPct(p)}% vs monthly
+                        </span>
+                      )}
+                      <p className="mt-1 text-[11.5px] text-[var(--color-ink-faint)]">
+                        ₹{p.priceAnnualTotal?.toLocaleString("en-IN")} charged once, then ₹{p.priceAnnualTotal?.toLocaleString("en-IN")}/year. Cancel anytime.
+                      </p>
+                    </>
                   )}
 
                   <ul className="mt-6 space-y-3 border-t border-[var(--color-line)] pt-5 text-left">

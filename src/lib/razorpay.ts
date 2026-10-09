@@ -7,6 +7,9 @@ export const PRODUCTS = {
   chapter_test: { amount: 12000, label: "Chapter Mock Test" }, // ₹120.00
   study_material: { amount: 28100, label: "Full Chapter-wise Study Material" }, // ₹281.00
   // Subscription plans (price in paise). Keep in sync with the Pricing page.
+  // basic_annual is billed as a single ₹399 upfront charge (~₹33/mo equivalent).
+  basic_monthly: { amount: 4900, label: "Basic plan — monthly" }, // ₹49
+  basic_annual: { amount: 39900, label: "Basic plan — annual (₹399 / year)" }, // ₹399
   // pro_annual is billed as a single ₹1,499 upfront charge (~₹125/mo equivalent).
   pro_monthly: { amount: 19900, label: "Pro plan — monthly" }, // ₹199
   pro_annual: { amount: 149900, label: "Pro plan — annual (₹1,499 / year)" }, // ₹1,499
@@ -20,9 +23,36 @@ export const PRODUCTS = {
   // threshold where a student thinks twice about tapping "Pay". Duolingo
   // proved the mechanic works — panic + tiny price + one tap = pure margin.
   streak_save: { amount: 1900, label: "Save your study streak" }, // ₹19
+  // Proctored test series. Priced above the one-off chapter test because the
+  // attempt is invigilated and the result is meant to be comparable across
+  // candidates — that is what a student is actually paying for.
+  test_series_jee: { amount: 49900, label: "Proctored Test Series — JEE (10 tests)" }, // ₹499
+  test_series_neet: { amount: 49900, label: "Proctored Test Series — NEET (10 tests)" }, // ₹499
+  // ── Institute licences (B2B) ────────────────────────────────────────────
+  // Billed annually and upfront: it matches a coaching centre's academic year,
+  // and one ₹36,000 invoice is worth ~180 student subscriptions at ₹199 while
+  // costing a fraction of the support load. Student caps are enforced in
+  // src/lib/institute.ts, not here.
+  inst_starter: { amount: 1200000, label: "Institute Starter — 1 year, up to 100 students" }, // ₹12,000
+  inst_growth: { amount: 3600000, label: "Institute Growth — 1 year, up to 500 students" }, // ₹36,000
+  inst_pro: { amount: 9000000, label: "Institute Pro — 1 year, unlimited students" }, // ₹90,000
 } as const;
 
 export type ProductId = keyof typeof PRODUCTS;
+
+/** Institute licence products and the student cap each one buys. */
+export const INSTITUTE_TIERS = {
+  inst_starter: { tier: "starter" as const, studentCap: 100 },
+  inst_growth: { tier: "growth" as const, studentCap: 500 },
+  inst_pro: { tier: "pro" as const, studentCap: Number.MAX_SAFE_INTEGER },
+} as const;
+
+export type InstituteProductId = keyof typeof INSTITUTE_TIERS;
+export type InstituteTier = (typeof INSTITUTE_TIERS)[InstituteProductId]["tier"];
+
+export function isInstituteProductId(value: unknown): value is InstituteProductId {
+  return typeof value === "string" && value in INSTITUTE_TIERS;
+}
 
 export function isProductId(value: unknown): value is ProductId {
   return typeof value === "string" && value in PRODUCTS;
@@ -33,8 +63,11 @@ export function isProductId(value: unknown): value is ProductId {
  * purchases (chapter_test, study_material). The verify endpoint returns this
  * to the client so the client cannot inflate its own plan after payment.
  */
-export function productToPlan(product: ProductId): "Pro" | null {
+export function productToPlan(product: ProductId): "Basic" | "Pro" | null {
   switch (product) {
+    case "basic_monthly":
+    case "basic_annual":
+      return "Basic";
     case "pro_monthly":
     case "pro_annual":
       return "Pro";
@@ -42,6 +75,16 @@ export function productToPlan(product: ProductId): "Pro" | null {
     case "study_material":
     case "jee_bundle_2026":
     case "streak_save":
+      return null;
+    // Test-series access is recorded per-product on the user doc, not as a plan.
+    case "test_series_jee":
+    case "test_series_neet":
+      return null;
+    // Institute licences grant a tier on the institute doc, not a consumer plan
+    // on the buyer's user doc — see activateInstituteLicence.
+    case "inst_starter":
+    case "inst_growth":
+    case "inst_pro":
       return null;
   }
 }
