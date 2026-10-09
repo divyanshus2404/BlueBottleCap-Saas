@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { UserStats } from "../types";
 import { Check, Zap, ShieldCheck, Printer, ArrowRight, Loader2, BookOpen, Crown } from "lucide-react";
 import { trackEvent } from "../lib/analytics";
 import { auth } from "../firebase";
+import { useAuth } from "../context/AuthContext";
 
 type PlanId = "Free" | "Basic" | "Pro";
 
@@ -17,6 +18,9 @@ interface PricingProps {
 
 export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, onNavigateTo }) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { currentUser } = useAuth();
+  const resumedRef = useRef(false);
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
   const [loadingStep, setLoadingStep] = useState<number>(-1);
   const [showReceipt, setShowReceipt] = useState<boolean>(false);
@@ -96,17 +100,32 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       document.body.appendChild(script);
     });
 
-  const handleUpgradeTrigger = async (plan: PlanId) => {
+  const handleUpgradeTrigger = async (plan: PlanId, billingOverride?: "monthly" | "annual") => {
     if (plan === "Free") {
       onUpgradeApproved("Free");
       onNavigateTo("dashboard");
       return;
     }
 
+    // Billing can be forced by the resume-after-signin flow (from the URL),
+    // which fires before the billingCycle state has been reconciled.
+    const cycle = billingOverride ?? billingCycle;
+
     const planObj = plans.find((pl) => pl.id === plan);
     if (!planObj) return;
-    const product = billingCycle === "monthly" ? planObj.product?.monthly : planObj.product?.annual;
+    const product = cycle === "monthly" ? planObj.product?.monthly : planObj.product?.annual;
     if (!product) return;
+
+    // Checkout requires a signed-in user (the server bakes the buyer uid into
+    // the order so the client can't self-upgrade). If logged out, send them to
+    // sign in rather than firing a request that 401s and feels like a dead
+    // button. `?auth=required` opens the global AuthModal (see ClientLayout);
+    // the plan/billing are carried so we can resume checkout after sign-in.
+    if (!auth?.currentUser) {
+      trackEvent("auth_gate_shown", { product });
+      router.push(`/pricing?auth=required&plan=${plan}&billing=${cycle}`);
+      return;
+    }
 
     setSelectedPlan(plan);
     setLoadingStep(0);
@@ -146,10 +165,10 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
           const verifyData = await verifyResp.json();
           if (verifyResp.ok && verifyData.ok) {
             onUpgradeApproved(plan);
-            trackEvent("payment_success", { plan, billing: billingCycle, paymentId: response.razorpay_payment_id });
+            trackEvent("payment_success", { plan, billing: cycle, paymentId: response.razorpay_payment_id });
             const params = new URLSearchParams({
               plan,
-              billing: billingCycle,
+              billing: cycle,
               paymentId: response.razorpay_payment_id,
             });
             router.push(`/payment-success?${params.toString()}`);
@@ -199,6 +218,25 @@ export const Pricing: React.FC<PricingProps> = ({ userStats, onUpgradeApproved, 
       setLoadingStep(-1);
     }
   };
+
+  // Resume checkout after sign-in. A logged-out "Get Basic/Pro" click sends the
+  // user to /pricing?auth=required&plan=…&billing=… and opens the AuthModal.
+  // Once they authenticate, re-trigger the same checkout and strip the query so
+  // it can't fire again on reload. Guarded by resumedRef to run at most once.
+  useEffect(() => {
+    if (resumedRef.current) return;
+    if (!currentUser) return;
+    if (searchParams.get("auth") !== "required") return;
+
+    const plan = searchParams.get("plan");
+    if (plan !== "Basic" && plan !== "Pro") return;
+    const billing = searchParams.get("billing") === "annual" ? "annual" : "monthly";
+
+    resumedRef.current = true;
+    setBillingCycle(billing);
+    router.replace("/pricing");
+    handleUpgradeTrigger(plan, billing);
+  }, [currentUser, searchParams]);
 
   const handleFinalizeUpgrade = () => {
     onUpgradeApproved(selectedPlan);
